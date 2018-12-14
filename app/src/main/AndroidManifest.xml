@@ -17,7 +17,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".WaterPeddlerHomeActivity"></activity>
+        <activity android:name=".WaterPeddlerHomeActivity" />
+        <activity android:name=".WaterStationHomeActivity" />
+        <activity android:name=".WaterAffiliateHomeActivity"></activity>
     </application>
 
 </manifest>
