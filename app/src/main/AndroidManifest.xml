@@ -5,7 +5,7 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="H2BOT | A Chatbot Assistant"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -24,7 +24,11 @@
         <activity
             android:name=".WaterStationDocumentActivity"
             android:label="@string/title_activity_water_station_document"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".AccountSettingsStationAndDMActivity" />
+        <activity android:name=".AccountSettingsStationAndDMAccountActivity" />
+        <activity android:name=".AccountSettingsStationAndDMAccountNextActivity" />
+        <activity android:name=".AccountSettingsStationDocumentActivity"></activity>
     </application>
 
 </manifest>
