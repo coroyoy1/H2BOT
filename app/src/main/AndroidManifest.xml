@@ -17,7 +17,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".WaterPeddlerHomeActivity"></activity>
+        <activity android:name=".WaterPeddlerHomeActivity" />
+        <activity android:name=".WaterStationHomeActivity" />
+        <activity android:name=".WaterAffiliateHomeActivity" />
+        <activity android:name=".RegisterNextActivity" />
+        <activity
+            android:name=".WaterStationDocumentActivity"
+            android:label="@string/title_activity_water_station_document"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     </application>
 
 </manifest>
