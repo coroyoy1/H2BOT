@@ -41,40 +41,48 @@
             android:orientation="vertical">
 
             <EditText
+                android:id="@+id/RegisterFirstName"
                 android:layout_width="300dp"
                 android:layout_height="50dp"
                 android:inputType="text"
                 android:hint="@string/first_name" />
             <EditText
+                android:id="@+id/RegisterLastName"
                 android:layout_width="300dp"
                 android:layout_height="50dp"
                 android:inputType="text"
                 android:hint="@string/last_name"/>
             <EditText
+                android:id="@+id/RegisterMiddleName"
                 android:layout_width="300dp"
                 android:layout_height="50dp"
                 android:inputType="text"
                 android:hint="@string/middle_name"/>
             <EditText
+                android:id="@+id/RegisterAge"
                 android:layout_width="300dp"
                 android:layout_height="50dp"
                 android:hint="@string/age"
                 android:inputType="number"/>
             <EditText
+                android:id="@+id/RegisterAddress"
                 android:layout_width="300dp"
                 android:layout_height="50dp"
                 android:hint="@string/address"/>
             <EditText
+                android:id="@+id/RegisterContact"
                 android:layout_width="300dp"
                 android:layout_height="50dp"
                 android:hint="@string/contact_number"/>
             <EditText
+                android:id="@+id/RegisterEmailAddress"
                 android:layout_width="300dp"
                 android:layout_height="50dp"
                 android:inputType="textEmailAddress"
                 android:hint="@string/email_address"/>
         </LinearLayout>
         <Button
+            android:id="@+id/RegisterSignUp"
             android:layout_width="300dp"
             android:layout_height="50dp"
             android:layout_marginTop="30dp"
