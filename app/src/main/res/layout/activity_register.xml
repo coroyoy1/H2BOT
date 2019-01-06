@@ -1,9 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RegisterActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        android:textColor="#0B88FF"
+        android:text="@string/create_account"
+        android:textSize="25sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="31dp"
+        android:layout_marginTop="92dp"
+        android:text="@string/customer"
+        android:textSize="20sp"
+        android:textColor="#000"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:padding="5dp"
+        android:orientation="vertical"
+        android:layout_marginStart="63dp"
+        android:layout_marginTop="130dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/RegisterFirstName"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:inputType="text"
+                android:hint="@string/first_name" />
+            <EditText
+                android:id="@+id/RegisterLastName"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:inputType="text"
+                android:hint="@string/last_name"/>
+            <EditText
+                android:id="@+id/RegisterMiddleName"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:inputType="text"
+                android:hint="@string/middle_name"/>
+            <EditText
+                android:id="@+id/RegisterAge"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:hint="@string/age"
+                android:inputType="number"/>
+            <EditText
+                android:id="@+id/RegisterAddress"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:hint="@string/address"/>
+            <EditText
+                android:id="@+id/RegisterContact"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:hint="@string/contact_number"/>
+            <EditText
+                android:id="@+id/RegisterEmailAddress"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:inputType="textEmailAddress"
+                android:hint="@string/email_address"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/RegisterSignUp"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="30dp"
+            android:background="#0B88FF"
+            android:textColor="#FFF"
+            android:text="@string/sign_up"/>
+    </LinearLayout>
+
+</RelativeLayout>
