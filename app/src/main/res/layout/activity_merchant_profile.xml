@@ -1,9 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MerchantProfile">
+    tools:context=".MerchantProfileRate">
 
-</android.support.constraint.ConstraintLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="186dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
+
+        <ImageView
+            android:id="@+id/MerchantProfilePictureImageView"
+            android:layout_width="242dp"
+            android:layout_height="143dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="26dp"
+            app:srcCompat="@mipmap/ic_launcher" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="364dp"
+        android:layout_height="360dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#32918b88">
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="85dp"
+            android:layout_height="31dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/textView10"
+            android:layout_marginTop="146dp"
+            android:text="Products"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="85dp"
+            android:layout_height="31dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="19dp"
+            android:text="Name:"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="85dp"
+            android:layout_height="31dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="120dp"
+            android:gravity="center"
+            android:text="Rate"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="85dp"
+            android:layout_height="31dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/textView9"
+            android:layout_marginTop="64dp"
+            android:text="Address:"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="105dp"
+            android:layout_height="31dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/textView12"
+            android:layout_marginTop="105dp"
+            android:text="Contact No:"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="56dp"
+            android:numStars="5"
+            android:stepSize="1.0" />
+
+        <Button
+            android:id="@+id/SubmitButtonReviewMerchantButton"
+            android:layout_width="114dp"
+            android:layout_height="93dp"
+            android:layout_below="@+id/ratingBar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-56dp"
+            android:background="@android:color/holo_blue_dark"
+            android:text="Submit"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/MerchantContact"
+            android:layout_width="204dp"
+            android:layout_height="30dp"
+            android:layout_alignStart="@+id/MerchantName"
+            android:layout_alignTop="@+id/textView9"
+            android:text="M/S Contact"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/MerchantAddress"
+            android:layout_width="204dp"
+            android:layout_height="30dp"
+            android:layout_alignStart="@+id/MerchantName"
+            android:layout_alignTop="@+id/textView6"
+            android:text="M/S Address"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/MerchantName"
+            android:layout_width="204dp"
+            android:layout_height="30dp"
+            android:layout_alignEnd="@+id/SubmitButtonReviewMerchantButton"
+            android:layout_alignTop="@+id/textView10"
+            android:layout_marginEnd="-113dp"
+            android:text="Merchant/Station Name"
+            android:textSize="18sp" />
+    </RelativeLayout>
+</RelativeLayout>
