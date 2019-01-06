@@ -28,7 +28,10 @@
         <activity android:name=".AccountSettingsStationAndDMActivity" />
         <activity android:name=".AccountSettingsStationAndDMAccountActivity" />
         <activity android:name=".AccountSettingsStationAndDMAccountNextActivity" />
-        <activity android:name=".AccountSettingsStationDocumentActivity"></activity>
+        <activity android:name=".AccountSettingsStationDocumentActivity" />
+        <activity android:name=".TransactionsWSAndWDMain1Activity" />
+        <activity android:name=".MapMerchantActivity" />
+        <activity android:name=".ProductListMain1Activity"></activity>
     </application>
 
 </manifest>
