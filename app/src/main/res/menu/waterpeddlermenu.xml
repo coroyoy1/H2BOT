@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/TransactionItem" android:title="Transaction"></item>
+    <item android:id="@+id/AccountSettingItem" android:title="Account Setting"></item>
+    <item android:id="@+id/DailyRecordsItem" android:title="Daily Records"></item>
+    <item android:id="@+id/InProgressItem" android:title="In-Progress"></item>
+    <item android:id="@+id/AddItemItem" android:title="Add Item"></item>
+    <item android:id="@+id/FeedbackItem" android:title="Feedback"></item>
+    <item android:id="@+id/LogoutItem" android:title="Logout"></item>
+</menu>

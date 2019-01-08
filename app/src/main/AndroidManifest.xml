@@ -31,7 +31,7 @@
         <activity android:name=".AccountSettingsStationDocumentActivity" />
         <activity android:name=".TransactionsWSAndWDMain1Activity" />
         <activity android:name=".MapMerchantActivity" />
-        <activity android:name=".ProductListMain1Activity"></activity>
+        <activity android:name=".ProductListMain1Activity" />
     </application>
 
 </manifest>
