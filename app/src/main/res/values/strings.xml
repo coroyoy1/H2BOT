@@ -17,4 +17,9 @@
     <string name="first_name">First Name</string>
     <string name="customer">Customer</string>
     <string name="create_account">Create Account</string>
+    <string-array name="UserType">
+        <item>Customer</item>
+        <item>Station Owner</item>
+        <item>H2Bot Driver(Third Party Delivery Guy)</item>
+    </string-array>
 </resources>
