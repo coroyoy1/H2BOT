@@ -20,6 +20,6 @@
     <string-array name="UserType">
         <item>Customer</item>
         <item>Station Owner</item>
-        <item>H2Bot Driver(Third Party Delivery Guy)</item>
+        <item>H2Bot Driver(Third Party Affiliate)</item>
     </string-array>
 </resources>
