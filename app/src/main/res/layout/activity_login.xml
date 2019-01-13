@@ -11,9 +11,10 @@
         android:id="@+id/usernameEditText"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/passwordEditText"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="235dp"
+        android:layout_marginStart="-2dp"
+        android:layout_marginBottom="230dp"
         android:ems="10"
         android:hint="Username"
         android:inputType="textPersonName" />
@@ -22,9 +23,10 @@
         android:id="@+id/passwordEditText"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/imageView2"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="179dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="187dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword" />
@@ -35,11 +37,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="107dp"
+        android:layout_marginBottom="135dp"
         android:background="#0097e6"
-        android:textSize="20sp"
         android:text="Login"
-        android:textColor="#f5f6fa" />
+        android:textColor="#f5f6fa"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/forgotPassword"
@@ -47,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="105dp"
         android:text="Forgot password?"
         android:textColor="#2f3640"
         android:textSize="15sp"
@@ -59,7 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="28dp"
+        android:layout_marginBottom="46dp"
         android:text="Create Account"
         android:textColor="#e1b12c"
         android:textSize="25sp" />
@@ -70,7 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="237dp"
+        android:layout_marginTop="193dp"
         android:text="H2BOT"
         android:textColor="#273c75"
         android:textSize="40sp" />
@@ -80,8 +82,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="317dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="247dp"
+        android:layout_marginEnd="24dp"
         android:text="CHATBOT WATER ASSISTANT"
         android:textColor="#192a56"
         android:textSize="25sp" />
