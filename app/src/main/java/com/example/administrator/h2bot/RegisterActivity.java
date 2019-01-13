@@ -100,7 +100,6 @@ public class RegisterActivity extends AppCompatActivity {
                 String emailString = emailRegister.getText().toString();
                 String passwordString = passwordRegister.getText().toString();
 
-
                 if(passwordString.isEmpty() || fullnameString.isEmpty() || ageString.isEmpty() || addressString.isEmpty() || contactString.isEmpty() || emailString.isEmpty())
                 {
                     showMessage("Please fill up the requirements!");
@@ -171,6 +170,8 @@ public class RegisterActivity extends AppCompatActivity {
                                         if(task.isSuccessful())
                                         {
                                             passToNextActivity();
+                                            signUp.setVisibility(View.VISIBLE);
+                                            loadingProgressBar.setVisibility(View.INVISIBLE);
                                         }
                                     }
                                 });
