@@ -47,6 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
     static int PReqCode = 1;
     static int REQUESTCODE = 1;
     Uri uri;
+    Boolean clickable=false;
 
     Spinner spinnerRegister;
     EditText fullNameRegister, ageRegister, addressRegister, contactRegister, emailRegister, passwordRegister;
@@ -80,6 +81,7 @@ public class RegisterActivity extends AppCompatActivity {
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clickable=true;
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -151,12 +153,12 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void updateUserInfo(final String spinnerString, final String fullnameString, Uri uri, final FirebaseUser currentUser)
     {
-        StorageReference mStorage = FirebaseStorage.getInstance().getReference().child("users_photos");
-        final StorageReference imageFilePath = mStorage.child(uri.getLastPathSegment());
-        imageFilePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        String userID = mAuth.getCurrentUser().getUid();
+        final StorageReference mStorage = FirebaseStorage.getInstance().getReference().child("users_photos").child(userID+"/"+"profilePicture");
+        mStorage.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                imageFilePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                mStorage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
                         UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
@@ -200,11 +202,13 @@ public class RegisterActivity extends AppCompatActivity {
 
                 uri = data.getData();
 
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                    imageView.setImageBitmap(bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if(clickable) {
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                        imageView.setImageBitmap(bitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
