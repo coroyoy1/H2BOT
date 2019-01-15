@@ -108,6 +108,9 @@ public class LoginActivity extends AppCompatActivity {
                         progressLoad.setVisibility(View.INVISIBLE);
                         loginNow.setVisibility(View.VISIBLE);
                         showMessages("Successfully Login");
+
+                        //Temporary Output
+                        startActivity(new Intent(LoginActivity.this, WaterStationDocumentVersion2Activity.class));
                     }
                 }
             });

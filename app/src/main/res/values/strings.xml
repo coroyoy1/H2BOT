@@ -21,7 +21,7 @@
         <item>Customer</item>
         <item>Station Owner</item>
         <item>Delivery Man</item>
-        <item>Water Dealer/ Water Peddler</item>
-        <item>H2Bot Driver(Third Party Affiliate)</item>
+        <item>Water Dealer</item>
+        <item>Third Party Affiliate</item>
     </string-array>
 </resources>

@@ -37,6 +37,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -47,6 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
     static int PReqCode = 1;
     static int REQUESTCODE = 1;
     Uri uri;
+    Boolean clickable=false;
 
     Spinner spinnerRegister;
     EditText fullNameRegister, ageRegister, addressRegister, contactRegister, emailRegister, passwordRegister;
@@ -80,6 +82,7 @@ public class RegisterActivity extends AppCompatActivity {
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clickable=true;
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -114,6 +117,10 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    private void verificationOfUserType()
+    {
+    }
+
     private void CreateAccountUser(final String passwordString, final String spinnerString, final String fullnameString, final String ageString, final String addressString, final String contactString, final String emailString)
     {
         mAuth.createUserWithEmailAndPassword(emailString, passwordString)
@@ -122,22 +129,111 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful())
                         {
-                            Users user = new Users(spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString);
-                            FirebaseDatabase.getInstance().getReference("Users")
-                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task)
-                                {
-                                    if (task.isSuccessful()) {
-                                        showMessage("Successfully Register");
+                            String userType = spinnerRegister.getSelectedItem().toString();
+                            if(userType.equals("Customer"))
+                            {
+                                Users user = new Users(spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, "none", "none");
+                                FirebaseDatabase.getInstance().getReference("Users")
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                        .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task)
+                                    {
+                                        if (task.isSuccessful()) {
+                                            showMessage("Successfully Register");
+                                        }
+                                        else {
+                                            showMessage("Error to Register");
+                                        }
                                     }
-                                    else {
-                                        showMessage("Error to Register");
+                                });
+                                updateUserInfo(spinnerString, fullnameString, uri, mAuth.getCurrentUser());
+                            }
+                            else if(userType.equals("Station Owner"))
+                            {
+                                Random random = new Random();
+                                int number = random.nextInt(1000000000) + 1;
+                                String stringNumber = Integer.toString(number);
+                                Users user = new Users(spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, stringNumber, "none");
+                                FirebaseDatabase.getInstance().getReference("Users")
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                        .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task)
+                                    {
+                                        if (task.isSuccessful()) {
+                                            showMessage("Successfully Register");
+                                        }
+                                        else {
+                                            showMessage("Error to Register");
+                                        }
                                     }
-                                }
-                            });
-                            updateUserInfo(spinnerString, fullnameString, uri, mAuth.getCurrentUser());
+                                });
+                                updateUserInfo(spinnerString, fullnameString, uri, mAuth.getCurrentUser());
+                            }
+                            else if(userType.equals("Delivery Man"))
+                            {
+                                Users user = new Users(spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, "none", "false");
+                                FirebaseDatabase.getInstance().getReference("Users")
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                        .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task)
+                                    {
+                                        if (task.isSuccessful()) {
+                                            showMessage("Successfully Register");
+                                        }
+                                        else {
+                                            showMessage("Error to Register");
+                                        }
+                                    }
+                                });
+                                updateUserInfo(spinnerString, fullnameString, uri, mAuth.getCurrentUser());
+                            }
+                            else if(userType.equals("Water Dealer"))
+                            {
+                                Users user = new Users(spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, "none", "false");
+                                FirebaseDatabase.getInstance().getReference("Users")
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                        .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task)
+                                    {
+                                        if (task.isSuccessful()) {
+                                            showMessage("Successfully Register");
+                                        }
+                                        else {
+                                            showMessage("Error to Register");
+                                        }
+                                    }
+                                });
+                                updateUserInfo(spinnerString, fullnameString, uri, mAuth.getCurrentUser());
+                            }
+                            else if(userType.equals("Third Party Affiliate"))
+                            {
+                                Users user = new Users(spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, "none", "false");
+                                FirebaseDatabase.getInstance().getReference("Users")
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                        .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task)
+                                    {
+                                        if (task.isSuccessful()) {
+                                            showMessage("Successfully Register");
+                                        }
+                                        else {
+                                            showMessage("Error to Register");
+                                        }
+                                    }
+                                });
+                                updateUserInfo(spinnerString, fullnameString, uri, mAuth.getCurrentUser());
+                            }
+                            else
+                            {
+                                showMessage("No available users");
+                                signUp.setVisibility(View.VISIBLE);
+                                loadingProgressBar.setVisibility(View.INVISIBLE);
+                            }
                         }
                         else
                         {
@@ -151,12 +247,12 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void updateUserInfo(final String spinnerString, final String fullnameString, Uri uri, final FirebaseUser currentUser)
     {
-        StorageReference mStorage = FirebaseStorage.getInstance().getReference().child("users_photos");
-        final StorageReference imageFilePath = mStorage.child(uri.getLastPathSegment());
-        imageFilePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        String userID = mAuth.getCurrentUser().getUid();
+        final StorageReference mStorage = FirebaseStorage.getInstance().getReference().child("users_photos").child(userID+"/"+"profilePicture");
+        mStorage.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                imageFilePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                mStorage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
                         UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
@@ -200,11 +296,13 @@ public class RegisterActivity extends AppCompatActivity {
 
                 uri = data.getData();
 
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                    imageView.setImageBitmap(bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if(clickable) {
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                        imageView.setImageBitmap(bitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
