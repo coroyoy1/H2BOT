@@ -100,7 +100,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                     }
                 }
                 if(isClick3)
-                {
+                    {
                     try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri3);
                         image3.setImageBitmap(bitmap);
