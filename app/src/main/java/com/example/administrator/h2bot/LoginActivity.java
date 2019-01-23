@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,8 +16,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import org.w3c.dom.Text;
-
 public class LoginActivity extends AppCompatActivity {
 
     TextView register;
@@ -28,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
         {
             progressLoad.setVisibility(View.INVISIBLE);
             loginNow.setVisibility(View.VISIBLE);
-            showMessages("Invalid input!");
+            showMessages("Please check your email address or password.");
         }
         else
         {
@@ -101,16 +99,16 @@ public class LoginActivity extends AppCompatActivity {
                     {
                         progressLoad.setVisibility(View.INVISIBLE);
                         loginNow.setVisibility(View.VISIBLE);
-                        showMessages("Sign in problem or Connection Problem");
+                        showMessages("Please check your internet connection or credentials.");
                     }
                     else
                     {
                         progressLoad.setVisibility(View.INVISIBLE);
                         loginNow.setVisibility(View.VISIBLE);
-                        showMessages("Successfully Login");
-
+                        showMessages("Successfully logged-in");
+                        finish();
                         //Temporary Output
-                        startActivity(new Intent(LoginActivity.this, AddItemMerchant.class));
+                        startActivity(new Intent(LoginActivity.this, CustomerMainActivity.class));
                     }
                 }
             });

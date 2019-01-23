@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "8834897724",
+    "firebase_url": "https://h2botdatabase.firebaseio.com",
+    "project_id": "h2botdatabase",
+    "storage_bucket": "h2botdatabase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8834897724:android:505b961c7e3dca07",
+        "android_client_info": {
+          "package_name": "com.example.administrator.h2bot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "8834897724-24oas36rfnnd1qd9vatnh7kih9qs3gp8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUXXrDBOzQDURTrQ4IAmcXcOcCYi_I2pA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
