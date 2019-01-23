@@ -18,6 +18,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -77,6 +78,14 @@ public class AddItemMerchant extends AppCompatActivity {
 
         //Spinner
         waterTypeSpinner=findViewById(R.id.waterTypeSpinner);
+        String[] arraySpinner = new String[] {
+                "Mineral", "Distilled", "Purified", "Alkaline"
+        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, arraySpinner);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        waterTypeSpinner.setAdapter(adapter);
+
 
         //ProgressBar
         mProgressBar = findViewById(R.id.progress_bar);
@@ -150,7 +159,7 @@ public class AddItemMerchant extends AppCompatActivity {
                             WaterPeddlerGetterSetter upload = new WaterPeddlerGetterSetter(
                                     taskSnapshot.getUploadSessionUri().toString(),
                                     ItemNameEditText.getText().toString().trim(),
-                                   "Hello",
+                                   waterTypeSpinner.getSelectedItem().toString(),
                                     PriceEditText.getText().toString().trim(),
                                     QualityEditText.getText().toString().trim(),
                                     currentuser
