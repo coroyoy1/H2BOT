@@ -140,7 +140,8 @@ public class AddItemMerchant extends AppCompatActivity {
                 QualityEditText.requestFocus();
                 return;
             }
-            StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
+            final String uuid = UUID.randomUUID().toString();
+            StorageReference fileReference = mStorageRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(uuid).child(System.currentTimeMillis()
                     + "." + getFileExtension(mImageUri));
 
             mUploadTask = fileReference.putFile(mImageUri)
@@ -169,7 +170,10 @@ public class AddItemMerchant extends AppCompatActivity {
                             PriceEditText.setText("");
                             QualityEditText.setText("");
                             String uploadId = currentuser;
-                            mDatabaseRef.child(uploadId).setValue(upload);
+                            mDatabaseRef.child(uploadId).child(uuid).setValue(upload);
+
+//                            mDatabaseRef.child(uploadId).child(System.currentTimeMillis()
+//                                    + "." + getFileExtension(mImageUri)).setValue(upload);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
