@@ -110,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                         showMessages("Successfully Login");
 
                         //Temporary Output
-                        startActivity(new Intent(LoginActivity.this, WaterStationDocumentVersion2Activity.class));
+                        startActivity(new Intent(LoginActivity.this, AddItemMerchant.class));
                     }
                 }
             });

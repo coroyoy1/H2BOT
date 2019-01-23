@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.administrator.h2bot">
-
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.STORAGE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -25,6 +28,8 @@
             android:name=".WaterStationDocumentActivity"
             android:label="@string/title_activity_water_station_document"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".AddItemMerchant" >
+        </activity>
         <activity android:name=".AccountSettingsStationAndDMActivity" />
         <activity android:name=".AccountSettingsStationAndDMAccountActivity" />
         <activity android:name=".AccountSettingsStationAndDMAccountNextActivity" />
