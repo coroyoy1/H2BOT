@@ -55,6 +55,11 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AccountSettingFragment()).commit();
                 Toast.makeText(this, "Account Settings", Toast.LENGTH_SHORT).show();
                 break;
+
+            case R.id.feedback:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FeedbackFragment()).commit();
+                Toast.makeText(this, "Feedback", Toast.LENGTH_SHORT).show();
+                break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;

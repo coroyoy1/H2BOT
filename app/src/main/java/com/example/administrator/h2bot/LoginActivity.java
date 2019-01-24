@@ -44,15 +44,15 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
 
-//        mAuthListener = new FirebaseAuth.AuthStateListener() {
-//            @Override
-//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-//                if(FirebaseAuth.getInstance().getCurrentUser() != null)
-//                {
-//                    mAuth.signOut();
-//                }
-//            }
-//        };
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(FirebaseAuth.getInstance().getCurrentUser() != null)
+                {
+                    mAuth.signOut();
+                }
+            }
+        };
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,11 +72,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        mAuth.addAuthStateListener(mAuthListener);
-//    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
 
     private void signInNow()
     {
