@@ -94,7 +94,7 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         saveChangesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(CustomerMainActivity.this, "Temporary", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CustomerMainActivity.this, "Temporary", Toast.LENGTH_SHORT).show();
             }
         });
         dialog.show();
