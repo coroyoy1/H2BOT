@@ -81,7 +81,7 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
     public void ShowPopUpAccountSettingUpdate(View view){
         Button cancelBtn;
         Button saveChangesBtn;
-        dialog.setContentView(R.layout.account_setting_popup);
+        dialog.setContentView(R.layout.account_settings_popup);
         cancelBtn = dialog.findViewById(R.id.cancelBtn);
         saveChangesBtn = dialog.findViewById(R.id.saveChangesBtn);
 
