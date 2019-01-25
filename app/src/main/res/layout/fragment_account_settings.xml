@@ -29,6 +29,7 @@
 
                 <TextView
                     android:id="@+id/customerID"
+                    android:textStyle="bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

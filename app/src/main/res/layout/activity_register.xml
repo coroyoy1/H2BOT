@@ -123,7 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#FF0000"
-                android:text="Please use a valid phone number for your registration **"
+                android:text="Please use a valid phone number**"
                 android:textStyle="italic"/>
             <ProgressBar
                 android:id="@+id/progressBar1"

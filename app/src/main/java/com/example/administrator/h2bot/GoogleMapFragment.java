@@ -2,6 +2,8 @@ package com.example.administrator.h2bot;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -9,9 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
 /**
@@ -19,7 +24,8 @@ import com.google.android.gms.maps.SupportMapFragment;
  */
 public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
 
-    SupportMapFragment mapFragment;
+
+    GoogleMap map;
     public GoogleMapFragment() {
         // Required empty public constructor
     }
@@ -28,21 +34,25 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_google_map, container, false);
-        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        if(mapFragment == null){
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            mapFragment = SupportMapFragment.newInstance();
-            fragmentTransaction.replace(R.id.map, mapFragment);
-        }
-        mapFragment.getMapAsync(this);
         return view;
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map1);
+        mapFragment.getMapAsync(this);
+    }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+
+        LatLng pp = new LatLng(10.358060499999999, 123.9136566);
+        MarkerOptions options = new MarkerOptions();
+        options.position(pp).title("Almira Gwapa Pero Naay Matag Tiki sa bilat");
+        map.addMarker(options);
+        map.moveCamera(CameraUpdateFactory.newLatLng(pp));
     }
 }

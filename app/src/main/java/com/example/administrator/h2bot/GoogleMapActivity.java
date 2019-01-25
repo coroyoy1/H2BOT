@@ -35,7 +35,7 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady (GoogleMap googleMap) {
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
