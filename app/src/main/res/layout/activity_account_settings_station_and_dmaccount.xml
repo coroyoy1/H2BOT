@@ -1,117 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AccountSettingsStationAndDMAccountActivity">
-
+    tools:context=".AccountSettingsStationAndDMAccountActivity"
+    android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="50dp"
+        android:background="#0B88FF"
+        android:gravity="center"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
-            <TextView
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Update Account"
-                android:textStyle="bold"
-                android:textSize="18dp"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp">
-            <ImageView
-                android:layout_width="160dp"
-                android:layout_height="100dp"
-                android:background="@drawable/ic_launcher_background"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp" />
-            <Button
-                android:layout_width="140dp"
-                android:layout_height="60dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="30dp"
-                android:text="Add Photo"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp">
-            <Spinner
-                android:layout_width="320dp"
-                android:layout_height="40dp"></Spinner>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp">
-            <EditText
-                android:layout_width="320dp"
-                android:layout_height="wrap_content"
-                android:hint="Station Name"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp">
-            <EditText
-                android:layout_width="320dp"
-                android:layout_height="wrap_content"
-                android:hint="Username"/>
-        </LinearLayout>
 
-        <LinearLayout
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp">
-            <EditText
-                android:layout_width="320dp"
-                android:layout_height="wrap_content"
-                android:hint="Password"/>
-        </LinearLayout>
+            android:text="Update Account"
+            android:textColor="#FFF"
+            android:textSize="25sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="vertical"
+        android:gravity="center">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp">
-            <EditText
-                android:layout_width="320dp"
-                android:layout_height="wrap_content"
-                android:hint="Full Name"/>
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/RegisterPhoto"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center"
+            android:padding="5dp"
+            app:srcCompat="@mipmap/ic_launcher" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp">
-            <EditText
-                android:layout_width="320dp"
-                android:layout_height="wrap_content"
-                android:hint="Age"/>
-        </LinearLayout>
-        <LinearLayout
+        <Button
+            android:id="@+id/addPhotoRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp">
-            <Button
-                android:layout_width="320dp"
-                android:layout_height="60dp"
-                android:textColor="@android:color/white"
-                android:background="@android:color/holo_blue_dark"
-                android:text="Next"/>
-        </LinearLayout>
-
-
-
+            android:text="Upload Photo" />
     </LinearLayout>
 
-</RelativeLayout>
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center">-->
+            <!--<TextView-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Update Account"-->
+                <!--android:textStyle="bold"-->
+                <!--android:textSize="18dp"/>-->
+        <!--</LinearLayout>-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="10dp">-->
+            <!--<ImageView-->
+                <!--android:layout_width="160dp"-->
+                <!--android:layout_height="100dp"-->
+                <!--android:background="@drawable/ic_launcher_background"-->
+                <!--android:layout_marginLeft="10dp"-->
+                <!--android:layout_marginTop="10dp" />-->
+            <!--<Button-->
+                <!--android:layout_width="140dp"-->
+                <!--android:layout_height="60dp"-->
+                <!--android:layout_marginLeft="20dp"-->
+                <!--android:layout_marginTop="30dp"-->
+                <!--android:text="Add Photo"/>-->
+        <!--</LinearLayout>-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="20dp"-->
+            <!--android:layout_marginTop="10dp">-->
+            <!--<Spinner-->
+                <!--android:layout_width="320dp"-->
+                <!--android:layout_height="40dp"></Spinner>-->
+        <!--</LinearLayout>-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="20dp">-->
+            <!--<EditText-->
+                <!--android:layout_width="320dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:hint="Station Name"/>-->
+        <!--</LinearLayout>-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="20dp">-->
+            <!--<EditText-->
+                <!--android:layout_width="320dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:hint="Username"/>-->
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="20dp">-->
+            <!--<EditText-->
+                <!--android:layout_width="320dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:hint="Password"/>-->
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="20dp">-->
+            <!--<EditText-->
+                <!--android:layout_width="320dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:hint="Full Name"/>-->
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="20dp">-->
+            <!--<EditText-->
+                <!--android:layout_width="320dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:hint="Age"/>-->
+        <!--</LinearLayout>-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout_marginTop="10dp">-->
+            <!--<Button-->
+                <!--android:layout_width="320dp"-->
+                <!--android:layout_height="60dp"-->
+                <!--android:textColor="@android:color/white"-->
+                <!--android:background="@android:color/holo_blue_dark"-->
+                <!--android:text="Next"/>-->
+        <!--</LinearLayout>-->
+
+
+
+    <!--</LinearLayout>-->
+
+</LinearLayout>
