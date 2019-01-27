@@ -105,7 +105,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if(passwordString.isEmpty() || fullnameString.isEmpty() || ageString.isEmpty() || addressString.isEmpty() || contactString.isEmpty() || emailString.isEmpty())
                 {
-                    showMessage("Please fill up the requirements!");
+                    showMessage("Some fields are missing");
                     signUp.setVisibility(View.VISIBLE);
                     loadingProgressBar.setVisibility(View.INVISIBLE);
                 }

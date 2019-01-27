@@ -15,6 +15,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -25,12 +31,20 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseDatabase databaseConnection;
+    private DatabaseReference refConnection;
+
+    FirebaseUser currentUser;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        databaseConnection = FirebaseDatabase.getInstance();
+
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         emailAddress = (EditText) findViewById(R.id.usernameEditText);
         passwordType = (EditText) findViewById(R.id.passwordEditText);
@@ -49,7 +63,9 @@ public class LoginActivity extends AppCompatActivity {
 //            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 //                if(FirebaseAuth.getInstance().getCurrentUser() != null)
 //                {
-//                    mAuth.signOut();
+//                    finish();
+//                    Intent intent = new Intent(LoginActivity.this, CustomerMainActivity.class);
+//                    startActivity(intent);
 //                }
 //            }
 //        };
@@ -101,16 +117,88 @@ public class LoginActivity extends AppCompatActivity {
                         loginNow.setVisibility(View.VISIBLE);
                         showMessages("Please check your internet connection or credentials.");
                     }
-                    else
-                    {
+                    else {
                         progressLoad.setVisibility(View.INVISIBLE);
                         loginNow.setVisibility(View.VISIBLE);
-                        showMessages("Successfully logged-in");
-                        finish();
-                        //Temporary Output
-                        startActivity(new Intent(LoginActivity.this, WaterPeddlerDocumentActivity.class));
+                            FirebaseUser userHERE = FirebaseAuth.getInstance().getCurrentUser();
+                            String RegisteredUserID = userHERE.getUid();
+                            refConnection = FirebaseDatabase.getInstance().getReference().child("Users").child(RegisteredUserID);
+                            refConnection.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    String userType = dataSnapshot.child("userType").getValue().toString();
+                                    if (userType.equals("Customer")) {
+                                        //Temporary Output
+                                        startActivity(new Intent(LoginActivity.this, CustomerMainActivity.class));
+                                        showMessages("Successfully logged-in as Customer");
+                                        finish();
+                                    }
+                                    else if(userType.equals("Station Owner")){
+                                        String documentVerify = dataSnapshot.child("documentVerify").getValue().toString();
+                                        if(documentVerify.equals("none"))
+                                        {
+                                            startActivity(new Intent(LoginActivity.this, WaterStationDocumentVersion2Activity.class));
+                                            finish();
+                                        }
+                                        else if(documentVerify.equals("verified"))
+                                        {
+                                            showMessages("Water Station Verified");
+                                        }
+                                        showMessages("Successfully logged-in as Station Owner");
+                                    }
+                                    else if(userType.equals("Delivery Man"))
+                                    {
+                                        String documentVerify = dataSnapshot.child("documentVerify").getValue().toString();
+                                        if(documentVerify.equals("none"))
+                                        {
+                                            showMessages("Delivery Man Not Verified");
+                                        }
+                                        else if(documentVerify.equals("verified"))
+                                        {
+                                            showMessages("Delivery Man Verified");
+                                        }
+                                        showMessages("Successfully logged-in as Delivery Man");
+                                    }
+                                    else if(userType.equals("Water Dealer"))
+                                    {
+                                        String documentVerify = dataSnapshot.child("documentVerify").getValue().toString();
+                                        if(documentVerify.equals("none"))
+                                        {
+                                            showMessages("Water Dealer Not Verified");
+                                        }
+                                        else if(documentVerify.equals("verified"))
+                                        {
+                                            showMessages("Water Dealer Not Verified");
+                                        }
+                                        showMessages("Successfully logged-in as Water Dealer");
+                                    }
+                                    else if(userType.equals("Third Party Affiliate"))
+                                    {
+                                        String documentVerify = dataSnapshot.child("documentVerify").getValue().toString();
+                                        if(documentVerify.equals("none"))
+                                        {
+                                            showMessages("TPA Not Verified");
+                                        }
+                                        else if(documentVerify.equals("verified"))
+                                        {
+                                            showMessages("TPA Verified");
+                                        }
+                                        showMessages("Successfully logged-in as Third Affiliate");
+                                    }
+                                    else
+                                        {
+                                        showMessages("Failed to Login");
+                                        return;
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
                     }
-                }
             });
         }
     }
