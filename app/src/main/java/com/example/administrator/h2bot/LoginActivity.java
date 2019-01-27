@@ -50,19 +50,31 @@ public class LoginActivity extends AppCompatActivity {
         passwordType = (EditText) findViewById(R.id.passwordEditText);
         progressLoad = (ProgressBar) findViewById(R.id.progressBar1);
 
-        progressLoad.setVisibility(View.INVISIBLE);
+        progressLoad.setVisibility(View.VISIBLE);
+        findViewById(R.id.logInBtn).setVisibility(View.INVISIBLE);
 
         register = (TextView) findViewById(R.id.registerAccount);
         loginNow = (Button)findViewById(R.id.logInBtn);
+//        loginNow = new Button(getBaseContext());
+//        loginNow.setVisibility(View.INVISIBLE);
 
         mAuth = FirebaseAuth.getInstance();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                progressLoad.setVisibility(View.VISIBLE);
+                loginNow.setVisibility(View.INVISIBLE);
                 if(FirebaseAuth.getInstance().getCurrentUser() != null)
                 {
+                    progressLoad.setVisibility(View.INVISIBLE);
+                    loginNow.setVisibility(View.VISIBLE);
                     userTypeLogin();
+                }
+                else
+                {
+                    progressLoad.setVisibility(View.INVISIBLE);
+                    loginNow.setVisibility(View.VISIBLE);
                 }
             }
         };

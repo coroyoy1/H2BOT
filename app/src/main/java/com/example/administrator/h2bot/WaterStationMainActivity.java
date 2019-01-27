@@ -98,12 +98,12 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Product List");
                 showMessages("Product List");
                 break;
-            case R.id.nav_broadcast_ws:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
-                        new WSBroadcastFragment()).commit();
-                Objects.requireNonNull(getSupportActionBar()).setTitle("Broadcast");
-                showMessages("Broad cast");
-                break;
+//            case R.id.nav_broadcast_ws:
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
+//                        new WSBroadcastFragment()).commit();
+//                Objects.requireNonNull(getSupportActionBar()).setTitle("Broadcast");
+//                showMessages("Broad cast");
+//                break;
             case R.id.nav_accountsettings_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
                         new WSAccountSettingsFragment()).commit();
