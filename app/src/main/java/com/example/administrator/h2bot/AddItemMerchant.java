@@ -53,6 +53,7 @@ public class AddItemMerchant extends AppCompatActivity {
     private ProgressBar mProgressBar;
     String currentuser;
     Uri mImageUri;
+    private String imageUrl;
 
 
     private StorageReference mStorageRef;
@@ -155,17 +156,16 @@ public class AddItemMerchant extends AppCompatActivity {
                                     mProgressBar.setProgress(0);
                                 }
                             }, 500);
-
                             Toast.makeText(AddItemMerchant.this, "Upload successful" +currentuser, Toast.LENGTH_LONG).show();
                             WaterPeddlerGetterSetter upload = new WaterPeddlerGetterSetter(
-                                    taskSnapshot.getUploadSessionUri().toString(),
+                                    taskSnapshot.getMetadata().getPath(),
                                     ItemNameEditText.getText().toString().trim(),
                                    waterTypeSpinner.getSelectedItem().toString(),
                                     PriceEditText.getText().toString().trim(),
                                     QualityEditText.getText().toString().trim(),
                                     currentuser
                             );
-                            Picasso.get().load(R.drawable.ic_menu_camera);
+                            Picasso.get().load(R.drawable.ic_menu_camera).into(ItemImage);
                             ItemNameEditText.setText("");
                             PriceEditText.setText("");
                             QualityEditText.setText("");

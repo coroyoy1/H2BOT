@@ -108,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                         showMessages("Successfully logged-in");
                         finish();
                         //Temporary Output
-                        startActivity(new Intent(LoginActivity.this, CustomerMainActivity.class));
+                        startActivity(new Intent(LoginActivity.this, WaterPeddlerDocumentActivity.class));
                     }
                 }
             });

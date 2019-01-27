@@ -5,7 +5,7 @@
     android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WaterPeddlerHomeActivity">
+    tools:context=".WaterPeddlerDocumentActivity">
     <LinearLayout
         android:background="@android:color/white"
         android:orientation="vertical"

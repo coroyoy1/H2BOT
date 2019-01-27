@@ -5,7 +5,7 @@
     android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WaterPeddlerHomeActivity">
+    tools:context=".WaterPeddlerDocumentActivity">
     <LinearLayout
         android:background="@android:color/white"
         android:orientation="vertical"
@@ -79,7 +79,7 @@
                         android:textSize="18sp" />
 
                     <Button
-                        android:id="@+id/button20"
+                        android:id="@+id/chooseButton1"
                         android:layout_width="110dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -90,9 +90,10 @@
                         android:textColor="@android:color/background_light" />
 
                     <ImageView
-                        android:id="@+id/imageView49"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/driverLicenseImageView"
+                        android:layout_width="110dp"
                         android:layout_height="97dp"
+                        android:scaleType="fitXY"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginStart="47dp"
@@ -121,7 +122,7 @@
                         android:textSize="18sp" />
 
                     <Button
-                        android:id="@+id/button2"
+                        android:id="@+id/chooseButton2"
                         android:layout_width="110dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -132,8 +133,9 @@
                         android:textColor="@android:color/background_light" />
 
                     <ImageView
-                        android:id="@+id/imageView4"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/driverPlateNumberImageView"
+                        android:layout_width="110dp"
+                        android:scaleType="fitXY"
                         android:layout_height="97dp"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
@@ -162,7 +164,13 @@
                 android:background="@android:color/holo_blue_dark"
                 android:text="Submit"
                 android:textColor="@android:color/background_light" />
-
+            <android.support.v4.widget.ContentLoadingProgressBar
+                android:id="@+id/progress_bar"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true" />
         </RelativeLayout>
     </LinearLayout>
 
