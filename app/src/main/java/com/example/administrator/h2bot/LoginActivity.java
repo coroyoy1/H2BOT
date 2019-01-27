@@ -57,18 +57,15 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(FirebaseAuth.getInstance().getCurrentUser() != null)
+                {
 
-//        mAuthListener = new FirebaseAuth.AuthStateListener() {
-//            @Override
-//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-//                if(FirebaseAuth.getInstance().getCurrentUser() != null)
-//                {
-//                    finish();
-//                    Intent intent = new Intent(LoginActivity.this, CustomerMainActivity.class);
-//                    startActivity(intent);
-//                }
-//            }
-//        };
+                }
+            }
+        };
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,16 +80,16 @@ public class LoginActivity extends AppCompatActivity {
                 progressLoad.setVisibility(View.VISIBLE);
                 loginNow.setVisibility(View.INVISIBLE);
                 signInNow();
-//                mAuth.signOut();
+//
             }
         });
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        mAuth.addAuthStateListener(mAuthListener);
-//    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
 
     private void signInNow()
     {
@@ -111,6 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task)
                 {
+                    finish();
                     if(!task.isSuccessful())
                     {
                         progressLoad.setVisibility(View.INVISIBLE);
@@ -118,89 +116,95 @@ public class LoginActivity extends AppCompatActivity {
                         showMessages("Please check your internet connection or credentials.");
                     }
                     else {
-                        progressLoad.setVisibility(View.INVISIBLE);
-                        loginNow.setVisibility(View.VISIBLE);
-                            FirebaseUser userHERE = FirebaseAuth.getInstance().getCurrentUser();
-                            String RegisteredUserID = userHERE.getUid();
-                            refConnection = FirebaseDatabase.getInstance().getReference().child("Users").child(RegisteredUserID);
-                            refConnection.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    String userType = dataSnapshot.child("userType").getValue().toString();
-                                    if (userType.equals("Customer")) {
-                                        //Temporary Output
-                                        startActivity(new Intent(LoginActivity.this, CustomerMainActivity.class));
-                                        showMessages("Successfully logged-in as Customer");
-                                        finish();
-                                    }
-                                    else if(userType.equals("Station Owner")){
-                                        String documentVerify = dataSnapshot.child("documentVerify").getValue().toString();
-                                        if(documentVerify.equals("none"))
-                                        {
-                                            startActivity(new Intent(LoginActivity.this, WaterStationDocumentVersion2Activity.class));
-                                            finish();
-                                        }
-                                        else if(documentVerify.equals("verified"))
-                                        {
-                                            showMessages("Water Station Verified");
-                                        }
-                                        showMessages("Successfully logged-in as Station Owner");
-                                    }
-                                    else if(userType.equals("Delivery Man"))
-                                    {
-                                        String documentVerify = dataSnapshot.child("documentVerify").getValue().toString();
-                                        if(documentVerify.equals("none"))
-                                        {
-                                            showMessages("Delivery Man Not Verified");
-                                        }
-                                        else if(documentVerify.equals("verified"))
-                                        {
-                                            showMessages("Delivery Man Verified");
-                                        }
-                                        showMessages("Successfully logged-in as Delivery Man");
-                                    }
-                                    else if(userType.equals("Water Dealer"))
-                                    {
-                                        String documentVerify = dataSnapshot.child("documentVerify").getValue().toString();
-                                        if(documentVerify.equals("none"))
-                                        {
-                                            showMessages("Water Dealer Not Verified");
-                                        }
-                                        else if(documentVerify.equals("verified"))
-                                        {
-                                            showMessages("Water Dealer Not Verified");
-                                        }
-                                        showMessages("Successfully logged-in as Water Dealer");
-                                    }
-                                    else if(userType.equals("Third Party Affiliate"))
-                                    {
-                                        String documentVerify = dataSnapshot.child("documentVerify").getValue().toString();
-                                        if(documentVerify.equals("none"))
-                                        {
-                                            showMessages("TPA Not Verified");
-                                        }
-                                        else if(documentVerify.equals("verified"))
-                                        {
-                                            showMessages("TPA Verified");
-                                        }
-                                        showMessages("Successfully logged-in as Third Affiliate");
-                                    }
-                                    else
-                                        {
-                                        showMessages("Failed to Login");
-                                        return;
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
+                            progressLoad.setVisibility(View.INVISIBLE);
+                            loginNow.setVisibility(View.VISIBLE);
+                            userTypeLogin();
                         }
                     }
             });
         }
+    }
+
+    private void userTypeLogin()
+    {
+        FirebaseUser userHERE = FirebaseAuth.getInstance().getCurrentUser();
+        String RegisteredUserID = userHERE.getUid();
+        refConnection = FirebaseDatabase.getInstance().getReference().child("Users").child(RegisteredUserID);
+        refConnection.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String userType = dataSnapshot.child("userType").getValue().toString();
+                if (userType.equals("Customer")) {
+                    //Temporary Output
+                    startActivity(new Intent(LoginActivity.this, CustomerMainActivity.class));
+                    showMessages("Successfully logged-in as Customer");
+                    finish();
+                }
+                else if(userType.equals("Station Owner")){
+                    String documentVerify = dataSnapshot.child("status").getValue().toString();
+                    if(documentVerify.equals("inactive"))
+                    {
+                        startActivity(new Intent(LoginActivity.this, WaterStationDocumentVersion2Activity.class));
+                        finish();
+                    }
+                    else if(documentVerify.equals("active"))
+                    {
+                        startActivity(new Intent(LoginActivity.this, WaterStationMainActivity.class));
+                        finish();
+                    }
+                    showMessages("Successfully logged-in as Station Owner");
+                }
+                else if(userType.equals("Delivery Man"))
+                {
+                    String documentVerify = dataSnapshot.child("status").getValue().toString();
+                    if(documentVerify.equals("inactive"))
+                    {
+                        showMessages("Delivery Man Not Verified");
+                    }
+                    else if(documentVerify.equals("active"))
+                    {
+                        showMessages("Delivery Man Verified");
+                    }
+                    showMessages("Successfully logged-in as Delivery Man");
+                }
+                else if(userType.equals("Water Dealer"))
+                {
+                    String documentVerify = dataSnapshot.child("status").getValue().toString();
+                    if(documentVerify.equals("inactive"))
+                    {
+                        showMessages("Water Dealer Not Verified");
+                    }
+                    else if(documentVerify.equals("active"))
+                    {
+                        showMessages("Water Dealer Not Verified");
+                    }
+                    showMessages("Successfully logged-in as Water Dealer");
+                }
+                else if(userType.equals("Third Party Affiliate"))
+                {
+                    String documentVerify = dataSnapshot.child("status").getValue().toString();
+                    if(documentVerify.equals("inactive"))
+                    {
+                        showMessages("TPA Not Verified");
+                    }
+                    else if(documentVerify.equals("active"))
+                    {
+                        showMessages("TPA Verified");
+                    }
+                    showMessages("Successfully logged-in as Third Affiliate");
+                }
+                else
+                {
+                    showMessages("Failed to Login");
+                    return;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void showMessages(String s)
