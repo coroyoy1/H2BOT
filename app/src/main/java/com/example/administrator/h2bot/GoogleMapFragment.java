@@ -1,6 +1,7 @@
 package com.example.administrator.h2bot;
 
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
@@ -41,7 +43,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map1);
+        SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
@@ -51,8 +53,17 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
 
         LatLng pp = new LatLng(10.358060499999999, 123.9136566);
         MarkerOptions options = new MarkerOptions();
-        options.position(pp).title("Almira Gwapa Pero Naay Matag Tiki sa bilat");
-        map.addMarker(options);
-        map.moveCamera(CameraUpdateFactory.newLatLng(pp));
+        options.position(pp).title("Me");
+
+        map.addMarker(options).showInfoWindow();
+        float zoomLevel = 16.0f;
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(pp, zoomLevel));
+
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                return false;
+            }
+        });
     }
 }
