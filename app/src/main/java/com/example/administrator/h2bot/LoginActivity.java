@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(FirebaseAuth.getInstance().getCurrentUser() != null)
                 {
-
+                    userTypeLogin();
                 }
             }
         };

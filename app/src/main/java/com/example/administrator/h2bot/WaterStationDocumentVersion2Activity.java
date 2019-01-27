@@ -29,7 +29,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
 
     private static final int PICK_IMAGE_REQUEST = 1;
     ImageView image1, image2, image3, image4, image5, image6;
-    Button button1, button2, button3, button4, button5, button6, submitToFirebase;
+    Button button1, button2, button3, button4, button5, button6, buttonlogout, submitToFirebase;
 
     Boolean isClick1=false, isClick2=false, isClick3=false, isClick4=false, isClick5=false, isClick6=false;
     Intent intent;
@@ -63,6 +63,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         button4 = (Button)findViewById(R.id.permitButton4);
         button5 = (Button)findViewById(R.id.permitButton5);
         button6 = (Button)findViewById(R.id.permitButton6);
+        buttonlogout = (Button)findViewById(R.id.logoutButton);
         submitToFirebase = (Button)findViewById(R.id.submitButton);
 
         button1.setOnClickListener(this);
@@ -71,6 +72,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         button4.setOnClickListener(this);
         button5.setOnClickListener(this);
         button6.setOnClickListener(this);
+        buttonlogout.setOnClickListener(this);
         submitToFirebase.setOnClickListener(this);
     }
     @Override
@@ -332,6 +334,11 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                 break;
             case R.id.submitButton:
                 uploadImage();
+                break;
+            case R.id.logoutButton:
+                mAuth.signOut();
+                finish();
+                startActivity(new Intent(WaterStationDocumentVersion2Activity.this, LoginActivity.class));
                 break;
             default:
                 Toast.makeText(WaterStationDocumentVersion2Activity.this, "There is not such thing on app", Toast.LENGTH_SHORT).show();

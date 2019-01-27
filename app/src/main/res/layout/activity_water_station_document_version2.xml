@@ -238,7 +238,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
             <Button
                 android:id="@+id/submitButton"
                 android:layout_width="320dp"
@@ -246,6 +247,15 @@
                 android:text="Submit Document"
                 android:textColor="@android:color/white"
                 android:background="@android:color/holo_blue_dark"/>
+            <Button
+                android:layout_gravity="right"
+                android:layout_marginTop="8dp"
+                android:id="@+id/logoutButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Logout"
+                android:textColor="@android:color/white"
+                android:background="@android:color/darker_gray"/>
 
         </LinearLayout>
 
