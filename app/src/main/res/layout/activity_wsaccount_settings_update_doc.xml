@@ -4,25 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WaterStationDocumentVersion2Activity">
+    tools:context=".WSAccountSettingsUpdateDoc">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Submit Document"
-                android:textColor="@android:color/holo_blue_light"
-                android:textSize="18dp"
-                android:textStyle="bold"/>
-        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -40,14 +27,12 @@
                 android:textColor="@android:color/white"/>
 
             <ImageView
-                android:id="@+id/permit1"
                 android:layout_width="80dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="97dp"
                 android:layout_marginTop="0dp"
                 android:background="@drawable/ic_launcher_background" />
             <Button
-                android:id="@+id/permitButton1"
                 android:layout_marginTop="4dp"
                 android:layout_marginLeft="10dp"
                 android:layout_width="50dp"
@@ -70,14 +55,12 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/white"/>
             <ImageView
-                android:id="@+id/permit2"
                 android:layout_width="80dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="104dp"
                 android:layout_marginTop="0dp"
                 android:background="@drawable/ic_launcher_background"/>
             <Button
-                android:id="@+id/permitButton2"
                 android:layout_marginTop="4dp"
                 android:layout_marginLeft="10dp"
                 android:layout_width="50dp"
@@ -100,14 +83,12 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/white"/>
             <ImageView
-                android:id="@+id/permit3"
                 android:layout_width="80dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="110dp"
                 android:layout_marginTop="0dp"
                 android:background="@drawable/ic_launcher_background"/>
             <Button
-                android:id="@+id/permitButton3"
                 android:layout_marginTop="4dp"
                 android:layout_marginLeft="10dp"
                 android:layout_width="50dp"
@@ -130,14 +111,12 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/white"/>
             <ImageView
-                android:id="@+id/permit4"
                 android:layout_width="80dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="67dp"
                 android:layout_marginTop="0dp"
                 android:background="@drawable/ic_launcher_background"/>
             <Button
-                android:id="@+id/permitButton4"
                 android:layout_marginTop="4dp"
                 android:layout_marginLeft="10dp"
                 android:layout_width="50dp"
@@ -161,14 +140,12 @@
                 android:textColor="@android:color/white"/>
 
             <ImageView
-                android:id="@+id/permit5"
                 android:layout_width="80dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="0dp"
                 android:background="@drawable/ic_launcher_background" />
             <Button
-                android:id="@+id/permitButton5"
                 android:layout_marginTop="4dp"
                 android:layout_marginLeft="12dp"
                 android:layout_width="50dp"
@@ -191,14 +168,12 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/white"/>
             <ImageView
-                android:id="@+id/permit6"
                 android:layout_width="80dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="0dp"
                 android:background="@drawable/ic_launcher_background"/>
             <Button
-                android:id="@+id/permitButton6"
                 android:layout_marginTop="4dp"
                 android:layout_marginLeft="10dp"
                 android:layout_width="50dp"
@@ -238,24 +213,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
+            android:layout_marginTop="10dp">
             <Button
-                android:id="@+id/submitButton"
                 android:layout_width="320dp"
                 android:layout_height="50dp"
                 android:text="Submit Document"
                 android:textColor="@android:color/white"
                 android:background="@android:color/holo_blue_dark"/>
-            <Button
-                android:layout_gravity="right"
-                android:layout_marginTop="8dp"
-                android:id="@+id/logoutButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Logout"
-                android:textColor="@android:color/white"
-                android:background="@android:color/darker_gray"/>
 
         </LinearLayout>
 

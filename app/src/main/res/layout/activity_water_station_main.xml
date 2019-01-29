@@ -2,10 +2,10 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/customer_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CustomerMainActivity">
+    android:id="@+id/wsdrawer_layout"
+    tools:context=".WaterStationMainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,20 +13,24 @@
         android:orientation="vertical">
 
         <FrameLayout
-            android:id="@+id/fragment_container"
+            android:id="@+id/fragment_container_ws"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></FrameLayout>
+            android:layout_height="match_parent">
+
+        </FrameLayout>
 
     </LinearLayout>
 
     <android.support.design.widget.NavigationView
-        app:headerLayout="@layout/drawer_header"
-        android:id="@+id/nav_view"
+        android:id="@+id/nav_view_ws"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:itemIconTint="#000000"
         app:itemTextColor="#000000"
-        app:menu="@menu/customer_drawer_menu"></android.support.design.widget.NavigationView>
+        app:menu="@menu/waterstation_drawer">
+
+    </android.support.design.widget.NavigationView>
+
 
 </android.support.v4.widget.DrawerLayout>

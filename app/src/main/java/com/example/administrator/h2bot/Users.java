@@ -2,12 +2,12 @@ package com.example.administrator.h2bot;
 
 class Users
 {
-    String userType, fullname, email, age, address, contact, password, stationRelatedNo, documentVerify;
+    String userType, fullname, email, age, address, contact, password, stationRelatedNo, status;
     public Users()
     {
 
     }
-    public Users(String userType, String fullname, String email, String age, String address, String contact, String password, String stationRelatedNo, String documentVerify)
+    public Users(String userType, String fullname, String email, String age, String address, String contact, String password, String stationRelatedNo, String status)
     {
         this.userType = userType;
         this.fullname = fullname;
@@ -17,15 +17,15 @@ class Users
         this.contact = contact;
         this.password = password;
         this.stationRelatedNo = stationRelatedNo;
-        this.documentVerify = documentVerify;
+        this.status = status;
     }
 
     public String getStationRelatedNo() {
         return stationRelatedNo;
     }
 
-    public String getDocumentVerify() {
-        return documentVerify;
+    public String getStatus() {
+        return status;
     }
 
     public String getUserType() {
