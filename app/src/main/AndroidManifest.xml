@@ -75,7 +75,7 @@
             android:label="@string/title_activity_google_map" />
         <activity
             android:name=".WaterStationMainActivity"
-            android:theme="@style/Theme.Design.Light"></activity>
+            android:theme="@style/Theme.Design.Light" />
         <activity
             android:name=".WSAccountSettingsUpdateDoc"
             android:label="Update Document"
@@ -94,6 +94,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.administrator.h2bot.WaterStationMainActivity" />
         </activity>
+        <activity android:name=".TPAffiliateMainActivity"></activity>
     </application>
 
 </manifest>
