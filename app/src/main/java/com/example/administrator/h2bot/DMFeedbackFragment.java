@@ -8,10 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class WSAddItemFragment extends Fragment {
+public class DMFeedbackFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_ws_additem, container, false);
+        return inflater.inflate(R.layout.fragment_dm_feedback, container, false);
     }
 }

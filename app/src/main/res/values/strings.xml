@@ -32,6 +32,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="navigation_wsdrawer_open">Open navigation drawer</string>
     <string name="navigation_wsdrawer_close">Close navigation drawer</string>
+    <string name="navigation_dmdrawer_open">Open navigation drawer</string>
+    <string name="navigation_dmdrawer_close">Close navigation drawer</string>
     <string name="title_activity_wsaccount_settings_update_doc">WSAccountSettingsUpdateDoc</string>
     <string name="title_activity_wsaccount_settings_update_acc">WSAccountSettingsUpdateAcc</string>
 

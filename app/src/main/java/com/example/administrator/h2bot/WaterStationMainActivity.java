@@ -1,7 +1,6 @@
 package com.example.administrator.h2bot;
 
 import android.content.Intent;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -10,7 +9,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.app.Fragment;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -88,9 +86,9 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                 break;
             case R.id.nav_additem_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
-                        new WSAddItemFragment()).commit();
-                Objects.requireNonNull(getSupportActionBar()).setTitle("Add Item");
-                showMessages("Add Item");
+                        new WSBusinessInfoFragment()).commit();
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Business Information");
+                showMessages("Business Info");
                 break;
             case R.id.nav_productlist_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
@@ -99,11 +97,11 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                 showMessages("Product List");
                 break;
 //            case R.id.nav_broadcast_ws:
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
-//                        new WSBroadcastFragment()).commit();
-//                Objects.requireNonNull(getSupportActionBar()).setTitle("Broadcast");
-//                showMessages("Broad cast");
-//                break;
+////                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
+////                        new WSBroadcastFragment()).commit();
+////                Objects.requireNonNull(getSupportActionBar()).setTitle("Broadcast");
+////                showMessages("Broad cast");
+////                break;
             case R.id.nav_accountsettings_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
                         new WSAccountSettingsFragment()).commit();

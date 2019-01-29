@@ -170,7 +170,8 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     else if(documentVerify.equals("active"))
                     {
-                        showMessages("Delivery Man Verified");
+                        finish();
+                        startActivity(new Intent(LoginActivity.this, DeliveryManMainActivity.class));
                     }
                     showMessages("Successfully logged-in as Delivery Man");
                 }

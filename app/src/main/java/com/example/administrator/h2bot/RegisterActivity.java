@@ -1,5 +1,6 @@
 package com.example.administrator.h2bot;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -53,6 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
     Spinner spinnerRegister;
     EditText fullNameRegister, ageRegister, addressRegister, contactRegister, emailRegister, passwordRegister;
     ProgressBar loadingProgressBar;
+    ProgressDialog progressDialog;
 
     private FirebaseAuth mAuth;
 
@@ -72,6 +74,12 @@ public class RegisterActivity extends AppCompatActivity {
 
         loadingProgressBar = (ProgressBar) findViewById(R.id.progressBar1);
         spinnerRegister = (Spinner)findViewById(R.id.RegisterSpinner);
+
+        progressDialog = new ProgressDialog(RegisterActivity.this);
+        progressDialog.setMessage("Loading...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setProgress(0);
 
         loadingProgressBar.setVisibility(View.INVISIBLE);
 
@@ -93,8 +101,10 @@ public class RegisterActivity extends AppCompatActivity {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                signUp.setVisibility(View.INVISIBLE);
+                if(!(RegisterActivity.this).isFinishing())
+                {
+                    progressDialog.show();
+                }
                 String spinnerString = spinnerRegister.getSelectedItem().toString();
                 String fullnameString = fullNameRegister.getText().toString();
                 String ageString = ageRegister.getText().toString();
@@ -106,8 +116,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if(passwordString.isEmpty() || fullnameString.isEmpty() || ageString.isEmpty() || addressString.isEmpty() || contactString.isEmpty() || emailString.isEmpty())
                 {
                     showMessage("Some fields are missing");
-                    signUp.setVisibility(View.VISIBLE);
-                    loadingProgressBar.setVisibility(View.INVISIBLE);
+                    progressDialog.dismiss();
                 }
                 else
                 {
@@ -115,6 +124,14 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 
     private void verificationOfUserType()
@@ -132,7 +149,7 @@ public class RegisterActivity extends AppCompatActivity {
                             String userType = spinnerRegister.getSelectedItem().toString();
                             if(userType.equals("Customer"))
                             {
-                                Users user = new Users(spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, "none", "inactive");
+                                Users user = new Users(spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, "none", "active");
                                 FirebaseDatabase.getInstance().getReference("Users")
                                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                         .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -231,15 +248,13 @@ public class RegisterActivity extends AppCompatActivity {
                             else
                             {
                                 showMessage("No available users");
-                                signUp.setVisibility(View.VISIBLE);
-                                loadingProgressBar.setVisibility(View.INVISIBLE);
+                                progressDialog.dismiss();
                             }
                         }
                         else
                         {
                             showMessage("Failed to register" + task.getException().getMessage());
-                            signUp.setVisibility(View.VISIBLE);
-                            loadingProgressBar.setVisibility(View.INVISIBLE);
+                            progressDialog.dismiss();
                         }
                     }
                 });
@@ -266,8 +281,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         if(task.isSuccessful())
                                         {
                                             passToNextActivity();
-                                            signUp.setVisibility(View.VISIBLE);
-                                            loadingProgressBar.setVisibility(View.INVISIBLE);
+                                            progressDialog.dismiss();
                                         }
                                     }
                                 });
