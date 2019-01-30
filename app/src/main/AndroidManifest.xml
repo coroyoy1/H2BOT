@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -24,6 +23,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".WaterPeddlerHomeActivity"
+            android:theme="@style/Theme.Design.Light"></activity>
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,6 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".OrderDetailsConfirmOrDecline"></activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".WaterPeddlerDocumentActivity" />
         <activity android:name=".WaterStationHomeActivity" />
@@ -40,7 +42,6 @@
             android:name=".WaterStationDocumentActivity"
             android:label="@string/title_activity_water_station_document"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".AddItemMerchant" />
         <activity android:name=".AccountSettingsStationAndDMActivity" />
         <activity android:name=".AccountSettingsStationAndDMAccountActivity" />
         <activity android:name=".AccountSettingsStationAndDMAccountNextActivity" />

@@ -79,7 +79,7 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
                 break;
 
             case R.id.my_order:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new OrdersFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AddItemMerchant()).commit();
                 Toast.makeText(this, "Orders", Toast.LENGTH_SHORT).show();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("My Orders");
                 break;

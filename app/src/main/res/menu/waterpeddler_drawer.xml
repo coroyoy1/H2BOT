@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view_wp">
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_pending_orders_wp"
+            android:icon="@drawable/ic_transactions"
+            android:title="Pending Orders"
+            />
+        <item android:id="@+id/nav_transactions_wp"
+            android:icon="@drawable/ic_transactions"
+            android:title="Transactions"
+            />
+        <item android:id="@+id/nav_inprogress_wp"
+            android:icon="@drawable/ic_inprogress"
+            android:title="In-Progress"
+            />
+        <item android:id="@+id/nav_salesreport_wp"
+            android:icon="@drawable/ic_dailyrecords"
+            android:title="Sales Report"
+            />
+        <item android:id="@+id/nav_businessinfo_wp"
+            android:icon="@drawable/ic_additem"
+            android:title="Business Info"
+            />
+        <item android:id="@+id/nav_productlist_wp"
+            android:icon="@drawable/ic_list"
+            android:title="Product List"
+            />
+        <item android:title="Personal Information">
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item android:id="@+id/nav_accountsettings_wp"
+                        android:icon="@drawable/ic_accountsettings"
+                        android:title="Account Settings"
+                        />
+                    <item android:id="@+id/nav_rate_wp"
+                        android:icon="@drawable/ic_feedback"
+                        android:title="Rate"
+                        />
+                    <item android:id="@+id/nav_logout_wp"
+                        android:icon="@drawable/ic_logout"
+                        android:title="Logout"
+                        />
+                </group>
+            </menu>
+        </item>
+    </group>
+</menu>
