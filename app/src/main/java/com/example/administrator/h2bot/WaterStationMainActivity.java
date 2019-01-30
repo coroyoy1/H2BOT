@@ -80,7 +80,7 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                 break;
             case R.id.nav_dailyrecords_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
-                        new WSDailyRecordsFragment()).commit();
+                        new WSSalesReportsFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Daily Records");
                 showMessages("Daily Records");
                 break;
@@ -101,6 +101,11 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                         new WSPendingOrdersFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Pending Orders");
                 showMessages("Pending Orders");
+            case R.id.nav_map_ws:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
+                        new WSMapFragment()).commit();
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
+                showMessages("Map");
                 break;
             case R.id.nav_accountsettings_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,

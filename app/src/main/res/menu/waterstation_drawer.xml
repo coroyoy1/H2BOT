@@ -4,6 +4,10 @@
     tools:showIn="navigation_view_ws">
 
     <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_map_ws"
+            android:icon="@drawable/ic_map_black_24dp"
+            android:title="Map"
+            />
         <item android:id="@+id/nav_transactions_ws"
                 android:icon="@drawable/ic_transactions"
                 android:title="Transactions"
@@ -18,7 +22,7 @@
             />
         <item android:id="@+id/nav_dailyrecords_ws"
             android:icon="@drawable/ic_dailyrecords"
-            android:title="Daily Records"
+            android:title="Sales Reports"
             />
         <item android:id="@+id/nav_additem_ws"
             android:icon="@drawable/ic_additem"

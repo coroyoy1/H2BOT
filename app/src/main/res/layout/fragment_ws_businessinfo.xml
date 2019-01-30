@@ -4,117 +4,147 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="252dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true">
-
-        <TextView
-            android:id="@+id/textView13"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:id="@+id/relative1"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="21dp"
-            android:text="Add Item"
-            android:textColor="@android:color/holo_blue_dark"
-            android:textSize="18sp" />
-
-        <ImageView
-            android:id="@+id/ItemImage"
-            android:layout_width="193dp"
-            android:layout_height="137dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="42dp"
-            android:src="@mipmap/ic_launcher" />
-
-        <Button
-            android:id="@+id/UploadAPhotoButton"
-            android:layout_width="143dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="86dp"
-            android:layout_marginEnd="19dp"
-            android:background="@android:color/holo_blue_dark"
-            android:text="Upload a Photo"
-            android:textColor="@android:color/white" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="313dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
-
-        <EditText
-            android:id="@+id/ItemNameEditText"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="18dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="Item Name" />
-
-        <Spinner
-            android:id="@+id/waterTypeSpinner"
-            android:layout_width="300dp"
-            android:layout_height="48dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="73dp" />
-
-        <TextView
-            android:id="@+id/textView14"
-            android:layout_width="28dp"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/ItemNameEditText"
-            android:layout_centerVertical="true"
-            android:text="₱"
-            android:textColor="@android:color/black"
-            android:textSize="30sp" />
-
-        <EditText
-            android:id="@+id/PriceEditText"
-            android:layout_width="249dp"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/ItemNameEditText"
-            android:layout_centerVertical="true"
-            android:ems="10"
-            android:hint="Price"
-            android:inputType="textPersonName" />
-
-        <EditText
-            android:id="@+id/QualityEditText"
-            android:layout_width="298dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="75dp"
-            android:ems="10"
-            android:hint="Quantity"
-            android:inputType="textPersonName" />
-
-        <Button
-            android:id="@+id/AddItemButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
-            android:background="@android:color/holo_blue_dark"
-            android:text="Add Item"
-            android:textColor="@android:color/white" />
-
-        <android.support.v4.widget.ContentLoadingProgressBar
-            android:id="@+id/progress_bar"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
+            android:foregroundGravity="center"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="27dp"
+            android:padding="30dp"
+            android:background="#32918b88">
+
+            <TextView
+                android:id="@+id/textView21"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="13dp"
+                android:text="Order Details"
+                android:textColor="@android:color/holo_blue_dark"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textView38"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="49dp"
+                android:paddingBottom="10dp"
+                android:text="Name:  "
+                android:textColor="@android:color/black"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/textview1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:text="Address:  "
+                android:layout_below="@+id/textView38"
+                android:layout_alignStart="@+id/textView38"
+                android:textColor="@android:color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:id="@+id/textview2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:text="Business Hours:    "
+                android:layout_below="@+id/textview1"
+                android:layout_alignStart="@+id/textView38"
+                android:textColor="@android:color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:id="@+id/textview3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:text="Plate Number:  "
+                android:layout_below="@+id/textview2"
+                android:layout_alignStart="@+id/textView38"
+                android:textColor="@android:color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/textview4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:text="Delivery Fee:  "
+                android:layout_below="@+id/textview3"
+                android:layout_alignStart="@+id/textView38"
+                android:textColor="@android:color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="None"
+                android:textSize="17sp"
+                android:layout_toEndOf="@+id/textview2"
+                android:layout_alignTop="@+id/textView38"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="None"
+                android:textSize="17sp"
+                android:layout_toEndOf="@+id/textview2"
+                android:layout_alignTop="@+id/textview1"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="None"
+                android:textSize="17sp"
+                android:layout_toEndOf="@+id/textview2"
+                android:layout_alignTop="@+id/textview2"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="None"
+                android:textSize="17sp"
+                android:layout_toEndOf="@+id/textview2"
+                android:layout_alignTop="@+id/textview3"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="None"
+                android:textSize="17sp"
+                android:layout_toEndOf="@+id/textview2"
+                android:layout_alignTop="@+id/textview4"
+                />
+
+        </RelativeLayout>
+
+        <Button
+            android:onClick="ShowPopUpAccountSettingUpdateWP"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true" />
-    </RelativeLayout>
+            android:layout_marginBottom="60dp"
+            android:background="#0097e6"
+            android:textColor="@android:color/white"
+            android:text="Update" />
 
+    </RelativeLayout>
 </RelativeLayout>
