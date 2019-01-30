@@ -19,7 +19,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
-                android:text="No."
+                android:text="Transaction No."
                 android:textColor="@android:color/white"
                 android:textSize="18dp" />
 
@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="Transactions No."
+                android:text="Status"
                 android:textColor="@android:color/white"
                 android:textSize="18dp" />
 
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="Details"
+                android:text="Date"
                 android:textColor="@android:color/white"
                 android:textSize="18dp" />
 

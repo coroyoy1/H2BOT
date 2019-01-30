@@ -334,6 +334,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                 break;
             case R.id.submitButton:
                 uploadImage();
+//                passToNextAct();
                 break;
             case R.id.logoutButton:
                 mAuth.signOut();
@@ -344,5 +345,10 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                 Toast.makeText(WaterStationDocumentVersion2Activity.this, "There is not such thing on app", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+    public void passToNextAct()
+    {
+        Intent passIntent = new Intent(WaterStationDocumentVersion2Activity.this, WSAccessVerification.class);
+        startActivity(passIntent);
     }
 }

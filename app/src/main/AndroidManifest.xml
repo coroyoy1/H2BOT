@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -24,6 +23,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".WSAccessVerification"></activity>
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -95,8 +95,9 @@
                 android:value="com.example.administrator.h2bot.WaterStationMainActivity" />
         </activity>
         <activity android:name=".TPAffiliateMainActivity" />
-        <activity android:name=".DeliveryManMainActivity"
-            android:theme="@style/Theme.Design.Light"/>
+        <activity
+            android:name=".DeliveryManMainActivity"
+            android:theme="@style/Theme.Design.Light" />
     </application>
 
 </manifest>

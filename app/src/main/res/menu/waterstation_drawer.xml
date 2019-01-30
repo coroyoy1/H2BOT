@@ -8,6 +8,10 @@
                 android:icon="@drawable/ic_transactions"
                 android:title="Transactions"
             />
+        <item android:id="@+id/nav_pendingorders_ws"
+            android:icon="@drawable/ic_pendingorders"
+            android:title="Pending Orders"
+            />
         <item android:id="@+id/nav_inprogress_ws"
             android:icon="@drawable/ic_inprogress"
             android:title="In-Progress"
