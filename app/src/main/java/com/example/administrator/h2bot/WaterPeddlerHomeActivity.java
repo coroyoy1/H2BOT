@@ -1,5 +1,6 @@
 package com.example.administrator.h2bot;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -9,6 +10,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,6 +22,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     FirebaseAuth mAuth;
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +30,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
         setContentView(R.layout.activity_water_peddler_home);
 
         mAuth = FirebaseAuth.getInstance();
-
+        dialog = new Dialog(this);
         drawerLayout = findViewById(R.id.wpdrawer_layout);
         drawerLayout.closeDrawers();
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_wsdrawer_open, R.string.navigation_wsdrawer_close);
@@ -39,8 +43,9 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
 
         if(savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp,
-                    new WPPendingOrdersFragment()).commit();
-            Objects.requireNonNull(getSupportActionBar()).setTitle("Pending Orders");
+                    new GoogleMapFragment()).commit();
+            Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
+            showMessages("Map");
         }
     }
     @Override
@@ -65,6 +70,12 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch(menuItem.getItemId())
         {
+            case R.id.nav_map_wp:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp,
+                        new GoogleMapFragment()).commit();
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
+                showMessages("Map");
+                break;
             case R.id.nav_pending_orders_wp:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp,
                         new WPPendingOrdersFragment()).commit();
@@ -103,16 +114,16 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
                 break;
             case R.id.nav_accountsettings_wp:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp,
-                        new WSAccountSettingsFragment()).commit();
+                        new AccountSettingFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Account Settings");
                 showMessages("Account Settings");
                 break;
             case R.id.nav_rate_wp:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp,
-                        new WSFeedbackFragment()).commit();
-                Objects.requireNonNull(getSupportActionBar()).setTitle("Rate");
-                showMessages("Rate");
+                final Dialog dialog = new Dialog(this);
+                dialog.setContentView(R.layout.feedback_popup);
+                dialog.show();
                 break;
+
             case R.id.nav_logout_wp:
                 mAuth.signOut();
                 finish();
@@ -129,5 +140,27 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
     public void showMessages(String message)
     {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    public void ShowPopUpAccountSettingUpdateWP(View view) {
+        Button cancelBtn;
+        Button saveChangesBtn;
+        dialog.setContentView(R.layout.business_info_popup_update);
+        cancelBtn = dialog.findViewById(R.id.cancelButton);
+        saveChangesBtn = dialog.findViewById(R.id.saveButton);
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        saveChangesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(WaterPeddlerHomeActivity.this, "Temporary", Toast.LENGTH_SHORT).show();
+            }
+        });
+        dialog.show();
     }
 }

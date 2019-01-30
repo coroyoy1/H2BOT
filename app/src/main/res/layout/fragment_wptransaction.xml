@@ -13,31 +13,31 @@
         <LinearLayout
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:background="@android:color/holo_blue_dark">
             <TextView
                 android:layout_weight="1"
                 android:textColor="@android:color/white"
                 android:gravity="center"
-                android:textSize="18dp"
+                android:textSize="15dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Order No."/>
+                android:layout_height="match_parent"
+                android:text="Transactions No."/>
             <TextView
                 android:layout_weight="1"
                 android:gravity="center"
                 android:textColor="@android:color/white"
-                android:textSize="18dp"
+                android:textSize="15dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="Status"/>
             <TextView
                 android:textColor="@android:color/white"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textSize="18dp"
+                android:textSize="15dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="Details"/>
         </LinearLayout>
         <LinearLayout

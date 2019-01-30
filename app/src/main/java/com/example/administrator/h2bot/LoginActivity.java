@@ -180,11 +180,13 @@ public class LoginActivity extends AppCompatActivity {
                     String documentVerify = dataSnapshot.child("status").getValue().toString();
                     if(documentVerify.equals("inactive"))
                     {
+                        startActivity(new Intent(LoginActivity.this, WaterPeddlerDocumentActivity.class));
                         showMessages("Water Dealer Not Verified");
                     }
                     else if(documentVerify.equals("active"))
                     {
-                        showMessages("Water Dealer Not Verified");
+                        startActivity(new Intent(LoginActivity.this, WaterPeddlerHomeActivity.class));
+                        showMessages("Water Dealer Verified");
                     }
                     showMessages("Successfully logged-in as Water Dealer");
                 }

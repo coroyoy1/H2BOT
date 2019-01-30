@@ -136,7 +136,7 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         Button cancelBtn;
         Button saveChangesBtn;
         dialog.setContentView(R.layout.account_settings_popup);
-        cancelBtn = dialog.findViewById(R.id.cancelBtn);
+        cancelBtn = dialog.findViewById(R.id.saveButton);
         saveChangesBtn = dialog.findViewById(R.id.saveChangesBtn);
 
         cancelBtn.setOnClickListener(new View.OnClickListener() {
