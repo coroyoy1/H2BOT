@@ -92,11 +92,11 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
 
             case R.id.feedback:
                 final Dialog dialog = new Dialog(this);
-                dialog.setContentView(R.layout.feedback_popup);
+                dialog.setContentView(R.layout.ratings_popup);
                 dialog.show();
                 break;
 
-            case R.id.receipts:
+            case R.id.transactions:
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Receipts");
                 break;
         }

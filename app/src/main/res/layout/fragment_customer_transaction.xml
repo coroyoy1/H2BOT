@@ -42,7 +42,7 @@
         android:layout_height="50dp"
         android:background="#FFFFFF"
         android:gravity="center"
-        android:onClick="ViewOrderInfo"
+        android:onClick="ViewTransactionInfo"
         android:layout_marginBottom="1dp"
         android:orientation="horizontal">
 
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textAlignment="center"
-            android:text="Pending"
+            android:text="Delivered"
             android:textStyle="italic"
             android:textColor="#000000"
             android:textSize="12dp"/>
@@ -101,7 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textAlignment="center"
-            android:text="Pending"
+            android:text="Delivered"
             android:textStyle="italic"
             android:textColor="#000000"
             android:textSize="12dp"/>
