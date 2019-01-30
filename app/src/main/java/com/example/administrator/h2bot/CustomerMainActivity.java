@@ -3,6 +3,7 @@ package com.example.administrator.h2bot;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -32,6 +33,7 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private FirebaseAuth mAuth;
     Dialog dialog;
+    ProgressDialog progressDialog;
     private static final int ERROR_DIALOG_REQUEST = 9001;
     private static final String TAG = "CustomerMainActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -46,7 +48,12 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         setContentView(R.layout.activity_customer_main);
 
         dialog = new Dialog(this);
-
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+        progressDialog.setProgress(0);
         drawerLayout = findViewById(R.id.customer_drawer);
         drawerLayout.closeDrawers();
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
@@ -96,9 +103,16 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         if (menuItem.getItemId() == R.id.logout) {
             logout();
         }
-
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 
     @Override

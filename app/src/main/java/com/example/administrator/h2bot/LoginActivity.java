@@ -1,6 +1,10 @@
 package com.example.administrator.h2bot;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,13 +31,11 @@ public class LoginActivity extends AppCompatActivity {
     TextView register;
     EditText emailAddress, passwordType;
     Button loginNow;
-    ProgressBar progressLoad;
-
+    ProgressDialog progressDialog;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase databaseConnection;
     private DatabaseReference refConnection;
-
     FirebaseUser currentUser;
 
 
@@ -44,37 +46,27 @@ public class LoginActivity extends AppCompatActivity {
 
         databaseConnection = FirebaseDatabase.getInstance();
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setProgress(0);
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        emailAddress = (EditText) findViewById(R.id.usernameEditText);
-        passwordType = (EditText) findViewById(R.id.passwordEditText);
-        progressLoad = (ProgressBar) findViewById(R.id.progressBar1);
-
-        progressLoad.setVisibility(View.VISIBLE);
-        findViewById(R.id.logInBtn).setVisibility(View.INVISIBLE);
-
-        register = (TextView) findViewById(R.id.registerAccount);
-        loginNow = (Button)findViewById(R.id.logInBtn);
-//        loginNow = new Button(getBaseContext());
-//        loginNow.setVisibility(View.INVISIBLE);
-
+        emailAddress = findViewById(R.id.usernameEditText);
+        passwordType = findViewById(R.id.passwordEditText);
+        register = findViewById(R.id.registerAccount);
+        loginNow = findViewById(R.id.logInBtn);
         mAuth = FirebaseAuth.getInstance();
-
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                progressLoad.setVisibility(View.VISIBLE);
-                loginNow.setVisibility(View.INVISIBLE);
                 if(FirebaseAuth.getInstance().getCurrentUser() != null)
                 {
-                    progressLoad.setVisibility(View.INVISIBLE);
-                    loginNow.setVisibility(View.VISIBLE);
+                    if(!(LoginActivity.this).isFinishing())
+                    {
+                        progressDialog.show();
+                    }
                     userTypeLogin();
-                }
-                else
-                {
-                    progressLoad.setVisibility(View.INVISIBLE);
-                    loginNow.setVisibility(View.VISIBLE);
                 }
             }
         };
@@ -89,12 +81,21 @@ public class LoginActivity extends AppCompatActivity {
         loginNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressLoad.setVisibility(View.VISIBLE);
-                loginNow.setVisibility(View.INVISIBLE);
+                if(!(LoginActivity.this).isFinishing())
+                {
+                    progressDialog.show();
+                }
                 signInNow();
-//
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 
     @Override
@@ -110,8 +111,6 @@ public class LoginActivity extends AppCompatActivity {
 
         if(email.isEmpty() || password.isEmpty())
         {
-            progressLoad.setVisibility(View.INVISIBLE);
-            loginNow.setVisibility(View.VISIBLE);
             showMessages("Please check your email address or password.");
         }
         else
@@ -123,13 +122,9 @@ public class LoginActivity extends AppCompatActivity {
                     finish();
                     if(!task.isSuccessful())
                     {
-                        progressLoad.setVisibility(View.INVISIBLE);
-                        loginNow.setVisibility(View.VISIBLE);
                         showMessages("Please check your internet connection or credentials.");
                     }
                     else {
-                            progressLoad.setVisibility(View.INVISIBLE);
-                            loginNow.setVisibility(View.VISIBLE);
                             userTypeLogin();
                         }
                     }
@@ -175,7 +170,8 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     else if(documentVerify.equals("active"))
                     {
-                        showMessages("Delivery Man Verified");
+                        finish();
+                        startActivity(new Intent(LoginActivity.this, DeliveryManMainActivity.class));
                     }
                     showMessages("Successfully logged-in as Delivery Man");
                 }
@@ -197,13 +193,14 @@ public class LoginActivity extends AppCompatActivity {
                     String documentVerify = dataSnapshot.child("status").getValue().toString();
                     if(documentVerify.equals("inactive"))
                     {
-                        showMessages("TPA Not Verified");
+                        showMessages("Your registration is still on process. Please wait for the confirmation that will be sent through SMS.");
                     }
                     else if(documentVerify.equals("active"))
                     {
-                        showMessages("TPA Verified");
+                        startActivity(new Intent(LoginActivity.this, TPAffiliateMainActivity.class));
+                        showMessages("Successfully logged-in as Third Party Affiliate");
+                        finish();
                     }
-                    showMessages("Successfully logged-in as Third Affiliate");
                 }
                 else
                 {

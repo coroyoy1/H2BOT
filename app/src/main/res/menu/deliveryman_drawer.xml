@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_transactions_dm"
+            android:icon="@drawable/ic_transactions"
+            android:title="Transactions"
+            />
+        <item android:id="@+id/nav_inprogress_dm"
+            android:icon="@drawable/ic_inprogress"
+            android:title="In-Progress"
+            />
+        <!--<item android:id="@+id/nav_broadcast_ws"-->
+        <!--android:icon="@drawable/ic_broadcast"-->
+        <!--android:title="Broad Cast"-->
+        <!--/>-->
+        <item android:title="Personal Information">
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item android:id="@+id/nav_accountsettings_dm"
+                        android:icon="@drawable/ic_accountsettings"
+                        android:title="Account Settings"
+                        />
+                    <item android:id="@+id/nav_feedback_dm"
+                        android:icon="@drawable/ic_feedback"
+                        android:title="Feedback"
+                        />
+                    <item android:id="@+id/nav_logout_dm"
+                        android:icon="@drawable/ic_logout"
+                        android:title="Logout"
+                        />
+                </group>
+            </menu>
+        </item>
+    </group>
+
+</menu>
