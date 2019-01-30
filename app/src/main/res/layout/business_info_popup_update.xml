@@ -4,47 +4,42 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="5dp">
 
     <EditText
-        android:id="@+id/RegisterFullName"
+        android:id="@+id/WPFullName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Full Name"
         android:inputType="text" />
 
     <EditText
-        android:id="@+id/RegisterAge"
+        android:id="@+id/WPAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Address"
-        android:inputType="number" />
+        android:inputType="text" />
 
     <EditText
-        android:id="@+id/RegisterAddress"
+        android:id="@+id/WPBussinesHours"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Address" />
+        android:hint="Business Hours" />
 
     <EditText
-        android:id="@+id/RegisterContact"
+        android:id="@+id/WPPlateNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/contact_number" />
+        android:hint="Plate Number" />
 
     <EditText
-        android:id="@+id/RegisterEmailAddress"
+        android:id="@+id/WPDeliveryFee"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/email_address"
+        android:hint="Delivery Fee"
         android:inputType="textEmailAddress" />
 
-    <EditText
-        android:id="@+id/RegisterPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword" />
+
 
 
     <LinearLayout
@@ -53,7 +48,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/saveChangesBtn"
+            android:id="@+id/saveButton"
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,7 +61,7 @@
             android:textSize="15sp" />
 
         <Button
-            android:id="@+id/cancelBtn"
+            android:id="@+id/cancelButton"
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

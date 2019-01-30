@@ -1,170 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/wpdrawer_layout"
     tools:context=".WaterPeddlerHomeActivity">
-    <LinearLayout
-        android:background="@android:color/white"
-        android:orientation="vertical"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content">
-
-    </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <RelativeLayout
+        <FrameLayout
+            android:id="@+id/fragment_container_wp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/TextView11"
-                android:layout_width="166dp"
-                android:layout_height="36dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="35dp"
-                android:gravity="center"
-                android:text="Submit Document"
-                android:textColor="@android:color/holo_blue_dark" />
+        </FrameLayout>
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="82dp"
-                android:text="Pending"
-                android:textColor="@android:color/holo_orange_light"
-                android:textSize="18sp" />
-
-
-            <RelativeLayout
-                android:id="@+id/LayoutForSubmittion"
-                android:layout_width="match_parent"
-                android:layout_height="381dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginBottom="70dp">
-
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="140dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginTop="0dp"
-                    android:background="#32918b88">
-
-                    <TextView
-                        android:id="@+id/textView5"
-                        android:layout_width="154dp"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginStart="26dp"
-                        android:gravity="center"
-                        android:text="Driver's License"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
-
-                    <Button
-                        android:id="@+id/button20"
-                        android:layout_width="110dp"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="34dp"
-                        android:background="@android:color/holo_blue_dark"
-                        android:text="Choose image"
-                        android:textColor="@android:color/background_light" />
-
-                    <ImageView
-                        android:id="@+id/imageView49"
-                        android:layout_width="wrap_content"
-                        android:layout_height="97dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginStart="47dp"
-                        android:layout_marginTop="5dp"
-                        app:srcCompat="@drawable/ic_launcher_background" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="140dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginBottom="86dp"
-                    android:background="#32918b88">
-
-                    <TextView
-                        android:id="@+id/textView20"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginStart="17dp"
-                        android:gravity="center"
-                        android:text="Driver's Plate Number"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
-
-                    <Button
-                        android:id="@+id/button2"
-                        android:layout_width="110dp"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="34dp"
-                        android:background="@android:color/holo_blue_dark"
-                        android:text="Choose image"
-                        android:textColor="@android:color/background_light" />
-
-                    <ImageView
-                        android:id="@+id/imageView4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="97dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginStart="47dp"
-                        android:layout_marginTop="5dp"
-                        app:srcCompat="@drawable/ic_launcher_background" />
-                </RelativeLayout>
-
-                <TextView
-                    android:id="@+id/textView8"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginBottom="16dp"
-                    android:text="Note: Before you proceed, you must submit the necessary requirements and wait for the administrator's approval. Once the submittion is approved, you may proceed." />
-            </RelativeLayout>
-
-            <Button
-                android:id="@+id/SubmitButtonWaterPeddlerHomeActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="12dp"
-                android:background="@android:color/holo_blue_dark"
-                android:text="Submit"
-                android:textColor="@android:color/background_light" />
-
-        </RelativeLayout>
     </LinearLayout>
 
-
-</RelativeLayout>
+    <android.support.design.widget.NavigationView
+        app:headerLayout="@layout/drawer_header"
+        android:id="@+id/nav_view_wp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:itemIconTint="#000000"
+        app:itemTextColor="#000000"
+        app:menu="@menu/waterpeddler_drawer"></android.support.design.widget.NavigationView>
+</android.support.v4.widget.DrawerLayout>

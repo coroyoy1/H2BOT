@@ -1,6 +1,7 @@
 package com.example.administrator.h2bot;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -11,12 +12,21 @@ import android.os.Build;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -41,9 +51,13 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Objects;
 import java.util.UUID;
 
-public class AddItemMerchant extends AppCompatActivity {
+import static android.app.Activity.RESULT_OK;
+
+public class AddItemMerchant extends Fragment {
+
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final String TAG = "AddItemMerchant.class";
     Button UploadAPhotoButton,AddItemButton;
@@ -53,6 +67,7 @@ public class AddItemMerchant extends AppCompatActivity {
     private ProgressBar mProgressBar;
     String currentuser;
     Uri mImageUri;
+    private String imageUrl;
 
 
     private StorageReference mStorageRef;
@@ -60,35 +75,35 @@ public class AddItemMerchant extends AppCompatActivity {
     private StorageTask mUploadTask;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_item_merchant);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.activity_add_item_merchant, container, false);
 
         //Button
-        UploadAPhotoButton = findViewById(R.id.UploadAPhotoButton);
-        AddItemButton=findViewById(R.id.AddItemButton);
+        UploadAPhotoButton = view.findViewById(R.id.UploadAPhotoButton);
+        AddItemButton = view.findViewById(R.id.AddItemButton);
 
         //ImageView
-        ItemImage=findViewById(R.id.ItemImage);
+        ItemImage = view.findViewById(R.id.ItemImage);
 
         //EditView
-        ItemNameEditText =findViewById(R.id.ItemNameEditText);
-        PriceEditText = findViewById(R.id.PriceEditText);
-        QualityEditText = findViewById(R.id.QualityEditText);
+        ItemNameEditText = view.findViewById(R.id.ItemNameEditText);
+        PriceEditText = view.findViewById(R.id.PriceEditText);
+        QualityEditText = view.findViewById(R.id.QualityEditText);
 
         //Spinner
-        waterTypeSpinner=findViewById(R.id.waterTypeSpinner);
-        String[] arraySpinner = new String[] {
+        waterTypeSpinner = view.findViewById(R.id.waterTypeSpinner);
+        String[] arraySpinner = new String[]{
                 "Mineral", "Distilled", "Purified", "Alkaline"
         };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_spinner_item, arraySpinner);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         waterTypeSpinner.setAdapter(adapter);
 
 
         //ProgressBar
-        mProgressBar = findViewById(R.id.progress_bar);
+        mProgressBar = view.findViewById(R.id.progress_bar);
 
         //design
         currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -112,12 +127,13 @@ public class AddItemMerchant extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (mUploadTask != null && mUploadTask.isInProgress()) {
-                    Toast.makeText(AddItemMerchant.this, "Upload in progress", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Upload in progress", Toast.LENGTH_SHORT).show();
                 } else {
                     uploadItem();
                 }
             }
         });
+        return view;
     }
 
     private void uploadItem() {
@@ -155,17 +171,16 @@ public class AddItemMerchant extends AppCompatActivity {
                                     mProgressBar.setProgress(0);
                                 }
                             }, 500);
-
-                            Toast.makeText(AddItemMerchant.this, "Upload successful" +currentuser, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "Upload successful" +currentuser, Toast.LENGTH_LONG).show();
                             WaterPeddlerGetterSetter upload = new WaterPeddlerGetterSetter(
-                                    taskSnapshot.getUploadSessionUri().toString(),
+                                    taskSnapshot.getMetadata().getPath(),
                                     ItemNameEditText.getText().toString().trim(),
                                    waterTypeSpinner.getSelectedItem().toString(),
                                     PriceEditText.getText().toString().trim(),
                                     QualityEditText.getText().toString().trim(),
                                     currentuser
                             );
-                            Picasso.get().load(R.drawable.ic_menu_camera);
+                            Picasso.get().load(R.drawable.ic_menu_camera).into(ItemImage);
                             ItemNameEditText.setText("");
                             PriceEditText.setText("");
                             QualityEditText.setText("");
@@ -179,7 +194,7 @@ public class AddItemMerchant extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(AddItemMerchant.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -190,7 +205,7 @@ public class AddItemMerchant extends AppCompatActivity {
                         }
                     });
         } else {
-            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "No file selected", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -204,7 +219,7 @@ public class AddItemMerchant extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
@@ -213,7 +228,7 @@ public class AddItemMerchant extends AppCompatActivity {
         }
     }
     private String getFileExtension(Uri uri) {
-        ContentResolver cR = getContentResolver();
+        ContentResolver cR = getActivity().getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
@@ -223,4 +238,5 @@ public class AddItemMerchant extends AppCompatActivity {
             return source;
         }
     }
+
 }

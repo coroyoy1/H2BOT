@@ -25,35 +25,36 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <Button
-                android:id="@+id/button6"
-                android:layout_width="110dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="37dp"
-                android:background="@android:color/holo_blue_dark"
-                android:text="Apply"
-                android:textColor="@android:color/background_light" />
-
             <TextView
                 android:id="@+id/TextView11"
                 android:layout_width="166dp"
                 android:layout_height="36dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="35dp"
                 android:gravity="center"
-                android:text="Update Document"
+                android:text="Submit Document"
                 android:textColor="@android:color/holo_blue_dark" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="82dp"
+                android:text="Pending"
+                android:textColor="@android:color/holo_orange_light"
+                android:textSize="18sp" />
 
 
             <RelativeLayout
                 android:id="@+id/LayoutForSubmittion"
                 android:layout_width="match_parent"
-                android:layout_height="375dp"
+                android:layout_height="381dp"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
-                android:layout_centerVertical="true">
+                android:layout_marginBottom="70dp">
 
 
                 <RelativeLayout
@@ -78,20 +79,21 @@
                         android:textSize="18sp" />
 
                     <Button
-                        android:id="@+id/button2"
+                        android:id="@+id/chooseButton1"
                         android:layout_width="110dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="34dp"
                         android:background="@android:color/holo_blue_dark"
-                        android:text="Update image"
+                        android:text="Choose image"
                         android:textColor="@android:color/background_light" />
 
                     <ImageView
-                        android:id="@+id/imageView4"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/driverLicenseImageView"
+                        android:layout_width="110dp"
                         android:layout_height="97dp"
+                        android:scaleType="fitXY"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
                         android:layout_marginStart="47dp"
@@ -104,44 +106,71 @@
                     android:layout_height="140dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentStart="true"
-                    android:layout_marginBottom="60dp"
+                    android:layout_marginBottom="86dp"
                     android:background="#32918b88">
 
-                    <ImageView
-                        android:id="@+id/imageView5"
+                    <TextView
+                        android:id="@+id/textView20"
                         android:layout_width="wrap_content"
-                        android:layout_height="97dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
                         android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginStart="47dp"
-                        android:layout_marginTop="5dp"
-                        app:srcCompat="@drawable/ic_launcher_background" />
+                        android:layout_marginStart="17dp"
+                        android:gravity="center"
+                        android:text="Driver's Plate Number"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
 
                     <Button
-                        android:id="@+id/button3"
+                        android:id="@+id/chooseButton2"
                         android:layout_width="110dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="34dp"
                         android:background="@android:color/holo_blue_dark"
-                        android:text="Update image"
+                        android:text="Choose image"
                         android:textColor="@android:color/background_light" />
 
-                    <TextView
-                        android:id="@+id/textView7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
+                    <ImageView
+                        android:id="@+id/driverPlateNumberImageView"
+                        android:layout_width="110dp"
+                        android:scaleType="fitXY"
+                        android:layout_height="97dp"
                         android:layout_alignParentStart="true"
-                        android:layout_marginStart="14dp"
-                        android:text="Driver's Plate Number"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="47dp"
+                        android:layout_marginTop="5dp"
+                        app:srcCompat="@drawable/ic_launcher_background" />
                 </RelativeLayout>
 
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="16dp"
+                    android:text="Note: Before you proceed, you must submit the necessary requirements and wait for the administrator's approval. Once the submittion is approved, you may proceed." />
             </RelativeLayout>
 
+            <Button
+                android:id="@+id/SubmitButtonWaterPeddlerHomeActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="12dp"
+                android:background="@android:color/holo_blue_dark"
+                android:text="Submit"
+                android:textColor="@android:color/background_light" />
+            <android.support.v4.widget.ContentLoadingProgressBar
+                android:id="@+id/progress_bar"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true" />
         </RelativeLayout>
     </LinearLayout>
 

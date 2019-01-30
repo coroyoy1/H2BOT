@@ -9,10 +9,6 @@
             android:id="@+id/my_order"
             android:icon="@drawable/ic_shopping_cart_black_24dp"
             android:title="Transactions" />
-        <item
-            android:id="@+id/receipts"
-            android:icon="@drawable/ic_receipt_black_24dp"
-            android:title="Receipts" />
     </group>
     <item android:title="Personal Infomartion">
         <menu>

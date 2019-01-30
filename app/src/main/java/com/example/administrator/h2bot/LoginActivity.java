@@ -57,19 +57,19 @@ public class LoginActivity extends AppCompatActivity {
         register = findViewById(R.id.registerAccount);
         loginNow = findViewById(R.id.logInBtn);
         mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(FirebaseAuth.getInstance().getCurrentUser() != null)
-                {
-                    if(!(LoginActivity.this).isFinishing())
-                    {
-                        progressDialog.show();
-                    }
-                    userTypeLogin();
-                }
-            }
-        };
+//        mAuthListener = new FirebaseAuth.AuthStateListener() {
+//            @Override
+//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//                if(FirebaseAuth.getInstance().getCurrentUser() != null)
+//                {
+//                    if(!(LoginActivity.this).isFinishing())
+//                    {
+//                        progressDialog.show();
+//                    }
+//                    userTypeLogin();
+//                }
+//            }
+//        };
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,10 +81,6 @@ public class LoginActivity extends AppCompatActivity {
         loginNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!(LoginActivity.this).isFinishing())
-                {
-                    progressDialog.show();
-                }
                 signInNow();
             }
         });
@@ -98,11 +94,11 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        mAuth.addAuthStateListener(mAuthListener);
+//    }
 
     private void signInNow()
     {
@@ -115,6 +111,10 @@ public class LoginActivity extends AppCompatActivity {
         }
         else
         {
+            if(!(LoginActivity.this).isFinishing())
+            {
+                progressDialog.show();
+            }
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task)
@@ -180,11 +180,13 @@ public class LoginActivity extends AppCompatActivity {
                     String documentVerify = dataSnapshot.child("status").getValue().toString();
                     if(documentVerify.equals("inactive"))
                     {
+                        startActivity(new Intent(LoginActivity.this, WaterPeddlerDocumentActivity.class));
                         showMessages("Water Dealer Not Verified");
                     }
                     else if(documentVerify.equals("active"))
                     {
-                        showMessages("Water Dealer Not Verified");
+                        startActivity(new Intent(LoginActivity.this, WaterPeddlerHomeActivity.class));
+                        showMessages("Water Dealer Verified");
                     }
                     showMessages("Successfully logged-in as Water Dealer");
                 }
