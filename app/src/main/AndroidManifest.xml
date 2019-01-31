@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LO`CATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!--
@@ -40,7 +40,7 @@
             android:name=".WaterStationDocumentActivity"
             android:label="@string/title_activity_water_station_document"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".AddItemMerchant" />
+        <!--<activity android:name=".AddItemMerchant" />-->
         <activity android:name=".AccountSettingsStationAndDMActivity" />
         <activity android:name=".AccountSettingsStationAndDMAccountActivity" />
         <activity android:name=".AccountSettingsStationAndDMAccountNextActivity" />
@@ -94,7 +94,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.administrator.h2bot.WaterStationMainActivity" />
         </activity>
-        <activity android:name=".TPAffiliateMainActivity" />
+        <activity android:name=".TPAffiliateMainActivity"
+            android:theme="@style/Theme.Design.Light" />
         <activity
             android:name=".DeliveryManMainActivity"
             android:theme="@style/Theme.Design.Light" />

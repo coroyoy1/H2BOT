@@ -82,6 +82,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 signInNow();
+//                tempLogin();
             }
         });
     }
@@ -222,4 +223,33 @@ public class LoginActivity extends AppCompatActivity {
     {
         Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
     }
+
+//    public void tempLogin()
+//    {
+//        String email = emailAddress.getText().toString().trim();
+//        if(email.equals("customer"))
+//        {
+//            startActivity(new Intent(LoginActivity.this, CustomerMainActivity.class));
+//        }
+//        else if(email.equals("dealer"))
+//        {
+//            startActivity(new Intent(LoginActivity.this, WaterPeddlerHomeActivity.class));
+//        }
+//        else if(email.equals("station"))
+//        {
+//            startActivity(new Intent(LoginActivity.this, WaterStationMainActivity.class));
+//        }
+//        else if(email.equals("delivery"))
+//        {
+//            startActivity(new Intent(LoginActivity.this, DeliveryManMainActivity.class));
+//        }
+//        else if(email.equals("tpa"))
+//        {
+//            startActivity(new Intent(LoginActivity.this, TPAffiliateMainActivity.class));
+//        }
+//        else
+//        {
+//            showMessages("error");
+//        }
+//    }
 }
