@@ -33,7 +33,6 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private FirebaseAuth mAuth;
     Dialog dialog;
-    ProgressDialog progressDialog;
     private static final int ERROR_DIALOG_REQUEST = 9001;
     private static final String TAG = "CustomerMainActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -48,12 +47,6 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         setContentView(R.layout.activity_customer_main);
 
         dialog = new Dialog(this);
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading...");
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setCancelable(false);
-        progressDialog.setProgress(0);
         drawerLayout = findViewById(R.id.customer_drawer);
         drawerLayout.closeDrawers();
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
@@ -79,7 +72,7 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
                 break;
 
             case R.id.my_order:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AddItemMerchant()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new OrdersFragment()).commit();
                 Toast.makeText(this, "Orders", Toast.LENGTH_SHORT).show();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("My Orders");
                 break;
@@ -90,14 +83,16 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Account Settings");
                 break;
 
-            case R.id.feedback:
+            case R.id.rate:
                 final Dialog dialog = new Dialog(this);
                 dialog.setContentView(R.layout.ratings_popup);
                 dialog.show();
                 break;
 
             case R.id.transactions:
-                Objects.requireNonNull(getSupportActionBar()).setTitle("Receipts");
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerTransactionsFragment()).commit();
+                Toast.makeText(this, "Transactions", Toast.LENGTH_SHORT).show();
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Transactions");
                 break;
         }
         if (menuItem.getItemId() == R.id.logout) {
@@ -105,14 +100,6 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if(progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
     }
 
     @Override
@@ -130,6 +117,13 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void logout() {
+        mAuth.getInstance().signOut();
+        finish();
+        startActivity(new Intent(this, LoginActivity.class));
+        Toast.makeText(this, "Successfully logged-out", Toast.LENGTH_SHORT).show();
     }
 
     public void ShowPopUpAccountSettingUpdate(View view) {
@@ -154,15 +148,15 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         dialog.show();
     }
 
-    private void logout() {
-        mAuth.getInstance().signOut();
-        finish();
-        startActivity(new Intent(this, LoginActivity.class));
-        Toast.makeText(this, "Successfully logged-out", Toast.LENGTH_SHORT).show();
+    public void OrderInfoPopup(View view) {
+        dialog.setContentView(R.layout.order_info_popup);
+        dialog.show();
     }
 
-
-
+    public void TransactionInfoPopup(View view) {
+        dialog.setContentView(R.layout.transaction_popup);
+        dialog.show();
+    }
 //    public boolean isServiceOK(){
 //        Log.d(TAG, "isSeviceOK: checking google services version");
 //

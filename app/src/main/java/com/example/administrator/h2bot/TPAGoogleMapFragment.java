@@ -54,7 +54,7 @@ public class TPAGoogleMapFragment extends Fragment implements OnMapReadyCallback
 
         LatLng pp = new LatLng(10.358060499999999, 123.9136566);
         MarkerOptions options = new MarkerOptions();
-        options.position(pp).title("Me");
+        options.position(pp).title("Nature Spring");
 
         map.addMarker(options).showInfoWindow();
         float zoomLevel = 16.0f;
@@ -65,24 +65,23 @@ public class TPAGoogleMapFragment extends Fragment implements OnMapReadyCallback
             public boolean onMarkerClick(Marker marker) {
                 Toast.makeText(getContext(), "I clicked the map", Toast.LENGTH_SHORT).show();
                 final Dialog dialog = new Dialog(getContext());
-                dialog.setContentView(R.layout.station_popup);
-                Button viewMoreBtn = dialog.findViewById(R.id.viewMoreBtn);
-                Button orderBtn = dialog.findViewById(R.id.orderBtn);
+                dialog.setContentView(R.layout.tpa_station_popup);
+                Button acceptBtn = dialog.findViewById(R.id.acceptBtn);
+                Button cancelBtn = dialog.findViewById(R.id.cancelBtn);
 
-                viewMoreBtn.setOnClickListener(new View.OnClickListener() {
+                acceptBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getContext(), "View more info", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Accepted", Toast.LENGTH_SHORT).show();
                     }
                 });
 
-                orderBtn.setOnClickListener(new View.OnClickListener() {
+                cancelBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getContext(), "Order from Chatbot", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
                     }
                 });
-
                 dialog.show();
                 return false;
             }
