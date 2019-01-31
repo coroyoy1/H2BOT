@@ -52,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
     Boolean clickable=false;
 
     Spinner spinnerRegister;
-    EditText fullNameRegister, ageRegister, addressRegister, contactRegister, emailRegister, passwordRegister;
+    EditText usernameRegister, fullNameRegister, ageRegister, addressRegister, contactRegister, emailRegister, passwordRegister;
     ProgressBar loadingProgressBar;
     ProgressDialog progressDialog;
 
@@ -65,6 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        usernameRegister = (EditText) findViewById(R.id.usernameText);
         fullNameRegister = (EditText) findViewById(R.id.RegisterFullName);
         ageRegister = (EditText) findViewById(R.id.RegisterAge);
         addressRegister = (EditText) findViewById(R.id.RegisterAddress);
@@ -105,6 +106,7 @@ public class RegisterActivity extends AppCompatActivity {
                 {
                     progressDialog.show();
                 }
+                String usernameString = usernameRegister.getText().toString();
                 String spinnerString = spinnerRegister.getSelectedItem().toString();
                 String fullnameString = fullNameRegister.getText().toString();
                 String ageString = ageRegister.getText().toString();
@@ -120,7 +122,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    CreateAccountUser(passwordString, spinnerString, fullnameString, ageString, addressString, contactString, emailString);
+                    CreateAccountUser(usernameString, passwordString, spinnerString, fullnameString, ageString, addressString, contactString, emailString);
                 }
             }
         });
@@ -138,7 +140,7 @@ public class RegisterActivity extends AppCompatActivity {
     {
     }
 
-    private void CreateAccountUser(final String passwordString, final String spinnerString, final String fullnameString, final String ageString, final String addressString, final String contactString, final String emailString)
+    private void CreateAccountUser(final String usernameString, final String passwordString, final String spinnerString, final String fullnameString, final String ageString, final String addressString, final String contactString, final String emailString)
     {
         mAuth.createUserWithEmailAndPassword(emailString, passwordString)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -146,10 +148,11 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful())
                         {
+                            String stringUri = uri.toString();
                             String userType = spinnerRegister.getSelectedItem().toString();
                             if(userType.equals("Customer"))
                             {
-                                Users user = new Users(spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, "none", "active");
+                                Users user = new Users(usernameString ,spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, "none", "active", stringUri);
                                 FirebaseDatabase.getInstance().getReference("Users")
                                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                         .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -171,7 +174,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Random random = new Random();
                                 int number = random.nextInt(1000000000) + 1;
                                 String stringNumber = Integer.toString(number);
-                                Users user = new Users(spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, stringNumber, "inactive");
+                                Users user = new Users(usernameString, spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, stringNumber, "inactive", stringUri);
                                 FirebaseDatabase.getInstance().getReference("Users")
                                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                         .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -190,7 +193,7 @@ public class RegisterActivity extends AppCompatActivity {
                             }
                             else if(userType.equals("Delivery Man"))
                             {
-                                Users user = new Users(spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, "none", "inactive");
+                                Users user = new Users(usernameString, spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, "none", "inactive", stringUri);
                                 FirebaseDatabase.getInstance().getReference("Users")
                                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                         .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -209,7 +212,7 @@ public class RegisterActivity extends AppCompatActivity {
                             }
                             else if(userType.equals("Water Dealer"))
                             {
-                                Users user = new Users(spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, "none", "inactive");
+                                Users user = new Users(usernameString, spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, "none", "inactive", stringUri);
                                 FirebaseDatabase.getInstance().getReference("Users")
                                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                         .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -228,7 +231,7 @@ public class RegisterActivity extends AppCompatActivity {
                             }
                             else if(userType.equals("Third Party Affiliate"))
                             {
-                                Users user = new Users(spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, "none", "inactive");
+                                Users user = new Users(usernameString, spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, "none", "inactive", stringUri);
                                 FirebaseDatabase.getInstance().getReference("Users")
                                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                         .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
