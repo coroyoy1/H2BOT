@@ -1,24 +1,37 @@
 package com.example.administrator.h2bot;
 
-public class WaterPeddlerGetterSetter {
+public class MerchantGetterSetter {
     private String mItemImage;
     private String mItemName;
     private String mWaterType;
     private String mItemPrice;
     private String mItemQuantity;
     private String mUserID;
+    private String mItemNo;
 
-    public WaterPeddlerGetterSetter()
+
+    public MerchantGetterSetter()
     {
 
     }
-    public WaterPeddlerGetterSetter(String itemImage, String itemName, String waterType, String itemPrice, String itemQuantity, String userID) {
+
+
+    public MerchantGetterSetter(String itemImage, String itemName, String waterType, String itemPrice, String itemQuantity, String userID, String itemNo) {
         mItemImage = itemImage;
         mItemName = itemName;
         mWaterType = waterType;
         mItemPrice = itemPrice;
         mItemQuantity = itemQuantity;
         mUserID = userID;
+        mItemNo = itemNo;
+    }
+
+    public String getmItemNo() {
+        return mItemNo;
+    }
+
+    public void setmItemNo(String mItemNo) {
+        this.mItemNo = mItemNo;
     }
 
     public String getmItemImage() {

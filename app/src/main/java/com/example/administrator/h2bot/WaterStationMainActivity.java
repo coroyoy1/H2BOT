@@ -101,6 +101,7 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                         new WSPendingOrdersFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Pending Orders");
                 showMessages("Pending Orders");
+                break;
             case R.id.nav_map_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
                         new WSMapFragment()).commit();
