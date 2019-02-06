@@ -85,6 +85,7 @@
         android:layout_height="wrap_content"
         android:padding="10dp">
         <Button
+            android:id="@+id/updateAV"
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:background="@android:color/holo_blue_dark"
@@ -92,6 +93,7 @@
             android:text="Update Document"
             android:layout_weight="1"/>
         <Button
+            android:id="@+id/logoutAV"
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:background="@android:color/darker_gray"

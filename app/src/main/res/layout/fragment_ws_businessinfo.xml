@@ -136,8 +136,8 @@
         </RelativeLayout>
 
         <Button
-            android:onClick="ShowPopUpAccountSettingUpdateWP"
-            android:layout_width="wrap_content"
+            android:id="@+id/updateButtonWSBI"
+            android:layout_width="150dp"
             android:layout_centerHorizontal="true"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -145,6 +145,17 @@
             android:background="#0097e6"
             android:textColor="@android:color/white"
             android:text="Update" />
+
+        <Button
+            android:id="@+id/addProductButtonBusinessInfo"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="120dp"
+            android:background="#0097e6"
+            android:text="Add Product"
+            android:textColor="@android:color/white" />
 
     </RelativeLayout>
 </RelativeLayout>

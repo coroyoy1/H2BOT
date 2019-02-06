@@ -1,30 +1,16 @@
 package com.example.administrator.h2bot;
 
-import android.Manifest;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.nfc.Tag;
-import android.os.Build;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
@@ -38,8 +24,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -49,9 +35,7 @@ import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
@@ -107,7 +91,7 @@ public class AddItemMerchant extends Fragment {
 
         //design
         currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mStorageRef = FirebaseStorage.getInstance().getReference("sampleItemPhotos");
+        mStorageRef = FirebaseStorage.getInstance().getReference("userproduct");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("User Items");
 
         PriceEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
@@ -171,21 +155,31 @@ public class AddItemMerchant extends Fragment {
                                     mProgressBar.setProgress(0);
                                 }
                             }, 500);
-                            Toast.makeText(getActivity(), "Upload successful" +currentuser, Toast.LENGTH_LONG).show();
-                            WaterPeddlerGetterSetter upload = new WaterPeddlerGetterSetter(
-                                    taskSnapshot.getMetadata().getPath(),
-                                    ItemNameEditText.getText().toString().trim(),
-                                   waterTypeSpinner.getSelectedItem().toString(),
-                                    PriceEditText.getText().toString().trim(),
-                                    QualityEditText.getText().toString().trim(),
-                                    currentuser
-                            );
-                            Picasso.get().load(R.drawable.ic_menu_camera).into(ItemImage);
-                            ItemNameEditText.setText("");
-                            PriceEditText.setText("");
-                            QualityEditText.setText("");
-                            String uploadId = currentuser;
-                            mDatabaseRef.child(uploadId).child(uuid).setValue(upload);
+                            Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                            result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    String stringUri = uri.toString();
+                                    Random rand = new Random();
+                                    int randomize = rand.nextInt(1000) + 1;
+                                    String numberStore =  Integer.toString(randomize);
+                                    Toast.makeText(getActivity(), "Upload successful", Toast.LENGTH_LONG).show();
+                                    MerchantGetterSetter upload = new MerchantGetterSetter(
+                                            stringUri,
+                                            ItemNameEditText.getText().toString().trim(),
+                                            waterTypeSpinner.getSelectedItem().toString(),
+                                            PriceEditText.getText().toString().trim(),
+                                            QualityEditText.getText().toString().trim(),
+                                            currentuser,numberStore
+                                    );
+                                    Picasso.get().load(R.drawable.ic_menu_camera).into(ItemImage);
+                                    ItemNameEditText.setText("");
+                                    PriceEditText.setText("");
+                                    QualityEditText.setText("");
+                                    String uploadId = currentuser;
+                                    mDatabaseRef.child(uploadId).child(uuid).setValue(upload);
+                                }
+                            });
 
 //                            mDatabaseRef.child(uploadId).child(System.currentTimeMillis()
 //                                    + "." + getFileExtension(mImageUri)).setValue(upload);

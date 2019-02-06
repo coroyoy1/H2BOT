@@ -11,18 +11,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 public class WaterStationDocumentVersion2Activity extends AppCompatActivity implements View.OnClickListener{
@@ -30,6 +39,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
     private static final int PICK_IMAGE_REQUEST = 1;
     ImageView image1, image2, image3, image4, image5, image6;
     Button button1, button2, button3, button4, button5, button6, buttonlogout, submitToFirebase;
+    EditText stationAD;
 
     Boolean isClick1=false, isClick2=false, isClick3=false, isClick4=false, isClick5=false, isClick6=false;
     Intent intent;
@@ -38,6 +48,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
     FirebaseStorage storage;
     StorageReference storageReference;
     FirebaseAuth mAuth;
+
 
 
     @Override
@@ -49,6 +60,8 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         mAuth = FirebaseAuth.getInstance();
+
+        stationAD = findViewById(R.id.stationNameSD);
 
         image1 = (ImageView)findViewById(R.id.permit1);
         image2 = (ImageView)findViewById(R.id.permit2);
@@ -143,8 +156,9 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         {
             Toast.makeText(WaterStationDocumentVersion2Activity.this, "You haven't picked Image",Toast.LENGTH_LONG).show();
         }
-
     }
+
+
     private void uploadImage()
     {
 
@@ -265,8 +279,25 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            FirebaseDatabase databaseSpecificStore = FirebaseDatabase.getInstance();
+                            DatabaseReference referenceSpecificStore = databaseSpecificStore.getReference("Users");
+                            referenceSpecificStore.child(mAuth.getCurrentUser().getUid()).child("status").setValue("unconfirmed")
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                }
+                            });
+                            referenceSpecificStore.child(mAuth.getCurrentUser().getUid()).child("stationName").setValue(stationAD.getText().toString())
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    showMessages("Station Added");
+                                }
+                            });
                             progressDialog.dismiss();
                             Toast.makeText(WaterStationDocumentVersion2Activity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                            passToNextAct();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -333,8 +364,8 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
                 break;
             case R.id.submitButton:
+                checkingAddPhoto();
                 uploadImage();
-//                passToNextAct();
                 break;
             case R.id.logoutButton:
                 mAuth.signOut();
@@ -350,5 +381,18 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
     {
         Intent passIntent = new Intent(WaterStationDocumentVersion2Activity.this, WSAccessVerification.class);
         startActivity(passIntent);
+    }
+    public void checkingAddPhoto()
+    {
+        if(image1.getDrawable() == null
+        && image2.getDrawable() == null
+        && image3.getDrawable() == null
+        && image4.getDrawable() == null
+        && image5.getDrawable() == null
+        && image6.getDrawable() == null)
+        {
+            showMessages("All document should be attached!");
+            return;
+        }
     }
 }

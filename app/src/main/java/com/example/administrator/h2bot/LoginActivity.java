@@ -57,19 +57,19 @@ public class LoginActivity extends AppCompatActivity {
         register = findViewById(R.id.registerAccount);
         loginNow = findViewById(R.id.logInBtn);
         mAuth = FirebaseAuth.getInstance();
-//        mAuthListener = new FirebaseAuth.AuthStateListener() {
-//            @Override
-//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-//                if(FirebaseAuth.getInstance().getCurrentUser() != null)
-//                {
-//                    if(!(LoginActivity.this).isFinishing())
-//                    {
-//                        progressDialog.show();
-//                    }
-//                    userTypeLogin();
-//                }
-//            }
-//        };
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(FirebaseAuth.getInstance().getCurrentUser() != null)
+                {
+                    if(!(LoginActivity.this).isFinishing())
+                    {
+                        progressDialog.show();
+                    }
+                    userTypeLogin();
+                }
+            }
+        };
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,11 +95,11 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        mAuth.addAuthStateListener(mAuthListener);
-//    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
 
     private void signInNow()
     {
@@ -153,6 +153,11 @@ public class LoginActivity extends AppCompatActivity {
                     if(documentVerify.equals("inactive"))
                     {
                         startActivity(new Intent(LoginActivity.this, WaterStationDocumentVersion2Activity.class));
+                        finish();
+                    }
+                    else if(documentVerify.equals("unconfirmed"))
+                    {
+                        startActivity(new Intent(LoginActivity.this, WSAccessVerification.class));
                         finish();
                     }
                     else if(documentVerify.equals("active"))
