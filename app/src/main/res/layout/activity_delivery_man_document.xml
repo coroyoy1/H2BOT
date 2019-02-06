@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DeliveryManDocumentActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Submit Document"
+                android:textColor="@android:color/holo_blue_light"
+                android:textSize="24dp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:background="@android:color/darker_gray"
+            android:layout_marginTop="1dp">
+            <TextView
+                android:layout_weight="1"
+                android:layout_marginLeft="8dp"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Driver's License"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"/>
+
+            <ImageView
+                android:id="@+id/permit1DM"
+                android:layout_width="80dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="0dp"
+                android:layout_weight="1"
+                android:background="@android:color/holo_blue_light" />
+            <Button
+                android:layout_weight="1"
+                android:id="@+id/permitButton1DM"
+                android:layout_marginTop="4dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/ic_photo_camera_black_24dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:background="@android:color/darker_gray"
+            android:layout_marginTop="1dp">
+            <TextView
+                android:layout_weight="1"
+                android:layout_marginLeft="8dp"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Plate Number"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"/>
+            <ImageView
+                android:layout_weight="1"
+                android:id="@+id/permit2DM"
+                android:layout_width="80dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="0dp"
+                android:background="@android:color/holo_blue_light"/>
+            <Button
+                android:layout_weight="1"
+                android:id="@+id/permitButton2DM"
+                android:layout_marginTop="4dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/ic_photo_camera_black_24dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_margin="10dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+            <EditText
+                android:id="@+id/stationRelateDM"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Station Related No."
+                android:textSize="18dp"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_margin="10dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+            <EditText
+                android:id="@+id/stationNameDM"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Station Name"
+                android:textSize="18dp"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+            <Button
+                android:layout_weight="1"
+                android:id="@+id/submitButtonDM"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Submit Document"
+                android:layout_marginRight="5dp"
+                android:textColor="@android:color/white"
+                android:background="@android:color/holo_blue_dark"/>
+            <Button
+                android:layout_weight="1"
+                android:layout_gravity="right"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="5dp"
+                android:id="@+id/logoutButtonDM"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Logout"
+                android:textColor="@android:color/white"
+                android:background="@android:color/darker_gray"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -158,7 +158,6 @@ public class LoginActivity extends AppCompatActivity {
                     else if(documentVerify.equals("unconfirmed"))
                     {
                         startActivity(new Intent(LoginActivity.this, WSAccessVerification.class));
-                        finish();
                     }
                     else if(documentVerify.equals("active"))
                     {
@@ -172,7 +171,8 @@ public class LoginActivity extends AppCompatActivity {
                     String documentVerify = dataSnapshot.child("status").getValue().toString();
                     if(documentVerify.equals("inactive"))
                     {
-                        showMessages("Delivery Man Not Verified");
+                        finish();
+                        startActivity(new Intent(LoginActivity.this, DeliveryManDocumentActivity.class));
                     }
                     else if(documentVerify.equals("active"))
                     {
