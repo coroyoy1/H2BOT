@@ -50,11 +50,37 @@ public class MerchantAccessVerification extends AppCompatActivity implements Vie
                 String userType = dataSnapshot.child("userType").getValue().toString();
                 if(userType.equals("Station Owner"))
                 {
-                    startActivity(new Intent(MerchantAccessVerification.this, WaterStationDocumentVersion2Activity.class));
+                    String activateStat = dataSnapshot.child("status").getValue().toString();
+                    if(activateStat.equals("active"))
+                    {
+                        finish();
+                        startActivity(new Intent(MerchantAccessVerification.this, WaterStationMainActivity.class));
+                    }
+                    else if(activateStat.equals("unconfirmed"))
+                    {
+                        startActivity(new Intent(MerchantAccessVerification.this, WaterStationDocumentVersion2Activity.class));
+                    }
+                    else
+                    {
+                        showMessages("Error to pass intent");
+                    }
                 }
                 else if(userType.equals("Delivery Man"))
                 {
-                    startActivity(new Intent(MerchantAccessVerification.this, DeliveryManDocumentActivity.class));
+                    String activateStat = dataSnapshot.child("status").getValue().toString();
+                    if(activateStat.equals("active"))
+                    {
+                        finish();
+                        startActivity(new Intent(MerchantAccessVerification.this, DeliveryManMainActivity.class));
+                    }
+                    else if(activateStat.equals("unconfirmed"))
+                    {
+                        startActivity(new Intent(MerchantAccessVerification.this, DeliveryManDocumentActivity.class));
+                    }
+                    else
+                    {
+                        showMessages("Error to pass intent");
+                    }
                 }
                 else if(userType.equals("Third Affiliate"))
                 {

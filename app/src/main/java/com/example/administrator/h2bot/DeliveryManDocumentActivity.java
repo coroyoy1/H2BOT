@@ -50,6 +50,7 @@ public class DeliveryManDocumentActivity extends AppCompatActivity implements Vi
         intent = new Intent();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+        mAuth = FirebaseAuth.getInstance();
 
         editText1 = findViewById(R.id.stationNameDM);
         editText2 = findViewById(R.id.stationRelateDM);
@@ -59,9 +60,15 @@ public class DeliveryManDocumentActivity extends AppCompatActivity implements Vi
 
         imageButton1DM = findViewById(R.id.permitButton1DM);
         imageButton2DM = findViewById(R.id.permitButton2DM);
+        submitDoc = findViewById(R.id.submitButtonDM);
+        logoutDoc = findViewById(R.id.logoutButtonDM);
+
 
         imageButton1DM.setOnClickListener(this);
         imageButton2DM.setOnClickListener(this);
+
+        submitDoc.setOnClickListener(this);
+        logoutDoc.setOnClickListener(this);
     }
 
     @Override
