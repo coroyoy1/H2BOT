@@ -15,10 +15,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -28,11 +26,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
 
 public class WaterStationDocumentVersion2Activity extends AppCompatActivity implements View.OnClickListener{
 
@@ -379,7 +372,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
     }
     public void passToNextAct()
     {
-        Intent passIntent = new Intent(WaterStationDocumentVersion2Activity.this, WSAccessVerification.class);
+        Intent passIntent = new Intent(WaterStationDocumentVersion2Activity.this, MerchantAccessVerification.class);
         startActivity(passIntent);
     }
     public void checkingAddPhoto()
