@@ -1,12 +1,16 @@
 package com.example.administrator.h2bot;
 
 import android.content.Context;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -30,8 +34,14 @@ public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapte
     @Override
     public void onBindViewHolder(@NonNull MerchantDataAdapter.ImageViewHolder imageViewHolder, int i) {
         MerchantGetterSetter currentData = uploadsHolder.get(i);
-        imageViewHolder.PLItemNoHolder.setText(currentData.getmItemNo());
+
+//        imageViewHolder.PLItemNoHolder.setText(currentData.getmItemNo());
         imageViewHolder.PLItemNameHolder.setText(currentData.getmItemName());
+        Picasso.get()
+                .load(currentData.getmItemImage())
+                .fit()
+                .centerCrop()
+                .into(imageViewHolder.PLImage);
     }
 
     @Override
@@ -41,11 +51,13 @@ public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapte
 
     public class ImageViewHolder extends RecyclerView.ViewHolder{
         public TextView PLItemNoHolder, PLItemNameHolder;
+        public ImageView PLImage;
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
-            PLItemNoHolder = itemView.findViewById(R.id.PLItemNo);
+//            PLItemNoHolder = itemView.findViewById(R.id.PLItemNo);
             PLItemNameHolder = itemView.findViewById(R.id.PLItemName);
+            PLImage = itemView.findViewById(R.id.imageViewPL);
         }
     }
 }

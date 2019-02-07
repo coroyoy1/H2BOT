@@ -9,17 +9,80 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
 import java.util.Objects;
 
 public class WSAccountSettingsFragment extends Fragment implements View.OnClickListener {
+
+    TextView UserTypeWS, StationNameWS, StationRelatedNoWS, UserNameWS, FullNameWS, AgeWS, AddressWS, ContactNoWS, EmailAddressWS;
+    ImageView imageView;
+    DatabaseReference databaseReference;
+    FirebaseUser firebaseUser;
+    FirebaseAuth mAuth;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ws_accountsettings,
                 container, false);
+        mAuth = FirebaseAuth.getInstance();
+        firebaseUser = mAuth.getCurrentUser();
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(firebaseUser.getUid());
+
+        UserTypeWS = view.findViewById(R.id.userTypeAS);
+        StationNameWS = view.findViewById(R.id.stationNameAS);
+        StationRelatedNoWS = view.findViewById(R.id.stationRelatedNoAS);
+        FullNameWS = view.findViewById(R.id.fullNameAS);
+        AgeWS = view.findViewById(R.id.ageAS);
+        AddressWS = view.findViewById(R.id.addressAS);
+        ContactNoWS = view.findViewById(R.id.contactAS);
+        EmailAddressWS = view.findViewById(R.id.emailAS);
+        imageView = view.findViewById(R.id.profileImageAS);
+
         Button updateDoc = (Button)view.findViewById(R.id.updateDocument);
         Button updateAcc = (Button)view.findViewById(R.id.updateAccount);
+
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        UserMerchant user = dataSnapshot.getValue(UserMerchant.class);
+                        UserTypeWS.setText(user.getUserType());
+                        StationNameWS.setText(user.getStationName());
+                        StationRelatedNoWS.setText(user.getStationRelatedNo());
+                        FullNameWS.setText(user.getFullname());
+                        AgeWS.setText(user.getAge());
+                        AddressWS.setText(user.getAddress());
+                        ContactNoWS.setText(user.getContact());
+                        EmailAddressWS.setText(user.getEmail());
+                    Picasso.get()
+                            .load(user.getImageUri())
+                            .fit()
+                            .centerCrop()
+                            .into(imageView);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                showMessage("Failed to connect");
+            }
+        });
+
         updateAcc.setOnClickListener(this);
         updateDoc.setOnClickListener(this);
         return view;
@@ -29,6 +92,11 @@ public class WSAccountSettingsFragment extends Fragment implements View.OnClickL
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+    }
+
+    public void showMessage(String s)
+    {
+        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
     }
 
     @Override
