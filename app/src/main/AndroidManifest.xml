@@ -23,7 +23,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".DeliveryManDocumentActivity"></activity>
+        <activity android:name=".zCreateAccountOptionUserTypeActivity"></activity>
+        <activity android:name=".DeliveryManDocumentActivity" />
         <activity android:name=".tempAccessActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
@@ -100,7 +101,7 @@
         <activity
             android:name=".DeliveryManMainActivity"
             android:theme="@style/Theme.Design.Light" />
-        <activity android:name=".MerchantAccessVerification"></activity>
+        <activity android:name=".MerchantAccessVerification" />
     </application>
 
 </manifest>

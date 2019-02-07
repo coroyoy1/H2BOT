@@ -55,6 +55,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText usernameRegister, fullNameRegister, ageRegister, addressRegister, contactRegister, emailRegister, passwordRegister;
     ProgressBar loadingProgressBar;
     ProgressDialog progressDialog;
+    TextView headerTitle;
 
     private FirebaseAuth mAuth;
 
@@ -64,6 +65,10 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         mAuth = FirebaseAuth.getInstance();
+        String s = getIntent().getStringExtra("TextValue");
+        headerTitle = findViewById(R.id.headerRegister);
+        headerTitle.setText(s);
+
 
         usernameRegister = (EditText) findViewById(R.id.usernameText);
         fullNameRegister = (EditText) findViewById(R.id.RegisterFullName);
@@ -74,7 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
         passwordRegister = (EditText) findViewById(R.id.RegisterPassword);
 
         loadingProgressBar = (ProgressBar) findViewById(R.id.progressBar1);
-        spinnerRegister = (Spinner)findViewById(R.id.RegisterSpinner);
+//        spinnerRegister = (Spinner)findViewById(R.id.RegisterSpinner);
 
         progressDialog = new ProgressDialog(RegisterActivity.this);
         progressDialog.setMessage("Loading...");
@@ -107,7 +112,8 @@ public class RegisterActivity extends AppCompatActivity {
                     progressDialog.show();
                 }
                 String usernameString = usernameRegister.getText().toString();
-                String spinnerString = spinnerRegister.getSelectedItem().toString();
+//                String spinnerString = spinnerRegister.getSelectedItem().toString();
+                String spinnerString = headerTitle.getText().toString();
                 String fullnameString = fullNameRegister.getText().toString();
                 String ageString = ageRegister.getText().toString();
                 String addressString = addressRegister.getText().toString();
@@ -149,7 +155,8 @@ public class RegisterActivity extends AppCompatActivity {
                         if(task.isSuccessful())
                         {
                             String stringUri = uri.toString();
-                            String userType = spinnerRegister.getSelectedItem().toString();
+//                            String userType = spinnerRegister.getSelectedItem().toString();
+                            String userType = headerTitle.getText().toString();
                             if(userType.equals("Customer"))
                             {
                                 Users user = new Users(usernameString ,spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, "none", "active", stringUri);

@@ -16,6 +16,7 @@
 
 
         <TextView
+            android:id="@+id/headerRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/create_account"
@@ -55,14 +56,14 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <Spinner
-                android:id="@+id/RegisterSpinner"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:entries="@array/UserType">
+            <!--<Spinner-->
+                <!--android:id="@+id/RegisterSpinner"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:entries="@array/UserType">-->
 
-            </Spinner>
+            <!--</Spinner>-->
 
             <EditText
                 android:layout_width="match_parent"
