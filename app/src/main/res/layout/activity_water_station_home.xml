@@ -9,21 +9,24 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:orientation="vertical">
 
         <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp">
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create Account"
-            android:textSize="20dp"/>
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create Account"
+                android:textSize="20dp" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,9 +37,10 @@
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
                 android:hint="Full Name"
-                android:textSize="20dp"/>
+                android:textSize="20dp" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,9 +51,10 @@
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
                 android:hint="Full Name"
-                android:textSize="20dp"/>
+                android:textSize="20dp" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -60,9 +65,10 @@
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
                 android:hint="Full Name"
-                android:textSize="20dp"/>
+                android:textSize="20dp" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -73,9 +79,10 @@
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
                 android:hint="Full Name"
-                android:textSize="20dp"/>
+                android:textSize="20dp" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -85,10 +92,10 @@
             <Button
                 android:layout_width="280dp"
                 android:layout_height="50dp"
-                android:textColor="@android:color/white"
                 android:background="@android:color/holo_blue_dark"
                 android:text="Next"
-                android:textStyle="bold"/>
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
 
         </LinearLayout>
 

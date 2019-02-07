@@ -100,7 +100,7 @@
         <activity
             android:name=".DeliveryManMainActivity"
             android:theme="@style/Theme.Design.Light" />
-        <activity android:name=".WSAccessVerification"></activity>
+        <activity android:name=".MerchantAccessVerification"></activity>
     </application>
 
 </manifest>
