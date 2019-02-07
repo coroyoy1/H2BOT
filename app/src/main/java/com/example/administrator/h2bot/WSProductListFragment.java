@@ -60,6 +60,7 @@ public class WSProductListFragment extends Fragment {
                 {
                     MerchantGetterSetter getterSetter = postSnapshot.getValue(MerchantGetterSetter.class);
                     uploadPL.add(getterSetter);
+
                 }
                 PLAdapter = new MerchantDataAdapter(getActivity(), uploadPL);
                 recyclerViewPL.setAdapter(PLAdapter);
