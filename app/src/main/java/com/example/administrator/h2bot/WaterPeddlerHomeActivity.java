@@ -43,7 +43,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
 
         if(savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp,
-                    new GoogleMapFragment()).commit();
+                    new WaterDealerGoogleMapFragment()).commit();
             Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
             showMessages("Map");
         }
@@ -72,7 +72,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
         {
             case R.id.nav_map_wp:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp,
-                        new GoogleMapFragment()).commit();
+                        new WaterDealerGoogleMapFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
                 showMessages("Map");
                 break;
@@ -120,7 +120,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
                 break;
             case R.id.nav_rate_wp:
                 final Dialog dialog = new Dialog(this);
-                dialog.setContentView(R.layout.ratings_popup);
+
                 dialog.show();
                 break;
 
