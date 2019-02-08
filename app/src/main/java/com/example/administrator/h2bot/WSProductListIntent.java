@@ -63,6 +63,7 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
     public String DataGet(String itemUD)
     {
         return itemUD;
+
     }
 
     @Override
