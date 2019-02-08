@@ -56,6 +56,7 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
                     .centerCrop()
                     .into(imageView);
             DataGet(itemUi);
+
         }
         return view;
     }
