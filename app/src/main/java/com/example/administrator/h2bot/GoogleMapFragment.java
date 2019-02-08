@@ -60,6 +60,8 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback{
     LocationManager locationManager;
     private List<Users>uploadPL;
     String strAddress;
+
+
     //    Button viewMoreBtn, orderBtn;
     public GoogleMapFragment() {
         // Required empty public constructor
