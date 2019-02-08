@@ -170,7 +170,7 @@ public class AddItemMerchant extends Fragment {
                                             waterTypeSpinner.getSelectedItem().toString(),
                                             PriceEditText.getText().toString().trim(),
                                             QualityEditText.getText().toString().trim(),
-                                            currentuser,numberStore
+                                            currentuser,numberStore, uuid
                                     );
                                     Picasso.get().load(R.drawable.ic_menu_camera).into(ItemImage);
                                     ItemNameEditText.setText("");

@@ -8,6 +8,7 @@ public class MerchantGetterSetter {
     private String mItemQuantity;
     private String mUserID;
     private String mItemNo;
+    private String mItemUID;
 
 
     public MerchantGetterSetter()
@@ -16,7 +17,7 @@ public class MerchantGetterSetter {
     }
 
 
-    public MerchantGetterSetter(String itemImage, String itemName, String waterType, String itemPrice, String itemQuantity, String userID, String itemNo) {
+    public MerchantGetterSetter(String itemImage, String itemName, String waterType, String itemPrice, String itemQuantity, String userID, String itemNo, String itemUID) {
         mItemImage = itemImage;
         mItemName = itemName;
         mWaterType = waterType;
@@ -24,6 +25,7 @@ public class MerchantGetterSetter {
         mItemQuantity = itemQuantity;
         mUserID = userID;
         mItemNo = itemNo;
+        mItemUID = itemUID;
     }
 
     public String getmItemNo() {
@@ -80,5 +82,13 @@ public class MerchantGetterSetter {
 
     public void setmUserID(String mUserID) {
         this.mUserID = mUserID;
+    }
+
+    public String getmItemUID() {
+        return mItemUID;
+    }
+
+    public void setmItemUID(String mItemUID) {
+        this.mItemUID = mItemUID;
     }
 }
