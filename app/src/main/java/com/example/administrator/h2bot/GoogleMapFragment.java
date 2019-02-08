@@ -93,7 +93,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback{
         mAuth = FirebaseAuth.getInstance();
         mUsers = FirebaseDatabase.getInstance().getReference().child("tempOrders");
 
-        Toast.makeText(getActivity(), "HELLO", Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), "HIIIIIIIII", Toast.LENGTH_LONG).show();
     }
 
     @Override
