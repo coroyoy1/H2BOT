@@ -3,6 +3,7 @@ package com.example.administrator.h2bot;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -95,57 +96,17 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback{
 
         Toast.makeText(getActivity(), "HIIIIIIIII", Toast.LENGTH_LONG).show();
     }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
-        mUsers.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for(DataSnapshot s: dataSnapshot.getChildren())
-//                {
-//                Users user = s.getValue(Users.class);
-//                uploadPL.add(user);
-                  strAddress = dataSnapshot.child("mOrderNo").getValue(String.class);
-                Toast.makeText(getActivity(), ""+strAddress, Toast.LENGTH_LONG).show();
-//                Geocoder coder = new Geocoder(getActivity().getApplicationContext());
-//                List<Address> address;
-//                LatLng p1 = null;
-//                try {
-//                    // May throw an IOException
-//                    address = coder.getFromLocationName(strAddress, 1);
-//                    if (address == null) {
-//                        return;
-//                    }
-//                    Address location = address.get(0);
-//                    p1 = new LatLng(location.getLatitude(), location.getLongitude());
-//                    map.addMarker(new MarkerOptions()
-//                        .position(p1));
-//
-//
-//                } catch (IOException ex) {
-//
-//                    ex.printStackTrace();
-//                }
-//                MarkerOptions options = new MarkerOptions();
-//                options.position(p1).title(strAddress).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-//                map.addMarker(options).showInfoWindow();
-//                float zoomLevel = 16.0f;
-//                map.moveCamera(CameraUpdateFactory.newLatLngZoom(p1, zoomLevel));
-                 }
-           // }
+        LatLng pp = new LatLng(10.358060499999999, 123.9136566);
+        MarkerOptions options = new MarkerOptions();
+        options.position(pp).title("Me");
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-
-
-
-
+        map.addMarker(options).showInfoWindow();
+        float zoomLevel = 16.0f;
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(pp, zoomLevel));
 
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -166,14 +127,93 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback{
                 orderBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        startActivity(new Intent(getActivity(), ChatbotActivity.class));
                         Toast.makeText(getContext(), "Order from Chatbot", Toast.LENGTH_SHORT).show();
                     }
                 });
-
                 dialog.show();
                 return false;
             }
         });
     }
+//    @Override
+//    public void onMapReady(GoogleMap googleMap) {
+//        map = googleMap;
+//
+//        mUsers.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+////                for(DataSnapshot s: dataSnapshot.getChildren())
+////                {
+////                Users user = s.getValue(Users.class);
+////                uploadPL.add(user);
+//                  strAddress = dataSnapshot.child("mOrderNo").getValue(String.class);
+//                Toast.makeText(getActivity(), "Address: "+strAddress, Toast.LENGTH_LONG).show();
+////                Geocoder coder = new Geocoder(getActivity().getApplicationContext());
+////                List<Address> address;
+////                LatLng p1 = null;
+////                try {
+////                    // May throw an IOException
+////                    address = coder.getFromLocationName(strAddress, 1);
+////                    if (address == null) {
+////                        return;
+////                    }
+////                    Address location = address.get(0);
+////                    p1 = new LatLng(location.getLatitude(), location.getLongitude());
+////                    map.addMarker(new MarkerOptions()
+////                        .position(p1));
+////
+////
+////                } catch (IOException ex) {
+////
+////                    ex.printStackTrace();
+////                }
+////                MarkerOptions options = new MarkerOptions();
+////                options.position(p1).title(strAddress).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+////                map.addMarker(options).showInfoWindow();
+////                float zoomLevel = 16.0f;
+////                map.moveCamera(CameraUpdateFactory.newLatLngZoom(p1, zoomLevel));
+//                 }
+//           // }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//
+//
+//
+//
+//
+//        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+//            @Override
+//            public boolean onMarkerClick(Marker marker) {
+//                Toast.makeText(getContext(), "I clicked the map", Toast.LENGTH_SHORT).show();
+//                final Dialog dialog = new Dialog(getContext());
+//                dialog.setContentView(R.layout.station_popup);
+//                Button viewMoreBtn = dialog.findViewById(R.id.viewMoreBtn);
+//                Button orderBtn = dialog.findViewById(R.id.orderBtn);
+//
+//                viewMoreBtn.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Toast.makeText(getContext(), "View more info", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//
+//                orderBtn.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Toast.makeText(getContext(), "Order from Chatbot", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//
+//                dialog.show();
+//                return false;
+//            }
+//        });
+//    }
 
 }
