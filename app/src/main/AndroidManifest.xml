@@ -36,6 +36,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ChatbotActivity" />
+        <activity android:name=".OrderDetailsConfirmOrDecline" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".WaterPeddlerHomeActivity"
             android:theme="@style/Theme.Design.Light"/>
