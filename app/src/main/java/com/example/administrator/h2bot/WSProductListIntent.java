@@ -77,6 +77,13 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws, additem).addToBackStack(null).commit();
                 break;
             case R.id.PLIupdatebutton:
+                String uidString = DataGet(itemUi);
+                WSProductListUpdate updateitem = new WSProductListUpdate();
+                AppCompatActivity activityapp = (AppCompatActivity) v.getContext();
+                activityapp.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws, updateitem).addToBackStack(null).commit();
+                Bundle args = new Bundle();
+                args.putString("ItemUidPLI", uidString);
+                updateitem.setArguments(args);
                 Toast.makeText(getActivity(), DataGet(itemUi), Toast.LENGTH_LONG).show();
                 break;
         }
