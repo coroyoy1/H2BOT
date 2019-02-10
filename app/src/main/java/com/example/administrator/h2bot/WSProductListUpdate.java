@@ -21,24 +21,24 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ws_productlistintentupdate, container, false);
-//        dropdown = view.findViewById(R.id.spinnerUpItem);
-//        String[] typesProd = new String[]{"Mineral", "Distilled", "Purified", "Alkaline"};
-//        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item,typesProd);
-//        dropdown.setAdapter(adapter);
-//        backBut = view.findViewById(R.id.backUpItem);
-//        backBut.setOnClickListener(this);
+        dropdown = view.findViewById(R.id.spinnerUpItem);
+        String[] typesProd = new String[]{"Mineral", "Distilled", "Purified", "Alkaline"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item,typesProd);
+        dropdown.setAdapter(adapter);
+        backBut = view.findViewById(R.id.backUpItem);
+        backBut.setOnClickListener(this);
         return view;
     }
 
     @Override
     public void onClick(View v) {
-//        switch (v.getId())
-//        {
-//            case R.id.backUpItem:
-//                WSProductListFragment additem = new WSProductListFragment();
-//                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-//                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws, additem).addToBackStack(null).commit();
-//                break;
-//        }
+        switch (v.getId())
+        {
+            case R.id.backUpItem:
+                WSProductListFragment additem = new WSProductListFragment();
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws, additem).addToBackStack(null).commit();
+                break;
+        }
     }
 }
