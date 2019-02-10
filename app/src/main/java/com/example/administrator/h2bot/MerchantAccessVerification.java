@@ -48,7 +48,7 @@ public class MerchantAccessVerification extends AppCompatActivity implements Vie
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String userType = dataSnapshot.child("userType").getValue().toString();
-                if(userType.equals("Station Owner"))
+                if(userType.equals("Water Station"))
                 {
                     String activateStat = dataSnapshot.child("status").getValue().toString();
                     if(activateStat.equals("active"))

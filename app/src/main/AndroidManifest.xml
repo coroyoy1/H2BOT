@@ -9,8 +9,10 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LO`CATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <permission android:name="com.example.permission.MAPS_RECEIVE" android:protectionLevel="signature"/>
 
+    <permission
+        android:name="com.example.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -25,7 +27,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".zCreateAccountOptionUserTypeActivity"></activity>
+        <activity android:name=".zCreateStationDetailsActivity"></activity>
+        <activity android:name=".zCreateAccountOptionUserTypeActivity" />
         <activity android:name=".DeliveryManDocumentActivity" />
         <activity android:name=".tempAccessActivity" />
         <activity android:name=".LoginActivity">
@@ -38,8 +41,9 @@
         <activity android:name=".ChatbotActivity" />
         <activity android:name=".OrderDetailsConfirmOrDecline" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".WaterPeddlerHomeActivity"
-            android:theme="@style/Theme.Design.Light"/>
+        <activity
+            android:name=".WaterPeddlerHomeActivity"
+            android:theme="@style/Theme.Design.Light" />
         <activity android:name=".WaterStationHomeActivity" />
         <activity android:name=".WaterAffiliateHomeActivity" />
         <activity android:name=".RegisterNextActivity" />

@@ -1,6 +1,7 @@
 package com.example.administrator.h2bot;
 
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +32,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
 import org.w3c.dom.Text;
@@ -56,6 +59,8 @@ public class RegisterActivity extends AppCompatActivity {
     ProgressBar loadingProgressBar;
     ProgressDialog progressDialog;
     TextView headerTitle;
+    private StorageTask mUploadTask;
+    private StorageReference storageReference;
 
     private FirebaseAuth mAuth;
 
@@ -111,6 +116,7 @@ public class RegisterActivity extends AppCompatActivity {
                 {
                     progressDialog.show();
                 }
+                String getUri = uri.toString();
                 String usernameString = usernameRegister.getText().toString();
 //                String spinnerString = spinnerRegister.getSelectedItem().toString();
                 String spinnerString = headerTitle.getText().toString();
@@ -128,7 +134,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    CreateAccountUser(usernameString, passwordString, spinnerString, fullnameString, ageString, addressString, contactString, emailString);
+                    CreateAccountUser(usernameString, passwordString, spinnerString, fullnameString, ageString, addressString, contactString, emailString, getUri);
                 }
             }
         });
@@ -146,7 +152,11 @@ public class RegisterActivity extends AppCompatActivity {
     {
     }
 
-    private void CreateAccountUser(final String usernameString, final String passwordString, final String spinnerString, final String fullnameString, final String ageString, final String addressString, final String contactString, final String emailString)
+    public String theImage(String imageStore)
+    {
+        return imageStore;
+    }
+    private void CreateAccountUser(final String usernameString, final String passwordString, final String spinnerString, final String fullnameString, final String ageString, final String addressString, final String contactString, final String emailString, final String getUri)
     {
         mAuth.createUserWithEmailAndPassword(emailString, passwordString)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -176,7 +186,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 });
                                 updateUserInfo(spinnerString, fullnameString, uri, mAuth.getCurrentUser());
                             }
-                            else if(userType.equals("Station Owner"))
+                            else if(userType.equals("Water Station"))
                             {
                                 Random random = new Random();
                                 int number = random.nextInt(1000000000) + 1;
@@ -280,25 +290,30 @@ public class RegisterActivity extends AppCompatActivity {
                 mStorage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(fullnameString)
-                                .setPhotoUri(uri)
-                                .build();
-                        currentUser.updateProfile(profileUpdate)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                        result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                String stringUri = uri.toString();
+                                FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("imageUri").setValue(stringUri)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful())
-                                        {
-                                            passToNextActivity();
-                                            progressDialog.dismiss();
-                                        }
+                                    public void onSuccess(Void aVoid) {
+                                        showMessage("Successfully upload Image");
+                                        passToNextActivity();
                                     }
                                 });
+                            }
+                        });
                     }
                 });
             }
         });
+    }
+    private String getFileExtension(Uri uri) {
+        ContentResolver cR = getApplication().getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
     private void passToNextActivity()

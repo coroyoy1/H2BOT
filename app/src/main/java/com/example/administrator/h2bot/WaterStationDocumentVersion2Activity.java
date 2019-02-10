@@ -13,10 +13,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -32,7 +35,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
     private static final int PICK_IMAGE_REQUEST = 1;
     ImageView image1, image2, image3, image4, image5, image6;
     Button button1, button2, button3, button4, button5, button6, buttonlogout, submitToFirebase;
-    EditText stationAD;
+    EditText stationAD, stationBusiness, stationDelivery;
 
     Boolean isClick1=false, isClick2=false, isClick3=false, isClick4=false, isClick5=false, isClick6=false;
     Intent intent;
@@ -41,6 +44,10 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
     FirebaseStorage storage;
     StorageReference storageReference;
     FirebaseAuth mAuth;
+
+    private RadioGroup radioGroup;
+    private RadioButton radioButton, radioButtonv;
+    String radioCheck = "";
 
 
 
@@ -53,6 +60,8 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         mAuth = FirebaseAuth.getInstance();
+
+        radioGroup = findViewById(R.id.radioAllSD);
 
         stationAD = findViewById(R.id.stationNameSD);
 
@@ -80,6 +89,33 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         button6.setOnClickListener(this);
         buttonlogout.setOnClickListener(this);
         submitToFirebase.setOnClickListener(this);
+
+        stationBusiness = findViewById(R.id.stationBusinesshoursSD);
+        stationDelivery = findViewById(R.id.stationDeliverySD);
+
+        radioButton = findViewById(R.id.radioYes);
+        radioButtonv = findViewById(R.id.radioNo);
+        radioButton.setChecked(true);
+        radioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stationDelivery.setVisibility(View.VISIBLE);
+            }
+        });
+        radioButtonv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stationDelivery.setVisibility(View.INVISIBLE);
+            }
+        });
+        if(radioButton.isChecked())
+        {
+            radioCheck = "true";
+        }
+        else if(radioButtonv.isChecked())
+        {
+            radioCheck = "false";
+        }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -163,6 +199,14 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Task<Uri>result1 = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                            result1.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    String addOne = uri.toString();
+                                    FirebaseDatabase.getInstance().getReference("user_waterstation_document").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("businesspermit").setValue(addOne);
+                                }
+                            });
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -184,6 +228,14 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Task<Uri>result1 = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                            result1.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    String addOne = uri.toString();
+                                    FirebaseDatabase.getInstance().getReference("user_waterstation_document").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("sanitarypermits").setValue(addOne);
+                                }
+                            });
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -205,6 +257,14 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Task<Uri>result1 = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                            result1.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    String addOne = uri.toString();
+                                    FirebaseDatabase.getInstance().getReference("user_waterstation_document").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("fire protection").setValue(addOne);
+                                }
+                            });
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -226,6 +286,14 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Task<Uri>result1 = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                            result1.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    String addOne = uri.toString();
+                                    FirebaseDatabase.getInstance().getReference("user_waterstation_document").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("realpropertiestaxes").setValue(addOne);
+                                }
+                            });
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -247,6 +315,14 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Task<Uri>result1 = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                            result1.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    String addOne = uri.toString();
+                                    FirebaseDatabase.getInstance().getReference("user_waterstation_document").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("buildingoccupancypermit").setValue(addOne);
+                                }
+                            });
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -272,22 +348,60 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Task<Uri>result1 = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                            result1.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    String addOne = uri.toString();
+                                    FirebaseDatabase.getInstance().getReference("user_waterstation_document").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("physicochemicaltest").setValue(addOne);
+                                    FirebaseDatabase.getInstance().getReference("user_waterstation_document").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("status").setValue("active");
+                                }
+                            });
                             FirebaseDatabase databaseSpecificStore = FirebaseDatabase.getInstance();
-                            DatabaseReference referenceSpecificStore = databaseSpecificStore.getReference("Users");
-                            referenceSpecificStore.child(mAuth.getCurrentUser().getUid()).child("status").setValue("unconfirmed")
+                            DatabaseReference referenceSpecificStore = databaseSpecificStore.getReference("user_waterstation_info");
+                            referenceSpecificStore.child(mAuth.getCurrentUser().getUid()).child("ws_userID").setValue(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+
+                                        }
+                                    });
+                            DatabaseReference referenceSpecificStoreStat = databaseSpecificStore.getReference("Users");
+                            referenceSpecificStoreStat.child(mAuth.getCurrentUser().getUid()).child("status").setValue("unconfirmed")
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
 
                                 }
                             });
-                            referenceSpecificStore.child(mAuth.getCurrentUser().getUid()).child("stationName").setValue(stationAD.getText().toString())
+                            referenceSpecificStore.child(mAuth.getCurrentUser().getUid()).child("ws_stationName").setValue(stationAD.getText().toString())
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    showMessages("Station Added");
+                                    //showMessages("Station Added");
                                 }
                             });
+                            referenceSpecificStore.child(mAuth.getCurrentUser().getUid()).child("ws_stationBusinesshours").setValue(stationBusiness.getText().toString())
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+
+                                        }
+                                    });
+                            referenceSpecificStore.child(mAuth.getCurrentUser().getUid()).child("ws_stationDeliveryService").setValue(radioCheck)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+
+                                        }
+                                    });
+                            referenceSpecificStore.child(mAuth.getCurrentUser().getUid()).child("ws_stationDeliveryFee").setValue(stationDelivery.getText().toString())
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+
+                                        }
+                                    });
                             progressDialog.dismiss();
                             Toast.makeText(WaterStationDocumentVersion2Activity.this, "Uploaded", Toast.LENGTH_SHORT).show();
                             passToNextAct();

@@ -144,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
                     showMessages("Successfully logged-in as Customer");
                     finish();
                 }
-                else if(userType.equals("Station Owner")){
+                else if(userType.equals("Water Station")){
                     String documentVerify = dataSnapshot.child("status").getValue().toString();
                     if(documentVerify.equals("inactive"))
                     {

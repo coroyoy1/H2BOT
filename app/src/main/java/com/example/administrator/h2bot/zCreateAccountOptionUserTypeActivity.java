@@ -41,7 +41,7 @@ public class zCreateAccountOptionUserTypeActivity extends AppCompatActivity impl
                 startActivity(intent);
                 break;
             case R.id.soCA:
-                intent.putExtra("TextValue", "Station Owner");
+                intent.putExtra("TextValue", "Water Station");
                 intent.setClass(zCreateAccountOptionUserTypeActivity.this, RegisterActivity.class);
                 startActivity(intent);
                 break;
