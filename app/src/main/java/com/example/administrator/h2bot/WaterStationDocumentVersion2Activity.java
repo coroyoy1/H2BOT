@@ -353,6 +353,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     String addOne = uri.toString();
+
                                     FirebaseDatabase.getInstance().getReference("user_waterstation_document").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("physicochemicaltest").setValue(addOne);
                                     FirebaseDatabase.getInstance().getReference("user_waterstation_document").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("status").setValue("active");
                                 }
