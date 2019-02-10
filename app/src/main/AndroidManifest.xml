@@ -76,9 +76,6 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".GoogleMapActivity"
-            android:label="@string/title_activity_google_map" />
-        <activity
             android:name=".WaterStationMainActivity"
             android:theme="@style/Theme.Design.Light" />
         <activity

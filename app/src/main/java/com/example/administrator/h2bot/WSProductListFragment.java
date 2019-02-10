@@ -53,6 +53,7 @@ public class WSProductListFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         uploadPL = new ArrayList<>();
         databaseReferencePL = FirebaseDatabase.getInstance().getReference("User Items").child(mAuth.getCurrentUser().getUid());
+
         databaseReferencePL.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

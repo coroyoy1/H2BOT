@@ -141,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (userType.equals("Customer")) {
                     //Temporary Output
                     startActivity(new Intent(LoginActivity.this, CustomerMainActivity.class));
-                    showMessages("Successfully logged-in as Customer");
+//                    showMessages("Successfully logged-in as Customer");
                     finish();
                 }
                 else if(userType.equals("Station Owner")){

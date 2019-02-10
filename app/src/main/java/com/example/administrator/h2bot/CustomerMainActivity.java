@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -33,19 +34,12 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private FirebaseAuth mAuth;
     Dialog dialog;
-    private static final int ERROR_DIALOG_REQUEST = 9001;
-    private static final String TAG = "CustomerMainActivity";
-    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private Boolean mLocationPermissionGranted = false;
     public GoogleMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_main);
-
         dialog = new Dialog(this);
         drawerLayout = findViewById(R.id.customer_drawer);
         drawerLayout.closeDrawers();
@@ -157,60 +151,4 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         dialog.setContentView(R.layout.transaction_popup);
         dialog.show();
     }
-//    public boolean isServiceOK(){
-//        Log.d(TAG, "isSeviceOK: checking google services version");
-//
-//        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(CustomerMainActivity.this);
-//
-//        if(available == ConnectionResult.SUCCESS){
-//            Log.d(TAG, "isSeviceOK: Google Play Services is working");
-//        }
-//        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
-//            Log.d(TAG, "isSeviceOK: An error occured");
-//            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(CustomerMainActivity.this, available, ERROR_DIALOG_REQUEST);
-//            dialog.show();
-//        }
-//        else{
-//            Toast.makeText(this, "We cant make map request", Toast.LENGTH_SHORT).show();
-//        }
-//        return false;
-//    }
-//
-//    private void getLocationPermission(){
-//        String [] permission = {Manifest.permission.ACCESS_FINE_LOCATION,
-//        Manifest.permission.ACCESS_COARSE_LOCATION};
-//
-//        if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-//                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-//            if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-//                    COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-//                mLocationPermissionGranted = true;
-//            }
-//            else{
-//                ActivityCompat.requestPermissions(this, permission, LOCATION_PERMISSION_REQUEST_CODE);
-//            }
-//        }
-//        else{
-//            ActivityCompat.requestPermissions(this, permission, LOCATION_PERMISSION_REQUEST_CODE);
-//        }
-//    }
-//
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        mLocationPermissionGranted = false;
-//
-//        switch (requestCode){
-//            case LOCATION_PERMISSION_REQUEST_CODE:{
-//                if(grantResults.length > 0){
-//                    for(int i = 0; i < grantResults.length; i++){
-//                        if(grantResults[i] != PackageManager.PERMISSION_GRANTED){
-//                            mLocationPermissionGranted = false;
-//                            return;
-//                        }
-//                    }
-//                    mLocationPermissionGranted = true;
-//                }
-//            }
-//        }
-//    }
 }
