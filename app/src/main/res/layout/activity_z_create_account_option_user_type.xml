@@ -11,69 +11,70 @@
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_gravity="center"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:text="Select Type of User:"
             android:layout_margin="10dp"
-            android:textColor="@android:color/white"/>
+            android:text="SELECT A ROLE"
+            android:textColor="@android:color/white"
+            android:textSize="20dp" />
 
         <Button
             android:id="@+id/cCA"
-            android:layout_margin="5dp"
-            android:textColor="@android:color/white"
-            android:text="Customer"
-            android:textSize="20dp"
             android:layout_width="200dp"
             android:layout_height="90dp"
-            android:background="@drawable/z_darkbluebutton"/>
+            android:layout_margin="5dp"
+            android:background="@drawable/z_darkbluebutton"
+            android:text="Customer"
+            android:textColor="@android:color/white"
+            android:textSize="20dp" />
 
         <Button
             android:id="@+id/soCA"
-            android:layout_margin="5dp"
-            android:textColor="@android:color/white"
-            android:text="Station Owner"
-            android:textSize="20dp"
             android:layout_width="200dp"
             android:layout_height="90dp"
-            android:background="@drawable/z_darkbluebutton"/>
+            android:layout_margin="5dp"
+            android:background="@drawable/z_darkbluebutton"
+            android:text="Station Owner"
+            android:textColor="@android:color/white"
+            android:textSize="20dp" />
 
         <Button
             android:id="@+id/dmCA"
-            android:layout_margin="5dp"
-            android:textColor="@android:color/white"
-            android:text="Delivery Man"
-            android:textSize="20dp"
             android:layout_width="200dp"
             android:layout_height="90dp"
-            android:background="@drawable/z_darkbluebutton" />
+            android:layout_margin="5dp"
+            android:background="@drawable/z_darkbluebutton"
+            android:text="Delivery Man"
+            android:textColor="@android:color/white"
+            android:textSize="20dp" />
 
         <Button
             android:id="@+id/wdCA"
-            android:layout_margin="5dp"
-            android:textColor="@android:color/white"
-            android:text="Water Dealer"
-            android:textSize="20dp"
             android:layout_width="200dp"
             android:layout_height="90dp"
-            android:background="@drawable/z_darkbluebutton" />
+            android:layout_margin="5dp"
+            android:background="@drawable/z_darkbluebutton"
+            android:text="Water Dealer"
+            android:textColor="@android:color/white"
+            android:textSize="20dp" />
 
         <Button
             android:id="@+id/tpaCA"
-            android:layout_margin="5dp"
-            android:textColor="@android:color/white"
-            android:text="Third Party Affiliate"
-            android:textSize="20dp"
             android:layout_width="200dp"
             android:layout_height="90dp"
-            android:background="@drawable/z_darkbluebutton" />
+            android:layout_margin="5dp"
+            android:background="@drawable/z_darkbluebutton"
+            android:text="Third Party Affiliate"
+            android:textColor="@android:color/white"
+            android:textSize="20dp" />
     </LinearLayout>
 
 

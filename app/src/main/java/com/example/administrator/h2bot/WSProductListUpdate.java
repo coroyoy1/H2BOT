@@ -39,6 +39,7 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws, additem).addToBackStack(null).commit();
                 break;
+
         }
     }
 }

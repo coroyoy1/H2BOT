@@ -29,6 +29,8 @@
         android:layout_gravity="start"
         app:itemIconTint="#000000"
         app:itemTextColor="#000000"
-        app:menu="@menu/customer_drawer_menu"></android.support.design.widget.NavigationView>
+        app:menu="@menu/customer_drawer_menu">
+
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>
