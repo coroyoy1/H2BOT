@@ -78,6 +78,7 @@ public class WPPendingTransactionFragment extends Fragment {
             }
         });
         final Activity activity = getActivity();
+
         QRscanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
