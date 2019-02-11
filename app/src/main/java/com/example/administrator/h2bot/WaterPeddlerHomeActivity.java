@@ -12,11 +12,13 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
+
 
 public class WaterPeddlerHomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawerLayout;
@@ -43,7 +45,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
 
         if(savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp,
-                    new WaterDealerGoogleMapFragment()).commit();
+                    new WPPendingOrdersFragment()).commit();
             Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
             showMessages("Map");
         }
@@ -70,12 +72,6 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch(menuItem.getItemId())
         {
-            case R.id.nav_map_wp:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp,
-                        new WaterDealerGoogleMapFragment()).commit();
-                Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
-                showMessages("Map");
-                break;
             case R.id.nav_pending_orders_wp:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp,
                         new WPPendingOrdersFragment()).commit();
@@ -141,6 +137,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
     {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
+
 
     public void ShowPopUpAccountSettingUpdateWP(View view) {
         Button cancelBtn;

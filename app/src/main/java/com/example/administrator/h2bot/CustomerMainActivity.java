@@ -27,6 +27,16 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 
+import static com.example.administrator.h2bot.WPInProgressFragment.EXTRA_transactionNo;
+import static com.example.administrator.h2bot.WPInProgressFragment.EXTRA_customerName;
+import static com.example.administrator.h2bot.WPInProgressFragment.EXTRA_contactNo;
+import static com.example.administrator.h2bot.WPInProgressFragment.EXTRA_waterType;
+import static com.example.administrator.h2bot.WPInProgressFragment.EXTRA_itemQuantity;
+import static com.example.administrator.h2bot.WPInProgressFragment.EXTRA_deliveryFee;
+import static com.example.administrator.h2bot.WPInProgressFragment.EXTRA_pricePerGallon;
+import static com.example.administrator.h2bot.WPInProgressFragment.EXTRA_service;
+import static com.example.administrator.h2bot.WPInProgressFragment.EXTRA_totalPrice;
+import static com.example.administrator.h2bot.WPInProgressFragment.EXTRA_address;
 import java.util.Objects;
 
 public class CustomerMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
