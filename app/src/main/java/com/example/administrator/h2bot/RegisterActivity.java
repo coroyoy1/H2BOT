@@ -1,5 +1,6 @@
 package com.example.administrator.h2bot;
 
+import com.example.administrator.h2bot.SetterAndGetterModelFolder.*;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -43,24 +45,23 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity{
 
     private static final int PICK_IMAGE_REQUEST = 1;
     Button addPhoto, signUp;
     ImageView imageView;
+
 
     static int PReqCode = 1;
     static int REQUESTCODE = 1;
     Uri uri;
     Boolean clickable=false;
 
-    Spinner spinnerRegister;
-    EditText usernameRegister, fullNameRegister, ageRegister, addressRegister, contactRegister, emailRegister, passwordRegister;
-    ProgressBar loadingProgressBar;
+    EditText firstNameRegister, lastNameRegister, addressRegister, contactRegister, emailRegister, passwordRegister;
     ProgressDialog progressDialog;
     TextView headerTitle;
-    private StorageTask mUploadTask;
-    private StorageReference storageReference;
+    FirebaseUser currentUser;
+
 
     private FirebaseAuth mAuth;
 
@@ -73,18 +74,15 @@ public class RegisterActivity extends AppCompatActivity {
         String s = getIntent().getStringExtra("TextValue");
         headerTitle = findViewById(R.id.headerRegister);
         headerTitle.setText(s);
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-
-        usernameRegister = (EditText) findViewById(R.id.usernameText);
-        fullNameRegister = (EditText) findViewById(R.id.RegisterFullName);
-        ageRegister = (EditText) findViewById(R.id.RegisterAge);
+        firstNameRegister = (EditText) findViewById(R.id.RegisterFullName);
+        lastNameRegister = (EditText) findViewById(R.id.RegisterLastName);
         addressRegister = (EditText) findViewById(R.id.RegisterAddress);
         contactRegister = (EditText) findViewById(R.id.RegisterContact);
         emailRegister = (EditText) findViewById(R.id.RegisterEmailAddress);
         passwordRegister = (EditText) findViewById(R.id.RegisterPassword);
 
-        loadingProgressBar = (ProgressBar) findViewById(R.id.progressBar1);
-//        spinnerRegister = (Spinner)findViewById(R.id.RegisterSpinner);
 
         progressDialog = new ProgressDialog(RegisterActivity.this);
         progressDialog.setMessage("Loading...");
@@ -92,11 +90,10 @@ public class RegisterActivity extends AppCompatActivity {
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
 
-        loadingProgressBar.setVisibility(View.INVISIBLE);
 
-        imageView = (ImageView)findViewById(R.id.RegisterPhoto);
-        addPhoto = (Button) findViewById(R.id.addPhotoRegister);
-        signUp = (Button) findViewById(R.id.RegisterSignUp);
+        imageView = findViewById(R.id.RegisterPhoto);
+        addPhoto = findViewById(R.id.addPhotoRegister);
+        signUp = findViewById(R.id.RegisterSignUp);
 
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,29 +109,24 @@ public class RegisterActivity extends AppCompatActivity {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!(RegisterActivity.this).isFinishing())
-                {
+                if(!(RegisterActivity.this).isFinishing()) {
                     progressDialog.show();
                 }
-                String getUri = uri.toString();
-                String usernameString = usernameRegister.getText().toString();
-//                String spinnerString = spinnerRegister.getSelectedItem().toString();
-                String spinnerString = headerTitle.getText().toString();
-                String fullnameString = fullNameRegister.getText().toString();
-                String ageString = ageRegister.getText().toString();
+                String firstNameString = firstNameRegister.getText().toString();
+                String lastNameString = lastNameRegister.getText().toString();
                 String addressString = addressRegister.getText().toString();
-                String contactString = contactRegister.getText().toString();
-                String emailString = emailRegister.getText().toString();
+                String contactNoString = contactRegister.getText().toString();
+                String emailAddressString = emailRegister.getText().toString();
                 String passwordString = passwordRegister.getText().toString();
 
-                if(passwordString.isEmpty() || fullnameString.isEmpty() || ageString.isEmpty() || addressString.isEmpty() || contactString.isEmpty() || emailString.isEmpty())
+                if(passwordString.isEmpty() || firstNameString.isEmpty() || lastNameString.isEmpty() || addressString.isEmpty() || contactNoString.isEmpty() || emailAddressString.isEmpty() || imageView.getDrawable() == null)
                 {
                     showMessage("Some fields are missing");
                     progressDialog.dismiss();
                 }
                 else
                 {
-                    CreateAccountUser(usernameString, passwordString, spinnerString, fullnameString, ageString, addressString, contactString, emailString, getUri);
+                    CreateAccount(firstNameString, lastNameString,addressString,contactNoString,emailAddressString,passwordString, uri);
                 }
             }
         });
@@ -146,184 +138,6 @@ public class RegisterActivity extends AppCompatActivity {
         if(progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
-    }
-
-    private void verificationOfUserType()
-    {
-    }
-
-    public String theImage(String imageStore)
-    {
-        return imageStore;
-    }
-    private void CreateAccountUser(final String usernameString, final String passwordString, final String spinnerString, final String fullnameString, final String ageString, final String addressString, final String contactString, final String emailString, final String getUri)
-    {
-        mAuth.createUserWithEmailAndPassword(emailString, passwordString)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful())
-                        {
-                            String stringUri = uri.toString();
-//                            String userType = spinnerRegister.getSelectedItem().toString();
-                            String userType = headerTitle.getText().toString();
-                            if(userType.equals("Customer"))
-                            {
-                                Users user = new Users(usernameString ,spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, "none", "active", stringUri);
-                                FirebaseDatabase.getInstance().getReference("Users")
-                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                        .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task)
-                                    {
-                                        if (task.isSuccessful()) {
-                                            showMessage("Successfully Register");
-                                        }
-                                        else {
-                                            showMessage("Error to Register");
-                                        }
-                                    }
-                                });
-                                updateUserInfo(spinnerString, fullnameString, uri, mAuth.getCurrentUser());
-                            }
-                            else if(userType.equals("Water Station"))
-                            {
-                                Random random = new Random();
-                                int number = random.nextInt(1000000000) + 1;
-                                String stringNumber = Integer.toString(number);
-                                Users user = new Users(usernameString, spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, stringNumber, "inactive", stringUri);
-                                FirebaseDatabase.getInstance().getReference("Users")
-                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                        .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task)
-                                    {
-                                        if (task.isSuccessful()) {
-                                            showMessage("Successfully Register");
-                                        }
-                                        else {
-                                            showMessage("Error to Register");
-                                        }
-                                    }
-                                });
-                                updateUserInfo(spinnerString, fullnameString, uri, mAuth.getCurrentUser());
-                            }
-                            else if(userType.equals("Delivery Man"))
-                            {
-                                Users user = new Users(usernameString, spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, "none", "inactive", stringUri);
-                                FirebaseDatabase.getInstance().getReference("Users")
-                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                        .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task)
-                                    {
-                                        if (task.isSuccessful()) {
-                                            showMessage("Successfully Register");
-                                        }
-                                        else {
-                                            showMessage("Error to Register");
-                                        }
-                                    }
-                                });
-                                updateUserInfo(spinnerString, fullnameString, uri, mAuth.getCurrentUser());
-                            }
-                            else if(userType.equals("Water Dealer"))
-                            {
-                                Users user = new Users(usernameString, spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, "none", "inactive", stringUri);
-                                FirebaseDatabase.getInstance().getReference("Users")
-                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                        .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task)
-                                    {
-                                        if (task.isSuccessful()) {
-                                            showMessage("Successfully Register");
-                                        }
-                                        else {
-                                            showMessage("Error to Register");
-                                        }
-                                    }
-                                });
-                                updateUserInfo(spinnerString, fullnameString, uri, mAuth.getCurrentUser());
-                            }
-                            else if(userType.equals("Third Party Affiliate"))
-                            {
-                                Users user = new Users(usernameString, spinnerString, fullnameString, emailString, ageString, addressString, contactString, passwordString, "none", "inactive", stringUri);
-                                FirebaseDatabase.getInstance().getReference("Users")
-                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                        .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task)
-                                    {
-                                        if (task.isSuccessful()) {
-                                            showMessage("Successfully Register");
-                                        }
-                                        else {
-                                            showMessage("Error to Register");
-                                        }
-                                    }
-                                });
-                                updateUserInfo(spinnerString, fullnameString, uri, mAuth.getCurrentUser());
-                            }
-                            else
-                            {
-                                showMessage("No available users");
-                                progressDialog.dismiss();
-                            }
-                        }
-                        else
-                        {
-                            showMessage("Failed to register" + task.getException().getMessage());
-                            progressDialog.dismiss();
-                        }
-                    }
-                });
-    }
-
-    private void updateUserInfo(final String spinnerString, final String fullnameString, Uri uri, final FirebaseUser currentUser)
-    {
-        String userID = mAuth.getCurrentUser().getUid();
-        final StorageReference mStorage = FirebaseStorage.getInstance().getReference().child("users_photos").child(userID+"/"+"profilePicture");
-        mStorage.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                mStorage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-                        result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                String stringUri = uri.toString();
-                                FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("imageUri").setValue(stringUri)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        showMessage("Successfully upload Image");
-                                        passToNextActivity();
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    }
-    private String getFileExtension(Uri uri) {
-        ContentResolver cR = getApplication().getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(cR.getType(uri));
-    }
-
-    private void passToNextActivity()
-    {
-        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-        startActivity(intent);
-    }
-
-    private void showMessage(String s) {
-        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -350,5 +164,113 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(RegisterActivity.this, "You haven't picked Image",Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    private void CreateAccount(final String firstNameString, final String lastNameString, final String addressString, String contactNoString, final String emailAddressString, final String passwordString, Uri uri)
+    {
+        mAuth.createUserWithEmailAndPassword(emailAddressString, passwordString)
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        String userType = headerTitle.getText().toString();
+                        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                        String uidString = firebaseUser.getUid();
+
+                        StorageReference mStorage = FirebaseStorage.getInstance().getReference("users_photos").child(uidString);
+                        mStorage.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                                result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        String stringUri = uri.toString();
+                                        UserFile userFile;
+                                        if(userType.equals("Customer"))
+                                        {
+                                             userFile = new UserFile(uidString,
+                                                     stringUri,
+                                                     firstNameRegister.getText().toString(),
+                                                     lastNameRegister.getText().toString(),
+                                                     addressRegister.getText().toString(),
+                                                     contactRegister.getText().toString(),
+                                                     userType,
+                                                     "active");
+                                        }
+                                        else
+                                        {
+                                             userFile = new UserFile(uidString,
+                                                     stringUri,
+                                                     firstNameRegister.getText().toString(),
+                                                     lastNameRegister.getText().toString(),
+                                                     addressRegister.getText().toString(),
+                                                     contactRegister.getText().toString(),
+                                                     userType,
+                                                     "inactive");
+                                        }
+                                        UserAccountFile userAccountFile = new UserAccountFile(uidString,
+                                                emailRegister.getText().toString(),
+                                                passwordRegister.getText().toString(),
+                                                "active");
+                                        FirebaseDatabase.getInstance().getReference("User_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userFile)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        progressDialog.dismiss();
+                                                        showMessage("Successfull Registered");
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        progressDialog.dismiss();
+                                                        showMessage("Error, Connection Error");
+                                                    }
+                                                });
+                                        FirebaseDatabase.getInstance().getReference("User_Account_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userAccountFile)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        progressDialog.dismiss();
+                                                        showMessage("Successfull Registered");
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        progressDialog.dismiss();
+                                                        showMessage("Error, Connection Error");
+                                                    }
+                                                });
+
+                                    }
+                                });
+                            }
+                        });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+                        showMessage("Please connect to Internet Connection");
+                    }
+                });
+    }
+
+    private String getFileExtension(Uri uri) {
+        ContentResolver cR = getApplication().getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cR.getType(uri));
+    }
+
+    private void passToNextActivity()
+    {
+        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    private void showMessage(String s) {
+        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
     }
 }

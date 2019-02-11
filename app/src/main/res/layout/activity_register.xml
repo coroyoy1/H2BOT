@@ -57,88 +57,116 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <!--<Spinner-->
-                <!--android:id="@+id/RegisterSpinner"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="50dp"-->
-                <!--android:layout_weight="1"-->
-                <!--android:entries="@array/UserType">-->
+            <!--android:id="@+id/RegisterSpinner"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:entries="@array/UserType">-->
 
             <!--</Spinner>-->
 
-            <EditText
+            <!--<EditText-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:id="@+id/usernameText"-->
+            <!--android:hint="Username"-->
+            <!--android:inputType="text"-->
+            <!--android:background="@drawable/z_edittextround" />-->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/usernameText"
-                android:hint="Username"
-                android:inputType="text"/>
+                android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/RegisterFullName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Full Name"
-                android:inputType="text" />
+                <EditText
+                    android:id="@+id/RegisterFullName"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/z_edittextround"
+                    android:hint="First Name"
+                    android:inputType="text" />
 
-            <EditText
-                android:id="@+id/RegisterAge"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/age"
-                android:inputType="number" />
+                <EditText
+                    android:id="@+id/RegisterLastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/z_edittextround"
+                    android:hint="Last Name"
+                    android:inputType="text" />
+            </LinearLayout>
+
+
+            <!--<EditText-->
+            <!--android:id="@+id/RegisterAge"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:hint="@string/age"-->
+            <!--android:inputType="number" />-->
 
             <EditText
                 android:id="@+id/RegisterAddress"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/z_edittextround"
                 android:hint="Address" />
 
             <EditText
                 android:id="@+id/RegisterContact"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/z_edittextround"
                 android:hint="@string/contact_number" />
 
             <EditText
                 android:id="@+id/RegisterEmailAddress"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/z_edittextround"
                 android:hint="@string/email_address"
                 android:inputType="textEmailAddress" />
 
             <EditText
                 android:id="@+id/RegisterPassword"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/z_edittextround"
                 android:hint="Password"
                 android:inputType="textPassword" />
 
             <EditText
                 android:id="@+id/ConfirmPassword"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/z_edittextround"
                 android:hint="Confirm Password"
                 android:inputType="textPassword" />
 
             <Button
+
                 android:id="@+id/RegisterSignUp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="#0B88FF"
+                android:background="@drawable/z_darkbluebutton"
                 android:text="@string/sign_up"
                 android:textColor="#FFF" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#FF0000"
                 android:text="Please use a valid phone number**"
-                android:textStyle="italic"/>
-            <ProgressBar
-                android:id="@+id/progressBar1"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textColor="#FF0000"
+                android:textStyle="italic" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -53,19 +53,19 @@ public class LoginActivity extends AppCompatActivity {
         register = findViewById(R.id.registerAccount);
         loginNow = findViewById(R.id.logInBtn);
         mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(FirebaseAuth.getInstance().getCurrentUser() != null)
-                {
-                    if(!(LoginActivity.this).isFinishing())
-                    {
-                        progressDialog.show();
-                    }
-                    userTypeLogin();
-                }
-            }
-        };
+//        mAuthListener = new FirebaseAuth.AuthStateListener() {
+//            @Override
+//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//                if(FirebaseAuth.getInstance().getCurrentUser() != null)
+//                {
+//                    if(!(LoginActivity.this).isFinishing())
+//                    {
+//                        progressDialog.show();
+//                    }
+//                    userTypeLogin();
+//                }
+//            }
+//        };
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,11 +91,11 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        mAuth.addAuthStateListener(mAuthListener);
+//    }
 
     private void signInNow()
     {
@@ -133,11 +133,11 @@ public class LoginActivity extends AppCompatActivity {
     {
         FirebaseUser userHERE = FirebaseAuth.getInstance().getCurrentUser();
         String RegisteredUserID = userHERE.getUid();
-        refConnection = FirebaseDatabase.getInstance().getReference().child("Users").child(RegisteredUserID);
+        refConnection = FirebaseDatabase.getInstance().getReference().child("User_File").child(RegisteredUserID);
         refConnection.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String userType = dataSnapshot.child("userType").getValue().toString();
+                String userType = dataSnapshot.child("user_type").getValue().toString();
                 if (userType.equals("Customer")) {
                     //Temporary Output
                     startActivity(new Intent(LoginActivity.this, CustomerMainActivity.class));
@@ -145,7 +145,7 @@ public class LoginActivity extends AppCompatActivity {
                     finish();
                 }
                 else if(userType.equals("Water Station")){
-                    String documentVerify = dataSnapshot.child("status").getValue().toString();
+                    String documentVerify = dataSnapshot.child("user_status").getValue().toString();
                     if(documentVerify.equals("inactive"))
                     {
                         startActivity(new Intent(LoginActivity.this, WaterStationDocumentVersion2Activity.class));
@@ -164,7 +164,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else if(userType.equals("Delivery Man"))
                 {
-                    String documentVerify = dataSnapshot.child("status").getValue().toString();
+                    String documentVerify = dataSnapshot.child("user_status").getValue().toString();
                     if(documentVerify.equals("inactive"))
                     {
                         finish();
@@ -179,7 +179,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else if(userType.equals("Water Dealer"))
                 {
-                    String documentVerify = dataSnapshot.child("status").getValue().toString();
+                    String documentVerify = dataSnapshot.child("user_status").getValue().toString();
                     if(documentVerify.equals("inactive"))
                     {
                         startActivity(new Intent(LoginActivity.this, WaterPeddlerDocumentActivity.class));
@@ -194,7 +194,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else if(userType.equals("Third Party Affiliate"))
                 {
-                    String documentVerify = dataSnapshot.child("status").getValue().toString();
+                    String documentVerify = dataSnapshot.child("user_status").getValue().toString();
                     if(documentVerify.equals("inactive"))
                     {
                         showMessages("Your registration is still on process. Please wait for the confirmation that will be sent through SMS.");
