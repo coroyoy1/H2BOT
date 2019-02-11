@@ -10,6 +10,7 @@ public class UserFile {
     private String user_status;
     private String user_uri;
 
+
     public UserFile()
     {
 
