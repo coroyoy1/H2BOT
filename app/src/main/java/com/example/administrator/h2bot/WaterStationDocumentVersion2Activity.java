@@ -1,5 +1,6 @@
 package com.example.administrator.h2bot;
 
+import com.example.administrator.h2bot.SetterAndGetterModelFolder.*;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,6 +18,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -35,7 +37,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
     private static final int PICK_IMAGE_REQUEST = 1;
     ImageView image1, image2, image3, image4, image5, image6;
     Button button1, button2, button3, button4, button5, button6, buttonlogout, submitToFirebase;
-    EditText stationAD, stationBusiness, stationDelivery;
+    EditText businessName, businessStartTime, businessEndTime, businessDeliveryFeePerGal, businessMinNoCapacity, businessTelNo;
 
     Boolean isClick1=false, isClick2=false, isClick3=false, isClick4=false, isClick5=false, isClick6=false;
     Intent intent;
@@ -46,9 +48,10 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
     FirebaseAuth mAuth;
 
     private RadioGroup radioGroup;
-    private RadioButton radioButton, radioButtonv;
+    private RadioButton radioButton, radioButtonv, radioButtonvv;
     String radioCheck = "";
-
+    String businessFreeOrNoText = "";
+    String businessDeliveryService = "";
 
 
     @Override
@@ -63,7 +66,6 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
 
         radioGroup = findViewById(R.id.radioAllSD);
 
-        stationAD = findViewById(R.id.stationNameSD);
 
         image1 = (ImageView)findViewById(R.id.permit1);
         image2 = (ImageView)findViewById(R.id.permit2);
@@ -90,22 +92,44 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         buttonlogout.setOnClickListener(this);
         submitToFirebase.setOnClickListener(this);
 
-        stationBusiness = findViewById(R.id.stationBusinesshoursSD);
-        stationDelivery = findViewById(R.id.stationDeliverySD);
+
+        //Edittext
+        businessName = findViewById(R.id.stationNameSD);
+        businessStartTime = findViewById(R.id.stationBusinesshoursSD);
+        businessEndTime = findViewById(R.id.stationBusinesshoursSDEnd);
+        businessDeliveryFeePerGal = findViewById(R.id.stationDeliverySD);
+        businessMinNoCapacity = findViewById(R.id.stationCapacitySD);
+        businessTelNo = findViewById(R.id.stationTelephoneySD);
+
+
 
         radioButton = findViewById(R.id.radioYes);
         radioButtonv = findViewById(R.id.radioNo);
+        radioButtonvv = findViewById(R.id.radioFree);
         radioButton.setChecked(true);
+
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stationDelivery.setVisibility(View.VISIBLE);
+
+                businessDeliveryFeePerGal.setVisibility(View.VISIBLE);
+                businessFreeOrNoText = "not";
+                businessDeliveryService = "active";
             }
         });
         radioButtonv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stationDelivery.setVisibility(View.INVISIBLE);
+                businessDeliveryFeePerGal.setVisibility(View.INVISIBLE);
+                businessFreeOrNoText = "not";
+                businessDeliveryService = "inactive";
+            }
+        });
+        radioButtonvv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                businessFreeOrNoText = "free";
+                businessDeliveryService = "active";
             }
         });
         if(radioButton.isChecked())
@@ -188,13 +212,18 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
     }
 
 
-    private void uploadImage()
-    {
 
+    private void uploadData(String businessNameTextGET,
+               String businessStartTimeTextGET,
+               String businessEndTimeTextGET,
+               String businessDeliveryFeePerGalTextGet,
+               String businessMinNoCapacityTextGET,
+               String businessTelNoTextGET)
+    {
         if(uri1 != null)
         {
             String currentUser = mAuth.getCurrentUser().getUid();
-            StorageReference ref = storageReference.child("users_documents").child(currentUser+"/"+"documentFirst");
+            StorageReference ref = storageReference.child("users_documents").child(currentUser+"/"+"business_permit_picture");
             ref.putFile(uri1)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -204,26 +233,16 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     String addOne = uri.toString();
-                                    FirebaseDatabase.getInstance().getReference("user_waterstation_document").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("businesspermit").setValue(addOne);
+                                    FirebaseDatabase.getInstance().getReference("User_WS_Docs_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("station_business_permit").setValue(addOne);
                                 }
                             });
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                         }
                     });
             }
         if(uri2 != null)
         {
             String currentUser = mAuth.getCurrentUser().getUid();
-            StorageReference ref = storageReference.child("users_documents").child(currentUser+"/"+"documentSecond");
+            StorageReference ref = storageReference.child("users_documents").child(currentUser+"/"+"station_sanitary_permit_picture");
             ref.putFile(uri2)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -233,26 +252,16 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     String addOne = uri.toString();
-                                    FirebaseDatabase.getInstance().getReference("user_waterstation_document").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("sanitarypermits").setValue(addOne);
+                                    FirebaseDatabase.getInstance().getReference("User_WS_Docs_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("station_sanitary_permit").setValue(addOne);
                                 }
                             });
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                         }
                     });
         }
         if(uri3 != null)
         {
             String currentUser = mAuth.getCurrentUser().getUid();
-            StorageReference ref = storageReference.child("users_documents").child(currentUser+"/"+"documentThird");
+            StorageReference ref = storageReference.child("users_documents").child(currentUser+"/"+"station_fire_protection_picture");
             ref.putFile(uri3)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -262,7 +271,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     String addOne = uri.toString();
-                                    FirebaseDatabase.getInstance().getReference("user_waterstation_document").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("fire protection").setValue(addOne);
+                                    FirebaseDatabase.getInstance().getReference("User_WS_Docs_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("station_fire_protection").setValue(addOne);
                                 }
                             });
                         }
@@ -281,7 +290,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         if(uri4 != null)
         {
             String currentUser = mAuth.getCurrentUser().getUid();
-            StorageReference ref = storageReference.child("users_documents").child(currentUser+"/"+"documentFourth");
+            StorageReference ref = storageReference.child("users_documents").child(currentUser+"/"+"station_real_property_taxes_picture");
             ref.putFile(uri4)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -291,7 +300,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     String addOne = uri.toString();
-                                    FirebaseDatabase.getInstance().getReference("user_waterstation_document").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("realpropertiestaxes").setValue(addOne);
+                                    FirebaseDatabase.getInstance().getReference("User_WS_Docs_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("station_real_property_taxes").setValue(addOne);
                                 }
                             });
                         }
@@ -310,7 +319,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         if(uri5 != null)
         {
             String currentUser = mAuth.getCurrentUser().getUid();
-            StorageReference ref = storageReference.child("users_documents").child(currentUser+"/"+"documentFifth");
+            StorageReference ref = storageReference.child("users_documents").child(currentUser+"/"+"station_occupancy_permit_picture");
             ref.putFile(uri5)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -320,7 +329,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     String addOne = uri.toString();
-                                    FirebaseDatabase.getInstance().getReference("user_waterstation_document").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("buildingoccupancypermit").setValue(addOne);
+                                    FirebaseDatabase.getInstance().getReference("User_WS_Docs_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("station_occupancy_permit").setValue(addOne);
                                 }
                             });
                         }
@@ -343,7 +352,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
             progressDialog.show();
 
             String currentUser = mAuth.getCurrentUser().getUid();
-            StorageReference ref = storageReference.child("users_documents").child(currentUser+"/"+"documentSixth");
+            StorageReference ref = storageReference.child("users_documents").child(currentUser+"/"+"station_physico_chem_permit_picture");
             ref.putFile(uri6)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -354,55 +363,26 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                 public void onSuccess(Uri uri) {
                                     String addOne = uri.toString();
 
-                                    FirebaseDatabase.getInstance().getReference("user_waterstation_document").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("physicochemicaltest").setValue(addOne);
-                                    FirebaseDatabase.getInstance().getReference("user_waterstation_document").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("status").setValue("active");
+                                    FirebaseDatabase.getInstance().getReference("User_WS_Docs_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("station_physico_chem_permit").setValue(addOne);
+                                    FirebaseDatabase.getInstance().getReference("User_WS_Docs_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("station_status").setValue("inactive");
                                 }
                             });
-                            FirebaseDatabase databaseSpecificStore = FirebaseDatabase.getInstance();
-                            DatabaseReference referenceSpecificStore = databaseSpecificStore.getReference("user_waterstation_info");
-                            referenceSpecificStore.child(mAuth.getCurrentUser().getUid()).child("ws_userID").setValue(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-
-                                        }
-                                    });
-                            DatabaseReference referenceSpecificStoreStat = databaseSpecificStore.getReference("Users");
-                            referenceSpecificStoreStat.child(mAuth.getCurrentUser().getUid()).child("status").setValue("unconfirmed")
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-
-                                }
-                            });
-                            referenceSpecificStore.child(mAuth.getCurrentUser().getUid()).child("ws_stationName").setValue(stationAD.getText().toString())
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    //showMessages("Station Added");
-                                }
-                            });
-                            referenceSpecificStore.child(mAuth.getCurrentUser().getUid()).child("ws_stationBusinesshours").setValue(stationBusiness.getText().toString())
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-
-                                        }
-                                    });
-                            referenceSpecificStore.child(mAuth.getCurrentUser().getUid()).child("ws_stationDeliveryService").setValue(radioCheck)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-
-                                        }
-                                    });
-                            referenceSpecificStore.child(mAuth.getCurrentUser().getUid()).child("ws_stationDeliveryFee").setValue(stationDelivery.getText().toString())
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-
-                                        }
-                                    });
+                            UserWSBusinessInfoFile userWSBusinessInfoFile = new UserWSBusinessInfoFile(currentUser, businessNameTextGET, businessStartTimeTextGET, businessEndTimeTextGET, businessDeliveryService, businessFreeOrNoText, businessDeliveryFeePerGalTextGet, businessMinNoCapacityTextGET, businessTelNoTextGET, "active");
+                            FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(currentUser).setValue(userWSBusinessInfoFile)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        showMessages("Successfully Submitted");
+                                        progressDialog.dismiss();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        progressDialog.dismiss();
+                                        showMessages("Failed to submit");
+                                    }
+                                });
                             progressDialog.dismiss();
                             Toast.makeText(WaterStationDocumentVersion2Activity.this, "Uploaded", Toast.LENGTH_SHORT).show();
                             passToNextAct();
@@ -431,49 +411,44 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
     }
 
+    public void openGallery()
+    {
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId())
         {
             case R.id.permitButton1:
-                isClick1=true;
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+                isClick1=true;isClick2=false;isClick3=false;isClick4=false;isClick5=false;isClick6=false;
+                openGallery();
                 break;
             case R.id.permitButton2:
-                isClick2=true;
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+                isClick2=true;isClick1=false;isClick3=false;isClick4=false;isClick5=false;isClick6=false;
+                openGallery();
                 break;
             case R.id.permitButton3:
-                isClick3=true;
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+                isClick3=true;isClick2=false;isClick1=false;isClick4=false;isClick5=false;isClick6=false;
+                openGallery();
                 break;
             case R.id.permitButton4:
-                isClick4=true;
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+                isClick4=true;isClick2=false;isClick3=false;isClick1=false;isClick5=false;isClick6=false;
+                openGallery();
                 break;
             case R.id.permitButton5:
-                isClick5=true;
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+                isClick5=true;isClick2=false;isClick3=false;isClick4=false;isClick1=false;isClick6=false;
+                openGallery();
                 break;
             case R.id.permitButton6:
-                isClick6=true;
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+                isClick6=true;isClick2=false;isClick3=false;isClick4=false;isClick5=false;isClick1=false;
+                openGallery();
                 break;
             case R.id.submitButton:
                 checkingAddPhoto();
-                uploadImage();
+                stringData();
                 break;
             case R.id.logoutButton:
                 mAuth.signOut();
@@ -489,6 +464,22 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
     {
         Intent passIntent = new Intent(WaterStationDocumentVersion2Activity.this, MerchantAccessVerification.class);
         startActivity(passIntent);
+    }
+    public void stringData()
+    {
+        String businessNameText = businessName.getText().toString();
+        String businessStartTimeText = businessStartTime.getText().toString();
+        String businessEndTimeText = businessEndTime.getText().toString();
+        String businessDeliveryFeePerGalText = businessDeliveryFeePerGal.getText().toString();
+        String businessMinNoCapacityText = businessMinNoCapacity.getText().toString();
+        String businessTelNoText = businessTelNo.getText().toString();
+
+        uploadData(businessNameText,
+                businessStartTimeText,
+                businessEndTimeText,
+                businessDeliveryFeePerGalText,
+                businessMinNoCapacityText,
+                businessTelNoText);
     }
     public void checkingAddPhoto()
     {

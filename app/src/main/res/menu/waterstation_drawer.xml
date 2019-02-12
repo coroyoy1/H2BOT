@@ -32,6 +32,10 @@
             android:icon="@drawable/ic_list"
             android:title="Product List"
             />
+        <item android:id="@+id/nav_deliveryman_ws"
+            android:icon="@drawable/ic_deliveryman"
+            android:title="Delivery Man"
+            />
         <!--<item android:id="@+id/nav_broadcast_ws"-->
             <!--android:icon="@drawable/ic_broadcast"-->
             <!--android:title="Broad Cast"-->

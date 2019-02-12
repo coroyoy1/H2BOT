@@ -120,6 +120,12 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Feedback");
                 showMessages("Feedback");
                 break;
+            case R.id.nav_deliveryman_ws:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
+                        new WSDMFragment()).commit();
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Delivery Man");
+                showMessages("Delivery Man");
+                break;
             case R.id.nav_logout_ws:
                 mAuth.signOut();
                 finish();
