@@ -1,6 +1,6 @@
 package com.example.administrator.h2bot;
 
-class UserMerchant
+public class UserMerchant
 {
     String username, userType, fullname, email, age, address, contact, password, stationRelatedNo, status, imageUri, stationName;
     public UserMerchant()

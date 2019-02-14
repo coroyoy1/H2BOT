@@ -1,6 +1,5 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.waterstation;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.example.administrator.h2bot.R;
 
 public class WSBusinessInfoFragment extends Fragment implements View.OnClickListener
         {
@@ -44,6 +45,8 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
                         AddItemMerchant additem = new AddItemMerchant();
                         FragmentManager fragmentManager = getFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                        fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.replace(R.id.fragment_container_ws, additem);
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();

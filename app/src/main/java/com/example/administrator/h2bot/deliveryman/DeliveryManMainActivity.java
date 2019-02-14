@@ -1,4 +1,4 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.deliveryman;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.administrator.h2bot.LoginActivity;
+import com.example.administrator.h2bot.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;

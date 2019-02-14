@@ -1,15 +1,9 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.waterstation;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.administrator.h2bot.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -26,9 +20,9 @@ import java.util.List;
 public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapter.ImageViewHolder> {
 
     private Context contextHolder;
-    private List<MerchantGetterSetter>uploadsHolder;
+    private List<ProductGetterSetter>uploadsHolder;
 
-    public MerchantDataAdapter(Context context, List<MerchantGetterSetter>uploads)
+    public MerchantDataAdapter(Context context, List<ProductGetterSetter>uploads)
     {
         contextHolder = context;
         uploadsHolder = uploads;
@@ -42,7 +36,7 @@ public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapte
 
     @Override
     public void onBindViewHolder(@NonNull MerchantDataAdapter.ImageViewHolder imageViewHolder, int i) {
-        final MerchantGetterSetter currentData = uploadsHolder.get(i);
+        final ProductGetterSetter currentData = uploadsHolder.get(i);
         imageViewHolder.PLItemNameHolder.setText(currentData.getmItemName());
         final String itemName = currentData.getmItemName();
         final String itemPrice = currentData.getmItemPrice();
@@ -60,7 +54,12 @@ public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapte
             public void onClick(View v) {
                 WSProductListIntent additem = new WSProductListIntent();
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws, additem).addToBackStack(null).commit();
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                        .replace(R.id.fragment_container_ws, additem)
+                        .addToBackStack(null)
+                        .commit();
                 Bundle args = new Bundle();
                 args.putString("ItemNameMDA", itemName);
                 args.putString("ItemPriceMDA", itemPrice);

@@ -1,4 +1,4 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.waterstation;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,10 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class DMInProgressFragment extends Fragment {
+import com.example.administrator.h2bot.R;
+
+public class WSBusinessInformationUpdate extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_dm_inprogress, container, false);
+        View view = inflater.inflate(R.layout.fragment_ws_business_info, container, false);
+        return view;
     }
 }

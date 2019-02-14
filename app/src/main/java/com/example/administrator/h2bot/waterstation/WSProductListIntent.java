@@ -1,10 +1,11 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.waterstation;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.h2bot.R;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 public class WSProductListIntent extends Fragment implements View.OnClickListener {
     TextView itemN, itemP, itemQ, itemU;
@@ -74,13 +74,23 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
             case R.id.PLIbackbutton:
                 WSProductListFragment additem = new WSProductListFragment();
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws, additem).addToBackStack(null).commit();
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                        .replace(R.id.fragment_container_ws, additem)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             case R.id.PLIupdatebutton:
                 String uidString = DataGet(itemUi);
                 WSProductListUpdate updateitem = new WSProductListUpdate();
                 AppCompatActivity activityapp = (AppCompatActivity) v.getContext();
-                activityapp.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws, updateitem).addToBackStack(null).commit();
+                activityapp.getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                        .replace(R.id.fragment_container_ws, updateitem)
+                        .addToBackStack(null)
+                        .commit();
                 Bundle args = new Bundle();
                 args.putString("ItemUidPLI", uidString);
                 updateitem.setArguments(args);

@@ -29,7 +29,7 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".zCreateStationDetailsActivity"></activity>
         <activity android:name=".zCreateAccountOptionUserTypeActivity" />
-        <activity android:name=".DeliveryManDocumentActivity" />
+        <activity android:name=".deliveryman.DeliveryManDocumentActivity" />
         <activity android:name=".tempAccessActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
@@ -80,31 +80,31 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".WaterStationMainActivity"
+            android:name=".waterstation.WaterStationMainActivity"
             android:theme="@style/Theme.Design.Light" />
         <activity
-            android:name=".WSAccountSettingsUpdateDoc"
+            android:name=".waterstation.WSAccountSettingsUpdateDoc"
             android:label="Update Document"
-            android:parentActivityName=".WaterStationMainActivity"
+            android:parentActivityName=".waterstation.WaterStationMainActivity"
             android:theme="@style/Theme.Design.Light">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.administrator.h2bot.WaterStationMainActivity" />
+                android:value="com.example.administrator.h2bot.waterstation.WaterStationMainActivity" />
         </activity>
         <activity
-            android:name=".WSAccountSettingsUpdateAcc"
+            android:name=".waterstation.WSAccountSettingsUpdateAcc"
             android:label="Update Account"
-            android:parentActivityName=".WaterStationMainActivity"
+            android:parentActivityName=".waterstation.WaterStationMainActivity"
             android:theme="@style/Theme.Design.Light">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.administrator.h2bot.WaterStationMainActivity" />
+                android:value="com.example.administrator.h2bot.waterstation.WaterStationMainActivity" />
         </activity>
         <activity
             android:name=".TPAffiliateMainActivity"
             android:theme="@style/Theme.Design.Light" />
         <activity
-            android:name=".DeliveryManMainActivity"
+            android:name=".deliveryman.DeliveryManMainActivity"
             android:theme="@style/Theme.Design.Light" />
         <activity android:name=".MerchantAccessVerification" />
     </application>

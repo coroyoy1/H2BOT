@@ -1,4 +1,4 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.waterstation;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,12 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class WSDMFragment extends Fragment {
+import com.example.administrator.h2bot.R;
+
+public class WSFeedbackFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_ws_deliveryman, container, false);
-
-        return view;
+        return inflater.inflate(R.layout.fragment_ws_feedback, container, false);
     }
 }

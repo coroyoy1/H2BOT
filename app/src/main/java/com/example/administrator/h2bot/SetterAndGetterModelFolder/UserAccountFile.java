@@ -14,6 +14,11 @@ public class UserAccountFile {
         this.user_status = user_status;
     }
 
+    public UserAccountFile()
+    {
+
+    }
+
     public String getUser_getUID() {
         return user_getUID;
     }

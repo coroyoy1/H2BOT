@@ -1,5 +1,6 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.waterstation;
 
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
@@ -22,12 +23,14 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.administrator.h2bot.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+//import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -56,12 +59,21 @@ public class AddItemMerchant extends Fragment {
 
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
+    ProgressDialog progressDialog;
     private StorageTask mUploadTask;
+//    private FirebaseFirestore firebaseFirestore;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.activity_add_item_merchant, container, false);
+
+
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Loading...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setProgress(0);
 
         //Button
         UploadAPhotoButton = view.findViewById(R.id.UploadAPhotoButton);
@@ -91,8 +103,8 @@ public class AddItemMerchant extends Fragment {
 
         //design
         currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mStorageRef = FirebaseStorage.getInstance().getReference("userproduct");
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("User Items");
+        mStorageRef = FirebaseStorage.getInstance().getReference("user_product");
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("User_Product");
 
         PriceEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
         QualityEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
@@ -113,6 +125,7 @@ public class AddItemMerchant extends Fragment {
                 if (mUploadTask != null && mUploadTask.isInProgress()) {
                     Toast.makeText(getActivity(), "Upload in progress", Toast.LENGTH_SHORT).show();
                 } else {
+                    progressDialog.show();
                     uploadItem();
                 }
             }
@@ -164,7 +177,7 @@ public class AddItemMerchant extends Fragment {
                                     int randomize = rand.nextInt(1000) + 1;
                                     String numberStore =  Integer.toString(randomize);
                                     Toast.makeText(getActivity(), "Upload successful", Toast.LENGTH_LONG).show();
-                                    MerchantGetterSetter upload = new MerchantGetterSetter(
+                                    ProductGetterSetter upload = new ProductGetterSetter(
                                             stringUri,
                                             ItemNameEditText.getText().toString().trim(),
                                             waterTypeSpinner.getSelectedItem().toString(),
@@ -172,12 +185,13 @@ public class AddItemMerchant extends Fragment {
                                             QualityEditText.getText().toString().trim(),
                                             currentuser,numberStore, uuid
                                     );
-                                    Picasso.get().load(R.drawable.ic_menu_camera).into(ItemImage);
+                                    Picasso.get().load(R.drawable.ic_launcherandroid).into(ItemImage);
                                     ItemNameEditText.setText("");
                                     PriceEditText.setText("");
                                     QualityEditText.setText("");
                                     String uploadId = currentuser;
                                     mDatabaseRef.child(uploadId).child(uuid).setValue(upload);
+                                    progressDialog.dismiss();
                                 }
                             });
 
@@ -189,6 +203,7 @@ public class AddItemMerchant extends Fragment {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {

@@ -1,7 +1,8 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.waterstation;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.SetterAndGetterModelFolder.*;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -22,14 +25,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.util.Objects;
-
 public class WSAccountSettingsFragment extends Fragment implements View.OnClickListener {
 
     TextView UserTypeWS, StationNameWS, StationRelatedNoWS, UserNameWS, FullNameWS, AgeWS, AddressWS, ContactNoWS, EmailAddressWS;
     ImageView imageView;
     DatabaseReference databaseReference;
+    DatabaseReference databaseReference1;
+    DatabaseReference databaseReference2;
     FirebaseUser firebaseUser;
     FirebaseAuth mAuth;
 
@@ -40,7 +42,7 @@ public class WSAccountSettingsFragment extends Fragment implements View.OnClickL
                 container, false);
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(firebaseUser.getUid());
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("User_File").child(firebaseUser.getUid());
 
         UserTypeWS = view.findViewById(R.id.userTypeAS);
         StationNameWS = view.findViewById(R.id.stationNameAS);
@@ -60,21 +62,42 @@ public class WSAccountSettingsFragment extends Fragment implements View.OnClickL
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        UserMerchant user = dataSnapshot.getValue(UserMerchant.class);
-                        UserTypeWS.setText(user.getUserType());
-                        StationNameWS.setText(user.getStationName());
-                        StationRelatedNoWS.setText(user.getStationRelatedNo());
-                        FullNameWS.setText(user.getFullname());
-                        AgeWS.setText(user.getAge());
-                        AddressWS.setText(user.getAddress());
-                        ContactNoWS.setText(user.getContact());
-                        EmailAddressWS.setText(user.getEmail());
-                    Picasso.get()
-                            .load(user.getImageUri())
-                            .fit()
-                            .centerCrop()
-                            .into(imageView);
+                UserFile user = dataSnapshot.getValue(UserFile.class);
+                FullNameWS.setText(user.getUser_firtname()+" "+user.getUser_lastname());
+                AddressWS.setText(user.getUser_address());
+                ContactNoWS.setText(user.getUser_phone_no());
+                UserTypeWS.setText(user.getUser_type());
+                Picasso.get()
+                        .load(user.getUser_uri())
+                        .fit()
+                        .centerCrop()
+                        .into(imageView);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                showMessage("Failed to connect");
+            }
+        });
+        databaseReference1 = FirebaseDatabase.getInstance().getReference("User_Account_File").child(firebaseUser.getUid());
+        databaseReference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                UserAccountFile userAccount = dataSnapshot.getValue(UserAccountFile.class);
+                    EmailAddressWS.setText(userAccount.getUser_email_address());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                showMessage("Failed to connect");
+            }
+        });
+        databaseReference2 = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(firebaseUser.getUid());
+        databaseReference2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                UserWSBusinessInfoFile userBusiness = dataSnapshot.getValue(UserWSBusinessInfoFile.class);
+                StationNameWS.setText(userBusiness.getBusiness_name());
             }
 
             @Override

@@ -1,6 +1,6 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.waterstation;
 
-public class MerchantGetterSetter {
+public class ProductGetterSetter {
     private String mItemImage;
     private String mItemName;
     private String mWaterType;
@@ -11,13 +11,13 @@ public class MerchantGetterSetter {
     private String mItemUID;
 
 
-    public MerchantGetterSetter()
+    public ProductGetterSetter()
     {
 
     }
 
 
-    public MerchantGetterSetter(String itemImage, String itemName, String waterType, String itemPrice, String itemQuantity, String userID, String itemNo, String itemUID) {
+    public ProductGetterSetter(String itemImage, String itemName, String waterType, String itemPrice, String itemQuantity, String userID, String itemNo, String itemUID) {
         mItemImage = itemImage;
         mItemName = itemName;
         mWaterType = waterType;

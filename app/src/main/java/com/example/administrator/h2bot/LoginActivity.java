@@ -11,6 +11,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.h2bot.deliveryman.DeliveryManDocumentActivity;
+import com.example.administrator.h2bot.deliveryman.DeliveryManMainActivity;
+import com.example.administrator.h2bot.waterstation.WaterStationMainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -53,19 +56,19 @@ public class LoginActivity extends AppCompatActivity {
         register = findViewById(R.id.registerAccount);
         loginNow = findViewById(R.id.logInBtn);
         mAuth = FirebaseAuth.getInstance();
-//        mAuthListener = new FirebaseAuth.AuthStateListener() {
-//            @Override
-//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-//                if(FirebaseAuth.getInstance().getCurrentUser() != null)
-//                {
-//                    if(!(LoginActivity.this).isFinishing())
-//                    {
-//                        progressDialog.show();
-//                    }
-//                    userTypeLogin();
-//                }
-//            }
-//        };
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(FirebaseAuth.getInstance().getCurrentUser() != null)
+                {
+                    if(!(LoginActivity.this).isFinishing())
+                    {
+                        progressDialog.show();
+                    }
+                    userTypeLogin();
+                }
+            }
+        };
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,11 +94,11 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        mAuth.addAuthStateListener(mAuthListener);
-//    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
 
     private void signInNow()
     {
