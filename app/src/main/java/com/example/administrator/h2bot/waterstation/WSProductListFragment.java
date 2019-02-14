@@ -32,7 +32,7 @@ public class WSProductListFragment extends Fragment {
     private FloatingActionButton floatButton;
     private MerchantDataAdapter PLAdapter;
     private DatabaseReference databaseReferencePL;
-    private List<ProductGetterSetter> uploadPL;
+    private List<UserWSWDWaterTypeFile> uploadPL;
     private FirebaseAuth mAuth;
 
     @Nullable
@@ -46,14 +46,14 @@ public class WSProductListFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
         uploadPL = new ArrayList<>();
-        databaseReferencePL = FirebaseDatabase.getInstance().getReference("User_Product").child(mAuth.getCurrentUser().getUid());
+        databaseReferencePL = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File").child(mAuth.getCurrentUser().getUid());
 
         databaseReferencePL.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot postSnapshot : dataSnapshot.getChildren())
                 {
-                    ProductGetterSetter getterSetter = postSnapshot.getValue(ProductGetterSetter.class);
+                    UserWSWDWaterTypeFile getterSetter = postSnapshot.getValue(UserWSWDWaterTypeFile.class);
                     uploadPL.add(getterSetter);
 
                 }
@@ -72,7 +72,7 @@ public class WSProductListFragment extends Fragment {
         floatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddItemMerchant additem = new AddItemMerchant();
+                WSProductAdd additem = new WSProductAdd();
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 activity.getSupportFragmentManager()
                         .beginTransaction()

@@ -20,9 +20,9 @@ import java.util.List;
 public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapter.ImageViewHolder> {
 
     private Context contextHolder;
-    private List<ProductGetterSetter>uploadsHolder;
+    private List<UserWSWDWaterTypeFile>uploadsHolder;
 
-    public MerchantDataAdapter(Context context, List<ProductGetterSetter>uploads)
+    public MerchantDataAdapter(Context context, List<UserWSWDWaterTypeFile>uploads)
     {
         contextHolder = context;
         uploadsHolder = uploads;
@@ -36,19 +36,20 @@ public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapte
 
     @Override
     public void onBindViewHolder(@NonNull MerchantDataAdapter.ImageViewHolder imageViewHolder, int i) {
-        final ProductGetterSetter currentData = uploadsHolder.get(i);
-        imageViewHolder.PLItemNameHolder.setText(currentData.getmItemName());
-        final String itemName = currentData.getmItemName();
-        final String itemPrice = currentData.getmItemPrice();
-        final String itemQuantity = currentData.getmItemQuantity();
-        final String itemType = currentData.getmWaterType();
-        final String itemUid = currentData.getmItemUID();
+        final UserWSWDWaterTypeFile currentData = uploadsHolder.get(i);
+        imageViewHolder.PLItemNameHolder.setText(currentData.getWater_type());
 
-        Picasso.get()
-                .load(currentData.getmItemImage())
-                .fit()
-                .centerCrop()
-                .into(imageViewHolder.PLImage);
+        final String itemName = currentData.getWater_name();
+        final String itemPrice = currentData.getWater_price_per_gallon();
+        //final String itemQuantity = currentData.getmItemQuantity();
+        final String itemType = currentData.getWater_type();
+        final String itemUid = currentData.getWater_seller_id();
+
+//        Picasso.get()
+//                .load(currentData.getmItemImage())
+//                .fit()
+//                .centerCrop()
+//                .into(imageViewHolder.PLImage);
         imageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,12 +62,12 @@ public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapte
                         .addToBackStack(null)
                         .commit();
                 Bundle args = new Bundle();
-                args.putString("ItemNameMDA", itemName);
-                args.putString("ItemPriceMDA", itemPrice);
-                args.putString("ItemQuantityMDA", itemQuantity);
-                args.putString("ItemTypeMDA", itemType);
-                args.putString("ItemImageMDA", currentData.getmItemImage());
-                args.putString("ItemUidMDA", itemUid);
+                //args.putString("ItemNameMDA", itemName);
+                //args.putString("ItemPriceMDA", itemPrice);
+                //args.putString("ItemQuantityMDA", itemQuantity);
+                //args.putString("ItemTypeMDA", itemType);
+                //args.putString("ItemImageMDA", currentData.getmItemImage());
+                //args.putString("ItemUidMDA", itemUid);
                 additem.setArguments(args);
             }
         });
@@ -79,13 +80,13 @@ public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapte
 
     public class ImageViewHolder extends RecyclerView.ViewHolder{
         public TextView PLItemNoHolder, PLItemNameHolder;
-        public ImageView PLImage;
+        //public ImageView PLImage;
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
 //            PLItemNoHolder = itemView.findViewById(R.id.PLItemNo);
             PLItemNameHolder = itemView.findViewById(R.id.PLItemName);
-            PLImage = itemView.findViewById(R.id.imageViewPL);
+           // PLImage = itemView.findViewById(R.id.imageViewPL);
         }
     }
 }
