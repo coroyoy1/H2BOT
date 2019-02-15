@@ -95,6 +95,7 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
 
+
         Bundle bundle = this.getArguments();
         if(bundle != null)
         {
