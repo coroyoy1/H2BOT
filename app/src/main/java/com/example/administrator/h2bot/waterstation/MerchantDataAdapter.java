@@ -9,11 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
-import com.squareup.picasso.Picasso;
+import com.example.administrator.h2bot.UserWSWDWaterTypeFile;
 
 import java.util.List;
 
@@ -38,22 +37,20 @@ public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapte
     public void onBindViewHolder(@NonNull MerchantDataAdapter.ImageViewHolder imageViewHolder, int i) {
         final UserWSWDWaterTypeFile currentData = uploadsHolder.get(i);
         imageViewHolder.PLItemNameHolder.setText(currentData.getWater_type());
+        imageViewHolder.PLItemNoHolder.setText(currentData.getWater_name());
 
         final String itemName = currentData.getWater_name();
         final String itemPrice = currentData.getWater_price_per_gallon();
-        //final String itemQuantity = currentData.getmItemQuantity();
         final String itemType = currentData.getWater_type();
         final String itemUid = currentData.getWater_seller_id();
+        final String itemStatus = currentData.getWater_status();
+        final String itemKey = currentData.getWater_genKey();
 
-//        Picasso.get()
-//                .load(currentData.getmItemImage())
-//                .fit()
-//                .centerCrop()
-//                .into(imageViewHolder.PLImage);
         imageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 WSProductListIntent additem = new WSProductListIntent();
+                WSProductListUpdate updateitem = new WSProductListUpdate();
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 activity.getSupportFragmentManager()
                         .beginTransaction()
@@ -62,13 +59,14 @@ public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapte
                         .addToBackStack(null)
                         .commit();
                 Bundle args = new Bundle();
-                //args.putString("ItemNameMDA", itemName);
-                //args.putString("ItemPriceMDA", itemPrice);
-                //args.putString("ItemQuantityMDA", itemQuantity);
-                //args.putString("ItemTypeMDA", itemType);
-                //args.putString("ItemImageMDA", currentData.getmItemImage());
-                //args.putString("ItemUidMDA", itemUid);
+                args.putString("ItemNameMDA", itemName);
+                args.putString("ItemPriceMDA", itemPrice);
+                args.putString("ItemTypeMDA", itemType);
+                args.putString("ItemUidMDA", itemUid);
+                args.putString("ItemStatusMDA", itemStatus);
+                args.putString("ItemKeyMDA", itemKey);
                 additem.setArguments(args);
+                updateitem.setArguments(args);
             }
         });
     }
@@ -80,13 +78,11 @@ public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapte
 
     public class ImageViewHolder extends RecyclerView.ViewHolder{
         public TextView PLItemNoHolder, PLItemNameHolder;
-        //public ImageView PLImage;
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
-//            PLItemNoHolder = itemView.findViewById(R.id.PLItemNo);
+           PLItemNoHolder = itemView.findViewById(R.id.PLItemItem);
             PLItemNameHolder = itemView.findViewById(R.id.PLItemName);
-           // PLImage = itemView.findViewById(R.id.imageViewPL);
         }
     }
 }

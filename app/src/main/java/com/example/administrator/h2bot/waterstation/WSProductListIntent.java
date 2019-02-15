@@ -1,5 +1,7 @@
 package com.example.administrator.h2bot.waterstation;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,26 +18,51 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 public class WSProductListIntent extends Fragment implements View.OnClickListener {
-    TextView itemN, itemP, itemQ, itemU;
-    ImageView imageView;
-    Button backBu, updateBu;
-    String itemUi;
+    TextView itemN, itemP, itemU;
+    Button backBu, updateBu, deleteButton;
+    String itemUi, itemNameString, itemPriceString, itemTypeString, itemStatusString, itemKeyString;
+
+
+    FirebaseDatabase firebaseDatabase;
+    FirebaseAuth mAuth;
+    FirebaseUser firebaseUser;
+    DatabaseReference databaseReference;
+
+    ProgressDialog progressDialog;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ws_productlistintent, container, false);
         itemN = view.findViewById(R.id.PLIitemname);
         itemP = view.findViewById(R.id.PLIprice);
-        itemQ = view.findViewById(R.id.PLIquantity);
         itemU = view.findViewById(R.id.PLItype);
-        imageView = view.findViewById(R.id.PLIimage);
+
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Loading...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setProgress(0);
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        firebaseUser = mAuth.getCurrentUser();
+        databaseReference = firebaseDatabase.getReference("User_WS_WD_Water_Type_File");
 
         backBu = view.findViewById(R.id.PLIbackbutton);
         updateBu = view.findViewById(R.id.PLIupdatebutton);
+        deleteButton = view.findViewById(R.id.PLIDeletebutton);
 
+        deleteButton.setOnClickListener(this);
         backBu.setOnClickListener(this);
         updateBu.setOnClickListener(this);
 
@@ -43,28 +70,82 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
         if (bundle != null) {
             String itemNa = bundle.getString("ItemNameMDA");
             String itemPr = bundle.getString("ItemPriceMDA");
-            String itemQu = bundle.getString("ItemQuantityMDA");
             String itemTy = bundle.getString("ItemTypeMDA");
-            String itemIm = bundle.getString("ItemImageMDA");
+            String itemSt = bundle.getString("ItemStatusMDA");
+            String itemKey = bundle.getString("ItemKeyMDA");
+
             itemUi = bundle.getString("ItemUidMDA");
             itemN.setText("Item Name: "+itemNa);
             itemP.setText("    Price: "+itemPr);
-            itemQ.setText(" Quantity: "+itemQu);
             itemU.setText("     Type: "+itemTy);
-            Picasso.get().load(itemIm)
-                    .fit()
-                    .centerCrop()
-                    .into(imageView);
-            DataGet(itemUi);
+
+            itemNameString = bundle.getString("ItemNameMDA");
+            itemPriceString = bundle.getString("ItemPriceMDA");
+            itemTypeString = bundle.getString("ItemTypeMDA");
+            itemStatusString = bundle.getString("ItemStatusMDA");
+            itemKeyString = bundle.getString("ItemKeyMDA");
+
 
         }
         return view;
     }
 
-    public String DataGet(String itemUD)
+    public void deleteData()
+    {
+        progressDialog.show();
+        String deleteKey = DataKey(itemKeyString);
+        databaseReference.child(firebaseUser.getUid()).child(deleteKey).removeValue()
+            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    showMessage("Successfully Deleted");
+                    WSProductListFragment additem = new WSProductListFragment();
+                    AppCompatActivity activity = (AppCompatActivity)getContext();
+                    activity.getSupportFragmentManager()
+                            .beginTransaction()
+                            .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                            .replace(R.id.fragment_container_ws, additem)
+                            .addToBackStack(null)
+                            .commit();
+                    progressDialog.dismiss();
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    showMessage("Error to delete data, Please check internet connection!");
+                    progressDialog.dismiss();
+                }
+            });
+    }
+
+    private void showMessage(String s) {
+        Toast.makeText(getActivity(),s, Toast.LENGTH_SHORT).show();
+    }
+
+    public String DataID(String itemUD)
     {
         return itemUD;
-
+    }
+    public String DataName(String itemName)
+    {
+        return itemName;
+    }
+    public String DataPrice(String itemPrice)
+    {
+        return itemPrice;
+    }
+    public String DataType(String itemType)
+    {
+        return itemType;
+    }
+    public String DataStatus(String itemStatus)
+    {
+        return itemStatus;
+    }
+    public String DataKey(String itemKey)
+    {
+        return itemKey;
     }
 
     @Override
@@ -82,7 +163,13 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
                         .commit();
                 break;
             case R.id.PLIupdatebutton:
-                String uidString = DataGet(itemUi);
+                String uidString = DataID(itemUi);
+                String nameString = DataName(itemNameString);
+                String typeString = DataType(itemTypeString);
+                String priceString = DataPrice(itemPriceString);
+                String statusString = DataStatus(itemStatusString);
+                String keyString = DataKey(itemKeyString);
+
                 WSProductListUpdate updateitem = new WSProductListUpdate();
                 AppCompatActivity activityapp = (AppCompatActivity) v.getContext();
                 activityapp.getSupportFragmentManager()
@@ -93,8 +180,15 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
                         .commit();
                 Bundle args = new Bundle();
                 args.putString("ItemUidPLI", uidString);
+                args.putString("ItemNamePLI", nameString);
+                args.putString("ItemPricePLI", priceString);
+                args.putString("ItemTypePLI", typeString);
+                args.putString("ItemStatusPLI", statusString);
+                args.putString("ItemKeyPLI", keyString);
                 updateitem.setArguments(args);
-                Toast.makeText(getActivity(), DataGet(itemUi), Toast.LENGTH_LONG).show();
+                break;
+            case R.id.PLIDeletebutton:
+                deleteData();
                 break;
         }
     }

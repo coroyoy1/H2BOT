@@ -15,120 +15,98 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="Update Item"
-            android:textColor="@android:color/white"
-            android:textSize="24dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:src="@mipmap/ic_launcher_round"
-                android:layout_width="220dp"
-                android:layout_height="180dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="20dp" />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/z_darkbluebutton"
-                android:text="Add Photo"
-                android:textColor="@android:color/white" />
-        </LinearLayout>
-
+            android:text="Update Water Product"
+            android:textSize="28dp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"/>
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="30dp"
-            android:background="@drawable/z_edittextround"
-            android:hint="Item Name"
-            android:textAlignment="center" />
-
-        <Spinner
-            android:spinnerMode="dropdown"
-            android:id="@+id/spinnerUpItem"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="30dp"
+            android:id="@+id/waterUpdateName"
             android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/z_edittextround"
+            android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:background="@drawable/z_edittextround"/>
-
+            android:hint="Water Name"
+            android:textAlignment="center"/>
+        <Spinner
+            android:id="@+id/waterUpdateSpinner"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@android:color/white"
+            android:layout_marginLeft="31dp"
+            android:layout_marginRight="31dp">
+        </Spinner>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp">
-
             <TextView
                 android:id="@+id/textView14"
                 android:layout_width="28dp"
                 android:layout_height="50dp"
-                android:layout_alignStart="@+id/ItemNameEditText"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:layout_marginLeft="30dp"
                 android:text="₱"
-                android:textColor="@android:color/black"
+                android:layout_marginLeft="30dp"
+                android:textColor="@android:color/white"
                 android:textSize="30sp" />
 
             <EditText
+                android:id="@+id/waterUpdatePrice"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
                 android:layout_marginRight="30dp"
-                android:background="@drawable/z_edittextround"
-                android:hint="Price"
-                android:textAlignment="center" />
+                android:layout_height="50dp"
+                android:textAlignment="center"
+                android:hint="Price per Gallon"
+                android:inputType="textPersonName"
+                android:background="@drawable/z_edittextround"/>
         </LinearLayout>
+        <RadioGroup
+            android:id="@+id/validRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:textColor="@android:color/white"
+                android:textSize="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status: "/>
+            <RadioButton
+                android:id="@+id/avaiableRadio"
+                android:textColor="@android:color/white"
+                android:text="Available"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <RadioButton
+                android:id="@+id/unavailableRadio"
+                android:textColor="@android:color/white"
+                android:text="Unavailable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RadioGroup>
+        <Button
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:layout_marginRight="30dp"
-            android:background="@drawable/z_edittextround"
-            android:hint="Quantity"
-            android:textAlignment="center" />
-
-        <LinearLayout
+            android:layout_marginLeft="30dp"
+            android:id="@+id/waterUpdateAdd"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <Button
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="5dp"
-                android:textColor="@android:color/white"
-                android:background="@drawable/z_darkbluebutton"
-                android:text="Update"
-                android:textAlignment="center" />
-            <Button
-                android:id="@+id/backUpItem"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="30dp"
-                android:textColor="@android:color/white"
-                android:background="@drawable/z_graybuttomv"
-                android:text="Back"
-                android:textAlignment="center" />
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:background="@drawable/z_darkbluebutton"
+            android:text="Add"
+            android:textColor="@android:color/white" />
+        <Button
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:id="@+id/waterUpdateBack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/z_graybuttomv"
+            android:text="Back"
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
 </RelativeLayout>

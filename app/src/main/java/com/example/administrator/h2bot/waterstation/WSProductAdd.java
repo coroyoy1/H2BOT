@@ -16,14 +16,13 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.UserWSWDWaterTypeFile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.UUID;
 
 public class WSProductAdd extends Fragment implements View.OnClickListener {
 
@@ -83,7 +82,7 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
         String waterPriceString = waterProductPrice.getText().toString();
         String waterTypeString = waterProductType.getSelectedItem().toString();
 
-        if(waterNameString.isEmpty() && waterPriceString.isEmpty() && waterTypeString.isEmpty())
+        if(waterNameString.equals("") && waterPriceString.equals("") && waterTypeString.equals(""))
         {
             showMessages("Fill up first the requirement");
             return;

@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.LOCATION_SERVICE;
@@ -35,13 +36,11 @@ import static android.content.Context.LOCATION_SERVICE;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WaterDealerGoogleMapFragment extends Fragment implements OnMapReadyCallback, TaskLoadedCallback {
+public class WaterDealerGoogleMapFragment extends Fragment implements OnMapReadyCallback{// TaskLoadedCallback {
 
     GoogleMap map;
     MarkerOptions place1, place2;
     Polyline currentPolyline;
-
-
     public WaterDealerGoogleMapFragment() {
         // Required empty public constructor
     }
@@ -55,11 +54,8 @@ public class WaterDealerGoogleMapFragment extends Fragment implements OnMapReady
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        place1 = new MarkerOptions().position(new LatLng(10.402290,123.920950)).title("Location 1");
-        place2 = new MarkerOptions().position(new LatLng(10.369380, 123.913060)).title("Location 2");
-
-        String url = getUrl(place1.getPosition(), place2.getPosition(), "driving");
-        new FetchURL(getActivity()).execute(url, "driving");
+//        String url = getUrl(place1.getPosition(), place2.getPosition(), "driving");
+//        new FetchURL(getActivity()).execute(url, "driving");
         return view;
     }
 
@@ -72,29 +68,32 @@ public class WaterDealerGoogleMapFragment extends Fragment implements OnMapReady
         @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-            map.addMarker(place1);
+            place1 = new MarkerOptions().position(new LatLng(10.402290,123.920950)).title("Location 1");
+            place2 = new MarkerOptions().position(new LatLng(10.369380, 123.913060)).title("Location 2");
+
+           map.addMarker(place1);
             map.addMarker(place2);
     }
 
-    private String getUrl(LatLng origin, LatLng dest, String directionMode) {
-        // Origin of route
-        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-        // Destination of route
-        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-        // Mode
-        String mode = "mode=" + directionMode;
-        // Building the parameters to the web service
-        String parameters = str_origin + "&" + str_dest + "&" + mode;
-        // Output format
-        String output = "json";
-        // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.google_maps_key);
-        return url;
-    }
-    @Override
-    public void onTaskDone(Object... values) {
-        if (currentPolyline != null)
-            currentPolyline.remove();
-        currentPolyline = map.addPolyline((PolylineOptions) values[0]);
-    }
+//    private String getUrl(LatLng origin, LatLng dest, String directionMode) {
+//        // Origin of route
+//        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+//        // Destination of route
+//        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+//        // Mode
+//        String mode = "mode=" + directionMode;
+//        // Building the parameters to the web service
+//        String parameters = str_origin + "&" + str_dest + "&" + mode;
+//        // Output format
+//        String output = "json";
+//        // Building the url to the web service
+//        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.google_maps_key);
+//        return url;
+//    }
+//    @Override
+//    public void onTaskDone(Object... values) {
+//        if (currentPolyline != null)
+//            currentPolyline.remove();
+//        currentPolyline = map.addPolyline((PolylineOptions) values[0]);
+//    }
 }

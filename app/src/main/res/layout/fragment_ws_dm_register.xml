@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/waterbackgroundvvv"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Delivery Man"
+            android:textColor="@android:color/white"
+            android:textSize="24dp"
+            android:textStyle="bold"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_marginTop="20dp"
+            android:layout_width="150dp"
+            android:layout_height="120dp"
+            android:id="@+id/imageDM"
+            android:src="@drawable/ic_person_black_24dp"/>
+
+        <Button
+            android:id="@+id/addPhotoDM"
+            android:layout_marginTop="10dp"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:background="@drawable/z_graybuttomv"
+            android:text="Add Photo"
+            android:textColor="@android:color/white"/>
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <!--<Spinner-->
+                <!--android:id="@+id/RegisterSpinner"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:entries="@array/UserType">-->
+
+                <!--</Spinner>-->
+
+                <!--<EditText-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="40dp"-->
+                <!--android:id="@+id/usernameText"-->
+                <!--android:hint="Username"-->
+                <!--android:inputType="text"-->
+                <!--android:background="@drawable/z_edittextround" />-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:textAlignment="center"
+                        android:id="@+id/RegisterFullNameDM"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="2dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/z_edittextround"
+                        android:hint="First Name"
+                        android:inputType="text" />
+
+                    <EditText
+                        android:textAlignment="center"
+                        android:id="@+id/RegisterLastNameDM"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/z_edittextround"
+                        android:hint="Last Name"
+                        android:inputType="text" />
+                </LinearLayout>
+
+
+                <!--<EditText-->
+                <!--android:id="@+id/RegisterAge"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:hint="@string/age"-->
+                <!--android:inputType="number" />-->
+
+                <EditText
+                    android:textAlignment="center"
+                    android:id="@+id/RegisterAddressDM"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/z_edittextround"
+                    android:hint="Address" />
+
+                <EditText
+                    android:textAlignment="center"
+                    android:id="@+id/RegisterContactDM"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/z_edittextround"
+                    android:hint="@string/contact_number" />
+
+                <EditText
+                    android:textAlignment="center"
+                    android:id="@+id/RegisterEmailAddressDM"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/z_edittextround"
+                    android:hint="@string/email_address"
+                    android:inputType="textEmailAddress" />
+
+                <EditText
+                    android:textAlignment="center"
+                    android:id="@+id/RegisterPasswordDM"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/z_edittextround"
+                    android:hint="Password"
+                    android:inputType="textPassword" />
+
+                <EditText
+                    android:textAlignment="center"
+                    android:id="@+id/ConfirmPasswordDM"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/z_edittextround"
+                    android:hint="Confirm Password"
+                    android:inputType="textPassword" />
+
+                <Button
+
+                    android:id="@+id/RegisterSignUpDM"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/z_darkbluebutton"
+                    android:text="Register"
+                    android:textColor="#FFF" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Please use a valid phone number**"
+                    android:textColor="#FF0000"
+                    android:textStyle="italic" />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</RelativeLayout>

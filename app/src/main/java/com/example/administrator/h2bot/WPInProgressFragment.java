@@ -11,6 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.administrator.h2bot.SetterAndGetterModelFolder.wptransactiondetailfilemodel;
+import com.example.administrator.h2bot.SetterAndGetterModelFolder.wptransactionheaderfilemodel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,10 +39,13 @@ public class WPInProgressFragment extends Fragment implements WPInProgressAdapte
     public static final String EXTRA_address = "address";
     public static final String EXTRA_totalPrice = "totalPrice";
 
+    FirebaseUser currentUser;
     private WPInProgressAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private DatabaseReference mDatabaseRef;
-    private List<WPTransactionModel> mUploads;
+    private DatabaseReference mDatabaseRef2;
+    private ArrayList<wptransactionheaderfilemodel> mUploads;
+    private ArrayList<wptransactiondetailfilemodel> mUploads2;
     public WPInProgressFragment() {
         // Required empty public constructor
     }
@@ -49,57 +56,58 @@ public class WPInProgressFragment extends Fragment implements WPInProgressAdapte
         View view = inflater.inflate(R.layout.fragment_wpin_progress, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
 
-        recyclerView.setHasFixedSize(true);
-        mUploads = new ArrayList<>();
-        recyclerView.setHasFixedSize(true);
+        mUploads = new ArrayList<wptransactionheaderfilemodel>();
+        mUploads2 = new ArrayList<>();
+
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setHasFixedSize(true);
 
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("dealerTransactions");
-
-
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String currendId = currentUser.getUid();
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("Transaction_Header_File");
+        mDatabaseRef2 = FirebaseDatabase.getInstance().getReference("Transaction_Detail_File");
 
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    WPTransactionModel transaction = postSnapshot.getValue(WPTransactionModel.class);
-                    mUploads.add(transaction);
-                }
-                mAdapter = new WPInProgressAdapter(getActivity(), mUploads);
-                recyclerView.setAdapter(mAdapter);
-                 mAdapter.setOnItemClickListener(WPInProgressFragment.this::onItemClick);
+                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                            wptransactionheaderfilemodel transactionHeader = postSnapshot.getValue(wptransactionheaderfilemodel.class);
+                           // wptransactiondetailfilemodel transactionDetail = postSnapshot.getValue(wptransactiondetailfilemodel.class);
+                                mUploads.add(transactionHeader);
 
-            }
+                        }
+                        mAdapter = new WPInProgressAdapter(getActivity(), mUploads);
+                        recyclerView.setAdapter(mAdapter);
+                        mAdapter.setOnItemClickListener(WPInProgressFragment.this::onItemClick);
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-
-
-        return view;
+                    }
+                });
+             return view;
     }
 
 
     @Override
     public void onItemClick(int position) {
         Intent detailIntent = new Intent(getActivity(), WPPendingTransactionFragment.class);
-        WPTransactionModel clickedItem = mUploads.get(position);
+        wptransactionheaderfilemodel clickedItem = mUploads.get(position);
 
-        detailIntent.putExtra(EXTRA_transactionNo, clickedItem.getTransactionNo());
-        detailIntent.putExtra(EXTRA_customerName, clickedItem.getCustomerName());
-        detailIntent.putExtra(EXTRA_contactNo, clickedItem.getContactNo());
-        detailIntent.putExtra(EXTRA_waterType, clickedItem.getWaterType());
-        detailIntent.putExtra(EXTRA_itemQuantity, clickedItem.getItemQuantity());
-        detailIntent.putExtra(EXTRA_deliveryFee, clickedItem.getDeliveryFee());
-        detailIntent.putExtra(EXTRA_pricePerGallon, clickedItem.getPricePerGallon());
-        detailIntent.putExtra(EXTRA_service, clickedItem.getService());
-        detailIntent.putExtra(EXTRA_totalPrice, clickedItem.getTotalPrice());
-        detailIntent.putExtra(EXTRA_address, clickedItem.getAddress());
-
-        Toast.makeText(getActivity(), "iya sud kay: "+clickedItem.getTransactionNo(), Toast.LENGTH_SHORT).show();
+//        detailIntent.putExtra(EXTRA_transactionNo, clickedItem.getTransactionNo());
+//        detailIntent.putExtra(EXTRA_customerName, clickedItem.getCustomerName());
+//        detailIntent.putExtra(EXTRA_contactNo, clickedItem.getContactNo());
+//        detailIntent.putExtra(EXTRA_waterType, clickedItem.getWaterType());
+//        detailIntent.putExtra(EXTRA_itemQuantity, clickedItem.getItemQuantity());
+//        detailIntent.putExtra(EXTRA_deliveryFee, clickedItem.getDeliveryFee());
+//        detailIntent.putExtra(EXTRA_pricePerGallon, clickedItem.getPricePerGallon());
+//        detailIntent.putExtra(EXTRA_service, clickedItem.getService());
+//        detailIntent.putExtra(EXTRA_totalPrice, clickedItem.getTotalPrice());
+//        detailIntent.putExtra(EXTRA_address, clickedItem.getAddress());
+//
+//        Toast.makeText(getActivity(), "iya sud kay: "+clickedItem.getTransactionNo(), Toast.LENGTH_SHORT).show();
         startActivity(detailIntent);
     }
 }

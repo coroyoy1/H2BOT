@@ -17,10 +17,6 @@
             android:text="Selected Product"
             android:layout_marginBottom="18dp"/>
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/PLIimage"
-            android:layout_width="240dp"
-            android:layout_height="180dp" />
         <TextView
             android:id="@+id/PLIitemname"
             android:layout_marginTop="10dp"
@@ -41,16 +37,6 @@
         android:text="Price"
             android:textSize="24dp"
         android:background="@drawable/z_linearround"/>
-        <TextView
-            android:id="@+id/PLIquantity"
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:text="Quantity"
-            android:textSize="24dp"
-            android:background="@drawable/z_linearround"/>
         <TextView
             android:id="@+id/PLItype"
             android:layout_marginTop="10dp"
@@ -87,6 +73,15 @@
                 android:textColor="@android:color/white"
                 android:layout_weight="1"/>
         </LinearLayout>
-
+        <Button
+            android:id="@+id/PLIDeletebutton"
+            android:background="@drawable/z_redbutton"
+            android:layout_marginRight="120dp"
+            android:layout_marginLeft="120dp"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Delete Item"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="20dp"/>
     </LinearLayout>
 </RelativeLayout>

@@ -16,6 +16,7 @@ import android.widget.Toast;
 //import com.bumptech.glide.Glide;
 //import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.UserWSWDWaterTypeFile;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

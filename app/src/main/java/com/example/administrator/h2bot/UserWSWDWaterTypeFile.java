@@ -1,4 +1,4 @@
-package com.example.administrator.h2bot.waterstation;
+package com.example.administrator.h2bot;
 
 public class UserWSWDWaterTypeFile {
    private String water_seller_id;
