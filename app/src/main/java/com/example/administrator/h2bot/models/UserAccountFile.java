@@ -1,4 +1,4 @@
-package com.example.administrator.h2bot.SetterAndGetterModelFolder;
+package com.example.administrator.h2bot.models;
 
 public class UserAccountFile {
     private String user_getUID;

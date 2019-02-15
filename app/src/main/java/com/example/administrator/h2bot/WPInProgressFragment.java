@@ -9,10 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.example.administrator.h2bot.SetterAndGetterModelFolder.wptransactiondetailfilemodel;
-import com.example.administrator.h2bot.SetterAndGetterModelFolder.wptransactionheaderfilemodel;
+import com.example.administrator.h2bot.models.wptransactiondetailfilemodel;
+import com.example.administrator.h2bot.models.wptransactionheaderfilemodel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -22,7 +21,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class WPInProgressFragment extends Fragment implements WPInProgressAdapter.OnItemClickListener{
     RecyclerView recyclerView;

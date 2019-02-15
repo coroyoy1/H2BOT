@@ -10,10 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.administrator.h2bot.SetterAndGetterModelFolder.wptransactionheaderfilemodel;
+import com.example.administrator.h2bot.models.wptransactionheaderfilemodel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class WPInProgressAdapter extends RecyclerView.Adapter<WPInProgressAdapter.ViewHolder>{
     private Context mContext;

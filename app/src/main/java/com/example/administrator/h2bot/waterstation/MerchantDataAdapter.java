@@ -81,7 +81,7 @@ public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapte
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
-           PLItemNoHolder = itemView.findViewById(R.id.PLItemItem);
+           PLItemNoHolder = itemView.findViewById(R.id.PLIaxitem);
             PLItemNameHolder = itemView.findViewById(R.id.PLItemName);
         }
     }
