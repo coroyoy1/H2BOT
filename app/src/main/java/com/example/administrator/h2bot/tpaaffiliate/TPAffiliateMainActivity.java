@@ -1,17 +1,21 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.tpaaffiliate;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.administrator.h2bot.AccountSettingFragment;
+import com.example.administrator.h2bot.CustomerTransactionsFragment;
+import com.example.administrator.h2bot.LoginActivity;
+import com.example.administrator.h2bot.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -71,16 +75,16 @@ public class TPAffiliateMainActivity extends AppCompatActivity implements Naviga
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Account Settings");
                 break;
 
-            case R.id.rate:
+            case R.id.ratings:
                 final Dialog dialog = new Dialog(this);
                 dialog.setContentView(R.layout.ratings_popup);
                 dialog.show();
                 break;
 
-            case R.id.transactions:
+            case R.id.delivered_orders:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerTransactionsFragment()).commit();
-                Toast.makeText(this, "Transactions", Toast.LENGTH_SHORT).show();
-                Objects.requireNonNull(getSupportActionBar()).setTitle("Transactions");
+                Toast.makeText(this, "Delivered Orders", Toast.LENGTH_SHORT).show();
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Delivered Orders");
                 break;
         }
         if (menuItem.getItemId() == R.id.logout) {

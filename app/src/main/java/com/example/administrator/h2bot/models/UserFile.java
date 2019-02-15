@@ -1,4 +1,4 @@
-package com.example.administrator.h2bot.SetterAndGetterModelFolder;
+package com.example.administrator.h2bot.models;
 
 public class UserFile {
     private String user_getUID;
@@ -13,7 +13,6 @@ public class UserFile {
 
     public UserFile()
     {
-
     }
 
     public UserFile(String user_getUID, String user_uri, String user_firstname, String user_lastname, String user_address, String user_phone_no, String user_type, String user_status)

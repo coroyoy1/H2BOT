@@ -27,11 +27,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".zCreateStationDetailsActivity"></activity>
+        <activity android:name=".WPTPAAffiliateDocumentsActivity"></activity>
+        <activity android:name=".zCreateStationDetailsActivity" />
         <activity android:name=".zCreateAccountOptionUserTypeActivity" />
         <activity android:name=".deliveryman.DeliveryManDocumentActivity" />
         <activity android:name=".tempAccessActivity" />
-        <activity android:name=".LoginActivity">
+        <!--<activity android:name=".LoginActivity">-->
+        <activity android:name=".tpaaffiliate.TPAffiliateMainActivity"
+            android:theme="@style/Theme.Design.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -64,7 +67,7 @@
         <activity android:name=".WaterStationDocumentVersion2Activity" />
         <activity
             android:name=".CustomerMainActivity"
-            android:theme="@style/Theme.Design.Light" />
+            android:theme="@style/Theme.Design.Light"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -101,9 +104,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.administrator.h2bot.waterstation.WaterStationMainActivity" />
         </activity>
-        <activity
-            android:name=".TPAffiliateMainActivity"
-            android:theme="@style/Theme.Design.Light" />
         <activity
             android:name=".deliveryman.DeliveryManMainActivity"
             android:theme="@style/Theme.Design.Light" />

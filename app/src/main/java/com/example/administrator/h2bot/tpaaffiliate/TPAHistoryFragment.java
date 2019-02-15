@@ -1,4 +1,4 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.tpaaffiliate;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import com.example.administrator.h2bot.R;
 
 public class TPAHistoryFragment extends Fragment {
     LinearLayout temp_layout;

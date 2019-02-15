@@ -14,39 +14,40 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:background="@android:color/holo_blue_light"
                 android:layout_gravity="center">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:textAlignment="center"
                     android:text="Submit Requirements"
-                    android:textColor="@android:color/holo_blue_light"
-                    android:textSize="18dp"
+                    android:textColor="#FFF"
+                    android:textSize="20sp"
                     android:textStyle="bold"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@android:color/darker_gray"
                 android:layout_marginTop="1dp">
+
                 <TextView
-                    android:layout_weight="1"
-                    android:layout_marginLeft="8dp"
                     android:layout_width="220dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
                     android:text="Business Permit"
                     android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"/>
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/permit1"
-                    android:layout_width="80dp"
-                    android:layout_height="60dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_marginTop="0dp"
                     android:layout_weight="1"
                     android:background="@drawable/ic_launcher_background" />
@@ -54,36 +55,36 @@
                     android:layout_weight="1"
                     android:id="@+id/permitButton1"
                     android:layout_marginTop="4dp"
+                    android:layout_marginRight="10dp"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@drawable/ic_photo_camera_black_24dp" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@android:color/darker_gray"
                 android:layout_marginTop="1dp">
                 <TextView
                     android:layout_weight="1"
                     android:layout_marginLeft="8dp"
                     android:layout_width="220dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:text="Sanitary Permit"
                     android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"/>
+                    android:textStyle="bold"/>
                 <ImageView
                     android:layout_weight="1"
                     android:id="@+id/permit2"
-                    android:layout_width="80dp"
-                    android:layout_height="60dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_marginTop="0dp"
                     android:background="@drawable/ic_launcher_background"/>
                 <Button
                     android:layout_weight="1"
                     android:id="@+id/permitButton2"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="4dp"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
@@ -91,93 +92,90 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@android:color/darker_gray"
                 android:layout_marginTop="1dp">
                 <TextView
                     android:layout_weight="1"
                     android:layout_marginLeft="8dp"
                     android:layout_width="220dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:text="Fire Protection"
                     android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"/>
+                    android:textStyle="bold"/>
                 <ImageView
                     android:layout_weight="1"
                     android:id="@+id/permit3"
-                    android:layout_width="80dp"
-                    android:layout_height="60dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_marginTop="0dp"
                     android:background="@drawable/ic_launcher_background"/>
                 <Button
                     android:layout_weight="1"
                     android:id="@+id/permitButton3"
                     android:layout_marginTop="4dp"
+                    android:layout_marginRight="10dp"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@drawable/ic_photo_camera_black_24dp" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@android:color/darker_gray"
                 android:layout_marginTop="1dp">
                 <TextView
                     android:layout_weight="1"
                     android:layout_marginLeft="8dp"
                     android:layout_width="220dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:text="Real Property Taxes"
                     android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"/>
+                    android:textStyle="bold"/>
                 <ImageView
                     android:layout_weight="1"
                     android:id="@+id/permit4"
-                    android:layout_width="80dp"
-                    android:layout_height="60dp"
+                    android:layout_width="100dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_height="100dp"
                     android:layout_marginTop="0dp"
                     android:background="@drawable/ic_launcher_background"/>
                 <Button
                     android:layout_weight="1"
                     android:id="@+id/permitButton4"
                     android:layout_marginTop="4dp"
+                    android:layout_marginRight="10dp"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@drawable/ic_photo_camera_black_24dp" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@android:color/darker_gray"
                 android:layout_marginTop="1dp">
                 <TextView
                     android:layout_weight="1"
                     android:layout_marginLeft="8dp"
                     android:layout_width="220dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:text="Building Occupancy Permit"
                     android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"/>
+                    android:textStyle="bold"/>
 
                 <ImageView
                     android:layout_weight="1"
                     android:id="@+id/permit5"
-                    android:layout_width="80dp"
-                    android:layout_height="60dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginRight="20dp"
                     android:layout_marginTop="0dp"
                     android:background="@drawable/ic_launcher_background" />
                 <Button
                     android:layout_weight="1"
                     android:id="@+id/permitButton5"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="4dp"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
@@ -185,30 +183,29 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@android:color/darker_gray"
                 android:layout_marginTop="1dp">
                 <TextView
                     android:layout_weight="1"
                     android:layout_marginLeft="8dp"
                     android:layout_width="220dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:text="PhysicoChemical Test"
                     android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"/>
+                    android:textStyle="bold"/>
                 <ImageView
                     android:layout_weight="1"
                     android:id="@+id/permit6"
-                    android:layout_width="80dp"
-                    android:layout_height="60dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_marginTop="0dp"
                     android:background="@drawable/ic_launcher_background"/>
                 <Button
                     android:layout_weight="1"
                     android:id="@+id/permitButton6"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="4dp"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
@@ -226,7 +223,6 @@
                     android:layout_height="50dp"
                     android:layout_marginTop="4dp"
                     android:layout_weight="1"
-                    android:background="@drawable/z_edittextround"
                     android:hint="Business Permit No."
                     android:inputType="text"
                     android:textAlignment="center"
@@ -238,15 +234,10 @@
                     android:layout_marginTop="10dp"
                     android:textAlignment="center"
                     android:text="Station Information"
+                    android:textColor="#FFF"
+                    android:background="@android:color/holo_blue_dark"
                     android:layout_marginBottom="0dp"
-                    android:textColor="@android:color/holo_blue_dark"
                     android:textStyle="bold"/>
-                <TextView
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Notice: Station name should be fill up. Business hours show when your station open or when it close. For example: '8am - 6pm Weekdays'"
-                    android:textColor="@android:color/holo_red_dark"/>
 
                 <EditText
                     android:id="@+id/stationNameSD"
@@ -254,9 +245,19 @@
                     android:layout_height="50dp"
                     android:layout_marginTop="4dp"
                     android:layout_weight="1"
-                    android:background="@drawable/z_edittextround"
                     android:hint="Water Station Name"
                     android:inputType="text"
+                    android:textAlignment="center"
+                    android:textSize="18dp" />
+
+                <EditText
+                    android:id="@+id/stationTelephoneySD"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:hint="Telephone No."
+                    android:inputType="number"
                     android:textAlignment="center"
                     android:textSize="18dp" />
                 <TextView
@@ -269,20 +270,19 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <EditText
-                        android:background="@drawable/z_edittextround"
                         android:id="@+id/stationBusinesshoursSD"
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:hint="Starting Time"
+                        android:hint="Start Time"
                         android:inputType="text"
                         android:textAlignment="center"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
+
                         android:layout_marginRight="2dp"/>
                     <EditText
                         android:layout_marginLeft="2dp"
-                        android:background="@drawable/z_edittextround"
                         android:id="@+id/stationBusinesshoursSDEnd"
                         android:layout_weight="1"
                         android:layout_width="match_parent"
@@ -293,28 +293,7 @@
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"/>
                 </LinearLayout>
-                <EditText
-                    android:background="@drawable/z_edittextround"
-                    android:id="@+id/stationCapacitySD"
-                    android:layout_weight="1"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:hint="Minimum No. of Capacity"
-                    android:textAlignment="center"
-                    android:inputType="number"
-                    android:textSize="18dp"
-                    android:layout_marginTop="10dp"/>
-                <EditText
-                    android:background="@drawable/z_edittextround"
-                    android:id="@+id/stationTelephoneySD"
-                    android:layout_weight="1"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:hint="Telephone No."
-                    android:textAlignment="center"
-                    android:inputType="number"
-                    android:textSize="18dp"
-                    android:layout_marginTop="10dp"/>
+
                 <RadioGroup
                     android:gravity="center"
                     android:id="@+id/radioAllSD"
@@ -345,12 +324,45 @@
                         android:id="@+id/radioFree"/>
                 </RadioGroup>
                 <EditText
-                    android:background="@drawable/z_edittextround"
+                    android:id="@+id/stationCapacitySD"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="Delivery no. minimum gallons capacity"
+                    android:textAlignment="center"
+                    android:inputType="number"
+                    android:textSize="18dp"
+                    android:layout_marginTop="10dp"/>
+
+                <RadioGroup
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Delivery Fee"
+                        android:textSize="18dp"/>
+                    <RadioButton
+                        android:layout_marginLeft="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Per Gallon"/>
+                    <RadioButton
+                        android:layout_marginLeft="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Fix"/>
+                </RadioGroup>
+
+
+                <EditText
                     android:id="@+id/stationDeliverySD"
                     android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:hint="Delivery Fee Amount"
+                    android:hint="Delivery fee"
                     android:textAlignment="center"
                     android:inputType="number"
                     android:textSize="18dp"
@@ -367,21 +379,10 @@
                     android:id="@+id/submitButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Submit Document"
+                    android:text="REGISTER"
                     android:layout_marginRight="5dp"
                     android:textColor="@android:color/white"
                     android:background="@android:color/holo_blue_dark"/>
-                <Button
-                    android:layout_weight="1"
-                    android:layout_gravity="right"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginLeft="5dp"
-                    android:id="@+id/logoutButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Logout"
-                    android:textColor="@android:color/white"
-                    android:background="@android:color/darker_gray"/>
 
             </LinearLayout>
 

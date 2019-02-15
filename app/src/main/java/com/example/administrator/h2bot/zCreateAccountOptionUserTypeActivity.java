@@ -8,7 +8,7 @@ import android.widget.Button;
 
 public class zCreateAccountOptionUserTypeActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button custCA, stationCA, deliveryCA, dealerCA, affiliateCA;
+    Button custCA, stationCA, dealerCA, affiliateCA;
     Intent intent;
 
     @Override
@@ -20,13 +20,11 @@ public class zCreateAccountOptionUserTypeActivity extends AppCompatActivity impl
 
         custCA = findViewById(R.id.cCA);
         stationCA = findViewById(R.id.soCA);
-        deliveryCA = findViewById(R.id.dmCA);
         dealerCA = findViewById(R.id.wdCA);
         affiliateCA = findViewById(R.id.tpaCA);
 
         custCA.setOnClickListener(this);
         stationCA.setOnClickListener(this);
-        deliveryCA.setOnClickListener(this);
         dealerCA.setOnClickListener(this);
         affiliateCA.setOnClickListener(this);
     }
@@ -42,11 +40,6 @@ public class zCreateAccountOptionUserTypeActivity extends AppCompatActivity impl
                 break;
             case R.id.soCA:
                 intent.putExtra("TextValue", "Water Station");
-                intent.setClass(zCreateAccountOptionUserTypeActivity.this, RegisterActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.dmCA:
-                intent.putExtra("TextValue", "Delivery Man");
                 intent.setClass(zCreateAccountOptionUserTypeActivity.this, RegisterActivity.class);
                 startActivity(intent);
                 break;

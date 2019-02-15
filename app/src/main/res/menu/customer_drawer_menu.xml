@@ -10,9 +10,9 @@
             android:icon="@drawable/ic_shopping_cart_black_24dp"
             android:title="My Orders" />
         <item
-            android:id="@+id/transactions"
-            android:icon="@drawable/ic_receipt_black_24dp"
-            android:title="Transactions" />
+            android:id="@+id/delivered_orders"
+            android:icon="@drawable/ic_playlist_add_check_black_24dp"
+            android:title="Delivered Orders" />
     </group>
     <item android:title="Personal Infomartion">
         <menu>
@@ -20,10 +20,6 @@
                 android:id="@+id/account_settings"
                 android:icon="@drawable/ic_settings_black_24dp"
                 android:title="Account Settings" />
-            <item
-                android:id="@+id/rate"
-                android:icon="@drawable/ic_star_black_24dp"
-                android:title="Ratings" />
             <item
                 android:id="@+id/logout"
                 android:icon="@drawable/ic_power_settings_new_black_24dp"

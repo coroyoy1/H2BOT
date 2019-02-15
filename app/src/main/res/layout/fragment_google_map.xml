@@ -121,13 +121,13 @@
                     <Button
                         android:id="@+id/orderBtn"
                         android:layout_weight="1"
-                        android:layout_marginLeft="2.5dp"
                         android:layout_width="match_parent"
                         android:drawableLeft="@drawable/ic_shopping_cart_black_24dp"
                         android:drawableTint="#FFFFFF"
                         android:layout_height="wrap_content"
                         android:textColor="#f5f6fa"
                         android:background="#0097e6"
+                        android:paddingLeft="20dp"
                         android:text="ORDER NOW"/>
                 </LinearLayout>
             </LinearLayout>

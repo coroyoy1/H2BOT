@@ -1,4 +1,5 @@
 package com.example.administrator.h2bot;
+import com.example.administrator.h2bot.tpaaffiliate.*;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -141,13 +142,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String userType = dataSnapshot.child("user_type").getValue().toString();
-                if (userType.equals("Customer")) {
+                String userStatus = dataSnapshot.child("user_status").getValue().toString();
+                if (userType.equals("Customer") && userStatus.equals("active")) {
                     //Temporary Output
                     startActivity(new Intent(LoginActivity.this, CustomerMainActivity.class));
 //                    showMessages("Successfully logged-in as Customer");
                     finish();
                 }
-                else if(userType.equals("Water Station")){
+                else if(userType.equals("Water Station") && userStatus.equals("active")){
                     String documentVerify = dataSnapshot.child("user_status").getValue().toString();
                     if(documentVerify.equals("inactive"))
                     {
@@ -165,7 +167,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     showMessages("Successfully logged-in as Station Owner");
                 }
-                else if(userType.equals("Delivery Man"))
+                else if(userType.equals("Delivery Man") && userStatus.equals("active"))
                 {
                     String documentVerify = dataSnapshot.child("user_status").getValue().toString();
                     if(documentVerify.equals("inactive"))
@@ -180,7 +182,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     showMessages("Successfully logged-in as Delivery Man");
                 }
-                else if(userType.equals("Water Dealer"))
+                else if(userType.equals("Water Dealer") && userStatus.equals("active"))
                 {
                     String documentVerify = dataSnapshot.child("user_status").getValue().toString();
                     if(documentVerify.equals("inactive"))

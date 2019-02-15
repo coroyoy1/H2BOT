@@ -87,16 +87,10 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Account Settings");
                 break;
 
-            case R.id.rate:
-                final Dialog dialog = new Dialog(this);
-                dialog.setContentView(R.layout.ratings_popup);
-                dialog.show();
-                break;
-
-            case R.id.transactions:
+            case R.id.delivered_orders:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerTransactionsFragment()).commit();
-                Toast.makeText(this, "Transactions", Toast.LENGTH_SHORT).show();
-                Objects.requireNonNull(getSupportActionBar()).setTitle("Transactions");
+                Toast.makeText(this, "Delivered Orders", Toast.LENGTH_SHORT).show();
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Delivered Orders");
                 break;
         }
         if (menuItem.getItemId() == R.id.logout) {
@@ -134,7 +128,7 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         Button cancelBtn;
         Button saveChangesBtn;
         dialog.setContentView(R.layout.account_settings_popup);
-        cancelBtn = dialog.findViewById(R.id.saveButton);
+        cancelBtn = dialog.findViewById(R.id.cancelBtn);
         saveChangesBtn = dialog.findViewById(R.id.saveChangesBtn);
 
         cancelBtn.setOnClickListener(new View.OnClickListener() {

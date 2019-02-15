@@ -2,6 +2,7 @@ package com.example.administrator.h2bot;
 
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -20,10 +21,13 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.administrator.h2bot.models.UserFile;
+import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -35,11 +39,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -75,16 +77,17 @@ public class GoogleMapFragment extends Fragment implements
     Marker marker;
     LinearLayout linearLayout;
     public FirebaseAuth mAuth;
-    DatabaseReference addressesRef;
+    DatabaseReference addressesRef, businessRef;
     DatabaseReference usersLocRef;
     LocationManager locationManager;
-    ArrayList<Users> myArrayListUsers;
+
+    ArrayList<UserFile> arrayListUserFile;
+    ArrayList<UserWSBusinessInfoFile> arrayListBusinessInfo;
 
     Geocoder mGeocoder;
     List<Address> myListAddresses;
-    String myAddresses;
-    String stationName;
-    String userType;
+    List<UserWSBusinessInfoFile> myBusinessInfos;
+    String myAddresses, stationName, userType, stationId;
     String addresses;
     LatLng latLong = null;
 
@@ -119,13 +122,92 @@ public class GoogleMapFragment extends Fragment implements
         bottomSheetBehavior.setPeekHeight(bottomSheetBehavior.getPeekHeight());
         bottomSheetBehavior.setHideable(true);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        myArrayListUsers = new ArrayList<Users>();
+
+        arrayListUserFile = new ArrayList<UserFile>();
+        arrayListBusinessInfo = new ArrayList<UserWSBusinessInfoFile>();
+
         mAuth = FirebaseAuth.getInstance();
         mGeocoder = new Geocoder(getActivity().getApplicationContext());
-        addressesRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        usersLocRef = FirebaseDatabase.getInstance().getReference("Users").child(mAuth.getCurrentUser().getUid());
+
+
+
+        usersLocRef = FirebaseDatabase.getInstance().getReference("User_File").child(mAuth.getCurrentUser().getUid());
         mapFragment.getMapAsync(this);
         ChildEventListener mChildEventListener;
+
+        // SELECT * FROM TABLE
+        addressesRef = FirebaseDatabase.getInstance().getReference("User_File");
+        businessRef = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
+
+        addressesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot data: dataSnapshot.getChildren()){
+                    UserFile users = data.getValue(UserFile.class);
+                    businessRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot data2: dataSnapshot.getChildren()){
+                                UserWSBusinessInfoFile info = data2.getValue(UserWSBusinessInfoFile.class);
+
+                                if(users.getUser_getUID().equals(info.getBusiness_id())){
+                                    if(users.getUser_type().equals("Water Station")
+                                    || users.getUser_type().equals("Water Dealer")){
+                                        if(users.getUser_status().equalsIgnoreCase("active")){
+                                            arrayListUserFile.add(users);
+                                            arrayListBusinessInfo.add(info);
+
+                                            //no business add
+                                            myAddresses = users.getUser_address();
+                                            stationName = info.getBusiness_name();
+                                            userType = users.getUser_type();
+                                            stationId = info.getBusiness_id();
+                                            try {
+                                                myListAddresses = mGeocoder.getFromLocationName(myAddresses, 1);
+                                                if (myListAddresses != null) {
+                                                    Address location = myListAddresses.get(0);
+                                                    latLong = new LatLng(location.getLatitude(), location.getLongitude());
+                                                    String status = "Status: OPEN";
+                                                    String type = "Type: " + userType;
+                                                    String address = "Address: " + myAddresses;
+                                                    stationId = "ID: " + stationId;
+                                                    map.addMarker(new MarkerOptions().position(latLong).title(stationName).snippet(stationId
+                                                            + "\n" + type
+                                                            + "\n" + address
+                                                            + "\n" + status));
+                                                    map.addMarker(new MarkerOptions().position(latLong));
+                                                    if(type.equals("Water Station")){
+                                                        map.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                                                    }
+                                                    else{
+                                                        map.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                                                    }
+
+                                                }
+                                            }
+                                            catch (Exception e){
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -143,9 +225,17 @@ public class GoogleMapFragment extends Fragment implements
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                if(!marker.getTitle().equals("You")){
+                Toast.makeText(getActivity(), "" + marker.getTitle(), Toast.LENGTH_SHORT).show();
+                if(!marker.getTitle().equalsIgnoreCase("You")){
                     updateBottomSheetContent(marker);
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    Toast.makeText(getActivity(), "" + marker.getId(), Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    if(bottomSheetBehavior.STATE_COLLAPSED == BottomSheetBehavior.STATE_COLLAPSED){
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                        Toast.makeText(getActivity(), "Hi", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 return false;
             }
@@ -234,44 +324,6 @@ public class GoogleMapFragment extends Fragment implements
         if(mCurrentLocationMarker != null){
             mCurrentLocationMarker.remove();
         }
-
-        // Get all water stations
-        Query getAllStations = addressesRef.orderByChild("userType").equalTo("Station Owner");
-        getAllStations.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot data: dataSnapshot.getChildren()){
-                    Users users = data.getValue(Users.class);
-                    myArrayListUsers.add(users);
-                    myAddresses = users.getAddress();
-                    stationName = users.getFullname();
-                    addresses = users.getAddress();
-                    userType = users.getUserType();
-                    try {
-                        myListAddresses = mGeocoder.getFromLocationName(myAddresses, 1);
-                        if (myListAddresses != null) {
-                            Address location = myListAddresses.get(0);
-                            latLong = new LatLng(location.getLatitude(), location.getLongitude());
-                            String status = "Status: OPEN";
-                            String type = "Type: " + userType;
-                            String address = "Address: " + addresses;
-                            map.addMarker(new MarkerOptions().position(latLong).title(stationName).snippet(status  + "\n" + type + "\n" + address));
-                            map.addMarker(new MarkerOptions().position(latLong).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-                        }
-                    }
-                    catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getActivity(), "Failed to read value.", Toast.LENGTH_LONG).show();
-            }
-        });
-
-
         LatLng mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions mMarkerOption = new MarkerOptions();
         mMarkerOption.position(mLatLng);
@@ -312,7 +364,17 @@ public class GoogleMapFragment extends Fragment implements
 
     private void updateBottomSheetContent(Marker marker) {
         TextView stationName = bottomSheet.findViewById(R.id.stationName);
+        Button orderBtn = bottomSheet.findViewById(R.id.orderBtn);
         stationName.setText(marker.getTitle());
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        orderBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("stationName", stationName.toString());
+                startActivity(new Intent(getActivity(), ChatbotActivity.class));
+            }
+        });
     }
 }

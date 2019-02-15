@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#0097e6"
+        android:background="@android:color/holo_blue_light"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="ORDER NO."
+            android:text="ORDER NO"
             android:textAlignment="center"
             android:textColor="#f5f6fa"
             android:textSize="15dp" />
@@ -27,6 +27,7 @@
             android:layout_weight="1"
             android:textAlignment="center"
             android:text="STATUS"
+            android:textSize="15dp"
             android:textColor="#f5f6fa" />
 
         <TextView

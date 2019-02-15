@@ -1,4 +1,4 @@
-package com.example.administrator.h2bot.SetterAndGetterModelFolder;
+package com.example.administrator.h2bot.models;
 
 public class UserWSBusinessInfoFile {
     private String business_id;

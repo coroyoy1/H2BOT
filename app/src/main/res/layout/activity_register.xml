@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#0B88FF"
+        android:background="@android:color/holo_blue_dark"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -30,13 +30,15 @@
         android:orientation="vertical"
         android:gravity="center">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/RegisterPhoto"
             android:layout_width="130dp"
             android:layout_height="130dp"
             android:layout_gravity="center"
+            android:background="@drawable/ic_account_circle_black_24dp"
+            android:backgroundTint="@android:color/holo_blue_dark"
             android:padding="5dp"
-            app:srcCompat="@mipmap/ic_launcher" />
+            app:srcCompat="@mipmap/ic_launcher_round" />
 
         <Button
             android:id="@+id/addPhotoRegister"
@@ -80,22 +82,20 @@
                 <EditText
                     android:id="@+id/RegisterFullName"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_marginRight="2dp"
                     android:layout_weight="1"
-                    android:background="@drawable/z_edittextround"
                     android:hint="First Name"
                     android:inputType="text" />
 
                 <EditText
                     android:id="@+id/RegisterLastName"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="2dp"
                     android:layout_marginTop="5dp"
                     android:layout_weight="1"
-                    android:background="@drawable/z_edittextround"
                     android:hint="Last Name"
                     android:inputType="text" />
             </LinearLayout>
@@ -111,43 +111,38 @@
             <EditText
                 android:id="@+id/RegisterAddress"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/z_edittextround"
                 android:hint="Address" />
 
             <EditText
                 android:id="@+id/RegisterContact"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/z_edittextround"
                 android:hint="@string/contact_number" />
 
             <EditText
                 android:id="@+id/RegisterEmailAddress"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/z_edittextround"
                 android:hint="@string/email_address"
                 android:inputType="textEmailAddress" />
 
             <EditText
                 android:id="@+id/RegisterPassword"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/z_edittextround"
                 android:hint="Password"
                 android:inputType="textPassword" />
 
             <EditText
                 android:id="@+id/ConfirmPassword"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/z_edittextround"
                 android:hint="Confirm Password"
                 android:inputType="textPassword" />
 
@@ -157,7 +152,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="@drawable/z_darkbluebutton"
+                android:background="@android:color/holo_blue_light"
                 android:text="@string/sign_up"
                 android:textColor="#FFF" />
 

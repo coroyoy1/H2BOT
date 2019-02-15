@@ -1,4 +1,4 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.tpaaffiliate;
 
 
 import android.app.Dialog;
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.administrator.h2bot.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;

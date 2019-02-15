@@ -1,6 +1,6 @@
 package com.example.administrator.h2bot;
 
-import com.example.administrator.h2bot.SetterAndGetterModelFolder.*;
+import com.example.administrator.h2bot.models.*;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -23,7 +23,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -80,7 +79,6 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         button4 = (Button)findViewById(R.id.permitButton4);
         button5 = (Button)findViewById(R.id.permitButton5);
         button6 = (Button)findViewById(R.id.permitButton6);
-        buttonlogout = (Button)findViewById(R.id.logoutButton);
         submitToFirebase = (Button)findViewById(R.id.submitButton);
 
         button1.setOnClickListener(this);
@@ -449,11 +447,6 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
             case R.id.submitButton:
                 checkingAddPhoto();
                 stringData();
-                break;
-            case R.id.logoutButton:
-                mAuth.signOut();
-                finish();
-                startActivity(new Intent(WaterStationDocumentVersion2Activity.this, LoginActivity.class));
                 break;
             default:
                 Toast.makeText(WaterStationDocumentVersion2Activity.this, "There is not such thing on app", Toast.LENGTH_SHORT).show();

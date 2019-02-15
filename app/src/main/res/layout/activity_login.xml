@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:background="#0097e6"
+            android:background="@android:color/holo_blue_dark"
             android:text="Login"
             android:textColor="#f5f6fa"
             android:textSize="20sp" />
