@@ -1,4 +1,4 @@
-package com.example.administrator.h2bot.waterstation;
+package com.example.administrator.h2bot.models;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.UserWSWDWaterTypeFile;
+import com.example.administrator.h2bot.waterstation.WSProductListIntent;
+import com.example.administrator.h2bot.waterstation.WSProductListUpdate;
 
 import java.util.List;
 
@@ -81,7 +83,7 @@ public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapte
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
-           PLItemNoHolder = itemView.findViewById(R.id.PLIaxitem);
+           PLItemNoHolder = itemView.findViewById(R.id.PLIapitem);
             PLItemNameHolder = itemView.findViewById(R.id.PLItemName);
         }
     }
