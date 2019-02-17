@@ -120,6 +120,7 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
                         emailPass = userAccountFile.getUser_email_address();
                         passPass = userAccountFile.getUser_password();
                     }
+
             }
 
             @Override
