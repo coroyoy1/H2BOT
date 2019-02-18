@@ -94,8 +94,8 @@ public class WPInProgressFragment extends Fragment implements WPInProgressAdapte
         Intent detailIntent = new Intent(getActivity(), WPPendingTransactionFragment.class);
         wptransactionheaderfilemodel clickedItem = mUploads.get(position);
 
-//        detailIntent.putExtra(EXTRA_transactionNo, clickedItem.getTransactionNo());
-//        detailIntent.putExtra(EXTRA_customerName, clickedItem.getCustomerName());
+        detailIntent.putExtra(EXTRA_transactionNo, clickedItem.getTrans_no());
+        detailIntent.putExtra(EXTRA_customerName, clickedItem.getTrans_status());
 //        detailIntent.putExtra(EXTRA_contactNo, clickedItem.getContactNo());
 //        detailIntent.putExtra(EXTRA_waterType, clickedItem.getWaterType());
 //        detailIntent.putExtra(EXTRA_itemQuantity, clickedItem.getItemQuantity());

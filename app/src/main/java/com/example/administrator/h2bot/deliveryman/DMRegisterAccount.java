@@ -25,14 +25,20 @@ import com.example.administrator.h2bot.UserWSWDWaterTypeFile;
 import com.example.administrator.h2bot.models.UserAccountFile;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserWSDMFile;
+import com.example.administrator.h2bot.waterstation.WSDMFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
@@ -47,6 +53,7 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
 
     private static final int PICK_IMAGE_REQUEST = 1;
     EditText firstNameDM, lastNameDM, addressDM, contactNoDM, emailDM, passwordDM, confirmPassDM;
+    FirebaseAnalytics firebaseAnalytics;
     Button registerDM, addPhotoBDM, addDocumentPhoto;
     CircleImageView imageView;
     ImageView imageDocument;
@@ -61,6 +68,8 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
     StorageReference storageReference;
     ProgressDialog progressDialog;
     String GetAuth;
+
+    String emailPass, passPass;
 
     StorageTask uploadTask;
 
@@ -101,11 +110,55 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
         {
             GetAuth = bundle.getString("AuthenFirebase");
         }
+        DatabaseReference databaseReferenceThis = FirebaseDatabase.getInstance().getReference("User_Account_File").child(GetAuth);
+        databaseReferenceThis.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    UserAccountFile userAccountFile = dataSnapshot.getValue(UserAccountFile.class);
+                    if (userAccountFile != null)
+                    {
+                        emailPass = userAccountFile.getUser_email_address();
+                        passPass = userAccountFile.getUser_password();
+                    }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                showMessages("Error to intent");
+            }
+        });
 
         addDocumentPhoto.setOnClickListener(this);
         addPhotoBDM.setOnClickListener(this);
         registerDM.setOnClickListener(this);
         return view;
+    }
+
+    private void performLogin(String emailString, String passwordString)
+    {
+        mAuth.signInWithEmailAndPassword(emailString, passwordString)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        showMessages("Success Login");
+                        WSDMFragment wsdmFragment = new WSDMFragment();
+                        AppCompatActivity activity = (AppCompatActivity)getContext();
+                        activity.getSupportFragmentManager()
+                                .beginTransaction()
+                                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                                .replace(R.id.fragment_container_ws, wsdmFragment)
+                                .addToBackStack(null)
+                                .commit();
+                        progressDialog.dismiss();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        showMessages("Fail to login");
+                    }
+                });
     }
 
     public void registerDeliveryMan()
@@ -116,7 +169,6 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
                     @Override
                     public void onSuccess(AuthResult authResult) {
                        String userd = FirebaseAuth.getInstance().getUid();
-
                        storageReference.child(userd)
                                .putFile(uri)
                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -132,8 +184,8 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
                                                 profilePic,
                                                 firstNameDM.getText().toString(),
                                                 lastNameDM.getText().toString(),
-                                                contactNoDM.getText().toString(),
                                                 addressDM.getText().toString(),
+                                                contactNoDM.getText().toString(),
                                                 "Delivery Man",
                                                 "active"
                                         );
@@ -143,7 +195,6 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     showMessages("Successfully Registered");
-                                                    progressDialog.dismiss();
                                                     storageReference.child(userd)
                                                             .putFile(uriv)
                                                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -171,12 +222,12 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
                                                                                                 docDM
                                                                                         );
                                                                                         DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("User_WS_DM_File");
-                                                                                        databaseReference2.child(userd).setValue(userWSDMFile)
+                                                                                        databaseReference2.child(GetAuth).child(userd).setValue(userWSDMFile)
                                                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                                                 @Override
                                                                                                 public void onSuccess(Void aVoid) {
                                                                                                     showMessages("Successfully Added");
-                                                                                                    progressDialog.dismiss();
+                                                                                                    performLogin(emailPass, passPass);
                                                                                                 }
                                                                                             })
                                                                                             .addOnFailureListener(new OnFailureListener() {
@@ -251,25 +302,6 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
     }
 
 
-    public void GettingData()
-    {
-        final String firstNameString = firstNameDM.getText().toString();
-        final String lastNameString = lastNameDM.getText().toString();
-        final String contactString = contactNoDM.getText().toString();
-        final String emailString = emailDM.getText().toString();
-        final String passwordString = passwordDM.getText().toString();
-        final String confirmString = confirmPassDM.getText().toString();
-        final String addressString = addressDM.getText().toString();
-
-
-
-        //final String uriString = uri.toString();
-
-//        Bundle args = new Bundle();
-//        args.putString("DMFirstName", firstNameString);
-
-    }
-
     public void openGallery()
     {
         Intent intent = new Intent();
@@ -310,16 +342,6 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
                 break;
             case R.id.RegisterSignUpDM:
                 registerDeliveryMan();
-//                GettingData();
-
-//                DMRegisterDocument dmRegisterDocument = new DMRegisterDocument();
-//                AppCompatActivity activity = (AppCompatActivity)v.getContext();
-//                activity.getSupportFragmentManager()
-//                        .beginTransaction()
-//                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-//                        .replace(R.id.fragment_container_ws, dmRegisterDocument)
-//                        .addToBackStack(null)
-//                        .commit();
                 break;
         }
     }

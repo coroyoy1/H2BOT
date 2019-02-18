@@ -1,210 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/waterbackgroundvvv"
-    android:orientation="horizontal">
-
-    <LinearLayout
-        android:gravity="center"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Delivery Man"
-            android:textColor="@android:color/white"
-            android:textSize="24dp"
-            android:textStyle="bold"/>
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_marginTop="20dp"
-            android:layout_width="150dp"
-            android:layout_height="120dp"
-            android:id="@+id/imageDM"
-            android:src="@drawable/ic_person_black_24dp"/>
-
-        <Button
-            android:id="@+id/addPhotoDM"
-            android:layout_marginTop="10dp"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
-            android:background="@drawable/z_graybuttomv"
-            android:text="Add Photo"
-            android:textColor="@android:color/white"/>
-
-        <ScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+    android:orientation="vertical">
+        <LinearLayout
             android:layout_gravity="center"
-            android:padding="5dp">
-
-            <LinearLayout
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <!--<Spinner-->
-                <!--android:id="@+id/RegisterSpinner"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="50dp"-->
-                <!--android:layout_weight="1"-->
-                <!--android:entries="@array/UserType">-->
-
-                <!--</Spinner>-->
-
-                <!--<EditText-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="40dp"-->
-                <!--android:id="@+id/usernameText"-->
-                <!--android:hint="Username"-->
-                <!--android:inputType="text"-->
-                <!--android:background="@drawable/z_edittextround" />-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:textAlignment="center"
-                        android:id="@+id/RegisterFullNameDM"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginRight="2dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/z_edittextround"
-                        android:hint="First Name"
-                        android:inputType="text" />
-
-                    <EditText
-                        android:textAlignment="center"
-                        android:id="@+id/RegisterLastNameDM"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/z_edittextround"
-                        android:hint="Last Name"
-                        android:inputType="text" />
-                </LinearLayout>
-
-
-                <!--<EditText-->
-                <!--android:id="@+id/RegisterAge"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:hint="@string/age"-->
-                <!--android:inputType="number" />-->
-
-                <EditText
-                    android:textAlignment="center"
-                    android:id="@+id/RegisterAddressDM"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/z_edittextround"
-                    android:hint="Address" />
-
-                <EditText
-                    android:textAlignment="center"
-                    android:id="@+id/RegisterContactDM"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/z_edittextround"
-                    android:hint="@string/contact_number" />
-
-                <EditText
-                    android:textAlignment="center"
-                    android:id="@+id/RegisterEmailAddressDM"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/z_edittextround"
-                    android:hint="@string/email_address"
-                    android:inputType="textEmailAddress" />
-
-                <EditText
-                    android:textAlignment="center"
-                    android:id="@+id/RegisterPasswordDM"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/z_edittextround"
-                    android:hint="Password"
-                    android:inputType="textPassword" />
-
-                <EditText
-                    android:textAlignment="center"
-                    android:id="@+id/ConfirmPasswordDM"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/z_edittextround"
-                    android:hint="Confirm Password"
-                    android:inputType="textPassword" />
-
-
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
                 <TextView
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:textAlignment="center"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Additional Document"
-                    android:textSize="18dp"
-                    android:background="@android:color/holo_blue_bright"
+                    android:text="Add Delivery Man"
                     android:textColor="@android:color/white"
-                    />
+                    android:textSize="24dp"
+                    android:textStyle="bold" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_weight="1"
-                    android:background="@android:color/darker_gray">
-                    <TextView
-                        android:textSize="16dp"
-                        android:textColor="@android:color/white"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Driver's License "/>
-
-                    <ImageView
-                        android:id="@+id/documentImage"
-                        android:background="@drawable/ic_launcher_foreground"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp" />
-
-                    <Button
-                        android:id="@+id/addDocumentButton"
-                        android:layout_width="90dp"
-                        android:layout_height="50dp"
-                        android:text="Add document"
-                        android:textColor="@android:color/white"
-                        android:background="@drawable/z_blueroundbutton"
-                        />
-                </LinearLayout>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imageDM"
+                    android:layout_width="150dp"
+                    android:layout_height="120dp"
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/ic_person_black_24dp" />
 
                 <Button
-                    android:id="@+id/RegisterSignUpDM"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/z_darkbluebutton"
-                    android:text="Register"
-                    android:textColor="#FFF" />
+                    android:id="@+id/addPhotoDM"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/z_graybuttomv"
+                    android:text="Add Photo"
+                    android:textColor="@android:color/white" />
 
-                <TextView
-                    android:layout_width="match_parent"
+
+            <ScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="300dp"
                     android:layout_height="wrap_content"
-                    android:text="Please use a valid phone number**"
-                    android:textColor="#FF0000"
-                    android:textStyle="italic" />
+                    android:orientation="vertical">
+                    <!--<Spinner-->
+                    <!--android:id="@+id/RegisterSpinner"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="50dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:entries="@array/UserType">-->
+
+                    <!--</Spinner>-->
+
+                    <!--<EditText-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:id="@+id/usernameText"-->
+                    <!--android:hint="Username"-->
+                    <!--android:inputType="text"-->
+                    <!--android:background="@drawable/z_edittextround" />-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/RegisterFullNameDM"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginRight="2dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/z_edittextround"
+                            android:hint="First Name"
+                            android:inputType="textEmailAddress"
+                            android:textAlignment="center" />
+
+                        <EditText
+                            android:id="@+id/RegisterLastNameDM"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/z_edittextround"
+                            android:hint="Last Name"
+                            android:inputType="textEmailAddress"
+                            android:textAlignment="center" />
+                    </LinearLayout>
+
+
+                    <!--<EditText-->
+                    <!--android:id="@+id/RegisterAge"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:hint="@string/age"-->
+                    <!--android:inputType="number" />-->
+
+                    <EditText
+                        android:inputType="textEmailAddress"
+                        android:id="@+id/RegisterAddressDM"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/z_edittextround"
+                        android:hint="Address"
+                        android:textAlignment="center" />
+
+                    <EditText
+                        android:inputType="textEmailAddress"
+                        android:id="@+id/RegisterContactDM"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/z_edittextround"
+                        android:hint="@string/contact_number"
+                        android:textAlignment="center" />
+
+                    <EditText
+                        android:id="@+id/RegisterEmailAddressDM"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/z_edittextround"
+                        android:hint="@string/email_address"
+                        android:inputType="textEmailAddress"
+                        android:textAlignment="center" />
+
+                    <EditText
+                        android:id="@+id/RegisterPasswordDM"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/z_edittextround"
+                        android:hint="Password"
+                        android:inputType="textPassword"
+                        android:textAlignment="center" />
+
+                    <EditText
+                        android:id="@+id/ConfirmPasswordDM"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/z_edittextround"
+                        android:hint="Confirm Password"
+                        android:inputType="textPassword"
+                        android:textAlignment="center" />
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@android:color/holo_blue_bright"
+                        android:text="Additional Document"
+                        android:textAlignment="center"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="@android:color/darker_gray"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Driver's License "
+                            android:textColor="@android:color/white"
+                            android:textSize="16dp" />
+
+                        <ImageView
+                            android:id="@+id/documentImage"
+                            android:layout_width="240dp"
+                            android:layout_height="180dp"
+                            android:background="@drawable/ic_launcher_foreground" />
+
+                        <Button
+                            android:layout_marginTop="10dp"
+                            android:id="@+id/addDocumentButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@drawable/z_blueroundbutton"
+                            android:text="Add document"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/RegisterSignUpDM"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/z_darkbluebutton"
+                        android:text="Register"
+                        android:textColor="#FFF" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Please use a valid phone number**"
+                        android:textColor="#FF0000"
+                        android:textStyle="italic" />
+                </LinearLayout>
+            </ScrollView>
             </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
 </RelativeLayout>

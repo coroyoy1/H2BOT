@@ -1,43 +1,27 @@
 {
   "project_info": {
-    "project_number": "8834897724",
-    "firebase_url": "https://h2botdatabase.firebaseio.com",
-    "project_id": "h2botdatabase",
-    "storage_bucket": "h2botdatabase.appspot.com"
+    "project_number": "1001575215804",
+    "firebase_url": "https://arcane-bit-229705.firebaseio.com",
+    "project_id": "arcane-bit-229705",
+    "storage_bucket": "arcane-bit-229705.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:8834897724:android:505b961c7e3dca07",
+        "mobilesdk_app_id": "1:1001575215804:android:505b961c7e3dca07",
         "android_client_info": {
           "package_name": "com.example.administrator.h2bot"
         }
       },
       "oauth_client": [
         {
-          "client_id": "8834897724-u1h50a0fsvvfsjj2n74h66samehvbnn8.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.administrator.h2bot",
-            "certificate_hash": "847d6bdd0bb4c5a727e482311b8a1e4db8f3208f"
-          }
-        },
-        {
-          "client_id": "8834897724-08h80ma1o5c3rb0mgr4dj5lpca2iig70.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.administrator.h2bot",
-            "certificate_hash": "b74e8df0afa6bbdf56ebd5674d4b950d84593d0f"
-          }
-        },
-        {
-          "client_id": "8834897724-24oas36rfnnd1qd9vatnh7kih9qs3gp8.apps.googleusercontent.com",
+          "client_id": "1001575215804-tvbipl3d3depd73qfov7jaeaithiveqn.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCUXXrDBOzQDURTrQ4IAmcXcOcCYi_I2pA"
+          "current_key": "AIzaSyCzsD3s5_EoCiE09N2xX-9QJTkY0jnW1no"
         }
       ],
       "services": {
@@ -45,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "8834897724-24oas36rfnnd1qd9vatnh7kih9qs3gp8.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ import com.squareup.picasso.Picasso;
 
 public class WSAccountSettingsFragment extends Fragment implements View.OnClickListener {
 
-    TextView UserTypeWS, StationNameWS, StationRelatedNoWS, UserNameWS, FullNameWS, AgeWS, AddressWS, ContactNoWS, EmailAddressWS;
+    TextView UserTypeWS, StationNameWS,FullNameWS, AddressWS, ContactNoWS, EmailAddressWS;
     ImageView imageView;
     DatabaseReference databaseReference;
     DatabaseReference databaseReference1;
@@ -45,16 +46,13 @@ public class WSAccountSettingsFragment extends Fragment implements View.OnClickL
 
         UserTypeWS = view.findViewById(R.id.userTypeAS);
         StationNameWS = view.findViewById(R.id.stationNameAS);
-        StationRelatedNoWS = view.findViewById(R.id.stationRelatedNoAS);
         FullNameWS = view.findViewById(R.id.fullNameAS);
-        AgeWS = view.findViewById(R.id.ageAS);
         AddressWS = view.findViewById(R.id.addressAS);
         ContactNoWS = view.findViewById(R.id.contactAS);
         EmailAddressWS = view.findViewById(R.id.emailAS);
         imageView = view.findViewById(R.id.profileImageAS);
 
-        Button updateDoc = (Button)view.findViewById(R.id.updateDocument);
-        Button updateAcc = (Button)view.findViewById(R.id.updateAccount);
+        Button updateAcc = view.findViewById(R.id.updateAccount);
 
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -62,15 +60,19 @@ public class WSAccountSettingsFragment extends Fragment implements View.OnClickL
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 UserFile user = dataSnapshot.getValue(UserFile.class);
-                FullNameWS.setText(user.getUser_firtname()+" "+user.getUser_lastname());
-                AddressWS.setText(user.getUser_address());
-                ContactNoWS.setText(user.getUser_phone_no());
-                UserTypeWS.setText(user.getUser_type());
-                Picasso.get()
-                        .load(user.getUser_uri())
-                        .fit()
-                        .centerCrop()
-                        .into(imageView);
+                if(user != null)
+                {
+                    FullNameWS.setText("Full Name: "+user.getUser_firtname()+" "+user.getUser_lastname());
+                    AddressWS.setText("Full Adress: "+user.getUser_address());
+                    ContactNoWS.setText("Contact No.: "+user.getUser_phone_no());
+                    UserTypeWS.setText("User Type: "+user.getUser_type());
+
+                    Picasso.get()
+                            .load(user.getUser_uri())
+                            .fit()
+                            .centerCrop()
+                            .into(imageView);
+                }
             }
 
             @Override
@@ -83,7 +85,10 @@ public class WSAccountSettingsFragment extends Fragment implements View.OnClickL
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 UserAccountFile userAccount = dataSnapshot.getValue(UserAccountFile.class);
-                    EmailAddressWS.setText(userAccount.getUser_email_address());
+                if(userAccount != null)
+                {
+                    EmailAddressWS.setText("Email Address: "+userAccount.getUser_email_address());
+                }
             }
 
             @Override
@@ -96,7 +101,10 @@ public class WSAccountSettingsFragment extends Fragment implements View.OnClickL
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 UserWSBusinessInfoFile userBusiness = dataSnapshot.getValue(UserWSBusinessInfoFile.class);
-                StationNameWS.setText(userBusiness.getBusiness_name());
+                if(userBusiness != null)
+                {
+                    StationNameWS.setText("Station Name: "+userBusiness.getBusiness_name());
+                }
             }
 
             @Override
@@ -106,7 +114,6 @@ public class WSAccountSettingsFragment extends Fragment implements View.OnClickL
         });
 
         updateAcc.setOnClickListener(this);
-        updateDoc.setOnClickListener(this);
         return view;
     }
 
@@ -125,15 +132,15 @@ public class WSAccountSettingsFragment extends Fragment implements View.OnClickL
     public void onClick(View v) {
         switch(v.getId())
         {
-            case R.id.updateDocument:
-                Intent intent = new Intent(getActivity(), WSAccountSettingsUpdateDoc.class);
-                intent.putExtra("Data", "Some Data");
-                startActivity(intent);
-            break;
             case R.id.updateAccount:
-                Intent intent2 = new Intent(getActivity(), WSAccountSettingsUpdateAcc.class);
-                intent2.putExtra("Data", "Some Data");
-                startActivity(intent2);
+                WSUpdateAccountSettings wsdmFragment = new WSUpdateAccountSettings();
+                AppCompatActivity activity = (AppCompatActivity)v.getContext();
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                        .replace(R.id.fragment_container_ws, wsdmFragment)
+                        .addToBackStack(null)
+                        .commit();
                 break;
         }
     }
