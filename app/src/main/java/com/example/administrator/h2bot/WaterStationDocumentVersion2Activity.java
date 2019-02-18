@@ -36,7 +36,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
     private static final int PICK_IMAGE_REQUEST = 1;
     ImageView image1, image2, image3, image4, image5, image6;
     Button button1, button2, button3, button4, button5, button6, buttonlogout, submitToFirebase;
-    EditText businessName, businessStartTime, businessEndTime, businessDeliveryFeePerGal, businessMinNoCapacity, businessTelNo;
+    EditText businessName, businessStartTime, businessEndTime, businessDeliveryFeePerGal, businessMinNoCapacity, businessTelNo, businessAddress;
 
     Boolean isClick1=false, isClick2=false, isClick3=false, isClick4=false, isClick5=false, isClick6=false;
     Intent intent;
@@ -99,6 +99,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         businessDeliveryFeePerGal = findViewById(R.id.stationDeliverySD);
         businessMinNoCapacity = findViewById(R.id.stationCapacitySD);
         businessTelNo = findViewById(R.id.stationTelephoneySD);
+        businessAddress = findViewById(R.id.stationAddressSD);
 
 
 
@@ -217,7 +218,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                String businessEndTimeTextGET,
                String businessDeliveryFeePerGalTextGet,
                String businessMinNoCapacityTextGET,
-               String businessTelNoTextGET)
+               String businessTelNoTextGET, String businessAddressTextGEET)
     {
         if(uri1 != null)
         {
@@ -366,7 +367,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                     FirebaseDatabase.getInstance().getReference("User_WS_Docs_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("station_status").setValue("inactive");
                                 }
                             });
-                            UserWSBusinessInfoFile userWSBusinessInfoFile = new UserWSBusinessInfoFile(currentUser, businessNameTextGET, businessStartTimeTextGET, businessEndTimeTextGET, businessDeliveryService, businessFreeOrNoText, businessDeliveryFeePerGalTextGet, businessMinNoCapacityTextGET, businessTelNoTextGET, "active");
+                            UserWSBusinessInfoFile userWSBusinessInfoFile = new UserWSBusinessInfoFile(currentUser, businessNameTextGET, businessStartTimeTextGET, businessEndTimeTextGET, businessDeliveryService, businessFreeOrNoText, businessDeliveryFeePerGalTextGet, businessMinNoCapacityTextGET, businessTelNoTextGET, businessAddressTextGEET, "active");
                             FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(currentUser).setValue(userWSBusinessInfoFile)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
@@ -472,13 +473,36 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         String businessDeliveryFeePerGalText = businessDeliveryFeePerGal.getText().toString();
         String businessMinNoCapacityText = businessMinNoCapacity.getText().toString();
         String businessTelNoText = businessTelNo.getText().toString();
+        String businessAddressText = businessAddress.getText().toString();
 
-        uploadData(businessNameText,
-                businessStartTimeText,
-                businessEndTimeText,
-                businessDeliveryFeePerGalText,
-                businessMinNoCapacityText,
-                businessTelNoText);
+        if(businessName.getText().toString().isEmpty()
+            && businessStartTime.getText().toString().isEmpty()
+            && businessEndTime.getText().toString().isEmpty()
+            && businessDeliveryFeePerGal.getText().toString().isEmpty()
+            && businessMinNoCapacity.getText().toString().isEmpty()
+            && businessTelNo.getText().toString().isEmpty()
+            && businessAddress.getText().toString().isEmpty())
+        {
+            showMessages("Please fill up the requirements");
+        }
+        else
+        {
+            if(uri1 == null && uri2 == null && uri3 == null && uri4 == null && uri5 == null && uri6 == null)
+            {
+                showMessages("");
+            }
+            else
+            {
+                uploadData(businessNameText,
+                        businessStartTimeText,
+                        businessEndTimeText,
+                        businessDeliveryFeePerGalText,
+                        businessMinNoCapacityText,
+                        businessTelNoText,
+                        businessAddressText);
+            }
+        }
+
     }
     public void checkingAddPhoto()
     {

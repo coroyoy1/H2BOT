@@ -228,7 +228,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/z_edittextround"
                     android:hint="Business Permit No."
-                    android:inputType="text"
+                    android:inputType="textEmailAddress"
                     android:textAlignment="center"
                     android:textSize="18dp" />
                 <TextView
@@ -245,7 +245,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Notice: Station name should be fill up. Business hours show when your station open or when it close. For example: '8am - 6pm Weekdays'"
+                    android:text="Notice: Station name and full address should be fill up. Business hours show when your station open or when it close. For example: '8am - 6pm Weekdays'"
                     android:textColor="@android:color/holo_red_dark"/>
 
                 <EditText
@@ -256,7 +256,18 @@
                     android:layout_weight="1"
                     android:background="@drawable/z_edittextround"
                     android:hint="Water Station Name"
-                    android:inputType="text"
+                    android:inputType="textEmailAddress"
+                    android:textAlignment="center"
+                    android:textSize="18dp" />
+                <EditText
+                    android:id="@+id/stationAddressSD"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/z_edittextround"
+                    android:hint="Station Full Address"
+                    android:inputType="textEmailAddress"
                     android:textAlignment="center"
                     android:textSize="18dp" />
                 <TextView
@@ -275,7 +286,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:hint="Starting Time"
-                        android:inputType="text"
+                        android:inputType="textEmailAddress"
                         android:textAlignment="center"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -288,7 +299,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:hint="End Time"
-                        android:inputType="text"
+                        android:inputType="textEmailAddress"
                         android:textAlignment="center"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"/>

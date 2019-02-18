@@ -10,6 +10,7 @@ public class UserWSBusinessInfoFile {
     private String business_delivery_fee_per_gal;
     private String business_min_no_of_capacity;
     private String business_tel_no;
+    private String business_address;
     private String business_status;
 
     public UserWSBusinessInfoFile()
@@ -26,6 +27,7 @@ public class UserWSBusinessInfoFile {
             String business_delivery_fee_per_gal,
             String business_min_no_of_capacity,
             String business_tel_no,
+             String business_address,
              String business_status
     )
     {
@@ -38,7 +40,16 @@ public class UserWSBusinessInfoFile {
         this.business_delivery_fee_per_gal = business_delivery_fee_per_gal;
         this.business_min_no_of_capacity = business_min_no_of_capacity;
         this.business_tel_no = business_tel_no;
+        this.business_address = business_address;
         this.business_status = business_status;
+    }
+
+    public String getBusiness_address() {
+        return business_address;
+    }
+
+    public void setBusiness_address(String business_address) {
+        this.business_address = business_address;
     }
 
     public String getBusiness_id() {
