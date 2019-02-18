@@ -1,6 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@mipmap/waterbackgroundvvv"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
 
+        <TextView
+            android:textColor="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your Profile"
+            android:textSize="18dp"
+            android:textStyle="bold"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImageDMYP"
+            android:layout_width="150dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="#78807C7C"
+            android:orientation="vertical">
+
+            <TextView
+                android:textColor="@android:color/white"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/userTypeDMYP"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="[none/none/none/none/]"
+                android:textSize="18dp" />
+
+            <TextView
+                android:textColor="@android:color/white"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/stationNameDMYP"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="[none/none/none/none/]"
+                android:textSize="18dp" />
+
+            <TextView
+                android:textColor="@android:color/white"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/fullNameDMYP"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="[none/none/none/none/]"
+                android:textSize="18dp" />
+
+            <TextView
+                android:textColor="@android:color/white"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/addressDMYP"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="[none/none/none/none/]"
+                android:textSize="18dp" />
+
+            <TextView
+                android:textColor="@android:color/white"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/emailDMYP"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="[none/none/none/none/]"
+                android:textSize="18dp" />
+
+            <TextView
+                android:textColor="@android:color/white"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/contactDMYP"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                android:text="[none/none/none/none/]"
+                android:layout_marginBottom="10dp"
+                android:textSize="18dp" />
+        </LinearLayout>
+
+        <TextView
+            android:textColor="@android:color/holo_green_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Document Verified"
+            android:textSize="18dp"
+            android:textStyle="bold"/>
+        <Button
+            android:id="@+id/updateAccountDMYP"
+            android:layout_width="170dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:text="Update Account"
+            android:background="@drawable/z_darkbluebutton"
+            android:textColor="@android:color/white"/>
+
+
+    </LinearLayout>
 </RelativeLayout>

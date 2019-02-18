@@ -49,15 +49,16 @@
         <activity android:name=".zCreateStationDetailsActivity" />
         <activity android:name=".zCreateAccountOptionUserTypeActivity" />
         <activity android:name=".deliveryman.DeliveryManDocumentActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".tempAccessActivity" />
-        <activity
-            android:name=".tpaaffiliate.TPAffiliateMainActivity">
+        <activity android:name=".LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".tempAccessActivity" />
+        <activity
+            android:name=".tpaaffiliate.TPAffiliateMainActivity">
         </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".WaterPeddlerDocumentActivity" />

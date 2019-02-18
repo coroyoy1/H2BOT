@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WPTransactionFragment">
+    tools:context=".WPTransactionFragment"
+    android:background="@mipmap/waterbackgroundvvv">
 
     <LinearLayout
         android:orientation="vertical"
@@ -11,7 +12,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="0dp"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@android:color/holo_blue_dark">
@@ -42,10 +43,10 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="405dp">
+            android:layout_height="match_parent">
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
             </android.support.v7.widget.RecyclerView>
         </LinearLayout>
 

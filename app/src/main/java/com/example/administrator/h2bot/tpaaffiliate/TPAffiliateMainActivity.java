@@ -43,11 +43,11 @@ public class TPAffiliateMainActivity extends AppCompatActivity implements Naviga
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         actionBarDrawerToggle.syncState();
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TPAGoogleMapFragment()).commit();
-            navigationView.setCheckedItem(R.id.map);
-            Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
-        }
+//        if (savedInstanceState == null) {
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TPAGoogleMapFragment()).commit();
+//            navigationView.setCheckedItem(R.id.map);
+//            Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
+//        }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
     @Override
