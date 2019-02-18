@@ -1,4 +1,4 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,12 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.WPPendingTransactionFragment;
+import com.example.administrator.h2bot.WSCompletedOrdersInformationFragment;
 import com.example.administrator.h2bot.models.wptransactionheaderfilemodel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class WPInProgressAdapter extends RecyclerView.Adapter<WPInProgressAdapter.ViewHolder>{
+public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterdOrdersAdapter.ViewHolder>{
     private Context mContext;
     private List<wptransactionheaderfilemodel> mUploads;
     private OnItemClickListener mListener;
@@ -28,19 +31,19 @@ public class WPInProgressAdapter extends RecyclerView.Adapter<WPInProgressAdapte
         mListener = listener;
     }
 
-    public WPInProgressAdapter(Context context, ArrayList<wptransactionheaderfilemodel> uploads) {
+    public WSCompleterdOrdersAdapter(Context context, List<wptransactionheaderfilemodel> uploads) {
         mContext = context;
         mUploads = uploads;
     }
 
     @NonNull
     @Override
-    public WPInProgressAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public WSCompleterdOrdersAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.wpinprogressxml, viewGroup, false);
         return new ViewHolder(v);
     }
     @Override
-    public void onBindViewHolder(@NonNull WPInProgressAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull WSCompleterdOrdersAdapter.ViewHolder viewHolder, int i) {
         final wptransactionheaderfilemodel currentData = mUploads.get(i);
                 viewHolder.transactionNo.setText(currentData.getTrans_no());
                 viewHolder.status.setText(currentData.getTrans_status());
@@ -71,9 +74,9 @@ public class WPInProgressAdapter extends RecyclerView.Adapter<WPInProgressAdapte
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WPPendingTransactionFragment detail = new WPPendingTransactionFragment();
+                WSCompletedOrdersInformationFragment detail = new WSCompletedOrdersInformationFragment();
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp, detail).addToBackStack(null).commit();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws, detail).addToBackStack(null).commit();
                 Bundle args = new Bundle();
                 args.putString("transactionno", currentData.getTrans_no());
                 args.putString("status", currentData.getTrans_status());
@@ -118,7 +121,7 @@ public class WPInProgressAdapter extends RecyclerView.Adapter<WPInProgressAdapte
 
             transactionNo = itemView.findViewById(R.id.transactionNo);
             status = itemView.findViewById(R.id.status);
-//            details = itemView.findViewById(R.id.details);
+            details = itemView.findViewById(R.id.details);
 //            address = itemView.findViewById(R.id.address);
 //            customername = itemView.findViewById(R.id.customername);
 //            contactno = itemView.findViewById(R.id.contactno);
