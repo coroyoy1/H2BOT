@@ -4,138 +4,80 @@
     android:background="@mipmap/waterbackgroundvvv"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:layout_margin="20dp"
+        android:background="#32918b88"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <RelativeLayout
-            android:id="@+id/relative1"
-            android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content">
+        <TextView
             android:layout_width="match_parent"
-            android:foregroundGravity="center"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginTop="27dp"
-            android:padding="30dp"
-            android:background="#32918b88">
-
-            <TextView
-                android:id="@+id/textView21"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="13dp"
-                android:text="Station Details"
-                android:textColor="@android:color/holo_blue_dark"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/textView38"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="49dp"
-                android:paddingBottom="10dp"
-                android:text="Name:  "
-                android:textColor="@android:color/black"
-                android:textSize="17sp"
-                android:textStyle="bold" />
-            <TextView
-                android:id="@+id/textview1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:text="Address:  "
-                android:layout_below="@+id/textView38"
-                android:layout_alignStart="@+id/textView38"
-                android:textColor="@android:color/black"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                />
-            <TextView
-                android:id="@+id/textview2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:text="Business Hours:    "
-                android:layout_below="@+id/textview1"
-                android:layout_alignStart="@+id/textView38"
-                android:textColor="@android:color/black"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                />
-            <TextView
-                android:id="@+id/textview3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:text="Plate Number:  "
-                android:layout_below="@+id/textview2"
-                android:layout_alignStart="@+id/textView38"
-                android:textColor="@android:color/black"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                />
-
-            <TextView
-                android:id="@+id/textview4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:text="Delivery Fee:  "
-                android:layout_below="@+id/textview3"
-                android:layout_alignStart="@+id/textView38"
-                android:textColor="@android:color/black"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="None"
-                android:textSize="17sp"
-                android:layout_toEndOf="@+id/textview2"
-                android:layout_alignTop="@+id/textView38"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="None"
-                android:textSize="17sp"
-                android:layout_toEndOf="@+id/textview2"
-                android:layout_alignTop="@+id/textview1"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="None"
-                android:textSize="17sp"
-                android:layout_toEndOf="@+id/textview2"
-                android:layout_alignTop="@+id/textview2"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="None"
-                android:textSize="17sp"
-                android:layout_toEndOf="@+id/textview2"
-                android:layout_alignTop="@+id/textview3"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="None"
-                android:textSize="17sp"
-                android:layout_toEndOf="@+id/textview2"
-                android:layout_alignTop="@+id/textview4"
-                />
-
-        </RelativeLayout>
+            android:textColor="@android:color/holo_blue_dark"
+            android:text="Water Station Details"
+            android:textAlignment="center"
+            android:textSize="20dp"
+            android:layout_marginBottom="20dp"/>
+        <TextView
+            android:id="@+id/stationaNameBI"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="18dp"
+            android:text="Station Name"/>
+        <TextView
+            android:id="@+id/stationAddressBI"
+            android:layout_marginTop="10dp"
+            android:textSize="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:text="Station Address"/>
+        <TextView
+            android:id="@+id/stationHoursBI"
+            android:layout_marginTop="10dp"
+            android:textSize="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:text="Station Hours"/>
+        <TextView
+            android:id="@+id/stationTelNoBI"
+            android:layout_marginTop="10dp"
+            android:textSize="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:text="Station Tel No"/>
+        <TextView
+            android:id="@+id/stationFeePerGalBI"
+            android:layout_marginTop="10dp"
+            android:textSize="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:text="Station fee per gal"/>
+        <TextView
+            android:id="@+id/stationDeliveryBI"
+            android:layout_marginTop="10dp"
+            android:textSize="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:text="Station Delivery status"/>
+        <TextView
+            android:id="@+id/stationStatusBI"
+            android:layout_marginTop="10dp"
+            android:textSize="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:text="Station status"/>
+    </LinearLayout>
 
         <Button
             android:id="@+id/updateButtonWSBI"
@@ -148,16 +90,4 @@
             android:textColor="@android:color/white"
             android:text="Update" />
 
-        <Button
-            android:id="@+id/addProductButtonBusinessInfo"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="120dp"
-            android:background="@drawable/z_darkbluebutton"
-            android:text="Add Product"
-            android:textColor="@android:color/white" />
-
-    </RelativeLayout>
 </RelativeLayout>

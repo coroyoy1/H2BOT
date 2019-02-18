@@ -135,19 +135,6 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
         return view;
     }
 
-    public void dataUser()
-    {
-    }
-
-    public String getEmailOf(String emailEmailTo)
-    {
-        return emailEmailTo;
-    }
-    public String getPassOf(String passTo)
-    {
-        return passTo;
-    }
-
     private void performLogin(String emailString, String passwordString)
     {
         mAuth.signInWithEmailAndPassword(emailString, passwordString)
