@@ -1,4 +1,4 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.tpaaffiliate;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,12 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-public class CustomerTransactionsFragment extends Fragment {
+import com.example.administrator.h2bot.R;
+
+public class TPADeliveredOrdersFragment extends Fragment {
     LinearLayout temp_layout;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_customer_transaction, container, false);
+        return inflater.inflate(R.layout.tpa_delivered_orders_fragment, container, false);
     }
 }

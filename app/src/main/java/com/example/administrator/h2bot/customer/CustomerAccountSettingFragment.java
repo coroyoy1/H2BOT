@@ -1,4 +1,4 @@
-package com.example.administrator.h2bot.tpaaffiliate;
+package com.example.administrator.h2bot.customer;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,16 +7,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.example.administrator.h2bot.R;
 
-public class TPAHistoryFragment extends Fragment {
-    LinearLayout temp_layout;
+public class CustomerAccountSettingFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        return inflater.inflate(R.layout.tpa_history_fragment, container, false);
+        return inflater.inflate(R.layout.customer_fragment_account_settings, container, false);
     }
 }

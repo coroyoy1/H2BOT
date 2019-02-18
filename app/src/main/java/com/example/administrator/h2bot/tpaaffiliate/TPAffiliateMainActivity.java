@@ -5,15 +5,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.example.administrator.h2bot.AccountSettingFragment;
-import com.example.administrator.h2bot.CustomerTransactionsFragment;
 import com.example.administrator.h2bot.LoginActivity;
 import com.example.administrator.h2bot.R;
 import com.google.android.gms.maps.GoogleMap;
@@ -57,20 +59,20 @@ public class TPAffiliateMainActivity extends AppCompatActivity implements Naviga
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
                 break;
 
-//            case R.id.accepted:
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TPAHistoryFragment()).commit();
-//                Toast.makeText(this, "Transactions", Toast.LENGTH_SHORT).show();
-//                Objects.requireNonNull(getSupportActionBar()).setTitle("TransactionsDelivered");
-//                break;
+            case R.id.inProgress:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TPAInprogressFragment()).commit();
+                Toast.makeText(this, "In progress", Toast.LENGTH_SHORT).show();
+                Objects.requireNonNull(getSupportActionBar()).setTitle("In progress");
+                break;
 
-            case R.id.history:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TPAHistoryFragment()).commit();
-                Toast.makeText(this, "Transactions", Toast.LENGTH_SHORT).show();
-                Objects.requireNonNull(getSupportActionBar()).setTitle("TransactionsDelivered");
+            case R.id.delivered_orders:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TPADeliveredOrdersFragment()).commit();
+                Toast.makeText(this, "Delivered Orders", Toast.LENGTH_SHORT).show();
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Delivered Orders");
                 break;
 
             case R.id.account_settings:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AccountSettingFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TPAAccountSettingFragment()).commit();
                 Toast.makeText(this, "Account Settings", Toast.LENGTH_SHORT).show();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Account Settings");
                 break;
@@ -79,12 +81,6 @@ public class TPAffiliateMainActivity extends AppCompatActivity implements Naviga
                 final Dialog dialog = new Dialog(this);
                 dialog.setContentView(R.layout.ratings_popup);
                 dialog.show();
-                break;
-
-            case R.id.delivered_orders:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerTransactionsFragment()).commit();
-                Toast.makeText(this, "Delivered Orders", Toast.LENGTH_SHORT).show();
-                Objects.requireNonNull(getSupportActionBar()).setTitle("Delivered Orders");
                 break;
         }
         if (menuItem.getItemId() == R.id.logout) {

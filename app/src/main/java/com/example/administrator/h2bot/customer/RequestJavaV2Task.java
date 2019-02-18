@@ -1,4 +1,4 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.customer;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -41,6 +41,6 @@ public class RequestJavaV2Task extends AsyncTask<Void, Void, DetectIntentRespons
 
     @Override
     protected void onPostExecute(DetectIntentResponse detectIntentResponse) {
-        ((ChatbotActivity) activity).callbackV2(detectIntentResponse);
+        ((CustomerChatbotActivity) activity).callbackV2(detectIntentResponse);
     }
 }

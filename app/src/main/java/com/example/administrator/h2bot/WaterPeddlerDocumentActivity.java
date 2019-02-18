@@ -75,7 +75,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
 //        navigationView.setNavigationItemSelectedListener(this);
 //        actionBarDrawerToggle.syncState();
 //        if (savedInstanceState == null) {
-//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new GoogleMapFragment()).commit();
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerMapFragment()).commit();
 //            navigationView.setCheckedItem(R.id.map);
 //            Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
 //        }
@@ -219,19 +219,19 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
 //    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 //        switch (menuItem.getItemId()) {
 //            case R.id.map:
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new GoogleMapFragment()).commit();
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerMapFragment()).commit();
 //                Toast.makeText(this, "Map", Toast.LENGTH_SHORT).show();
 //                Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
 //                break;
 //
 //            case R.id.my_order:
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new OrdersFragment()).commit();
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerOrdersFragment()).commit();
 //                Toast.makeText(this, "Orders", Toast.LENGTH_SHORT).show();
 //                Objects.requireNonNull(getSupportActionBar()).setTitle("My Orders");
 //                break;
 //
 //            case R.id.account_settings:
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AccountSettingFragment()).commit();
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerAccountSettingFragment()).commit();
 //                Toast.makeText(this, "Account Settings", Toast.LENGTH_SHORT).show();
 //                Objects.requireNonNull(getSupportActionBar()).setTitle("Account Settings");
 //                break;

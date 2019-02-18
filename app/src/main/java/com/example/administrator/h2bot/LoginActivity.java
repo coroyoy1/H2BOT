@@ -1,5 +1,6 @@
 package com.example.administrator.h2bot;
 import com.example.administrator.h2bot.tpaaffiliate.*;
+import com.example.administrator.h2bot.customer.*;
 
 import android.app.ProgressDialog;
 import android.content.Intent;

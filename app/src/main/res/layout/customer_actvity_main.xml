@@ -5,7 +5,7 @@
     android:id="@+id/customer_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CustomerMainActivity">
+    tools:context=".customer.CustomerMainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

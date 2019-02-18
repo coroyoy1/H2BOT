@@ -1,4 +1,5 @@
 package com.example.administrator.h2bot;
+import com.example.administrator.h2bot.customer.*;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -110,7 +111,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
                 break;
             case R.id.nav_accountsettings_wp:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp,
-                        new AccountSettingFragment()).commit();
+                        new CustomerAccountSettingFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Account Settings");
                 showMessages("Account Settings");
                 break;

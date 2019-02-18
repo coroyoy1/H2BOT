@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:background="@android:color/holo_blue_dark"
         android:gravity="center"
         android:orientation="vertical">
@@ -42,9 +42,11 @@
 
         <Button
             android:id="@+id/addPhotoRegister"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
+            android:background="@android:color/holo_blue_dark"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:textColor="#FFFFFF"
             android:text="Upload Photo" />
     </LinearLayout>
 
@@ -84,6 +86,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:background="@drawable/edit_text_border"
+                    android:padding="12dp"
                     android:layout_marginRight="2dp"
                     android:layout_weight="1"
                     android:hint="First Name"
@@ -96,6 +100,8 @@
                     android:layout_marginLeft="2dp"
                     android:layout_marginTop="5dp"
                     android:layout_weight="1"
+                    android:background="@drawable/edit_text_border"
+                    android:padding="12dp"
                     android:hint="Last Name"
                     android:inputType="text" />
             </LinearLayout>
@@ -112,6 +118,8 @@
                 android:id="@+id/RegisterAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_border"
+                android:padding="12dp"
                 android:layout_marginTop="5dp"
                 android:hint="Address" />
 
@@ -119,6 +127,8 @@
                 android:id="@+id/RegisterContact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_border"
+                android:padding="12dp"
                 android:layout_marginTop="5dp"
                 android:hint="@string/contact_number" />
 
@@ -126,6 +136,8 @@
                 android:id="@+id/RegisterEmailAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_border"
+                android:padding="12dp"
                 android:layout_marginTop="5dp"
                 android:hint="@string/email_address"
                 android:inputType="textEmailAddress" />
@@ -135,6 +147,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:background="@drawable/edit_text_border"
+                android:padding="12dp"
                 android:hint="Password"
                 android:inputType="textPassword" />
 
@@ -142,6 +156,8 @@
                 android:id="@+id/ConfirmPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_border"
+                android:padding="12dp"
                 android:layout_marginTop="5dp"
                 android:hint="Confirm Password"
                 android:inputType="textPassword" />
@@ -152,7 +168,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="@android:color/holo_blue_light"
+                android:background="@android:color/holo_blue_dark"
                 android:text="@string/sign_up"
                 android:textColor="#FFF" />
 

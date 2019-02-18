@@ -1,42 +1,24 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.customer;
 
-import android.Manifest;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
+import com.example.administrator.h2bot.LoginActivity;
+import com.example.administrator.h2bot.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 
-import static com.example.administrator.h2bot.WPInProgressFragment.EXTRA_transactionNo;
-import static com.example.administrator.h2bot.WPInProgressFragment.EXTRA_customerName;
-import static com.example.administrator.h2bot.WPInProgressFragment.EXTRA_contactNo;
-import static com.example.administrator.h2bot.WPInProgressFragment.EXTRA_waterType;
-import static com.example.administrator.h2bot.WPInProgressFragment.EXTRA_itemQuantity;
-import static com.example.administrator.h2bot.WPInProgressFragment.EXTRA_deliveryFee;
-import static com.example.administrator.h2bot.WPInProgressFragment.EXTRA_pricePerGallon;
-import static com.example.administrator.h2bot.WPInProgressFragment.EXTRA_service;
-import static com.example.administrator.h2bot.WPInProgressFragment.EXTRA_totalPrice;
-import static com.example.administrator.h2bot.WPInProgressFragment.EXTRA_address;
 import java.util.Objects;
 
 public class CustomerMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -49,7 +31,7 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_customer_main);
+        setContentView(R.layout.customer_actvity_main);
         dialog = new Dialog(this);
         drawerLayout = findViewById(R.id.customer_drawer);
         drawerLayout.closeDrawers();
@@ -59,7 +41,7 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         navigationView.setNavigationItemSelectedListener(this);
         actionBarDrawerToggle.syncState();
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new GoogleMapFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerMapFragment()).commit();
             navigationView.setCheckedItem(R.id.map);
             Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
         }
@@ -70,25 +52,25 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.map:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new GoogleMapFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerMapFragment()).commit();
                 Toast.makeText(this, "Map", Toast.LENGTH_SHORT).show();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
                 break;
 
             case R.id.my_order:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new OrdersFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerOrdersFragment()).commit();
                 Toast.makeText(this, "Orders", Toast.LENGTH_SHORT).show();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("My Orders");
                 break;
 
             case R.id.account_settings:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AccountSettingFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerAccountSettingFragment()).commit();
                 Toast.makeText(this, "Account Settings", Toast.LENGTH_SHORT).show();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Account Settings");
                 break;
 
             case R.id.delivered_orders:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerTransactionsFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerDeliveredOrdersFragment()).commit();
                 Toast.makeText(this, "Delivered Orders", Toast.LENGTH_SHORT).show();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Delivered Orders");
                 break;
@@ -146,13 +128,27 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         dialog.show();
     }
 
-    public void OrderInfoPopup(View view) {
-        dialog.setContentView(R.layout.order_info_popup);
-        dialog.show();
-    }
+//    public void OrderInfoPopup(View view) {
+//        dialog.setContentView(R.layout.order_info_popup);
+//        dialog.show();
+//    }
+//
+//    public void TransactionInfoPopup(View view) {
+//        dialog.setContentView(R.layout.transaction_popup);
+//        dialog.show();
+//    }
 
-    public void TransactionInfoPopup(View view) {
-        dialog.setContentView(R.layout.transaction_popup);
+    public void showQrCode(View view) {
+        Button dismissBtn;
+        dialog.setContentView(R.layout.qr_code_popup);
+        dismissBtn = dialog.findViewById(R.id.dismissBtn);
+
+        dismissBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
         dialog.show();
     }
 }

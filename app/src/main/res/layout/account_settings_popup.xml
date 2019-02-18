@@ -6,29 +6,59 @@
     android:orientation="vertical"
     android:padding="10dp">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@android:color/holo_blue_dark"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/headerRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Update Account"
+            android:textColor="#FFF"
+            android:textStyle="bold"
+            android:textSize="21sp" />
+    </LinearLayout>
+
     <EditText
-        android:id="@+id/RegisterFullName"
+        android:id="@+id/firstname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Full Name"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"
+        android:hint="First Name"
         android:inputType="text" />
 
     <EditText
-        android:id="@+id/RegisterAge"
+        android:id="@+id/lastname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Address"
-        android:inputType="number" />
+        android:layout_marginTop="7dp"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"
+        android:hint="Last Name"
+        android:inputType="text" />
 
     <EditText
         android:id="@+id/RegisterAddress"
         android:layout_width="match_parent"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"
+        android:layout_marginTop="7dp"
         android:layout_height="wrap_content"
         android:hint="Address" />
 
     <EditText
         android:id="@+id/RegisterContact"
         android:layout_width="match_parent"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"
+        android:layout_marginTop="7dp"
         android:layout_height="wrap_content"
         android:hint="@string/contact_number" />
 
@@ -37,6 +67,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/email_address"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"
+        android:layout_marginTop="7dp"
         android:inputType="textEmailAddress" />
 
     <EditText
@@ -44,6 +77,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Password"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"
+        android:layout_marginTop="7dp"
         android:inputType="textPassword" />
 
 
@@ -58,7 +94,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:background="#0097e6"
+            android:background="@android:color/holo_blue_dark"
             android:padding="10dp"
             android:text="Save"
             android:textAllCaps="false"
@@ -71,12 +107,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:background="#0097e6"
+            android:background="@android:color/holo_blue_dark"
             android:padding="10dp"
             android:text="Cancel"
             android:textAllCaps="false"
             android:textColor="#f5f6fa"
             android:textSize="15sp" />
     </LinearLayout>
-
 </LinearLayout>

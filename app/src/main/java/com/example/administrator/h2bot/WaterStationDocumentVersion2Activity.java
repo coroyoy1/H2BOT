@@ -98,6 +98,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         businessDeliveryFeePerGal = findViewById(R.id.stationDeliverySD);
         businessMinNoCapacity = findViewById(R.id.stationCapacitySD);
         businessTelNo = findViewById(R.id.stationTelephoneySD);
+
         businessAddress = findViewById(R.id.stationAddressSD);
 
 

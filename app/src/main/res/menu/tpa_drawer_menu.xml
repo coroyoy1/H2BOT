@@ -7,10 +7,10 @@
             android:title="Map" />
         <item
             android:id="@+id/inProgress"
-            android:icon="@drawable/ic_repeat_black_24dp"
-            android:title="In progress" />
+            android:icon="@drawable/ic_person_black_24dp"
+            android:title="Recipient" />
         <item
-            android:id="@+id/history"
+            android:id="@+id/delivered_orders"
             android:icon="@drawable/ic_playlist_add_check_black_24dp"
             android:title="Delivered Orders" />
     </group>

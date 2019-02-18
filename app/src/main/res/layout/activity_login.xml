@@ -55,6 +55,8 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"
         android:hint="Email Address"
         android:inputType="textPersonName" />
 
@@ -63,6 +65,9 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/edit_text_border"
+        android:padding="12dp"
         android:hint="Password"
         android:inputType="textPassword" />
     </LinearLayout>
@@ -83,15 +88,6 @@
             android:text="Login"
             android:textColor="#f5f6fa"
             android:textSize="20sp" />
-
-        <!--<ProgressBar-->
-            <!--android:id="@+id/progressBar1"-->
-            <!--style="?android:attr/progressBarStyle"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:layout_marginTop="0dp" />-->
 
     </RelativeLayout>
 

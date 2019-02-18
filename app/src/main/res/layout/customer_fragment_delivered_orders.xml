@@ -7,8 +7,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@android:color/holo_blue_light"
+        android:layout_height="55dp"
+        android:background="@android:color/holo_blue_dark"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -18,17 +18,19 @@
             android:layout_weight="1"
             android:text="ORDER NO"
             android:textAlignment="center"
+            android:textStyle="bold"
             android:textColor="#f5f6fa"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAlignment="center"
             android:text="STATUS"
-            android:textSize="15dp"
-            android:textColor="#f5f6fa" />
+            android:textAlignment="center"
+            android:textColor="#f5f6fa"
+            android:textStyle="bold"
+            android:textSize="15sp"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -38,12 +40,11 @@
             android:textColor="#f5f6fa" />
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/temp_layout"
+        android:id="@+id/delivered_orders"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#FFFFFF"
         android:gravity="center"
-        android:onClick="TransactionInfoPopup"
         android:layout_marginBottom="1dp"
         android:orientation="horizontal">
 
@@ -51,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="0001"
+            android:text="00000001"
             android:textAlignment="center"
             android:textColor="#000000"
             android:textSize="12dp" />
@@ -92,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="0002"
+            android:text="00000002"
             android:textAlignment="center"
             android:textColor="#000000"
             android:textSize="12dp" />

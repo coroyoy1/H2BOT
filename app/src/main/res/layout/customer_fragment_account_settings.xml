@@ -163,7 +163,7 @@
                 android:padding="10dp"
                 android:textAllCaps="false"
                 android:layout_height="wrap_content"
-                android:background="#0097e6"
+                android:background="@android:color/holo_blue_dark"
                 android:text="Update"
                 android:textColor="#f5f6fa"
                 android:textSize="15sp" />

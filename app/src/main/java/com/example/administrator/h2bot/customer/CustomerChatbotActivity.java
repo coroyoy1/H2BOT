@@ -1,6 +1,7 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.customer;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -14,6 +15,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.models.UserFile;
 import com.google.api.gax.core.FixedCredentialsProvider;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
@@ -23,12 +26,20 @@ import com.google.cloud.dialogflow.v2.SessionName;
 import com.google.cloud.dialogflow.v2.SessionsClient;
 import com.google.cloud.dialogflow.v2.SessionsSettings;
 import com.google.cloud.dialogflow.v2.TextInput;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.UUID;
 
-public class ChatbotActivity extends AppCompatActivity {
-    private static final String TAG = ChatbotActivity.class.getSimpleName();
+public class CustomerChatbotActivity extends AppCompatActivity {
+    private static final String TAG = CustomerChatbotActivity.class.getSimpleName();
     private static final int USER = 10001;
     private static final int BOT = 10002;
 
@@ -39,10 +50,14 @@ public class ChatbotActivity extends AppCompatActivity {
     // Java V2
     private SessionsClient sessionsClient;
     private SessionName session;
+    FirebaseDatabase db = FirebaseDatabase.getInstance();
+    FirebaseAuth myAuth;
+    public String customerName;
+    ArrayList<UserFile> userFile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chatbot);
+        setContentView(R.layout.customer_activity_chatbot);
 
         final ScrollView scrollview = findViewById(R.id.chatScrollView);
         scrollview.post(() -> scrollview.fullScroll(ScrollView.FOCUS_DOWN));
@@ -50,6 +65,8 @@ public class ChatbotActivity extends AppCompatActivity {
         chatLayout = findViewById(R.id.chatLayout);
         ImageView sendBtn = findViewById(R.id.sendBtn);
         sendBtn.setOnClickListener(this::sendMessage);
+        myAuth = FirebaseAuth.getInstance();
+        userFile = new ArrayList<>();
 
         queryEditText = findViewById(R.id.queryEditText);
         queryEditText.setOnKeyListener((view, keyCode, event) -> {
@@ -72,12 +89,6 @@ public class ChatbotActivity extends AppCompatActivity {
         initiateChatbot();
     }
 
-    private void initiateChatbot() {
-        String msg = "hi";
-        QueryInput queryInput = QueryInput.newBuilder().setText(TextInput.newBuilder().setText(msg).setLanguageCode("en-US")).build();
-        new RequestJavaV2Task(ChatbotActivity.this, session, sessionsClient, queryInput).execute();
-    }
-
     private void initV2Chatbot() {
         try {
             InputStream stream = getResources().openRawResource(R.raw.credentials);
@@ -97,14 +108,14 @@ public class ChatbotActivity extends AppCompatActivity {
     private void sendMessage(View view) {
         String msg = queryEditText.getText().toString();
         if (msg.trim().isEmpty()) {
-            Toast.makeText(ChatbotActivity.this, "Please enter your query!", Toast.LENGTH_LONG).show();
+            Toast.makeText(CustomerChatbotActivity.this, "Please enter your query!", Toast.LENGTH_LONG).show();
         } else {
             showTextView(msg, USER);
             queryEditText.setText("");
 
             // Java V2
             QueryInput queryInput = QueryInput.newBuilder().setText(TextInput.newBuilder().setText(msg).setLanguageCode("en-US")).build();
-            new RequestJavaV2Task(ChatbotActivity.this, session, sessionsClient, queryInput).execute();
+            new RequestJavaV2Task(CustomerChatbotActivity.this, session, sessionsClient, queryInput).execute();
         }
     }
 
@@ -130,12 +141,12 @@ public class ChatbotActivity extends AppCompatActivity {
     }
 
     FrameLayout getUserLayout() {
-        LayoutInflater inflater = LayoutInflater.from(ChatbotActivity.this);
+        LayoutInflater inflater = LayoutInflater.from(CustomerChatbotActivity.this);
         return (FrameLayout) inflater.inflate(R.layout.user_msg_layout, null);
     }
 
     FrameLayout getBotLayout() {
-        LayoutInflater inflater = LayoutInflater.from(ChatbotActivity.this);
+        LayoutInflater inflater = LayoutInflater.from(CustomerChatbotActivity.this);
         return (FrameLayout) inflater.inflate(R.layout.bot_msg_layout, null);
     }
 
@@ -147,7 +158,33 @@ public class ChatbotActivity extends AppCompatActivity {
             showTextView(botReply, BOT);
         } else {
             Log.d(TAG, "Bot Reply: Null");
-            showTextView("There was some communication issue. Please Try again!", BOT);
+            showTextView("Communication error or check your internet connection.", BOT);
         }
+    }
+
+    private void initiateChatbot() {
+        DatabaseReference userFileRef = db.getReference("User_File");
+        FirebaseUser get_UId = myAuth.getCurrentUser();
+        String get_id = get_UId.getUid();
+        userFileRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot data: dataSnapshot.getChildren()){
+                    UserFile user = data.getValue(UserFile.class);
+                    if(user.getUser_getUID().equals(get_id)){
+                        userFile.add(user);
+                        customerName = user.getUser_firtname();
+                        String msg = "" + customerName;
+                        QueryInput queryInput = QueryInput.newBuilder().setText(TextInput.newBuilder().setText(msg).setLanguageCode("en-US")).build();
+                        new RequestJavaV2Task(CustomerChatbotActivity.this, session, sessionsClient, queryInput).execute();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

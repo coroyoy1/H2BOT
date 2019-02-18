@@ -1,4 +1,4 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.customer;
 
 
 import android.Manifest;
@@ -26,11 +26,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -47,8 +48,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +59,7 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GoogleMapFragment extends Fragment implements
+public class CustomerMapFragment extends Fragment implements
         OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
@@ -97,14 +98,14 @@ public class GoogleMapFragment extends Fragment implements
     private BottomSheetBehavior bottomSheetBehavior;
     private View bottomSheet;
 
-    public GoogleMapFragment() {
+    public CustomerMapFragment() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_google_map, container, false);
+        View view = inflater.inflate(R.layout.customer_fragment_map, container, false);
         return view;
     }
 
@@ -232,8 +233,8 @@ public class GoogleMapFragment extends Fragment implements
                     Toast.makeText(getActivity(), "" + marker.getId(), Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    if(bottomSheetBehavior.STATE_COLLAPSED == BottomSheetBehavior.STATE_COLLAPSED){
-                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    if(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED){
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                         Toast.makeText(getActivity(), "Hi", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -373,7 +374,7 @@ public class GoogleMapFragment extends Fragment implements
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 bundle.putString("stationName", stationName.toString());
-                startActivity(new Intent(getActivity(), ChatbotActivity.class));
+                startActivity(new Intent(getActivity(), CustomerChatbotActivity.class));
             }
         });
     }
