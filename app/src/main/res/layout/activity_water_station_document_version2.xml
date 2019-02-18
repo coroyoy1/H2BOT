@@ -224,7 +224,7 @@
                     android:layout_marginTop="4dp"
                     android:layout_weight="1"
                     android:hint="Business Permit No."
-                    android:inputType="text"
+                    android:inputType="textEmailAddress"
                     android:textAlignment="center"
                     android:textSize="18dp" />
                 <TextView
@@ -246,7 +246,17 @@
                     android:layout_marginTop="4dp"
                     android:layout_weight="1"
                     android:hint="Water Station Name"
-                    android:inputType="text"
+                    android:inputType="textEmailAddress"
+                    android:textAlignment="center"
+                    android:textSize="18dp" />
+                <EditText
+                    android:id="@+id/stationAddressSD"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:hint="Water Station Name"
+                    android:inputType="textEmailAddress"
                     android:textAlignment="center"
                     android:textSize="18dp" />
 
@@ -275,7 +285,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:hint="Start Time"
-                        android:inputType="text"
+                        android:inputType="textEmailAddress"
                         android:textAlignment="center"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"
@@ -288,7 +298,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:hint="End Time"
-                        android:inputType="text"
+                        android:inputType="textEmailAddress"
                         android:textAlignment="center"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"/>
@@ -344,19 +354,24 @@
                         android:layout_height="wrap_content"
                         android:text="Delivery Fee"
                         android:textSize="18dp"/>
-                    <RadioButton
-                        android:layout_marginLeft="20dp"
-                        android:layout_width="match_parent"
+                    <RadioGroup
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Per Gallon"/>
-                    <RadioButton
-                        android:layout_marginLeft="20dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Fix"/>
+                        android:id="@+id/radioPerGalOrFix">
+                        <RadioButton
+                            android:id="@+id/radioPerGalSD"
+                            android:layout_marginLeft="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Per Gallon"/>
+                        <RadioButton
+                            android:id="@+id/radioFixSD"
+                            android:layout_marginLeft="20dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Fix"/>
+                    </RadioGroup>
                 </RadioGroup>
-
-
                 <EditText
                     android:id="@+id/stationDeliverySD"
                     android:layout_weight="1"
