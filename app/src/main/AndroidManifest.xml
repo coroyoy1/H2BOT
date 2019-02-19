@@ -23,10 +23,9 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="H2BOT | A Chatbot Assistant"
+        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        android:supportsRtl="true">
 
         <!--<activity-->
             <!--android:name=".LoginActivity">-->
@@ -43,22 +42,21 @@
         <activity android:name=".customer.CustomerChatbotActivity"></activity>
 
 
-        <activity android:name=".tpaaffiliate.TPARecipientActivity"></activity>
-        <!--<activity android:name=".tpaaffiliate.TPAffiliateMainActivity"> </activity>-->
+        <!--<activity android:name=".tpaaffiliate.TPAAffiliateMainActivity"> </activity>-->
         <activity android:name=".WPTPAAffiliateDocumentsActivity" />
         <activity android:name=".zCreateStationDetailsActivity" />
         <activity android:name=".zCreateAccountOptionUserTypeActivity" />
         <activity android:name=".deliveryman.DeliveryManDocumentActivity" />
-        <activity android:name=".LoginActivity" >
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".tempAccessActivity" />
+        <activity
+            android:name=".tpaaffiliate.TPAAffiliateMainActivity"
+            android:theme="@style/Theme.Design.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".tempAccessActivity" />
-        <activity
-            android:name=".tpaaffiliate.TPAffiliateMainActivity">
         </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".WaterPeddlerDocumentActivity" />

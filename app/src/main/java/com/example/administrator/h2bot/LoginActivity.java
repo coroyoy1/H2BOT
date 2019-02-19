@@ -214,7 +214,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     else if(documentVerify.equals("active"))
                     {
-                        startActivity(new Intent(LoginActivity.this, TPAffiliateMainActivity.class));
+                        startActivity(new Intent(LoginActivity.this, TPAAffiliateMainActivity.class));
                         showMessages("Successfully logged-in as Third Party Affiliate");
                         finish();
                     }
@@ -259,7 +259,7 @@ public class LoginActivity extends AppCompatActivity {
 //        }
 //        else if(email.equals("tpa"))
 //        {
-//            startActivity(new Intent(LoginActivity.this, TPAffiliateMainActivity.class));
+//            startActivity(new Intent(LoginActivity.this, TPAAffiliateMainActivity.class));
 //        }
 //        else
 //        {

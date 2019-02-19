@@ -255,7 +255,7 @@
                     android:layout_height="50dp"
                     android:layout_marginTop="4dp"
                     android:layout_weight="1"
-                    android:hint="Water Station Name"
+                    android:hint="Business Address"
                     android:inputType="textEmailAddress"
                     android:textAlignment="center"
                     android:textSize="18dp" />
