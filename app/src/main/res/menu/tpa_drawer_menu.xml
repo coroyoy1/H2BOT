@@ -17,6 +17,10 @@
     <item android:title="Personal Infomartion">
         <menu>
             <item
+                android:id="@+id/load_wallet"
+                android:icon="@drawable/ic_account_balance_wallet_black_24dp"
+                android:title="Add Load Wallet" />
+            <item
                 android:id="@+id/account_settings"
                 android:icon="@drawable/ic_settings_black_24dp"
                 android:title="Account Settings" />

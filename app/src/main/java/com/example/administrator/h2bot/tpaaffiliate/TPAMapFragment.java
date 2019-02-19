@@ -62,7 +62,7 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TPAGoogleMapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+public class TPAMapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
 
@@ -99,7 +99,7 @@ public class TPAGoogleMapFragment extends Fragment implements OnMapReadyCallback
     private BottomSheetBehavior bottomSheetBehavior;
     private View bottomSheet;
     //    Button viewMoreBtn, orderBtn;
-    public TPAGoogleMapFragment() {
+    public TPAMapFragment() {
         // Required empty public constructor
     }
 
@@ -107,7 +107,7 @@ public class TPAGoogleMapFragment extends Fragment implements OnMapReadyCallback
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_tpa_google_map, container, false);
+        View view = inflater.inflate(R.layout.tpa_fragment_map, container, false);
         return view;
     }
 
@@ -133,83 +133,8 @@ public class TPAGoogleMapFragment extends Fragment implements OnMapReadyCallback
 
 
 
-//        usersLocRef = FirebaseDatabase.getInstance().getReference("User_File").child(mAuth.getCurrentUser().getUid());
         mapFragment.getMapAsync(this);
         ChildEventListener mChildEventListener;
-
-        // SELECT * FROM TABLE
-        addressesRef = FirebaseDatabase.getInstance().getReference("User_File");
-        businessRef = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
-
-        addressesRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                for(DataSnapshot data: dataSnapshot.getChildren()){
-                    UserFile users = data.getValue(UserFile.class);
-                    businessRef.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot data2: dataSnapshot.getChildren()){
-                                UserWSBusinessInfoFile info = data2.getValue(UserWSBusinessInfoFile.class);
-
-                                if(users.getUser_getUID().equals(info.getBusiness_id())){
-                                    if(users.getUser_type().equals("Water Station")
-                                            || users.getUser_type().equals("Water Dealer")){
-                                        if(users.getUser_status().equalsIgnoreCase("active")){
-                                            arrayListUserFile.add(users);
-                                            arrayListBusinessInfo.add(info);
-
-                                            //no business add
-                                            myAddresses = users.getUser_address();
-                                            stationName = info.getBusiness_name();
-                                            userType = users.getUser_type();
-                                            stationId = info.getBusiness_id();
-                                            try {
-                                                myListAddresses = mGeocoder.getFromLocationName(myAddresses, 1);
-                                                if (myListAddresses != null) {
-                                                    Address location = myListAddresses.get(0);
-                                                    latLong = new LatLng(location.getLatitude(), location.getLongitude());
-                                                    String status = "Status: OPEN";
-                                                    String type = "Type: " + userType;
-                                                    String address = "Address: " + myAddresses;
-                                                    stationId = "ID: " + stationId;
-                                                    map.addMarker(new MarkerOptions().position(latLong).title(stationName).snippet(stationId
-                                                            + "\n" + type
-                                                            + "\n" + address
-                                                            + "\n" + status));
-                                                    map.addMarker(new MarkerOptions().position(latLong));
-                                                    if(type.equals("Water Station")){
-                                                        map.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-                                                    }
-                                                    else{
-                                                        map.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-                                                    }
-
-                                                }
-                                            }
-                                            catch (Exception e){
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
@@ -220,9 +145,9 @@ public class TPAGoogleMapFragment extends Fragment implements OnMapReadyCallback
             map.setMyLocationEnabled(true);
             Toast.makeText(getActivity(), "Permission granted", Toast.LENGTH_SHORT).show();
         }
+        getAllStations();
         float zoomLevel = 16.0f;
         map.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-
 
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -364,9 +289,9 @@ public class TPAGoogleMapFragment extends Fragment implements OnMapReadyCallback
     }
 
     private void updateBottomSheetContent(Marker marker) {
-        TextView stationName = bottomSheet.findViewById(R.id.stationName);
+//        TextView stationName = bottomSheet.findViewById(R.id.stationName);
         Button orderBtn = bottomSheet.findViewById(R.id.orderBtn);
-        stationName.setText(marker.getTitle());
+//        stationName.setText(marker.getTitle());
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
         orderBtn.setOnClickListener(new View.OnClickListener() {
@@ -399,7 +324,7 @@ public class TPAGoogleMapFragment extends Fragment implements OnMapReadyCallback
 
     public void snackBar(){
         View parentLayout = getActivity().findViewById(android.R.id.content);
-        Snackbar snackbar = Snackbar.make(parentLayout, "Please see your accepted orders in your progress menu."
+        Snackbar snackbar = Snackbar.make(parentLayout, "You can see the recipient's information in the IN PROGRESS menu."
                 , Snackbar.LENGTH_LONG);
         View view = snackbar.getView();
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
@@ -412,5 +337,75 @@ public class TPAGoogleMapFragment extends Fragment implements OnMapReadyCallback
             }
         }).setActionTextColor(getResources().getColor(android.R.color.white ));
         snackbar.show();
+    }
+
+    public void getAllStations(){
+        addressesRef = FirebaseDatabase.getInstance().getReference("User_File");
+        businessRef = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
+
+        addressesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot data: dataSnapshot.getChildren()){
+                    UserFile users = data.getValue(UserFile.class);
+                    businessRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot data2: dataSnapshot.getChildren()){
+                                UserWSBusinessInfoFile info = data2.getValue(UserWSBusinessInfoFile.class);
+
+                                if(users.getUser_getUID().equals(info.getBusiness_id())){
+                                    if(users.getUser_type().equals("Water Station")
+                                            || users.getUser_type().equals("Water Dealer")){
+                                        if(users.getUser_status().equalsIgnoreCase("active")){
+                                            arrayListUserFile.add(users);
+                                            arrayListBusinessInfo.add(info);
+
+                                            //no business add
+                                            myAddresses = users.getUser_address();
+                                            stationName = info.getBusiness_name();
+                                            userType = users.getUser_type();
+                                            stationId = info.getBusiness_id();
+                                            try {
+                                                myListAddresses = mGeocoder.getFromLocationName(myAddresses, 1);
+                                                if (myListAddresses != null) {
+                                                    Address location = myListAddresses.get(0);
+                                                    latLong = new LatLng(location.getLatitude(), location.getLongitude());
+                                                    String status = "Status: OPEN";
+                                                    String type = "Type: " + userType;
+                                                    String address = "Address: " + myAddresses;
+                                                    stationId = "ID: " + stationId;
+                                                    map.addMarker(new MarkerOptions().position(latLong).title(stationName).snippet(stationId
+                                                            + "\n" + type
+                                                            + "\n" + address
+                                                            + "\n" + status));
+                                                    map.addMarker(new MarkerOptions().position(latLong));
+                                                    map.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_store_mall_directory_black_24dp)));
+
+                                                }
+                                            }
+                                            catch (Exception e){
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
