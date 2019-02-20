@@ -24,7 +24,7 @@
                 android:textSize="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Transaction No."/>
+                android:text="Order No."/>
             <TextView
                 android:layout_weight="1"
                 android:gravity="center"

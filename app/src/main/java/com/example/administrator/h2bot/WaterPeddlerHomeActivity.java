@@ -82,7 +82,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
             case R.id.nav_transactions_wp:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp,
                         new WPTransactionFragment()).commit();
-                Objects.requireNonNull(getSupportActionBar()).setTitle("Transactions");
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Completed Orders");
                 showMessages("Transactions");
                 break;
             case R.id.nav_inprogress_wp:

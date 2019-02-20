@@ -60,7 +60,6 @@ public class WSTransactionsFragment extends Fragment implements WSCompleterdOrde
                     if(transactionHeader.getMerchant_id().equals(currendId) && transactionHeader.getTrans_status().equals("Completed"))
                     // TransactionDetailFileModel transactionDetail = postSnapshot.getValue(TransactionDetailFileModel.class);
                     mUploads.add(transactionHeader);
-
                 }
                 mAdapter = new WSCompleterdOrdersAdapter(getActivity(), mUploads);
                 recyclerView.setAdapter(mAdapter);

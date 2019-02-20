@@ -16,7 +16,6 @@ public class DMRegisterDocument extends Fragment implements View.OnClickListener
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ws_dm_registerdocument, container, false);
-
         return view;
     }
 

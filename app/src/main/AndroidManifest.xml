@@ -27,14 +27,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
 
-        <!--<activity-->
-            <!--android:name=".LoginActivity">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/Theme.Design.Light.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <!--Customer Activities-->
         <activity android:name=".customer.CustomerMainActivity"
@@ -45,20 +46,22 @@
         <!--<activity android:name=".tpaaffiliate.TPAAffiliateMainActivity"> </activity>-->
         <activity android:name=".WPTPAAffiliateDocumentsActivity" />
         <activity android:name=".zCreateStationDetailsActivity" />
-        <activity android:name=".zCreateAccountOptionUserTypeActivity" />
+        <activity android:name=".zCreateAccountOptionUserTypeActivity"
+            android:theme="@style/Theme.Design.Light.NoActionBar"/>
         <activity android:name=".deliveryman.DeliveryManDocumentActivity" />
-        <activity android:name=".LoginActivity" />
+        <!--<activity android:name=".LoginActivity" />-->
         <activity android:name=".tempAccessActivity" />
         <activity
             android:name=".tpaaffiliate.TPAAffiliateMainActivity"
             android:theme="@style/Theme.Design.Light">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".RegisterActivity"
+            android:theme="@style/Theme.Design.Light.NoActionBar"/>
         <activity android:name=".WaterPeddlerDocumentActivity" />
         <activity
             android:name=".WaterPeddlerHomeActivity"

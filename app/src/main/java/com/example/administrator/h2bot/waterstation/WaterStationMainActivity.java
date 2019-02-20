@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.administrator.h2bot.LoginActivity;
 import com.example.administrator.h2bot.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
@@ -42,8 +43,9 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
 
         if(savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
-                    new WSInProgressFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_inprogress_ws);
+                    new WSMapFragment()).commit();
+            Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
+            showMessages("Map");
         }
     }
     @Override
@@ -71,7 +73,7 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
             case R.id.nav_transactions_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
                         new WSTransactionsFragment()).commit();
-                Objects.requireNonNull(getSupportActionBar()).setTitle("Transactions");
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Completed Orders");
                 showMessages("Transactions");
                 break;
             case R.id.nav_inprogress_ws:

@@ -1,5 +1,8 @@
 package com.example.administrator.h2bot;
 
+import com.example.administrator.h2bot.customer.CustomerMainActivity;
+import com.example.administrator.h2bot.deliveryman.DeliveryManDocumentActivity;
+import com.example.administrator.h2bot.deliveryman.DeliveryManMainActivity;
 import com.example.administrator.h2bot.models.*;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -19,13 +22,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.h2bot.tpaaffiliate.TPAAffiliateMainActivity;
+import com.example.administrator.h2bot.waterstation.WaterStationMainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -48,6 +57,7 @@ public class RegisterActivity extends AppCompatActivity{
     ProgressDialog progressDialog;
     TextView headerTitle;
     FirebaseUser currentUser;
+    FirebaseAuth.AuthStateListener mAuthListener;
 
 
     private FirebaseAuth mAuth;
@@ -113,7 +123,7 @@ public class RegisterActivity extends AppCompatActivity{
                 }
                 else
                 {
-                    CreateAccount(firstNameString, lastNameString,addressString,contactNoString,emailAddressString,passwordString, uri);
+                    CreateAccount();
                 }
             }
         });
@@ -153,9 +163,9 @@ public class RegisterActivity extends AppCompatActivity{
 
     }
 
-    private void CreateAccount(final String firstNameString, final String lastNameString, final String addressString, String contactNoString, final String emailAddressString, final String passwordString, Uri uri)
+    private void CreateAccount()
     {
-        mAuth.createUserWithEmailAndPassword(emailAddressString, passwordString)
+        mAuth.createUserWithEmailAndPassword(emailRegister.getText().toString(), passwordRegister.getText().toString())
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
@@ -205,6 +215,22 @@ public class RegisterActivity extends AppCompatActivity{
                                                     public void onSuccess(Void aVoid) {
                                                         progressDialog.dismiss();
                                                         showMessage("Successfully Registered");
+                                                        FirebaseDatabase.getInstance().getReference("User_Account_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userAccountFile)
+                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void aVoid) {
+                                                                        progressDialog.dismiss();
+                                                                        showMessage("Successfully registered");
+                                                                        passToNextActivity();
+                                                                    }
+                                                                })
+                                                                .addOnFailureListener(new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(@NonNull Exception e) {
+                                                                        progressDialog.dismiss();
+                                                                        showMessage("Error, Connection Error");
+                                                                    }
+                                                                });
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
@@ -214,22 +240,7 @@ public class RegisterActivity extends AppCompatActivity{
                                                         showMessage("Error, Connection Error");
                                                     }
                                                 });
-                                        FirebaseDatabase.getInstance().getReference("User_Account_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userAccountFile)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        progressDialog.dismiss();
-                                                        showMessage("Successfully registered");
-                                                    }
-                                                })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        progressDialog.dismiss();
-                                                        showMessage("Error, Connection Error");
-                                                    }
-                                                });
-                                                mAuth.signOut();
+                                               // mAuth.signOut();
                                     }
                                 });
                             }
@@ -245,16 +256,12 @@ public class RegisterActivity extends AppCompatActivity{
                 });
     }
 
-    private String getFileExtension(Uri uri) {
-        ContentResolver cR = getApplication().getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(cR.getType(uri));
-    }
 
     private void passToNextActivity()
     {
         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intent);
+        onResume();
     }
 
     private void showMessage(String s) {

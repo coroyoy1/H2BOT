@@ -80,7 +80,7 @@ public class WSCompletedOrdersInformationFragment extends Fragment {
                     if(postSnapshot.child("trans_no").getValue(String.class).equals(transaction)) {
                         customerID = postSnapshot.child("customer_id").getValue(String.class);
                         orderNumberTextView.setText(postSnapshot.child("trans_no").getValue(String.class));
-                        serviceTextView.setText(postSnapshot.child("trans_delivery_service").getValue(String.class));
+                        serviceTextView.setText(postSnapshot.child("trans_delivered_service").getValue(String.class));
                         deliveryFeeTextView.setText(postSnapshot.child("trans_total_delivery_fee").getValue(String.class));
                         totalPriceTextView.setText(postSnapshot.child("trans_total_amount").getValue(String.class));
                         itemQuantityTextView.setText(postSnapshot.child("trans_total_no_of_gallons").getValue(String.class));

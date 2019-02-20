@@ -1,7 +1,9 @@
 package com.example.administrator.h2bot.models;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +11,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.waterstation.WSPendingOrderAcceptDeclineFragment;
+import com.example.administrator.h2bot.waterstation.WSProductListFragment;
 
 import java.util.List;
+
+import static java.security.AccessController.getContext;
 
 public class PendingListAdapter extends RecyclerView.Adapter<PendingListAdapter.ImageViewholder> {
 
@@ -41,7 +47,18 @@ public class PendingListAdapter extends RecyclerView.Adapter<PendingListAdapter.
         imageViewholder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+                WSPendingOrderAcceptDeclineFragment additem = new WSPendingOrderAcceptDeclineFragment();
+                AppCompatActivity activity = (AppCompatActivity)v.getContext();
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                        .replace(R.id.fragment_container_ws, additem)
+                        .addToBackStack(null)
+                        .commit();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("transactNoString", transactionNo);
+                additem.setArguments(bundle);
             }
         });
     }

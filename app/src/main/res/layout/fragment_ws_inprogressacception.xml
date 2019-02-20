@@ -139,14 +139,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <Button
-                    android:text="Back"
+                    android:text="Scan QR"
                     android:textColor="@android:color/white"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_weight="1"
-                    android:background="@drawable/z_graybuttomv"/>
+                    android:background="@drawable/z_greenbluebutton"/>
                 <Button
                     android:background="@drawable/z_darkbluebutton"
                     android:textColor="@android:color/white"
