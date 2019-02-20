@@ -11,16 +11,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
-import com.example.administrator.h2bot.WPPendingTransactionFragment;
 import com.example.administrator.h2bot.WSCompletedOrdersInformationFragment;
-import com.example.administrator.h2bot.models.wptransactionheaderfilemodel;
+import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterdOrdersAdapter.ViewHolder>{
     private Context mContext;
-    private List<wptransactionheaderfilemodel> mUploads;
+    private List<TransactionHeaderFileModel> mUploads;
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener {
@@ -31,7 +29,7 @@ public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterd
         mListener = listener;
     }
 
-    public WSCompleterdOrdersAdapter(Context context, List<wptransactionheaderfilemodel> uploads) {
+    public WSCompleterdOrdersAdapter(Context context, List<TransactionHeaderFileModel> uploads) {
         mContext = context;
         mUploads = uploads;
     }
@@ -44,7 +42,7 @@ public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterd
     }
     @Override
     public void onBindViewHolder(@NonNull WSCompleterdOrdersAdapter.ViewHolder viewHolder, int i) {
-        final wptransactionheaderfilemodel currentData = mUploads.get(i);
+        final TransactionHeaderFileModel currentData = mUploads.get(i);
                 viewHolder.transactionNo.setText(currentData.getTrans_no());
                 viewHolder.status.setText(currentData.getTrans_status());
 //                viewHolder.customername.setText(currentData.getCustomerName());
@@ -93,7 +91,7 @@ public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterd
             }
         });
 
-                wptransactionheaderfilemodel uploadCurrent = mUploads.get(i);
+                TransactionHeaderFileModel uploadCurrent = mUploads.get(i);
                 viewHolder.transactionNo.setText(uploadCurrent.getTrans_no());
                 viewHolder.status.setText(uploadCurrent.getTrans_status());
 //                viewHolder.customername.setText(uploadCurrent.getCustomerName());

@@ -1,6 +1,6 @@
 package com.example.administrator.h2bot.models;
 
-public class wptransactiondetailfilemodel {
+public class TransactionDetailFileModel {
     String  trans_delivery_fee_per_gallon;
     String trans_no;
     String trans_no_of_gallons;
@@ -9,10 +9,10 @@ public class wptransactiondetailfilemodel {
     String trans_status;
     String trans_water_type;
 
-    public wptransactiondetailfilemodel(){
+    public TransactionDetailFileModel(){
 
     }
-    public wptransactiondetailfilemodel(String trans_delivery_fee_per_gallon,String trans_no, String trans_no_of_gallons, String trans_partial_amount, String trans_price_per_gallon, String trans_status, String trans_water_type){
+    public TransactionDetailFileModel(String trans_delivery_fee_per_gallon, String trans_no, String trans_no_of_gallons, String trans_partial_amount, String trans_price_per_gallon, String trans_status, String trans_water_type){
         this.trans_delivery_fee_per_gallon = trans_delivery_fee_per_gallon;
         this.trans_no = trans_no;
         this.trans_no_of_gallons = trans_no_of_gallons;

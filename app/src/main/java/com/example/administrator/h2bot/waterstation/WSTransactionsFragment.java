@@ -11,10 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.administrator.h2bot.R;
-import com.example.administrator.h2bot.WPInProgressAdapter;
-import com.example.administrator.h2bot.WPInProgressFragment;
 import com.example.administrator.h2bot.adapter.WSCompleterdOrdersAdapter;
-import com.example.administrator.h2bot.models.wptransactionheaderfilemodel;
+import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -33,7 +31,7 @@ public class WSTransactionsFragment extends Fragment implements WSCompleterdOrde
     private DatabaseReference mDatabaseRef;
     private RecyclerView.LayoutManager mLayoutManager;
     private WSCompleterdOrdersAdapter mAdapter;
-    private List<wptransactionheaderfilemodel> mUploads;
+    private List<TransactionHeaderFileModel> mUploads;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,9 +56,9 @@ public class WSTransactionsFragment extends Fragment implements WSCompleterdOrde
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    wptransactionheaderfilemodel transactionHeader = postSnapshot.getValue(wptransactionheaderfilemodel.class);
+                    TransactionHeaderFileModel transactionHeader = postSnapshot.getValue(TransactionHeaderFileModel.class);
                     if(transactionHeader.getMerchant_id().equals(currendId) && transactionHeader.getTrans_status().equals("Completed"))
-                    // wptransactiondetailfilemodel transactionDetail = postSnapshot.getValue(wptransactiondetailfilemodel.class);
+                    // TransactionDetailFileModel transactionDetail = postSnapshot.getValue(TransactionDetailFileModel.class);
                     mUploads.add(transactionHeader);
 
                 }

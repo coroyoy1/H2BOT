@@ -10,8 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.administrator.h2bot.models.wptransactiondetailfilemodel;
-import com.example.administrator.h2bot.models.wptransactionheaderfilemodel;
+import com.example.administrator.h2bot.models.TransactionDetailFileModel;
+import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,8 +42,8 @@ public class WPInProgressFragment extends Fragment implements WPInProgressAdapte
     private RecyclerView.LayoutManager mLayoutManager;
     private DatabaseReference mDatabaseRef;
     private DatabaseReference mDatabaseRef2;
-    private ArrayList<wptransactionheaderfilemodel> mUploads;
-    private ArrayList<wptransactiondetailfilemodel> mUploads2;
+    private ArrayList<TransactionHeaderFileModel> mUploads;
+    private ArrayList<TransactionDetailFileModel> mUploads2;
     public WPInProgressFragment() {
         // Required empty public constructor
     }
@@ -54,7 +54,7 @@ public class WPInProgressFragment extends Fragment implements WPInProgressAdapte
         View view = inflater.inflate(R.layout.fragment_wpin_progress, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
 
-        mUploads = new ArrayList<wptransactionheaderfilemodel>();
+        mUploads = new ArrayList<TransactionHeaderFileModel>();
         mUploads2 = new ArrayList<>();
 
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -70,8 +70,8 @@ public class WPInProgressFragment extends Fragment implements WPInProgressAdapte
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                      for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                            wptransactionheaderfilemodel transactionHeader = postSnapshot.getValue(wptransactionheaderfilemodel.class);
-                           // wptransactiondetailfilemodel transactionDetail = postSnapshot.getValue(wptransactiondetailfilemodel.class);
+                            TransactionHeaderFileModel transactionHeader = postSnapshot.getValue(TransactionHeaderFileModel.class);
+                           // TransactionDetailFileModel transactionDetail = postSnapshot.getValue(TransactionDetailFileModel.class);
                                 mUploads.add(transactionHeader);
 
                         }
@@ -92,7 +92,7 @@ public class WPInProgressFragment extends Fragment implements WPInProgressAdapte
     @Override
     public void onItemClick(int position) {
         Intent detailIntent = new Intent(getActivity(), WPPendingTransactionFragment.class);
-        wptransactionheaderfilemodel clickedItem = mUploads.get(position);
+        TransactionHeaderFileModel clickedItem = mUploads.get(position);
 
         detailIntent.putExtra(EXTRA_transactionNo, clickedItem.getTrans_no());
         detailIntent.putExtra(EXTRA_customerName, clickedItem.getTrans_status());

@@ -5,111 +5,122 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LoginActivity"
-    android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="230dp"
-        android:orientation="vertical"
-        android:gravity="center">
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:gravity="center">
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:scaleType="fitXY"
-            app:srcCompat="@drawable/chatbot_logo" />
-    </LinearLayout>
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="H2BOT"
-        android:textColor="#273c75"
-            android:textAlignment="center"
-        android:textSize="35sp" />
+        android:layout_centerVertical="true">
 
-        <TextView
-        android:id="@+id/textView4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="CHATBOT WATER ASSISTANT"
-            android:textAlignment="center"
-        android:textColor="#192a56"
-        android:textSize="15sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:orientation="vertical"
-        android:gravity="center">
-
-        <EditText
-        android:id="@+id/usernameEditText"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:background="@drawable/edit_text_border"
-        android:padding="12dp"
-        android:hint="Email Address"
-        android:inputType="textPersonName" />
-
-        <EditText
-        android:id="@+id/passwordEditText"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/edit_text_border"
-        android:padding="12dp"
-        android:hint="Password"
-        android:inputType="textPassword" />
-    </LinearLayout>
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center">
-
-        <Button
-            android:id="@+id/logInBtn"
-            android:layout_width="280dp"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+        <LinearLayout
             android:layout_gravity="center"
-            android:background="@android:color/holo_blue_dark"
-            android:text="Login"
-            android:textColor="#f5f6fa"
-            android:textSize="20sp" />
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                android:orientation="vertical"
+                android:gravity="center">
 
-    </RelativeLayout>
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/chatbot_logo" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="H2BOT"
+                    android:textColor="#273c75"
+                    android:textAlignment="center"
+                    android:textSize="35sp" />
 
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="CHATBOT WATER ASSISTANT"
+                    android:textAlignment="center"
+                    android:textColor="#192a56"
+                    android:textSize="15sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:orientation="vertical"
+                android:gravity="center">
 
-    <TextView
-        android:id="@+id/forgotPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="forgot password?"
-        android:textAlignment="center"
-        android:textColor="#2f3640"
-        android:textSize="15sp" />
+                <EditText
+                    android:id="@+id/usernameEditText"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:background="@drawable/edit_text_border"
+                    android:padding="12dp"
+                    android:hint="Email Address"
+                    android:inputType="textPersonName" />
 
-    <TextView
-        android:id="@+id/registerAccount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Create Account"
-        android:layout_marginTop="20dp"
-        android:textColor="#e1b12c"
-        android:textAlignment="center"
-        android:textSize="25sp" />
+                <EditText
+                    android:id="@+id/passwordEditText"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/edit_text_border"
+                    android:padding="12dp"
+                    android:hint="Password"
+                    android:inputType="textPassword" />
+            </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <Button
+                    android:id="@+id/logInBtn"
+                    android:layout_width="280dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:background="@android:color/holo_blue_dark"
+                    android:text="Login"
+                    android:textColor="#f5f6fa"
+                    android:textSize="20sp" />
+
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/forgotPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="forgot password?"
+                android:textAlignment="center"
+                android:textColor="#2f3640"
+                android:textSize="15sp" />
+            <TextView
+                android:id="@+id/registerAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Create Account"
+                android:layout_marginTop="20dp"
+                android:textColor="#e1b12c"
+                android:textAlignment="center"
+                android:textSize="25sp" />
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

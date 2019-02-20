@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/waterbackgroundvvv">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:background="#32918b88"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Order Details"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:textSize="24dp" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_gravity="center"
+                    android:layout_width="140dp"
+                    android:layout_height="120dp"
+                    android:src="@drawable/ic_launcher_background"/>
+
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:textSize="18dp"
+                    android:textColor="@android:color/white"
+                    android:layout_marginLeft="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Order No:" />
+
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:textSize="18dp"
+                    android:textColor="@android:color/white"
+                    android:layout_marginLeft="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Customer" />
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:textSize="18dp"
+                    android:textColor="@android:color/white"
+                    android:layout_marginLeft="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Contact No.:" />
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:textSize="18dp"
+                    android:textColor="@android:color/white"
+                    android:layout_marginLeft="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Water Type:" />
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:textSize="18dp"
+                    android:textColor="@android:color/white"
+                    android:layout_marginLeft="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Item Quantity" />
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:textSize="18dp"
+                    android:textColor="@android:color/white"
+                    android:layout_marginLeft="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Price per Gallon" />
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:textSize="18dp"
+                    android:textColor="@android:color/white"
+                    android:layout_marginLeft="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Service" />
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:textSize="18dp"
+                    android:textColor="@android:color/white"
+                    android:layout_marginLeft="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Address" />
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:textSize="18dp"
+                    android:textColor="@android:color/white"
+                    android:layout_marginLeft="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Delivery Fee" />
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:textSize="18dp"
+                    android:textColor="@android:color/white"
+                    android:layout_marginLeft="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Price"
+                    android:layout_marginBottom="10dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/z_darkbluebutton"
+                    android:textColor="@android:color/white"
+                    android:text="View Location"
+                    android:layout_marginLeft="65dp"
+                    android:layout_marginRight="65dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:text="Decline"
+                    android:textColor="@android:color/white"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/z_redbutton"/>
+                <Button
+                    android:background="@drawable/z_greenbluebutton"
+                    android:textColor="@android:color/white"
+                    android:text="Accept"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

@@ -1,6 +1,6 @@
 package com.example.administrator.h2bot.models;
 
-public class wptransactionheaderfilemodel {
+public class TransactionHeaderFileModel {
     String customer_id;
     String merchant_id;
     String trans_date_issued;
@@ -11,10 +11,10 @@ public class wptransactionheaderfilemodel {
     String total_delivery_fee;
     String trans_total_no_gallons;
 
-    public wptransactionheaderfilemodel(){
+    public TransactionHeaderFileModel(){
 
     }
-    public wptransactionheaderfilemodel(String customer_id, String merchant_id, String trans_date_issued, String trans_delivery_service, String trans_no,String trans_status,String trans_total_amount,String total_delivery_fee, String trans_total_no_gallons){
+    public TransactionHeaderFileModel(String customer_id, String merchant_id, String trans_date_issued, String trans_delivery_service, String trans_no, String trans_status, String trans_total_amount, String total_delivery_fee, String trans_total_no_gallons){
         this.customer_id = customer_id;
         this.merchant_id = merchant_id;
         this.trans_date_issued = trans_date_issued;

@@ -1,26 +1,22 @@
 package com.example.administrator.h2bot;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.h2bot.models.TransactionDetailFileModel;
 import com.example.administrator.h2bot.models.UserFile;
-import com.example.administrator.h2bot.models.wptransactiondetailfilemodel;
-import com.example.administrator.h2bot.models.wptransactionheaderfilemodel;
+import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +39,8 @@ public class WSCompletedOrdersInformationFragment extends Fragment {
     String pricePerGallon ;
     String service;
     String totalPrice;
-    private List<wptransactionheaderfilemodel> mUploads;
-    private List<wptransactiondetailfilemodel> mUploads2;
+    private List<TransactionHeaderFileModel> mUploads;
+    private List<TransactionDetailFileModel> mUploads2;
     private List<UserFile> mUploads3;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -1,9 +1,11 @@
 package com.example.administrator.h2bot;
+import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.tpaaffiliate.*;
 import com.example.administrator.h2bot.customer.*;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -59,16 +61,40 @@ public class LoginActivity extends AppCompatActivity {
         register = findViewById(R.id.registerAccount);
         loginNow = findViewById(R.id.logInBtn);
         mAuth = FirebaseAuth.getInstance();
+
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(FirebaseAuth.getInstance().getCurrentUser() != null)
                 {
-                    if(!(LoginActivity.this).isFinishing())
-                    {
-                        progressDialog.show();
-                    }
-                    userTypeLogin();
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File").child(mAuth.getCurrentUser().getUid());
+                    databaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            String userFile = dataSnapshot.child("user_getUID").getValue().toString();
+                            if(userFile.equals(mAuth.getCurrentUser().getUid()))
+                            {
+                                if(!(LoginActivity.this).isFinishing())
+                                {
+                                    progressDialog.show();
+                                }
+                                userTypeLogin();
+                            }
+                            else
+                            {
+                                showMessages("Account is not available");
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            showMessages("Account does not available");
+                        }
+                    });
+                }
+                else
+                {
+                    showMessages("Account is not available");
                 }
             }
         };
@@ -97,12 +123,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
     private void signInNow()
     {
         String email = emailAddress.getText().toString();
@@ -127,25 +147,25 @@ public class LoginActivity extends AppCompatActivity {
                         showMessages("Please check your internet connection or credentials.");
                     }
                     else {
-                            userTypeLogin();
-                        }
+                        userTypeLogin();
                     }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    showMessages("Account is not exists");
-                    progressDialog.dismiss();
                 }
-            });
+            })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            showMessages("Account is not exists");
+                            progressDialog.dismiss();
+                        }
+                    });
         }
     }
 
     private void userTypeLogin()
     {
         FirebaseUser userHERE = FirebaseAuth.getInstance().getCurrentUser();
-        String RegisteredUserID = userHERE.getUid();
-        refConnection = FirebaseDatabase.getInstance().getReference().child("User_File").child(RegisteredUserID);
+        //String RegisteredUserID = userHERE.getUid();
+        refConnection = FirebaseDatabase.getInstance().getReference("User_File").child(currentUser.getUid());
         refConnection.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
