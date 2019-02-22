@@ -50,6 +50,7 @@ public class WSPendingOrdersFragment extends Fragment {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren())
                 {
 //                    if(postSnapshot.child())
+  //                  String detUserMerchant = postSnapshot.child("merchant_id").getValue(String.class);
                     TransactionHeaderFileModel transactionHeaderFileModel = postSnapshot.getValue(TransactionHeaderFileModel.class);
                     if(transactionHeaderFileModel.getMerchant_id().equals(firebaseUser.getUid())
                             && transactionHeaderFileModel.getTrans_status().equals("Pending"))

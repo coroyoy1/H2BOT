@@ -138,7 +138,15 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                 showMessages(result.getContents());
                 transactNoScan = result.getContents();
                 progressDialog.show();
-                setOrderSucess(transactNoScan);
+                if(transactNoScan.equals(transactionNo))
+                {
+                    setOrderSucess(transactNoScan);
+                }
+                else
+                {
+                    showMessages("QR is not specific to the order number, please search for the specific order");
+                    progressDialog.dismiss();
+                }
             }
         }
         else
@@ -263,7 +271,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                             @Override
                             public void onSuccess(Void aVoid) {
                                 showMessages("Successfully perform task");
-                                WSCompletedAccept additem = new WSCompletedAccept();
+                                WSTransactionsFragment additem = new WSTransactionsFragment();
                                 AppCompatActivity activity = (AppCompatActivity)getContext();
                                 activity.getSupportFragmentManager()
                                         .beginTransaction()

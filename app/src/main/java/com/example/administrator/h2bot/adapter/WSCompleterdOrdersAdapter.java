@@ -93,7 +93,7 @@ public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterd
 //                args.putString("service", currentData.getService());
 //                args.putString("totalprice", currentData.getTotalPrice());
 //                args.putString("watertype", currentData.getWaterType());
-//                detail.setArguments(args);
+                    additem.setArguments(args);
             }
         });
 
