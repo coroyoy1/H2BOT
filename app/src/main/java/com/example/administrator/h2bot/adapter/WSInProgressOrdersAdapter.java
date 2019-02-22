@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
+import com.example.administrator.h2bot.waterstation.WSCompletedAccept;
+import com.example.administrator.h2bot.waterstation.WSInProgressAccept;
 import com.example.administrator.h2bot.waterstation.WSPendingOrderAcceptDeclineFragment;
 
 import java.util.List;
@@ -72,9 +74,14 @@ public class WSInProgressOrdersAdapter extends RecyclerView.Adapter<WSInProgress
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WSPendingOrderAcceptDeclineFragment detail = new WSPendingOrderAcceptDeclineFragment();
-                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws, detail).addToBackStack(null).commit();
+                WSInProgressAccept additem = new WSInProgressAccept();
+                AppCompatActivity activity = (AppCompatActivity)v.getContext();
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                        .replace(R.id.fragment_container_ws, additem)
+                        .addToBackStack(null)
+                        .commit();
                 Bundle args = new Bundle();
                 args.putString("transactionno", currentData.getTrans_no());
                 args.putString("status", currentData.getTrans_status());
@@ -87,7 +94,7 @@ public class WSInProgressOrdersAdapter extends RecyclerView.Adapter<WSInProgress
 //                args.putString("service", currentData.getService());
 //                args.putString("totalprice", currentData.getTotalPrice());
 //                args.putString("watertype", currentData.getWaterType());
-                detail.setArguments(args);
+ //               detail.setArguments(args);
             }
         });
 

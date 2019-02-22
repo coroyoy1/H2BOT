@@ -36,7 +36,7 @@
                     android:layout_gravity="center"
                     android:layout_width="140dp"
                     android:layout_height="120dp"
-                    android:src="@drawable/ic_launcher_background"/>
+                    android:src="@drawable/ic_account_circle_black_24dp"/>
 
                 <TextView
                     android:layout_marginTop="10dp"
@@ -137,9 +137,10 @@
                 android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp">
                 <Button
-                    android:text="Scan QR"
+                    android:text="Launch QR"
                     android:textColor="@android:color/white"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"

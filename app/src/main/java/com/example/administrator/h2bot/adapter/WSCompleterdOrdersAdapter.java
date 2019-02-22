@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.WSCompletedOrdersInformationFragment;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
+import com.example.administrator.h2bot.waterstation.WSCompletedAccept;
 
 import java.util.List;
 
@@ -72,9 +73,14 @@ public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterd
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WSCompletedOrdersInformationFragment detail = new WSCompletedOrdersInformationFragment();
-                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws, detail).addToBackStack(null).commit();
+                WSCompletedAccept additem = new WSCompletedAccept();
+                AppCompatActivity activity = (AppCompatActivity)v.getContext();
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                        .replace(R.id.fragment_container_ws, additem)
+                        .addToBackStack(null)
+                        .commit();
                 Bundle args = new Bundle();
                 args.putString("transactionno", currentData.getTrans_no());
                 args.putString("status", currentData.getTrans_status());
@@ -87,7 +93,7 @@ public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterd
 //                args.putString("service", currentData.getService());
 //                args.putString("totalprice", currentData.getTotalPrice());
 //                args.putString("watertype", currentData.getWaterType());
-                detail.setArguments(args);
+//                detail.setArguments(args);
             }
         });
 
