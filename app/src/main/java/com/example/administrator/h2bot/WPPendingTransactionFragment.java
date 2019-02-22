@@ -9,12 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.administrator.h2bot.models.CaptureActivityPortrait;
 import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import com.google.firebase.database.DatabaseReference;
-
-import java.util.Objects;
 
 
 public class WPPendingTransactionFragment extends Fragment {
@@ -82,7 +81,7 @@ public class WPPendingTransactionFragment extends Fragment {
         QRscanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentIntegrator integrator = new IntentIntegrator(activity);
+                IntentIntegrator integrator = IntentIntegrator.forSupportFragment(WPPendingTransactionFragment.this);
                 integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
                 integrator.setPrompt("Scan");
                 integrator.setCameraId(0);

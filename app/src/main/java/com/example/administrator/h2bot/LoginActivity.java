@@ -85,12 +85,14 @@ public class LoginActivity extends AppCompatActivity {
                             else
                             {
                                 showMessages("Account is not available");
+                                progressDialog.dismiss();
                             }
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
                             showMessages("Account does not available");
+                            progressDialog.dismiss();
                         }
                     });
         }

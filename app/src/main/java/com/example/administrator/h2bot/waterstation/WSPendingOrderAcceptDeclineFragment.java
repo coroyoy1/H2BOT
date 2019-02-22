@@ -243,17 +243,31 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                showMessages("Successfully updated");
-                                WSInProgressFragment additem = new WSInProgressFragment();
-                                AppCompatActivity activity = (AppCompatActivity)getContext();
-                                activity.getSupportFragmentManager()
-                                        .beginTransaction()
-                                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                                        .replace(R.id.fragment_container_ws, additem)
-                                        .addToBackStack(null)
-                                        .commit();
-                                Objects.requireNonNull(((AppCompatActivity)getActivity()).getSupportActionBar()).setTitle("In-Progress");
-                                progressDialog.dismiss();
+                                DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("Transaction_Detail_File");
+                                databaseReference.child(transactionNo).child("trans_status").setValue("In-Progress")
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            showMessages("Successfully updated");
+                                            WSInProgressFragment additem = new WSInProgressFragment();
+                                            AppCompatActivity activity = (AppCompatActivity)getContext();
+                                            activity.getSupportFragmentManager()
+                                                    .beginTransaction()
+                                                    .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                                                    .replace(R.id.fragment_container_ws, additem)
+                                                    .addToBackStack(null)
+                                                    .commit();
+                                            Objects.requireNonNull(((AppCompatActivity)getActivity()).getSupportActionBar()).setTitle("In-Progress");
+                                            progressDialog.dismiss();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            showMessages("Failed to update task, please check internet connection");
+                                            progressDialog.dismiss();
+                                        }
+                                    });
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -269,7 +283,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                showMessages("Data cant be retrieve");
             }
         });
     }

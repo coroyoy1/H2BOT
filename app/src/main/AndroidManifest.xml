@@ -45,6 +45,7 @@
         <activity android:name=".deliveryman.DeliveryManDocumentActivity" />
         <activity android:name=".tempAccessActivity" />
 
+
         <activity
             android:name=".LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -120,6 +121,15 @@
             android:name=".deliveryman.DeliveryManMainActivity"
             android:theme="@style/Theme.Design.Light" />
         <activity android:name=".MerchantAccessVerification" />
+
+        <activity
+            android:name=".models.CaptureActivityPortrait"
+            android:screenOrientation="portrait"
+            android:stateNotNeeded="true"
+            android:theme="@style/zxing_CaptureTheme"
+            android:windowSoftInputMode="stateAlwaysHidden">
+        </activity>
+
     </application>
 
 </manifest>

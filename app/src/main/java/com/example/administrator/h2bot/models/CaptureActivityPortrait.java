@@ -1,4 +1,4 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.models;
 
 import com.journeyapps.barcodescanner.CaptureActivity;
 
