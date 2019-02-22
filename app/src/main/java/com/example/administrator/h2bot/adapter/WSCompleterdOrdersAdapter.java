@@ -37,7 +37,7 @@ public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterd
     @NonNull
     @Override
     public WSCompleterdOrdersAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.wpinprogressxml, viewGroup, false);
+        View v = LayoutInflater.from(mContext).inflate(R.layout.x_merchant_transaction_completedtransaction, viewGroup, false);
         return new ViewHolder(v);
     }
     @Override
@@ -54,7 +54,7 @@ public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterd
 //                viewHolder.service.setText(currentData.getService());
 //                viewHolder.totalprice.setText(currentData.getTotalPrice());
 //                viewHolder.watertype.setText(currentData.getWaterType());
-                viewHolder.details.setText(">>");
+//                viewHolder.details.setText(">>");
 
            String transactno= currentData.getTrans_no();
             String status= currentData.getTrans_status();
@@ -103,7 +103,7 @@ public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterd
 //                viewHolder.service.setText(uploadCurrent.getService());
 //                viewHolder.totalprice.setText(uploadCurrent.getTotalPrice());
 //                viewHolder.watertype.setText(uploadCurrent.getWaterType());
-                viewHolder.details.setText(">>");
+//                viewHolder.details.setText(">>");
 
     }
 
@@ -117,9 +117,9 @@ public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterd
         public ViewHolder(View itemView) {
             super(itemView);
 
-            transactionNo = itemView.findViewById(R.id.transactionNo);
-            status = itemView.findViewById(R.id.status);
-            details = itemView.findViewById(R.id.details);
+            transactionNo = itemView.findViewById(R.id.transactionNoCOM);
+            status = itemView.findViewById(R.id.transactionStatusCOM);
+//            details = itemView.findViewById(R.id.t);
 //            address = itemView.findViewById(R.id.address);
 //            customername = itemView.findViewById(R.id.customername);
 //            contactno = itemView.findViewById(R.id.contactno);

@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
-import com.example.administrator.h2bot.models.PendingListAdapter;
+import com.example.administrator.h2bot.adapter.PendingListAdapter;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

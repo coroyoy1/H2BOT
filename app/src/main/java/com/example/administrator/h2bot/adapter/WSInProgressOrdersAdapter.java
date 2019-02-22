@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
-import com.example.administrator.h2bot.WSCompletedOrdersInformationFragment;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 import com.example.administrator.h2bot.waterstation.WSPendingOrderAcceptDeclineFragment;
 
@@ -38,7 +37,7 @@ public class WSInProgressOrdersAdapter extends RecyclerView.Adapter<WSInProgress
     @NonNull
     @Override
     public WSInProgressOrdersAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.wpinprogressxml, viewGroup, false);
+        View v = LayoutInflater.from(mContext).inflate(R.layout.x_merchant_transaction_inprogressorder, viewGroup, false);
         return new ViewHolder(v);
     }
     @Override
@@ -55,7 +54,7 @@ public class WSInProgressOrdersAdapter extends RecyclerView.Adapter<WSInProgress
 //                viewHolder.service.setText(currentData.getService());
 //                viewHolder.totalprice.setText(currentData.getTotalPrice());
 //                viewHolder.watertype.setText(currentData.getWaterType());
-                viewHolder.details.setText(">>");
+        //viewHolder.details.setText(">>");
 
            String transactno= currentData.getTrans_no();
             String status= currentData.getTrans_status();
@@ -104,7 +103,7 @@ public class WSInProgressOrdersAdapter extends RecyclerView.Adapter<WSInProgress
 //                viewHolder.service.setText(uploadCurrent.getService());
 //                viewHolder.totalprice.setText(uploadCurrent.getTotalPrice());
 //                viewHolder.watertype.setText(uploadCurrent.getWaterType());
-                viewHolder.details.setText(">>");
+//                viewHolder.details.setText(">>");
 
     }
 
@@ -118,9 +117,9 @@ public class WSInProgressOrdersAdapter extends RecyclerView.Adapter<WSInProgress
         public ViewHolder(View itemView) {
             super(itemView);
 
-            transactionNo = itemView.findViewById(R.id.transactionNo);
-            status = itemView.findViewById(R.id.status);
-            details = itemView.findViewById(R.id.details);
+            transactionNo = itemView.findViewById(R.id.transactionNoIN);
+            status = itemView.findViewById(R.id.transactionStatusIN);
+//            details = itemView.findViewById(R.id.details);
 //            address = itemView.findViewById(R.id.address);
 //            customername = itemView.findViewById(R.id.customername);
 //            contactno = itemView.findViewById(R.id.contactno);

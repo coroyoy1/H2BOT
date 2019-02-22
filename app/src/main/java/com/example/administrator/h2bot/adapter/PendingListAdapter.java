@@ -1,4 +1,4 @@
-package com.example.administrator.h2bot.models;
+package com.example.administrator.h2bot.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,12 +11,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 import com.example.administrator.h2bot.waterstation.WSPendingOrderAcceptDeclineFragment;
-import com.example.administrator.h2bot.waterstation.WSProductListFragment;
 
 import java.util.List;
-
-import static java.security.AccessController.getContext;
 
 public class PendingListAdapter extends RecyclerView.Adapter<PendingListAdapter.ImageViewholder> {
 

@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.administrator.h2bot.deliveryman.DeliveryManDocumentActivity;
 import com.example.administrator.h2bot.deliveryman.DeliveryManMainActivity;
 import com.example.administrator.h2bot.waterstation.WaterStationMainActivity;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -116,6 +117,17 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if(progressDialog != null && progressDialog.isShowing()) {
@@ -125,6 +137,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void signInNow()
     {
+        onStop();
         String email = emailAddress.getText().toString();
         String password = passwordType.getText().toString();
 
@@ -151,6 +164,12 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 }
             })
+                    .addOnCanceledListener(new OnCanceledListener() {
+                        @Override
+                        public void onCanceled() {
+                            showMessages("Cancel to perform retrieving");
+                        }
+                    })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
