@@ -42,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseDatabase databaseConnection;
     private DatabaseReference refConnection;
     FirebaseUser currentUser;
+    String userHERE;
 
 
     @Override
@@ -56,19 +57,18 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
         emailAddress = findViewById(R.id.usernameEditText);
         passwordType = findViewById(R.id.passwordEditText);
         register = findViewById(R.id.registerAccount);
         loginNow = findViewById(R.id.logInBtn);
         mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(FirebaseAuth.getInstance().getCurrentUser() != null)
-                {
-                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File").child(mAuth.getCurrentUser().getUid());
+
+        if(currentUser != null)
+        {
+            userHERE = currentUser.getUid();
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File").child(currentUser.getUid());
                     databaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -79,6 +79,7 @@ public class LoginActivity extends AppCompatActivity {
                                 {
                                     progressDialog.show();
                                 }
+                                finish();
                                 userTypeLogin();
                             }
                             else
@@ -92,17 +93,49 @@ public class LoginActivity extends AppCompatActivity {
                             showMessages("Account does not available");
                         }
                     });
-                }
-                else
-                {
-                    showMessages("Account is not available");
-                }
-            }
-        };
+        }
+
+//        mAuthListener = new FirebaseAuth.AuthStateListener() {
+//            @Override
+//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//                if(FirebaseAuth.getInstance().getCurrentUser() != null)
+//                {
+//                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File").child(mAuth.getCurrentUser().getUid());
+//                    databaseReference.addValueEventListener(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                            String userFile = dataSnapshot.child("user_getUID").getValue().toString();
+//                            if(userFile.equals(mAuth.getCurrentUser().getUid()))
+//                            {
+//                                if(!(LoginActivity.this).isFinishing())
+//                                {
+//                                    progressDialog.show();
+//                                }
+//                                userTypeLogin();
+//                            }
+//                            else
+//                            {
+//                                showMessages("Account is not available");
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//                            showMessages("Account does not available");
+//                        }
+//                    });
+//                }
+//                else
+//                {
+//                    showMessages("Account is not available");
+//                }
+//            }
+//        };
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
                 Intent intent = new Intent(LoginActivity.this, zCreateAccountOptionUserTypeActivity.class);
                 startActivity(intent);
             }
@@ -116,16 +149,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//    }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
 
     @Override
     protected void onDestroy() {
@@ -137,7 +165,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void signInNow()
     {
-        onStop();
         String email = emailAddress.getText().toString();
         String password = passwordType.getText().toString();
 
@@ -151,25 +178,21 @@ public class LoginActivity extends AppCompatActivity {
             {
                 progressDialog.show();
             }
-            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            mAuth.signInWithEmailAndPassword(emailAddress.getText().toString(), passwordType.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task)
                 {
+
+                    userHERE = mAuth.getCurrentUser().getUid();
                     if(!task.isSuccessful())
                     {
                         showMessages("Please check your internet connection or credentials.");
                     }
                     else {
                         userTypeLogin();
-                    }
+                }
                 }
             })
-                    .addOnCanceledListener(new OnCanceledListener() {
-                        @Override
-                        public void onCanceled() {
-                            showMessages("Cancel to perform retrieving");
-                        }
-                    })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
@@ -182,22 +205,19 @@ public class LoginActivity extends AppCompatActivity {
 
     private void userTypeLogin()
     {
-        FirebaseUser userHERE = FirebaseAuth.getInstance().getCurrentUser();
-        //String RegisteredUserID = userHERE.getUid();
-        refConnection = FirebaseDatabase.getInstance().getReference("User_File").child(currentUser.getUid());
+        refConnection = FirebaseDatabase.getInstance().getReference("User_File").child(userHERE);
         refConnection.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String userType = dataSnapshot.child("user_type").getValue().toString();
-                String userStatus = dataSnapshot.child("user_status").getValue().toString();
-                if (userType.equals("Customer") && userStatus.equals("active")) {
+                String userType = dataSnapshot.child("user_type").getValue(String.class);
+                String documentVerify = dataSnapshot.child("user_status").getValue(String.class);
+                if (userType.equals("Customer") && documentVerify.equals("active")) {
                     //Temporary Output
                     startActivity(new Intent(LoginActivity.this, CustomerMainActivity.class));
 //                    showMessages("Successfully logged-in as Customer");
                     finish();
                 }
-                else if(userType.equals("Water Station") && userStatus.equals("active")){
-                    String documentVerify = dataSnapshot.child("user_status").getValue().toString();
+                else if(userType.equals("Water Station")){
                     if(documentVerify.equals("inactive"))
                     {
                         startActivity(new Intent(LoginActivity.this, WaterStationDocumentVersion2Activity.class));
@@ -214,9 +234,8 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     showMessages("Successfully logged-in as Station Owner");
                 }
-                else if(userType.equals("Delivery Man") && userStatus.equals("active"))
+                else if(userType.equals("Delivery Man"))
                 {
-                    String documentVerify = dataSnapshot.child("user_status").getValue().toString();
                     if(documentVerify.equals("inactive"))
                     {
                         finish();
@@ -229,9 +248,8 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     showMessages("Successfully logged-in as Delivery Man");
                 }
-                else if(userType.equals("Water Dealer") && userStatus.equals("active"))
+                else if(userType.equals("Water Dealer"))
                 {
-                    String documentVerify = dataSnapshot.child("user_status").getValue().toString();
                     if(documentVerify.equals("inactive"))
                     {
                         startActivity(new Intent(LoginActivity.this, WaterPeddlerDocumentActivity.class));
@@ -246,7 +264,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else if(userType.equals("Third Party Affiliate"))
                 {
-                    String documentVerify = dataSnapshot.child("user_status").getValue().toString();
                     if(documentVerify.equals("inactive"))
                     {
                         showMessages("Your registration is still on process. Please wait for the confirmation that will be sent through SMS.");
