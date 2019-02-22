@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@mipmap/waterbackgroundvvv">
+    android:layout_height="match_parent">
     <LinearLayout
         android:layout_gravity="center"
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Update Account Settings"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="24dp"
             android:textStyle="bold" />
 
@@ -23,7 +23,8 @@
             android:layout_width="150dp"
             android:layout_height="120dp"
             android:layout_marginTop="20dp"
-            android:src="@drawable/ic_person_black_24dp" />
+            android:src="@drawable/ic_account_circle_black_24dp"
+            android:background="@android:color/darker_gray"/>
 
         <Button
             android:id="@+id/addPhotoUAS"
@@ -54,7 +55,7 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginRight="2dp"
                         android:layout_weight="1"
-                        android:background="@drawable/z_edittextround"
+                        android:background="@drawable/edit_text_border"
                         android:hint="First Name"
                         android:inputType="textEmailAddress"
                         android:textAlignment="center" />
@@ -66,7 +67,7 @@
                         android:layout_marginLeft="2dp"
                         android:layout_marginTop="5dp"
                         android:layout_weight="1"
-                        android:background="@drawable/z_edittextround"
+                        android:background="@drawable/edit_text_border"
                         android:hint="Last Name"
                         android:inputType="textEmailAddress"
                         android:textAlignment="center" />
@@ -78,7 +79,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/z_edittextround"
+                    android:background="@drawable/edit_text_border"
                     android:hint="Address"
                     android:textAlignment="center" />
 
@@ -88,7 +89,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/z_edittextround"
+                    android:background="@drawable/edit_text_border"
                     android:hint="@string/contact_number"
                     android:textAlignment="center" />
 
@@ -97,7 +98,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/z_edittextround"
+                    android:background="@drawable/edit_text_border"
                     android:hint="@string/email_address"
                     android:inputType="textEmailAddress"
                     android:textAlignment="center" />
@@ -107,7 +108,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/z_edittextround"
+                    android:background="@drawable/edit_text_border"
                     android:hint="Password"
                     android:inputType="textPassword"
                     android:textAlignment="center" />
@@ -117,7 +118,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/z_edittextround"
+                    android:background="@drawable/edit_text_border"
                     android:hint="Confirm Password"
                     android:inputType="textPassword"
                     android:textAlignment="center" />

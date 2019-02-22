@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@mipmap/waterbackgroundvvv">
+    android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,7 +14,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:background="#32918b88"
+                android:background="@android:color/darker_gray"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
@@ -23,11 +22,12 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:background="@android:color/holo_blue_dark"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Order Details"
                     android:textAlignment="center"
-                    android:textColor="@android:color/holo_blue_dark"
+                    android:textColor="@android:color/white"
                     android:textSize="24dp" />
 
                 <de.hdodenhof.circleimageview.CircleImageView

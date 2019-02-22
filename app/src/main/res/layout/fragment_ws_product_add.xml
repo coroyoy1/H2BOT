@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="@mipmap/waterbackgroundvvv"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -22,7 +21,7 @@
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@drawable/z_edittextround"
+            android:background="@drawable/edit_text_border"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:hint="Water Name"
@@ -57,7 +56,7 @@
                 android:textAlignment="center"
                 android:hint="Price per Gallon"
                 android:inputType="textPersonName"
-                android:background="@drawable/z_edittextround"/>
+                android:background="@drawable/edit_text_border"/>
         </LinearLayout>
         <Button
 

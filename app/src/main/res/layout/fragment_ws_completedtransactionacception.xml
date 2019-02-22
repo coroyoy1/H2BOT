@@ -15,7 +15,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:background="#32918b88"
+                android:background="@android:color/darker_gray"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
@@ -23,11 +23,12 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:background="@android:color/holo_blue_dark"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Order Details"
                     android:textAlignment="center"
-                    android:textColor="@android:color/holo_blue_dark"
+                    android:textColor="@android:color/white"
                     android:textSize="24dp" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -36,7 +37,7 @@
                     android:layout_gravity="center"
                     android:layout_width="140dp"
                     android:layout_height="120dp"
-                    android:src="@drawable/ic_launcher_background"/>
+                    android:src="@drawable/ic_account_circle_black_24dp"/>
 
                 <TextView
                     android:layout_marginTop="10dp"

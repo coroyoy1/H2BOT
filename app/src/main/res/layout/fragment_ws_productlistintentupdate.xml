@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@mipmap/waterbackgroundvvv">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,23 +17,24 @@
             android:text="Update Water Product"
             android:textSize="28dp"
             android:textStyle="bold"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/black"/>
         <EditText
             android:id="@+id/waterUpdateName"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@drawable/z_edittextround"
+            android:background="@drawable/edit_text_border"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:hint="Water Name"
             android:textAlignment="center"/>
         <Spinner
+            android:textAlignment="center"
             android:id="@+id/waterUpdateSpinner"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@android:color/white"
+            android:background="@android:color/darker_gray"
             android:layout_marginLeft="31dp"
             android:layout_marginRight="31dp">
         </Spinner>
@@ -59,7 +59,7 @@
                 android:textAlignment="center"
                 android:hint="Price per Gallon"
                 android:inputType="textPersonName"
-                android:background="@drawable/z_edittextround"/>
+                android:background="@drawable/edit_text_border"/>
         </LinearLayout>
         <RadioGroup
             android:id="@+id/validRadio"
@@ -68,20 +68,20 @@
             android:orientation="horizontal"
             android:layout_marginTop="10dp">
             <TextView
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="24dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Status: "/>
             <RadioButton
                 android:id="@+id/avaiableRadio"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/holo_green_dark"
                 android:text="Available"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <RadioButton
                 android:id="@+id/unavailableRadio"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/holo_red_dark"
                 android:text="Unavailable"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
