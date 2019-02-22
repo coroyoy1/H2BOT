@@ -66,12 +66,13 @@ public class CustomerMapFragment extends Fragment implements
 
     // User Permissions
     private GoogleMap map;
+    TextView stationID;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Location mLastLocation;
     private Marker mCurrentLocationMarker;
     private static final int REQUEST_USER_LOCATION_CODE = 99;
-
+    public static final String EXTRA_stationID = "stationID";
 
     private ChildEventListener mChilExventListener;
     private Location mCurrentLocation;
@@ -118,6 +119,7 @@ public class CustomerMapFragment extends Fragment implements
         }
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        stationID = view.findViewById(R.id.stationID);
         bottomSheet = view.findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setPeekHeight(bottomSheetBehavior.getPeekHeight());
@@ -132,9 +134,21 @@ public class CustomerMapFragment extends Fragment implements
 
 
 
-        usersLocRef = FirebaseDatabase.getInstance().getReference("User_File").child(mAuth.getCurrentUser().getUid());
+//        usersLocRef = FirebaseDatabase.getInstance().getReference("User_File").child(mAuth.getCurrentUser().getUid());
         mapFragment.getMapAsync(this);
         ChildEventListener mChildEventListener;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            buildGoogleApiClient();
+            map.setMyLocationEnabled(true);
+            Toast.makeText(getActivity(), "Permission granted", Toast.LENGTH_SHORT).show();
+        }
+        float zoomLevel = 16.0f;
+        map.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
 
         // SELECT * FROM TABLE
         addressesRef = FirebaseDatabase.getInstance().getReference("User_File");
@@ -154,7 +168,7 @@ public class CustomerMapFragment extends Fragment implements
 
                                 if(users.getUser_getUID().equals(info.getBusiness_id())){
                                     if(users.getUser_type().equals("Water Station")
-                                    || users.getUser_type().equals("Water Dealer")){
+                                            || users.getUser_type().equals("Water Dealer")){
                                         if(users.getUser_status().equalsIgnoreCase("active")){
                                             arrayListUserFile.add(users);
                                             arrayListBusinessInfo.add(info);
@@ -172,7 +186,7 @@ public class CustomerMapFragment extends Fragment implements
                                                     String status = "Status: OPEN";
                                                     String type = "Type: " + userType;
                                                     String address = "Address: " + myAddresses;
-                                                    stationId = "ID: " + stationId;
+                                                    stationId = stationId;
                                                     map.addMarker(new MarkerOptions().position(latLong).title(stationName).snippet(stationId
                                                             + "\n" + type
                                                             + "\n" + address
@@ -209,18 +223,6 @@ public class CustomerMapFragment extends Fragment implements
                 Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        map = googleMap;
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            buildGoogleApiClient();
-            map.setMyLocationEnabled(true);
-            Toast.makeText(getActivity(), "Permission granted", Toast.LENGTH_SHORT).show();
-        }
-        float zoomLevel = 16.0f;
-        map.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
 
 
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -365,16 +367,24 @@ public class CustomerMapFragment extends Fragment implements
 
     private void updateBottomSheetContent(Marker marker) {
         TextView stationName = bottomSheet.findViewById(R.id.stationName);
+
         Button orderBtn = bottomSheet.findViewById(R.id.orderBtn);
         stationName.setText(marker.getTitle());
+
+        stationID.setText(stationId);
+        marker.getSnippet();
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
         orderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putString("stationName", stationName.toString());
-                startActivity(new Intent(getActivity(), CustomerChatbotActivity.class));
+                bundle.putString("stationId", stationName.toString());
+                Intent detailIntent = new Intent(getActivity(), CustomerChatbotActivity.class);
+                detailIntent.putExtra(EXTRA_stationID, stationID.getText().toString());
+
+
+                startActivity(detailIntent);
             }
         });
     }

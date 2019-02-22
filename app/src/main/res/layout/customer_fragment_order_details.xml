@@ -290,6 +290,12 @@
                     android:textColor="#f5f6fa"
                     tools:ignore="OnClick" />
             </LinearLayout>
+
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="Request Broadcast        "/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

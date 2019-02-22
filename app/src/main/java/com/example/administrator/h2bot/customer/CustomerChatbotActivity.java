@@ -1,5 +1,6 @@
 package com.example.administrator.h2bot.customer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +39,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static  com.example.administrator.h2bot.customer.CustomerMapFragment.EXTRA_stationID;
+
 public class CustomerChatbotActivity extends AppCompatActivity {
     private static final String TAG = CustomerChatbotActivity.class.getSimpleName();
     private static final int USER = 10001;
@@ -58,6 +61,13 @@ public class CustomerChatbotActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.customer_activity_chatbot);
+//        Bundle bundle = this.getArguments();
+//        if (bundle != null) {
+//            transaction = bundle.getString("transactionno");
+//            customerName = bundle.getString("customername");
+//
+//        }
+
 
         final ScrollView scrollview = findViewById(R.id.chatScrollView);
         scrollview.post(() -> scrollview.fullScroll(ScrollView.FOCUS_DOWN));
@@ -166,6 +176,9 @@ public class CustomerChatbotActivity extends AppCompatActivity {
         DatabaseReference userFileRef = db.getReference("User_File");
         FirebaseUser get_UId = myAuth.getCurrentUser();
         String get_id = get_UId.getUid();
+        Intent intent = getIntent();
+        String stationID = intent.getStringExtra(EXTRA_stationID);
+
         userFileRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -174,12 +187,14 @@ public class CustomerChatbotActivity extends AppCompatActivity {
                     if(user.getUser_getUID().equals(get_id)){
                         userFile.add(user);
                         customerName = user.getUser_firtname();
-                        String msg = "" + customerName;
+                        Toast.makeText(CustomerChatbotActivity.this, "Name: " + stationID, Toast.LENGTH_SHORT).show();
+                        String msg = "I am " + customerName + " and the station id is " + stationID;
                         QueryInput queryInput = QueryInput.newBuilder().setText(TextInput.newBuilder().setText(msg).setLanguageCode("en-US")).build();
                         new RequestJavaV2Task(CustomerChatbotActivity.this, session, sessionsClient, queryInput).execute();
                     }
                 }
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

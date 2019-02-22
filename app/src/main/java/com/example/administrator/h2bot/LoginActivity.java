@@ -1,11 +1,9 @@
 package com.example.administrator.h2bot;
-import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.tpaaffiliate.*;
 import com.example.administrator.h2bot.customer.*;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,7 +16,6 @@ import android.widget.Toast;
 import com.example.administrator.h2bot.deliveryman.DeliveryManDocumentActivity;
 import com.example.administrator.h2bot.deliveryman.DeliveryManMainActivity;
 import com.example.administrator.h2bot.waterstation.WaterStationMainActivity;
-import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -62,40 +59,16 @@ public class LoginActivity extends AppCompatActivity {
         register = findViewById(R.id.registerAccount);
         loginNow = findViewById(R.id.logInBtn);
         mAuth = FirebaseAuth.getInstance();
-
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(FirebaseAuth.getInstance().getCurrentUser() != null)
                 {
-                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File").child(mAuth.getCurrentUser().getUid());
-                    databaseReference.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            String userFile = dataSnapshot.child("user_getUID").getValue().toString();
-                            if(userFile.equals(mAuth.getCurrentUser().getUid()))
-                            {
-                                if(!(LoginActivity.this).isFinishing())
-                                {
-                                    progressDialog.show();
-                                }
-                                userTypeLogin();
-                            }
-                            else
-                            {
-                                showMessages("Account is not available");
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            showMessages("Account does not available");
-                        }
-                    });
-                }
-                else
-                {
-                    showMessages("Account is not available");
+                    if(!(LoginActivity.this).isFinishing())
+                    {
+                        progressDialog.show();
+                    }
+                    userTypeLogin();
                 }
             }
         };
@@ -117,17 +90,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         if(progressDialog != null && progressDialog.isShowing()) {
@@ -135,9 +97,14 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
     private void signInNow()
     {
-        onStop();
         String email = emailAddress.getText().toString();
         String password = passwordType.getText().toString();
 
@@ -151,7 +118,9 @@ public class LoginActivity extends AppCompatActivity {
             {
                 progressDialog.show();
             }
-            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            mAuth.signInWithEmailAndPassword(emailAddress.getText().toString(),
+                    passwordType.getText().toString())
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task)
                 {
@@ -160,31 +129,25 @@ public class LoginActivity extends AppCompatActivity {
                         showMessages("Please check your internet connection or credentials.");
                     }
                     else {
-                        userTypeLogin();
+                            userTypeLogin();
+                        }
                     }
-                }
-            })
-                    .addOnCanceledListener(new OnCanceledListener() {
-                        @Override
-                        public void onCanceled() {
-                            showMessages("Cancel to perform retrieving");
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            showMessages("Account is not exists");
-                            progressDialog.dismiss();
-                        }
-                    });
+            });
+//            .addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception e) {
+//                    showMessages("Account is not exists");
+//                    progressDialog.dismiss();
+//                }
+//            });
         }
     }
 
     private void userTypeLogin()
     {
         FirebaseUser userHERE = FirebaseAuth.getInstance().getCurrentUser();
-        //String RegisteredUserID = userHERE.getUid();
-        refConnection = FirebaseDatabase.getInstance().getReference("User_File").child(currentUser.getUid());
+        String RegisteredUserID = userHERE.getUid();
+        refConnection = FirebaseDatabase.getInstance().getReference().child("User_File").child(RegisteredUserID);
         refConnection.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -276,33 +239,4 @@ public class LoginActivity extends AppCompatActivity {
     {
         Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
     }
-
-//    public void tempLogin()
-//    {
-//        String email = emailAddress.getText().toString().trim();
-//        if(email.equals("customer"))
-//        {
-//            startActivity(new Intent(LoginActivity.this, CustomerMainActivity.class));
-//        }
-//        else if(email.equals("dealer"))
-//        {
-//            startActivity(new Intent(LoginActivity.this, WaterPeddlerHomeActivity.class));
-//        }
-//        else if(email.equals("station"))
-//        {
-//            startActivity(new Intent(LoginActivity.this, WaterStationMainActivity.class));
-//        }
-//        else if(email.equals("delivery"))
-//        {
-//            startActivity(new Intent(LoginActivity.this, DeliveryManMainActivity.class));
-//        }
-//        else if(email.equals("tpa"))
-//        {
-//            startActivity(new Intent(LoginActivity.this, TPAAffiliateMainActivity.class));
-//        }
-//        else
-//        {
-//            showMessages("error");
-//        }
-//    }
 }

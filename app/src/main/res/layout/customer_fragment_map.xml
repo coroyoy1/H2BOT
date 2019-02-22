@@ -111,6 +111,16 @@
                         android:textColor="#228B22"
                         android:text="AVAILABLE"
                         android:textStyle="bold|italic" />
+
+                    <TextView
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="#228B22"
+                        android:text="AVAILABLE"
+                        android:id="@+id/stationID"
+                        android:textStyle="bold|italic" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
