@@ -60,7 +60,7 @@
                         android:layout_width="230dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Destination: " />
+                        android:text="Station Address: " />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -142,16 +142,28 @@
                     android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/orderBtn"
+                        android:id="@+id/bidBtn"
                         android:layout_weight="1"
                         android:layout_width="match_parent"
-                        android:drawableLeft="@drawable/ic_playlist_add_check_black_24dp"
-                        android:drawableTint="#FFFFFF"
+                       android:drawableTint="#FFFFFF"
                         android:layout_height="wrap_content"
                         android:textColor="#f5f6fa"
                         android:background="#0097e6"
-                        android:paddingLeft="20dp"
-                        android:text="ACCEPT"/>
+                        android:layout_marginRight="5dp"
+                        android:onClick="AddBid"
+                        android:text="Add Bidding"/>
+                    <!--<Button-->
+                        <!--android:id="@+id/orderBtn"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:drawableLeft="@drawable/ic_playlist_add_check_black_24dp"-->
+                        <!--android:drawableTint="#FFFFFF"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:textColor="#f5f6fa"-->
+                        <!--android:background="#0097e6"-->
+                        <!--android:paddingLeft="20dp"-->
+                        <!--android:layout_marginLeft="5dp"-->
+                        <!--android:text="ACCEPT"/>-->
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

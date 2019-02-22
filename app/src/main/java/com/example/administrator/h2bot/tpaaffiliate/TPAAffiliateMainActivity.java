@@ -164,4 +164,9 @@ public class TPAAffiliateMainActivity extends AppCompatActivity implements Navig
         dialog.setContentView(R.layout.tpa_for_order_details);
         dialog.show();
     }
+
+    public void AddBid(View view) {
+        dialog.setContentView(R.layout.tpa_bid);
+        dialog.show();
+    }
 }
