@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WPTransactionFragment"
-    android:background="@mipmap/waterbackgroundvvv">
+    tools:context=".WPTransactionFragment">
 
     <LinearLayout
         android:orientation="vertical"
@@ -23,7 +22,7 @@
                 android:textSize="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Transactions No."/>
+                android:text="Order No."/>
             <TextView
                 android:layout_weight="1"
                 android:gravity="center"
