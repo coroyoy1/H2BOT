@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card_view_top"
     android:layout_width="match_parent"
-    android:layout_margin="10dp"
+    android:layout_margin="2dp"
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="6dp"
     card_view:contentPadding="15dp"
@@ -17,7 +17,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
-        android:layout_margin="10dp">
+        android:layout_margin="5dp">
         <TextView
             android:id="@+id/transactionNoIN"
             android:layout_width="match_parent"
