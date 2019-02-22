@@ -95,42 +95,6 @@ public class LoginActivity extends AppCompatActivity {
                     });
         }
 
-//        mAuthListener = new FirebaseAuth.AuthStateListener() {
-//            @Override
-//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-//                if(FirebaseAuth.getInstance().getCurrentUser() != null)
-//                {
-//                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File").child(mAuth.getCurrentUser().getUid());
-//                    databaseReference.addValueEventListener(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            String userFile = dataSnapshot.child("user_getUID").getValue().toString();
-//                            if(userFile.equals(mAuth.getCurrentUser().getUid()))
-//                            {
-//                                if(!(LoginActivity.this).isFinishing())
-//                                {
-//                                    progressDialog.show();
-//                                }
-//                                userTypeLogin();
-//                            }
-//                            else
-//                            {
-//                                showMessages("Account is not available");
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//                            showMessages("Account does not available");
-//                        }
-//                    });
-//                }
-//                else
-//                {
-//                    showMessages("Account is not available");
-//                }
-//            }
-//        };
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,10 +113,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//    }
 
 
     @Override
