@@ -6,8 +6,11 @@ import com.example.administrator.h2bot.deliveryman.DeliveryManMainActivity;
 import com.example.administrator.h2bot.models.*;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -24,6 +27,7 @@ import android.widget.Toast;
 
 import com.example.administrator.h2bot.tpaaffiliate.TPAAffiliateMainActivity;
 import com.example.administrator.h2bot.waterstation.WaterStationMainActivity;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,6 +45,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity{
 
@@ -128,6 +133,30 @@ public class RegisterActivity extends AppCompatActivity{
                 }
             }
         });
+    }
+
+    public LatLng getLocationFromAddress(String strAddress) {
+
+        Geocoder coder = new Geocoder(this);
+        List<Address> address;
+        LatLng locatorAddress = null;
+
+        try {
+            // May throw an IOException
+            address = coder.getFromLocationName(strAddress, 5);
+            if (address == null) {
+                return null;
+            }
+
+            Address location = address.get(0);
+            locatorAddress = new LatLng(location.getLatitude(), location.getLongitude());
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+        }
+
+        return locatorAddress;
     }
 
     @Override
@@ -218,14 +247,30 @@ public class RegisterActivity extends AppCompatActivity{
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
                                                             progressDialog.dismiss();
-                                                            showMessage("Successfully Registered");
                                                             FirebaseDatabase.getInstance().getReference("User_Account_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userAccountFile)
                                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                         @Override
                                                                         public void onSuccess(Void aVoid) {
-                                                                            progressDialog.dismiss();
-                                                                            showMessage("Successfully registered");
-                                                                            passToNextActivity();
+                                                                            String locateAddress = addressRegister.getText().toString();
+                                                                            String locateLatLong = getLocationFromAddress(locateAddress).toString();
+                                                                            UserLocationAddress userLocationAddress = new UserLocationAddress(uidString, locateLatLong);
+                                                                            DatabaseReference locationRef = FirebaseDatabase.getInstance().getReference("User_Location_Address");
+                                                                            locationRef.child(uidString).setValue(userLocationAddress)
+                                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                        @Override
+                                                                                        public void onSuccess(Void aVoid) {
+                                                                                            showMessage("Successfully Registered");
+                                                                                            progressDialog.dismiss();
+                                                                                            //passToNextActivity();
+                                                                                        }
+                                                                                    })
+                                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                                        @Override
+                                                                                        public void onFailure(@NonNull Exception e) {
+                                                                                            showMessage("Error to get location");
+                                                                                            progressDialog.dismiss();
+                                                                                        }
+                                                                                    });
                                                                         }
                                                                     })
                                                                     .addOnFailureListener(new OnFailureListener() {
@@ -233,6 +278,7 @@ public class RegisterActivity extends AppCompatActivity{
                                                                         public void onFailure(@NonNull Exception e) {
                                                                             progressDialog.dismiss();
                                                                             showMessage("Error, Connection Error");
+                                                                            progressDialog.dismiss();
                                                                         }
                                                                     });
                                                         }
@@ -253,13 +299,15 @@ public class RegisterActivity extends AppCompatActivity{
                         else
                         {
                             showMessage("Error to save data");
+                            progressDialog.dismiss();
                         }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-
+                        showMessage("Error to save");
+                        progressDialog.dismiss();
                     }
                 });
     }
