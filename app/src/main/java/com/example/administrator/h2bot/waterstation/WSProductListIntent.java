@@ -43,7 +43,6 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ws_productlistintent, container, false);
-        itemN = view.findViewById(R.id.PLIitemname);
         itemP = view.findViewById(R.id.PLIprice);
         itemU = view.findViewById(R.id.PLItype);
 
@@ -68,22 +67,17 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            String itemNa = bundle.getString("ItemNameMDA");
             String itemPr = bundle.getString("ItemPriceMDA");
             String itemTy = bundle.getString("ItemTypeMDA");
             String itemSt = bundle.getString("ItemStatusMDA");
-            String itemKey = bundle.getString("ItemKeyMDA");
 
             itemUi = bundle.getString("ItemUidMDA");
-            itemN.setText("Item Name: "+itemNa);
             itemP.setText("    Price: "+itemPr);
             itemU.setText("     Type: "+itemTy);
 
-            itemNameString = bundle.getString("ItemNameMDA");
             itemPriceString = bundle.getString("ItemPriceMDA");
             itemTypeString = bundle.getString("ItemTypeMDA");
             itemStatusString = bundle.getString("ItemStatusMDA");
-            itemKeyString = bundle.getString("ItemKeyMDA");
 
 
         }
@@ -93,8 +87,7 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
     public void deleteData()
     {
         progressDialog.show();
-        String deleteKey = DataKey(itemKeyString);
-        databaseReference.child(firebaseUser.getUid()).child(deleteKey).removeValue()
+        databaseReference.child(firebaseUser.getUid()).child(itemTypeString).removeValue()
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -127,10 +120,6 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
     {
         return itemUD;
     }
-    public String DataName(String itemName)
-    {
-        return itemName;
-    }
     public String DataPrice(String itemPrice)
     {
         return itemPrice;
@@ -142,10 +131,6 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
     public String DataStatus(String itemStatus)
     {
         return itemStatus;
-    }
-    public String DataKey(String itemKey)
-    {
-        return itemKey;
     }
 
     @Override
@@ -164,12 +149,9 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
                 break;
             case R.id.PLIupdatebutton:
                 String uidString = DataID(itemUi);
-                String nameString = DataName(itemNameString);
                 String typeString = DataType(itemTypeString);
                 String priceString = DataPrice(itemPriceString);
                 String statusString = DataStatus(itemStatusString);
-                String keyString = DataKey(itemKeyString);
-
                 WSProductListUpdate updateitem = new WSProductListUpdate();
                 AppCompatActivity activityapp = (AppCompatActivity) v.getContext();
                 activityapp.getSupportFragmentManager()
@@ -180,11 +162,9 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
                         .commit();
                 Bundle args = new Bundle();
                 args.putString("ItemUidPLI", uidString);
-                args.putString("ItemNamePLI", nameString);
                 args.putString("ItemPricePLI", priceString);
                 args.putString("ItemTypePLI", typeString);
                 args.putString("ItemStatusPLI", statusString);
-                args.putString("ItemKeyPLI", keyString);
                 updateitem.setArguments(args);
                 break;
             case R.id.PLIDeletebutton:

@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.administrator.h2bot.models.CaptureActivityPortrait;
 import com.example.administrator.h2bot.R;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -46,6 +47,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
     CircleImageView imageView;
     ProgressDialog progressDialog;
     String transactNoScan;
+    GoogleMap map;
 
 
     @Nullable
@@ -185,7 +187,8 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for(DataSnapshot postSnap : dataSnapshot.getChildren())
                                 {
-                                    if(postSnap.child("trans_no").getValue(String.class).equals(transactionNo))
+                                    if(postSnap.child("trans_no").getValue(String.class).equals(transactionNo)
+                                            && postSnap.child("trans_status").getValue(String.class).equals("In-Progress") )
                                     {
                                         transDeliveryFeePerGallonDetail = postSnap.child("trans_delivery_fee_per_gallon").getValue(String.class);
                                         transNoDetail = postSnap.child("trans_no").getValue(String.class);
@@ -313,7 +316,8 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                 viewLocationMeth();
                 break;
             case R.id.viewLocationButtonINACC:
-                showMessages(transactNoScan);
+               // map.clear();
+                showMessages(transactionNo);
                 break;
         }
     }

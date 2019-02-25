@@ -14,7 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.maps.MapMerchantFragment;
+import com.example.administrator.h2bot.maps.MapMerchantFragmentRenew;
 import com.example.administrator.h2bot.waterstation.WSInProgressFragment;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,6 +48,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
     String customerIDUser, contactNoUser;
     String orderNoGET , customerNoGET , merchantNOGET , dataIssuedGET , deliveryStatusGET , transStatusGET , transTotalAmountGET , transDeliveryFeeGET, transTotalNoGallonGET;
     CircleImageView imageView;
+    Bundle bundle;
      public WSPendingOrderAcceptDeclineFragment() {
 
     }
@@ -95,14 +99,6 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
 
     private void showMessages(String s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
-    }
-
-    public void acceptPass()
-    {
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-
-
     }
 
     public void getOrderData()
@@ -288,6 +284,21 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
         });
     }
 
+    public void viewLocationPass()
+    {
+        MapMerchantFragmentRenew additem = new MapMerchantFragmentRenew();
+        AppCompatActivity activity = (AppCompatActivity)getContext();
+        activity.getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                .replace(R.id.fragment_container_ws, additem)
+                .addToBackStack(null)
+                .commit();
+        bundle = new Bundle();
+        bundle.putString("TransactNoSeen1", transactionNo);
+        additem.setArguments(bundle);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId())
@@ -298,6 +309,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
             case R.id.declinePOA:
                 break;
             case R.id.viewLocationButtonPOA:
+                viewLocationPass();
                 break;
         }
     }

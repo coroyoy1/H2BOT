@@ -43,9 +43,8 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
 
         if(savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
-                    new WSMapFragment()).commit();
-            Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
-            showMessages("Map");
+                    new WSInProgressFragment()).commit();
+            Objects.requireNonNull(getSupportActionBar()).setTitle("In-Progress");
         }
     }
     @Override
@@ -74,61 +73,52 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
                         new WSTransactionsFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Completed Orders");
-                showMessages("Transactions");
                 break;
             case R.id.nav_inprogress_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
                         new WSInProgressFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("In-Progress");
-                showMessages("In-Progress");
                 break;
             case R.id.nav_dailyrecords_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
                         new WSSalesReportsFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Daily Records");
-                showMessages("Daily Records");
                 break;
             case R.id.nav_additem_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
                         new WSBusinessInfoFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Business Information");
-                showMessages("Business Info");
                 break;
             case R.id.nav_productlist_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
                         new WSProductListFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Product List");
-                showMessages("Product List");
                 break;
             case R.id.nav_pendingorders_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
                         new WSPendingOrdersFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Pending Orders");
-                showMessages("Pending Orders");
                 break;
-            case R.id.nav_map_ws:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
-                        new WSMapFragment()).commit();
-                Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
-                showMessages("Map");
-                break;
+//            case R.id.nav_map_ws:
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
+//                        new WSMapFragment()).commit();
+//                Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
+//                showMessages("Map");
+//                break;
             case R.id.nav_accountsettings_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
                         new WSAccountSettingsFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Account Settings");
-                showMessages("Account Settings");
                 break;
             case R.id.nav_feedback_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
                         new WSFeedbackFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Feedback");
-                showMessages("Feedback");
                 break;
             case R.id.nav_deliveryman_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
                         new WSDMFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Delivery Man");
-                showMessages("Delivery Man");
                 break;
             case R.id.nav_logout_ws:
                 mAuth.signOut();

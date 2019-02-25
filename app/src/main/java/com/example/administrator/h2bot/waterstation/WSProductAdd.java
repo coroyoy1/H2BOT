@@ -16,7 +16,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
-import com.example.administrator.h2bot.UserWSWDWaterTypeFile;
+import com.example.administrator.h2bot.models.UserWSWDWaterTypeFile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,7 +42,6 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ws_product_add, container, false);
 
-        waterProductName = view.findViewById(R.id.waterName);
         waterProductPrice = view.findViewById(R.id.waterPrice);
         waterProductType = view.findViewById(R.id.waterSpinner);
 
@@ -78,17 +77,16 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
 
     public void saveData()
     {
-        String waterNameString = waterProductName.getText().toString();
         String waterPriceString = waterProductPrice.getText().toString();
         String waterTypeString = waterProductType.getSelectedItem().toString();
 
-        if(waterNameString.equals("") && waterPriceString.equals("") && waterTypeString.equals(""))
+        if(waterPriceString.equals("") && waterTypeString.equals(""))
         {
             showMessages("Fill up first the requirement");
             return;
         }
         else {
-            addProduct(waterNameString, waterPriceString, waterTypeString);
+            addProduct(waterPriceString, waterTypeString);
         }
     }
 
@@ -96,14 +94,14 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
         Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
     }
 
-    private void addProduct(String waterNameString, String waterPriceString, String waterTypeString) {
+    private void addProduct(String waterPriceString, String waterTypeString) {
         String uidString = mAuth.getUid();
         String keyString = databaseReference.push().getKey();
 
         progressDialog.show();
 
-        UserWSWDWaterTypeFile userWSWDWaterTypeFile = new UserWSWDWaterTypeFile(uidString, keyString, waterNameString, waterTypeString, waterPriceString, "active");
-        databaseReference.child(uidString).child(keyString).setValue(userWSWDWaterTypeFile)
+        UserWSWDWaterTypeFile userWSWDWaterTypeFile = new UserWSWDWaterTypeFile(uidString, waterTypeString, waterPriceString, "active");
+        databaseReference.child(uidString).child(waterTypeString).setValue(userWSWDWaterTypeFile)
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {

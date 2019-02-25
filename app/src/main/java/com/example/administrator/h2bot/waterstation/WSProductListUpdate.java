@@ -17,7 +17,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
-import com.example.administrator.h2bot.UserWSWDWaterTypeFile;
+import com.example.administrator.h2bot.models.UserWSWDWaterTypeFile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -58,7 +58,6 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
         databaseReference = firebaseDatabase.getReference("User_WS_WD_Water_Type_File");
         firebaseUser = mAuth.getCurrentUser();
 
-        productUpdateName = view.findViewById(R.id.waterUpdateName);
         productUpdatePrice = view.findViewById(R.id.waterUpdatePrice);
         productUpdateType = view.findViewById(R.id.waterUpdateSpinner);
 
@@ -82,14 +81,11 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            String itemNa = bundle.getString("ItemNamePLI");
             String itemPr = bundle.getString("ItemPricePLI");
             String itemTy = bundle.getString("ItemTypePLI");
             String itemUi = bundle.getString("ItemUidPLI");
             String itemSt = bundle.getString("ItemStatusPLI");
-            keyGet = bundle.getString("ItemKeyPLI");
 
-            productUpdateName.setText(itemNa);
             productUpdatePrice.setText(itemPr);
             for(int counter = 0; counter < productUpdateType.getAdapter().getCount(); counter++)
             {
@@ -140,34 +136,31 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
         {
             statY = "inactive";
         }
-        String prodName = productUpdateName.getText().toString();
         String prodType = productUpdateType.getSelectedItem().toString();
         String prodPrice = productUpdatePrice.getText().toString();
         String prodKey = keyGet;
 
-        if(prodName.isEmpty() && prodType.isEmpty() && prodPrice.isEmpty())
+        if(prodType.isEmpty() && prodPrice.isEmpty())
         {
             showMessage("Please fill up the requirements1");
             return;
         }
         else
         {
-            dataConnection(prodName, prodType, prodPrice, statY, prodKey);
+            dataConnection(prodType, prodPrice, statY);
         }
 
     }
 
-    private void dataConnection(String prodName, String prodType, String prodPrice, String prodStat, String prodKey) {
+    private void dataConnection(String prodType, String prodPrice, String prodStat) {
         progressDialog.show();
         UserWSWDWaterTypeFile userWSWDWaterTypeFile = new UserWSWDWaterTypeFile(
                 firebaseUser.getUid(),
-                prodKey,
-                prodName,
                 prodType,
                 prodPrice,
                 prodStat
         );
-        databaseReference.child(firebaseUser.getUid()).child(prodKey).setValue(userWSWDWaterTypeFile)
+        databaseReference.child(firebaseUser.getUid()).child(prodType).setValue(userWSWDWaterTypeFile)
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {

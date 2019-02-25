@@ -36,5 +36,6 @@
     <string name="navigation_dmdrawer_close">Close navigation drawer</string>
     <string name="title_activity_wsaccount_settings_update_doc">WSAccountSettingsUpdateDoc</string>
     <string name="title_activity_wsaccount_settings_update_acc">WSAccountSettingsUpdateAcc</string>
+    <string name="title_activity_map_direct">MapDirectionAct</string>
 
 </resources>

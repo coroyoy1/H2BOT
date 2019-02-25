@@ -18,16 +18,7 @@
             android:textSize="28dp"
             android:textStyle="bold"
             android:textColor="@android:color/black"/>
-        <EditText
-            android:id="@+id/waterUpdateName"
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/edit_text_border"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:hint="Water Name"
-            android:textAlignment="center"/>
+
         <Spinner
             android:textAlignment="center"
             android:id="@+id/waterUpdateSpinner"
@@ -48,7 +39,7 @@
                 android:layout_height="50dp"
                 android:text="₱"
                 android:layout_marginLeft="30dp"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="30sp" />
 
             <EditText
