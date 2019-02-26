@@ -48,7 +48,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
     String customerIDUser, contactNoUser;
     String orderNoGET , customerNoGET , merchantNOGET , dataIssuedGET , deliveryStatusGET , transStatusGET , transTotalAmountGET , transDeliveryFeeGET, transTotalNoGallonGET;
     CircleImageView imageView;
-    Bundle bundle;
+    Bundle args;
      public WSPendingOrderAcceptDeclineFragment() {
 
     }
@@ -87,7 +87,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
         declineButton.setOnClickListener(this);
         viewLocationButton.setOnClickListener(this);
 
-        Bundle args = this.getArguments();
+        args = this.getArguments();
         if(args != null)
         {
             transactionNo = args.getString("transactNoString");
@@ -294,9 +294,8 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                 .replace(R.id.fragment_container_ws, additem)
                 .addToBackStack(null)
                 .commit();
-        bundle = new Bundle();
-        bundle.putString("TransactNoSeen1", transactionNo);
-        additem.setArguments(bundle);
+        args.putString("TransactNoSeen1", transactionNo);
+        additem.setArguments(args);
     }
 
     @Override

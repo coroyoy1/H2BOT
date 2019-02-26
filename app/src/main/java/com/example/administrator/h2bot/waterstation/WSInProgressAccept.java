@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.h2bot.maps.MapMerchantFragmentRenew;
 import com.example.administrator.h2bot.models.CaptureActivityPortrait;
 import com.example.administrator.h2bot.R;
 import com.google.android.gms.maps.GoogleMap;
@@ -48,6 +49,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
     ProgressDialog progressDialog;
     String transactNoScan;
     GoogleMap map;
+    Bundle bundle;
 
 
     @Nullable
@@ -80,7 +82,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
 
         progressDialog.show();
 
-        Bundle bundle = this.getArguments();
+        bundle = this.getArguments();
         if (bundle != null)
         {
             transactionNo = bundle.getString("transactionno");
@@ -210,6 +212,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                                                         String imageUi = post.child("user_uri").getValue(String.class);
                                                         Picasso.get().load(imageUi).fit().centerCrop().into(imageView);
                                                         progressDialog.dismiss();
+
                                                     }
                                                 }
                                                 orderNo.setText(orderNoGET);
@@ -308,6 +311,20 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
         Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
     }
 
+    public void viewLocationPass()
+    {
+        MapMerchantFragmentRenew additem = new MapMerchantFragmentRenew();
+        AppCompatActivity activity = (AppCompatActivity)getContext();
+        activity.getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                .replace(R.id.fragment_container_ws, additem)
+                .addToBackStack(null)
+                .commit();
+        bundle.putString("TransactNoSeen1", transactionNo);
+        additem.setArguments(bundle);
+    }
+
     @Override
     public void onClick(View v) {
         switch(v.getId())
@@ -317,7 +334,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                 break;
             case R.id.viewLocationButtonINACC:
                // map.clear();
-                showMessages(transactionNo);
+                viewLocationPass();
                 break;
         }
     }
