@@ -27,7 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 public class WSProductListIntent extends Fragment implements View.OnClickListener {
-    TextView itemN, itemP, itemU;
+    TextView itemN, itemP, itemU, itemS;
     Button backBu, updateBu, deleteButton;
     String itemUi, itemNameString, itemPriceString, itemTypeString, itemStatusString, itemKeyString;
 
@@ -45,6 +45,7 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
         View view = inflater.inflate(R.layout.fragment_ws_productlistintent, container, false);
         itemP = view.findViewById(R.id.PLIprice);
         itemU = view.findViewById(R.id.PLItype);
+        itemS = view.findViewById(R.id.PLIStatus);
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
@@ -72,8 +73,9 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
             String itemSt = bundle.getString("ItemStatusMDA");
 
             itemUi = bundle.getString("ItemUidMDA");
-            itemP.setText("    Price: "+itemPr);
-            itemU.setText("     Type: "+itemTy);
+            itemP.setText("  Price: "+itemPr);
+            itemU.setText("  Type: "+itemTy);
+            itemS.setText("  Status: "+itemSt);
 
             itemPriceString = bundle.getString("ItemPriceMDA");
             itemTypeString = bundle.getString("ItemTypeMDA");

@@ -41,6 +41,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -71,7 +72,7 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
 
     private static final String API_KEY = "AIzaSyBC4uUz5QHs3X_TswSKUDWl4I98BqZ17ac";
     // User Permissions
-    private GoogleMap map;
+    private static GoogleMap map;
     private int routeColor;
     TextView stationID;
     private GoogleApiClient mGoogleApiClient;
@@ -100,6 +101,7 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
     String addresses;
     LatLng latLong = null;
     LatLng mLatLng = null;
+    PolylineOptions polylineOptions;
 
     private Map<Marker, Map<String, Object>> hashMapMarkers = new HashMap<>();
     private Map<String, Object> dataModel = new HashMap<>();
@@ -120,6 +122,8 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_map_direct, container, false);
+//        marker.remove();
+
         Bundle bundle = this.getArguments();
         if(bundle != null)
         {
@@ -168,8 +172,10 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mAuth = FirebaseAuth.getInstance();
-        firebaseUser = mAuth.getCurrentUser();
+        if(map != null)
+        {
+            map.clear();
+        }
         map = googleMap;
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             buildGoogleApiClient();
@@ -178,70 +184,6 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
         }
         float zoomLevel = 16.0f;
         map.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Transaction_Header_File").child(transactNum);
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                TransactionHeaderFileModel transactionHeaderFileModel = dataSnapshot.getValue(TransactionHeaderFileModel.class);
-                String userOrderNo = transactionHeaderFileModel.getTrans_no();
-                String userMerchantId = transactionHeaderFileModel.getMerchant_id();
-                String userCustomerId = transactionHeaderFileModel.getCustomer_id();
-
-                if(userMerchantId.equals(firebaseUser.getUid()) && userOrderNo.equals(transactNum))
-                {
-                    DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("User_File").child(userCustomerId);
-                    databaseReference1.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                            UserFile userFile = dataSnapshot.getValue(UserFile.class);
-                            String fileCustomerId = userFile.getUser_getUID();
-                            if(userCustomerId.equals(fileCustomerId))
-                            {
-                                arrayListBusinessInfo.add(transactionHeaderFileModel);
-                                arrayListUserFile.add(userFile);
-                                myAddresses = userFile.getUser_address();
-                                try {
-                                    myListAddresses = mGeocoder.getFromLocationName(myAddresses, 1);
-                                    if (myListAddresses != null) {
-                                        Address location = myListAddresses.get(0);
-                                        latLong = new LatLng(location.getLatitude(), location.getLongitude());
-                                        setgetLAT setHere = new setgetLAT();
-                                        LatLng staticLat = setHere.getSetgetLATData();
-                                        String addressString = userFile.getUser_address();
-                                        String fullnameString = userFile.getUser_lastname() + ", " + userFile.getUser_firtname();
-                                        MarkerOptions mvMarkerOption = new MarkerOptions();
-                                        mvMarkerOption.position(latLong);
-                                        mvMarkerOption.snippet("Customer Name: " + fullnameString + "\n" + "Address: " + addressString);
-                                        mvMarkerOption.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                                        map.addMarker(mvMarkerOption).showInfoWindow();
-                                    }
-
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
-
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-
         map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker marker) {
@@ -313,7 +255,7 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
         @Override
         protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
             ArrayList points = null;
-            PolylineOptions polylineOptions = null;
+            polylineOptions = null;
             for(List<HashMap<String, String>>path:lists)
             {
                 points = new ArrayList();
@@ -344,6 +286,8 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
 
     @Override
     public void onLocationChanged(Location location) {
+        mAuth = FirebaseAuth.getInstance();
+        firebaseUser = mAuth.getCurrentUser();
         mLastLocation = location;
         if(mCurrentLocationMarker != null){
             mCurrentLocationMarker.remove();
@@ -356,6 +300,72 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
         mMarkerOption.title("You");
         mMarkerOption.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Transaction_Header_File").child(transactNum);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                TransactionHeaderFileModel transactionHeaderFileModel = dataSnapshot.getValue(TransactionHeaderFileModel.class);
+                String userOrderNo = transactionHeaderFileModel.getTrans_no();
+                String userMerchantId = transactionHeaderFileModel.getMerchant_id();
+                String userCustomerId = transactionHeaderFileModel.getCustomer_id();
+
+                if(userMerchantId.equals(firebaseUser.getUid()) && userOrderNo.equals(transactNum))
+                {
+                    DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("User_File").child(userCustomerId);
+                    databaseReference1.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            UserFile userFile = dataSnapshot.getValue(UserFile.class);
+                            String fileCustomerId = userFile.getUser_getUID();
+                            if(userCustomerId.equals(fileCustomerId))
+                            {
+                                arrayListBusinessInfo.add(transactionHeaderFileModel);
+                                arrayListUserFile.add(userFile);
+                                myAddresses = userFile.getUser_address();
+                                try {
+                                    myListAddresses = mGeocoder.getFromLocationName(myAddresses, 1);
+                                    if (myListAddresses != null) {
+                                        Address location = myListAddresses.get(0);
+                                        latLong = new LatLng(location.getLatitude(), location.getLongitude());
+                                        setgetLAT setHere = new setgetLAT();
+                                        LatLng staticLat = setHere.getSetgetLATData();
+                                        String addressString = userFile.getUser_address();
+                                        String fullnameString = userFile.getUser_lastname() + ", " + userFile.getUser_firtname();
+                                        MarkerOptions mvMarkerOption = new MarkerOptions();
+                                        mvMarkerOption.position(latLong);
+                                        mvMarkerOption.snippet("Customer Name: " + fullnameString + "\n" + "Address: " + addressString);
+                                        mvMarkerOption.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                                        map.addMarker(mvMarkerOption).showInfoWindow();
+                                        if(mLatLng != null && latLong != null) {
+                                            TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+                                            taskRequestDirections.execute(getRequestURL(mLatLng, latLong));
+                                        }
+                                    }
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         mCurrentLocationMarker = map.addMarker(mMarkerOption);
         map.addMarker(mMarkerOption).showInfoWindow();
         float zoomLevel = 16.0f;
@@ -364,9 +374,6 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
         if(mGoogleApiClient != null){
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
-        String urlString = getRequestURL(mLatLng, latLong);
-        TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
-        taskRequestDirections.execute(urlString);
     }
 
     public class setgetLAT

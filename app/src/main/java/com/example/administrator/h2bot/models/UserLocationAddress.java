@@ -4,14 +4,16 @@ import com.google.type.LatLng;
 
 public class UserLocationAddress {
     private String user_id;
-    private String user_geocode_location_address;
+    private String user_latitude;
+    private String user_longtitude;
 
-    public UserLocationAddress(String user_id, String user_geocode_location_address) {
-        this.user_id = user_id;
-        this.user_geocode_location_address = user_geocode_location_address;
+    public UserLocationAddress() {
     }
 
-    public UserLocationAddress(String uidString, com.google.android.gms.maps.model.LatLng locationFromAddress) {
+    public UserLocationAddress(String user_id, String user_latitude, String user_longtitude) {
+        this.user_id = user_id;
+        this.user_latitude = user_latitude;
+        this.user_longtitude = user_longtitude;
     }
 
     public String getUser_id() {
@@ -22,11 +24,19 @@ public class UserLocationAddress {
         this.user_id = user_id;
     }
 
-    public String getUser_geocode_location_address() {
-        return user_geocode_location_address;
+    public String getUser_latitude() {
+        return user_latitude;
     }
 
-    public void setUser_geocode_location_address(String user_geocode_location_address) {
-        this.user_geocode_location_address = user_geocode_location_address;
+    public void setUser_latitude(String user_latitude) {
+        this.user_latitude = user_latitude;
+    }
+
+    public String getUser_longtitude() {
+        return user_longtitude;
+    }
+
+    public void setUser_longtitude(String user_longtitude) {
+        this.user_longtitude = user_longtitude;
     }
 }

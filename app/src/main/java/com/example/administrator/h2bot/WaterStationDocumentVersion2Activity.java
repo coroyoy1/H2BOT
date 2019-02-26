@@ -28,8 +28,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+
+import io.grpc.Context;
 
 public class WaterStationDocumentVersion2Activity extends AppCompatActivity implements View.OnClickListener{
 
@@ -51,6 +54,10 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
     String radioCheck = "";
     String businessFreeOrNoText = "";
     String businessDeliveryService = "";
+    Uri imageForStationUri;
+    boolean isClick0;
+    ImageView imageStation;
+    Button addPhotoStation;
 
 
     @Override
@@ -72,6 +79,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         image4 = (ImageView)findViewById(R.id.permit4);
         image5 = (ImageView)findViewById(R.id.permit5);
         image6 = (ImageView)findViewById(R.id.permit6);
+        imageStation = findViewById(R.id.stationImageSR);
 
         button1 = (Button)findViewById(R.id.permitButton1);
         button2 = (Button)findViewById(R.id.permitButton2);
@@ -80,6 +88,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         button5 = (Button)findViewById(R.id.permitButton5);
         button6 = (Button)findViewById(R.id.permitButton6);
         submitToFirebase = (Button)findViewById(R.id.submitButton);
+        addPhotoStation = findViewById(R.id.stationPhotoUri);
 
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
@@ -87,8 +96,9 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         button4.setOnClickListener(this);
         button5.setOnClickListener(this);
         button6.setOnClickListener(this);
-        buttonlogout.setOnClickListener(this);
+//        buttonlogout.setOnClickListener(this);
         submitToFirebase.setOnClickListener(this);
+        addPhotoStation.setOnClickListener(this);
 
 
         //Edittext
@@ -148,7 +158,11 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         {
             if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
-                uri1 = data.getData();uri2 = data.getData();uri3 = data.getData();uri4 = data.getData();uri5 = data.getData();uri6 = data.getData();
+                imageForStationUri = data.getData(); uri1 = data.getData();uri2 = data.getData();uri3 = data.getData();uri4 = data.getData();uri5 = data.getData();uri6 = data.getData();
+                if(isClick0)
+                {
+                    Picasso.get().load(imageForStationUri).into(imageStation);
+                }
                 if(isClick1)
                 {
                     try {
@@ -367,25 +381,44 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                     FirebaseDatabase.getInstance().getReference("User_WS_Docs_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("station_status").setValue("inactive");
                                 }
                             });
-                            UserWSBusinessInfoFile userWSBusinessInfoFile = new UserWSBusinessInfoFile(currentUser, businessNameTextGET, businessStartTimeTextGET, businessEndTimeTextGET, businessDeliveryService, businessFreeOrNoText, businessDeliveryFeePerGalTextGet, businessMinNoCapacityTextGET, businessTelNoTextGET, businessAddressTextGEET, "active");
-                            FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(currentUser).setValue(userWSBusinessInfoFile)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        showMessages("Successfully Submitted");
-                                        progressDialog.dismiss();
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        progressDialog.dismiss();
-                                        showMessages("Failed to submit");
-                                    }
-                                });
-                            progressDialog.dismiss();
-                            Toast.makeText(WaterStationDocumentVersion2Activity.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                            passToNextAct();
+                            StorageReference referenceImage = FirebaseStorage.getInstance().getReference("user_station_photo_display").child(currentUser+"/"+"stationImage");
+                            referenceImage.putFile(imageForStationUri)
+                                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                            Task<Uri> imageResult = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                                            imageResult.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                @Override
+                                                public void onSuccess(Uri uri) {
+                                                    String imageStationUri = uri.toString();
+                                                    UserWSBusinessInfoFile userWSBusinessInfoFile = new UserWSBusinessInfoFile(currentUser, businessNameTextGET, businessStartTimeTextGET, businessEndTimeTextGET, businessDeliveryService, businessFreeOrNoText, businessDeliveryFeePerGalTextGet, businessMinNoCapacityTextGET, businessTelNoTextGET, businessAddressTextGEET, "active", imageStationUri);
+                                                    FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(currentUser).setValue(userWSBusinessInfoFile)
+                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    showMessages("Successfully Submitted");
+                                                                    progressDialog.dismiss();
+                                                                    Toast.makeText(WaterStationDocumentVersion2Activity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                                                                    passToNextAct();
+                                                                }
+                                                            })
+                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    progressDialog.dismiss();
+                                                                    showMessages("Failed to submit");
+                                                                }
+                                                            });
+                                                }
+                                            });
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            showMessages("Image of station does not save");
+                                        }
+                                    });
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -424,31 +457,42 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         {
             case R.id.permitButton1:
                 isClick1=true;isClick2=false;isClick3=false;isClick4=false;isClick5=false;isClick6=false;
+                isClick0=false;
                 openGallery();
                 break;
             case R.id.permitButton2:
                 isClick2=true;isClick1=false;isClick3=false;isClick4=false;isClick5=false;isClick6=false;
+                isClick0=false;
                 openGallery();
                 break;
             case R.id.permitButton3:
                 isClick3=true;isClick2=false;isClick1=false;isClick4=false;isClick5=false;isClick6=false;
+                isClick0=false;
                 openGallery();
                 break;
             case R.id.permitButton4:
                 isClick4=true;isClick2=false;isClick3=false;isClick1=false;isClick5=false;isClick6=false;
+                isClick0=false;
                 openGallery();
                 break;
             case R.id.permitButton5:
                 isClick5=true;isClick2=false;isClick3=false;isClick4=false;isClick1=false;isClick6=false;
+                isClick0=false;
                 openGallery();
                 break;
             case R.id.permitButton6:
                 isClick6=true;isClick2=false;isClick3=false;isClick4=false;isClick5=false;isClick1=false;
+                isClick0=false;
                 openGallery();
                 break;
             case R.id.submitButton:
                 checkingAddPhoto();
                 stringData();
+                break;
+            case R.id.stationPhotoUri:
+                isClick6=false;isClick2=false;isClick3=false;isClick4=false;isClick5=false;isClick1=false;
+                isClick0=true;
+                openGallery();
                 break;
             default:
                 Toast.makeText(WaterStationDocumentVersion2Activity.this, "There is not such thing on app", Toast.LENGTH_SHORT).show();
@@ -484,7 +528,11 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         {
             if(uri1 == null && uri2 == null && uri3 == null && uri4 == null && uri5 == null && uri6 == null)
             {
-                showMessages("");
+                showMessages("Images does not put");
+            }
+            else if(imageForStationUri != null)
+            {
+                showMessages("Station Photo should be display");
             }
             else
             {

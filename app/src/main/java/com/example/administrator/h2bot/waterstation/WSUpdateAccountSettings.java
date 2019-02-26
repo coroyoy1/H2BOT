@@ -2,6 +2,8 @@ package com.example.administrator.h2bot.waterstation;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.UserAccountFile;
 import com.example.administrator.h2bot.models.UserFile;
+import com.example.administrator.h2bot.models.UserLocationAddress;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -33,6 +36,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
@@ -47,6 +54,9 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
     ProgressDialog progressDialog;
 
     Uri uri;
+    double lat;
+    double lng;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -130,6 +140,52 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
         }
     }
 
+    private void getLocationSetter()
+    {
+        Geocoder coder = new Geocoder(getActivity(), Locale.getDefault());
+        List<Address> address;
+        Address LocationAddress = null;
+        String locateAddress = addressWU.getText().toString();
+
+        try {
+            address = coder.getFromLocationName(locateAddress, 5);
+
+            LocationAddress = address.get(0);
+
+            lat = LocationAddress.getLatitude();
+            lng = LocationAddress.getLongitude();
+
+            String getLocateLatitude = String.valueOf(lat);
+            String getLocateLongtitude = String.valueOf(lng);
+
+            UserLocationAddress userLocationAddress = new UserLocationAddress(FirebaseAuth.getInstance().getCurrentUser().getUid(), getLocateLatitude, getLocateLongtitude);
+            DatabaseReference locationRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
+            locationRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userLocationAddress)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            successMessages();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            showMessage("Error to get location");
+                            progressDialog.dismiss();
+                        }
+                    });
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+        }
+    }
+
+    private void showMessage(String s) {
+        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+    }
+
+
 
 
     private void thisGetUpdateData(String firstNameString, String lastNameString, String addressString, String contactNoString, String emailAddressString, String passwordString, String confirmPasswordString) {
@@ -138,7 +194,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        firebaseUser.updatePassword(passwordString)
+                        firebaseUser.updatePassword(confirmPasswordWU.getText().toString())
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -178,13 +234,14 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                                             @Override
                                                                                             public void onSuccess(Void aVoid) {
-                                                                                                successMessages();
+                                                                                                getLocationSetter();
                                                                                             }
                                                                                         })
                                                                                         .addOnFailureListener(new OnFailureListener() {
                                                                                             @Override
                                                                                             public void onFailure(@NonNull Exception e) {
                                                                                                 showMessages("User Account does not successfully save");
+                                                                                                progressDialog.dismiss();
                                                                                             }
                                                                                         });
 
@@ -194,6 +251,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                             @Override
                                                                             public void onFailure(@NonNull Exception e) {
                                                                                 showMessages("Data does not saved");
+                                                                                progressDialog.dismiss();
                                                                             }
                                                                         });
                                                             }
@@ -202,6 +260,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                     @Override
                                                                     public void onFailure(@NonNull Exception e) {
                                                                         showMessages("Image is not selected!");
+                                                                        progressDialog.dismiss();
                                                                     }
                                                                 });
                                                     }
@@ -209,7 +268,8 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                 .addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
-
+                                                        showMessages("image error");
+                                                        progressDialog.dismiss();
                                                     }
                                                 });
                                     }
@@ -217,7 +277,8 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-
+                                        showMessages("password error");
+                                        progressDialog.dismiss();
                                     }
                                 });
                     }
@@ -226,6 +287,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         showMessages("Fail to update the information");
+                        progressDialog.dismiss();
                     }
                 });
     }

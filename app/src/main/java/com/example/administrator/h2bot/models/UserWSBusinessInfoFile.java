@@ -12,6 +12,7 @@ public class UserWSBusinessInfoFile {
     private String business_tel_no;
     private String business_address;
     private String business_status;
+    private String business_station_photo;
 
     public UserWSBusinessInfoFile()
     {
@@ -27,9 +28,9 @@ public class UserWSBusinessInfoFile {
             String business_delivery_fee_per_gal,
             String business_min_no_of_capacity,
             String business_tel_no,
-             String business_address,
-             String business_status
-    )
+            String business_address,
+            String business_status,
+            String business_station_photo)
     {
         this.business_id =business_id;
         this.business_name = business_name;
@@ -42,6 +43,15 @@ public class UserWSBusinessInfoFile {
         this.business_tel_no = business_tel_no;
         this.business_address = business_address;
         this.business_status = business_status;
+        this.business_station_photo = business_station_photo;
+    }
+
+    public String getBusiness_station_photo() {
+        return business_station_photo;
+    }
+
+    public void setBusiness_station_photo(String business_station_photo) {
+        this.business_station_photo = business_station_photo;
     }
 
     public String getBusiness_address() {

@@ -16,11 +16,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 import com.example.administrator.h2bot.maps.MapMerchantFragmentRenew;
 import com.example.administrator.h2bot.models.CaptureActivityPortrait;
 import com.example.administrator.h2bot.R;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -48,7 +52,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
     CircleImageView imageView;
     ProgressDialog progressDialog;
     String transactNoScan;
-    GoogleMap map;
+    private static GoogleMap googleMap;
     Bundle bundle;
 
 
@@ -333,7 +337,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                 viewLocationMeth();
                 break;
             case R.id.viewLocationButtonINACC:
-               // map.clear();
+                //googleMap.clear();
                 viewLocationPass();
                 break;
         }

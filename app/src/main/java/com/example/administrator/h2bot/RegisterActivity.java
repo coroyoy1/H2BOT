@@ -4,9 +4,12 @@ import com.example.administrator.h2bot.customer.CustomerMainActivity;
 import com.example.administrator.h2bot.deliveryman.DeliveryManDocumentActivity;
 import com.example.administrator.h2bot.deliveryman.DeliveryManMainActivity;
 import com.example.administrator.h2bot.models.*;
+
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Address;
@@ -15,8 +18,10 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -43,6 +48,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.List;
@@ -52,6 +58,9 @@ public class RegisterActivity extends AppCompatActivity{
     private static final int PICK_IMAGE_REQUEST = 1;
     Button addPhoto, signUp;
     ImageView imageView;
+
+    double lat;
+    double lng;
 
 
     static int PReqCode = 1;
@@ -67,6 +76,7 @@ public class RegisterActivity extends AppCompatActivity{
 
 
     private FirebaseAuth mAuth;
+    private String addressLocate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,12 +89,12 @@ public class RegisterActivity extends AppCompatActivity{
         headerTitle.setText(s);
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        firstNameRegister = (EditText) findViewById(R.id.RegisterFullName);
-        lastNameRegister = (EditText) findViewById(R.id.RegisterLastName);
-        addressRegister = (EditText) findViewById(R.id.RegisterAddress);
-        contactRegister = (EditText) findViewById(R.id.RegisterContact);
+        firstNameRegister = findViewById(R.id.RegisterFullName);
+        lastNameRegister = findViewById(R.id.RegisterLastName);
+        addressRegister = findViewById(R.id.RegisterAddress);
+        contactRegister = findViewById(R.id.RegisterContact);
         emailRegister = (EditText) findViewById(R.id.RegisterEmailAddress);
-        passwordRegister = (EditText) findViewById(R.id.RegisterPassword);
+        passwordRegister = findViewById(R.id.RegisterPassword);
 
 
         progressDialog = new ProgressDialog(RegisterActivity.this);
@@ -122,41 +132,68 @@ public class RegisterActivity extends AppCompatActivity{
                 String emailAddressString = emailRegister.getText().toString();
                 String passwordString = passwordRegister.getText().toString();
 
-                if(passwordString.isEmpty() || firstNameString.isEmpty() || lastNameString.isEmpty() || addressString.isEmpty() || contactNoString.isEmpty() || emailAddressString.isEmpty() || imageView.getDrawable() == null)
+                if(passwordString.isEmpty() && firstNameString.isEmpty() && lastNameString.isEmpty() && addressString.isEmpty() && contactNoString.isEmpty() && emailAddressString.isEmpty() && imageView.getDrawable() == null)
                 {
                     showMessage("Some fields are missing");
                     progressDialog.dismiss();
                 }
+                else if(imageView.getDrawable() == null)
+                {
+                    showMessage("Photo is not yet set!");
+                    progressDialog.dismiss();
+                }
                 else
                 {
-                    CreateAccount();
+                    CreateAccount(emailAddressString, passwordString);
                 }
             }
         });
     }
 
-    public LatLng getLocationFromAddress(String strAddress) {
-
+    private void getLocationSetter()
+    {
         Geocoder coder = new Geocoder(this);
         List<Address> address;
-        LatLng locatorAddress = null;
+        Address LocationAddress = null;
+        String locateAddress = addressRegister.getText().toString();
 
         try {
-            // May throw an IOException
-            address = coder.getFromLocationName(strAddress, 5);
-            if (address == null) {
-                return null;
-            }
+            address = coder.getFromLocationName(locateAddress, 5);
 
-            Address location = address.get(0);
-            locatorAddress = new LatLng(location.getLatitude(), location.getLongitude());
+            LocationAddress = address.get(0);
+
+            lat = LocationAddress.getLatitude();
+            lng = LocationAddress.getLongitude();
+
+            String getLocateLatitude = String.valueOf(lat);
+            String getLocateLongtitude = String.valueOf(lng);
+
+            UserLocationAddress userLocationAddress = new UserLocationAddress(FirebaseAuth.getInstance().getCurrentUser().getUid(), getLocateLatitude, getLocateLongtitude);
+            DatabaseReference locationRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
+            locationRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userLocationAddress)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            showMessage("Successfully Registered");
+                            progressDialog.dismiss();
+                            passToNextActivity();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            showMessage("Error to get location");
+                            progressDialog.dismiss();
+                        }
+                    });
 
         } catch (IOException ex) {
 
             ex.printStackTrace();
         }
-
-        return locatorAddress;
+        finally {
+            showMessage("Error the locate your address, please change again");
+        }
     }
 
     @Override
@@ -177,12 +214,7 @@ public class RegisterActivity extends AppCompatActivity{
                 uri = data.getData();
 
                 if(clickable) {
-                    try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                        imageView.setImageBitmap(bitmap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    Picasso.get().load(uri).into(imageView);
                 }
             }
         }
@@ -194,80 +226,76 @@ public class RegisterActivity extends AppCompatActivity{
     }
 
 
-    private void CreateAccount()
+    private void CreateAccount(String emailString, String passwordString)
     {
-        mAuth.createUserWithEmailAndPassword(emailRegister.getText().toString(), passwordRegister.getText().toString())
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful())
-                        {
-                            String userType = headerTitle.getText().toString();
-                            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                            String uidString = firebaseUser.getUid();
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        mAuth.createUserWithEmailAndPassword(emailString, passwordString)
+                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if(task.isSuccessful())
+                                        {
+                                            String userType = headerTitle.getText().toString();
+                                            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                                            String uidString = firebaseUser.getUid();
 
-                            StorageReference mStorage = FirebaseStorage.getInstance().getReference("users_photos").child(uidString);
-                            mStorage.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-                                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                        @Override
-                                        public void onSuccess(Uri uri) {
-                                            String stringUri = uri.toString();
-                                            UserFile userFile;
-                                            if(userType.equals("Customer"))
-                                            {
-                                                userFile = new UserFile(uidString,
-                                                        stringUri,
-                                                        firstNameRegister.getText().toString(),
-                                                        lastNameRegister.getText().toString(),
-                                                        addressRegister.getText().toString(),
-                                                        contactRegister.getText().toString(),
-                                                        userType,
-                                                        "active");
-                                            }
-                                            else
-                                            {
-                                                userFile = new UserFile(uidString,
-                                                        stringUri,
-                                                        firstNameRegister.getText().toString(),
-                                                        lastNameRegister.getText().toString(),
-                                                        addressRegister.getText().toString(),
-                                                        contactRegister.getText().toString(),
-                                                        userType,
-                                                        "inactive");
-                                            }
-                                            UserAccountFile userAccountFile = new UserAccountFile(uidString,
-                                                    emailRegister.getText().toString(),
-                                                    passwordRegister.getText().toString(),
-                                                    "active");
-                                            FirebaseDatabase.getInstance().getReference("User_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userFile)
-                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            StorageReference mStorage = FirebaseStorage.getInstance().getReference("users_photos").child(uidString);
+                                            mStorage.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                @Override
+                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                    Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                                                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                         @Override
-                                                        public void onSuccess(Void aVoid) {
-                                                            progressDialog.dismiss();
-                                                            FirebaseDatabase.getInstance().getReference("User_Account_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userAccountFile)
+                                                        public void onSuccess(Uri uri) {
+                                                            String stringUri = uri.toString();
+                                                            UserFile userFile;
+                                                            if(userType.equals("Customer"))
+                                                            {
+                                                                userFile = new UserFile(uidString,
+                                                                        stringUri,
+                                                                        firstNameRegister.getText().toString(),
+                                                                        lastNameRegister.getText().toString(),
+                                                                        addressRegister.getText().toString(),
+                                                                        contactRegister.getText().toString(),
+                                                                        userType,
+                                                                        "active");
+                                                            }
+                                                            else
+                                                            {
+                                                                userFile = new UserFile(uidString,
+                                                                        stringUri,
+                                                                        firstNameRegister.getText().toString(),
+                                                                        lastNameRegister.getText().toString(),
+                                                                        addressRegister.getText().toString(),
+                                                                        contactRegister.getText().toString(),
+                                                                        userType,
+                                                                        "inactive");
+                                                            }
+                                                            UserAccountFile userAccountFile = new UserAccountFile(uidString,
+                                                                    emailRegister.getText().toString(),
+                                                                    passwordRegister.getText().toString(),
+                                                                    "active");
+                                                            FirebaseDatabase.getInstance().getReference("User_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userFile)
                                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                         @Override
                                                                         public void onSuccess(Void aVoid) {
-                                                                            String locateAddress = addressRegister.getText().toString();
-                                                                            String locateLatLong = getLocationFromAddress(locateAddress).toString();
-                                                                            UserLocationAddress userLocationAddress = new UserLocationAddress(uidString, locateLatLong);
-                                                                            DatabaseReference locationRef = FirebaseDatabase.getInstance().getReference("User_Location_Address");
-                                                                            locationRef.child(uidString).setValue(userLocationAddress)
+                                                                            progressDialog.dismiss();
+                                                                            FirebaseDatabase.getInstance().getReference("User_Account_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userAccountFile)
                                                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                                         @Override
                                                                                         public void onSuccess(Void aVoid) {
-                                                                                            showMessage("Successfully Registered");
-                                                                                            progressDialog.dismiss();
-                                                                                            //passToNextActivity();
+                                                                                            getLocationSetter();
                                                                                         }
                                                                                     })
                                                                                     .addOnFailureListener(new OnFailureListener() {
                                                                                         @Override
                                                                                         public void onFailure(@NonNull Exception e) {
-                                                                                            showMessage("Error to get location");
+                                                                                            progressDialog.dismiss();
+                                                                                            showMessage("Error, Connection Error");
                                                                                             progressDialog.dismiss();
                                                                                         }
                                                                                     });
@@ -278,139 +306,45 @@ public class RegisterActivity extends AppCompatActivity{
                                                                         public void onFailure(@NonNull Exception e) {
                                                                             progressDialog.dismiss();
                                                                             showMessage("Error, Connection Error");
-                                                                            progressDialog.dismiss();
                                                                         }
                                                                     });
-                                                        }
-                                                    })
-                                                    .addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            progressDialog.dismiss();
-                                                            showMessage("Error, Connection Error");
+                                                            // mAuth.signOut();
                                                         }
                                                     });
-                                            // mAuth.signOut();
+                                                }
+                                            });
                                         }
-                                    });
-                                }
-                            });
-                        }
-                        else
-                        {
-                            showMessage("Error to save data");
-                            progressDialog.dismiss();
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        showMessage("Error to save");
-                        progressDialog.dismiss();
-                    }
-                });
+                                        else
+                                        {
+                                            showMessage("Error to save data");
+                                            progressDialog.dismiss();
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        showMessage("Error to save");
+                                        progressDialog.dismiss();
+                                    }
+                                });
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure of your email, password, and full address? If YES? Press Yes").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
     }
-
-//    private void CreateAccount()
-//    {
-//        mAuth.createUserWithEmailAndPassword(emailRegister.getText().toString(), passwordRegister.getText().toString())
-//                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-//                    @Override
-//                    public void onSuccess(AuthResult authResult) {
-//                        String userType = headerTitle.getText().toString();
-//                        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-//                        String uidString = firebaseUser.getUid();
-//
-//                        StorageReference mStorage = FirebaseStorage.getInstance().getReference("users_photos").child(uidString);
-//                        mStorage.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                            @Override
-//                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                                Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-//                                result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                                    @Override
-//                                    public void onSuccess(Uri uri) {
-//                                        String stringUri = uri.toString();
-//                                        UserFile userFile;
-//                                        if(userType.equals("Customer"))
-//                                        {
-//                                             userFile = new UserFile(uidString,
-//                                                     stringUri,
-//                                                     firstNameRegister.getText().toString(),
-//                                                     lastNameRegister.getText().toString(),
-//                                                     addressRegister.getText().toString(),
-//                                                     contactRegister.getText().toString(),
-//                                                     userType,
-//                                                     "active");
-//                                        }
-//                                        else
-//                                        {
-//                                             userFile = new UserFile(uidString,
-//                                                     stringUri,
-//                                                     firstNameRegister.getText().toString(),
-//                                                     lastNameRegister.getText().toString(),
-//                                                     addressRegister.getText().toString(),
-//                                                     contactRegister.getText().toString(),
-//                                                     userType,
-//                                                     "inactive");
-//                                        }
-//                                        UserAccountFile userAccountFile = new UserAccountFile(uidString,
-//                                                emailRegister.getText().toString(),
-//                                                passwordRegister.getText().toString(),
-//                                                "active");
-//                                        FirebaseDatabase.getInstance().getReference("User_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userFile)
-//                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                                    @Override
-//                                                    public void onSuccess(Void aVoid) {
-//                                                        progressDialog.dismiss();
-//                                                        showMessage("Successfully Registered");
-//                                                        FirebaseDatabase.getInstance().getReference("User_Account_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userAccountFile)
-//                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                                                    @Override
-//                                                                    public void onSuccess(Void aVoid) {
-//                                                                        progressDialog.dismiss();
-//                                                                        showMessage("Successfully registered");
-//                                                                        passToNextActivity();
-//                                                                    }
-//                                                                })
-//                                                                .addOnFailureListener(new OnFailureListener() {
-//                                                                    @Override
-//                                                                    public void onFailure(@NonNull Exception e) {
-//                                                                        progressDialog.dismiss();
-//                                                                        showMessage("Error, Connection Error");
-//                                                                    }
-//                                                                });
-//                                                    }
-//                                                })
-//                                                .addOnFailureListener(new OnFailureListener() {
-//                                                    @Override
-//                                                    public void onFailure(@NonNull Exception e) {
-//                                                        progressDialog.dismiss();
-//                                                        showMessage("Error, Connection Error");
-//                                                    }
-//                                                });
-//                                               // mAuth.signOut();
-//                                    }
-//                                });
-//                            }
-//                        });
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        progressDialog.dismiss();
-//                        showMessage("Please connect to Internet Connection");
-//                    }
-//                });
-//    }
-
 
     private void passToNextActivity()
     {
         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intent);
-        onResume();
     }
 
     private void showMessage(String s) {

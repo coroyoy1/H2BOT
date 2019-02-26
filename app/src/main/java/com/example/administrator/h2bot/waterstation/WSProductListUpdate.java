@@ -106,23 +106,8 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
                 invalid.setChecked(true);
                 statusGet = "inactive";
             }
-//            if(valid.isChecked())
-//            {
-//                statusGet = "active";
-//                statusItem(statusGet);
-//            }
-//            else if(invalid.isChecked())
-//            {
-//                statusGet = "inactive";
-//                statusItem(statusGet);
-//            }
         }
         return view;
-    }
-
-    public String statusItem(String statusI)
-    {
-        return statusI;
     }
 
     public void updateData()
@@ -138,7 +123,6 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
         }
         String prodType = productUpdateType.getSelectedItem().toString();
         String prodPrice = productUpdatePrice.getText().toString();
-        String prodKey = keyGet;
 
         if(prodType.isEmpty() && prodPrice.isEmpty())
         {

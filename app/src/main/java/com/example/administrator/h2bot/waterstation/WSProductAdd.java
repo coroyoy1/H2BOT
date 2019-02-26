@@ -24,6 +24,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Objects;
+
 public class WSProductAdd extends Fragment implements View.OnClickListener {
 
     EditText waterProductName, waterProductPrice;
@@ -41,6 +43,8 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ws_product_add, container, false);
+
+        Objects.requireNonNull(getActivity()).onBackPressed();
 
         waterProductPrice = view.findViewById(R.id.waterPrice);
         waterProductType = view.findViewById(R.id.waterSpinner);

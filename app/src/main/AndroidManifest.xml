@@ -88,7 +88,8 @@
         <activity android:name=".MapMerchantActivity" />
         <activity android:name=".ProductListMain1Activity" />
         <activity android:name=".TransactionsWSAndWDMain2Activity" />
-        <activity android:name=".WaterStationDocumentVersion2Activity" />
+        <activity android:name=".WaterStationDocumentVersion2Activity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -125,7 +126,8 @@
         <activity
             android:name=".deliveryman.DeliveryManMainActivity"
             android:theme="@style/Theme.Design.Light" />
-        <activity android:name=".MerchantAccessVerification" />
+        <activity android:name=".MerchantAccessVerification"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".models.CaptureActivityPortrait"
             android:screenOrientation="portrait"
