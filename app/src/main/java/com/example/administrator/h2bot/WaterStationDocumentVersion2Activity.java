@@ -397,6 +397,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                                                 @Override
                                                                 public void onComplete(@NonNull Task<Void> task) {
                                                                     showMessages("Successfully Submitted");
+
                                                                     progressDialog.dismiss();
                                                                     Toast.makeText(WaterStationDocumentVersion2Activity.this, "Uploaded", Toast.LENGTH_SHORT).show();
                                                                     passToNextAct();
