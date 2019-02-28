@@ -19,7 +19,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
                 android:layout_marginRight="50dp"
-                android:background="@drawable/z_linearlayoutdesign"
                 android:orientation="vertical">
 
                 <TextView
