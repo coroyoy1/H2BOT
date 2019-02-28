@@ -174,7 +174,7 @@ public class RegisterActivity extends AppCompatActivity{
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            showMessage("Successfully Registered");
+                            showMessage("Successfully registered");
                             progressDialog.dismiss();
                             passToNextActivity();
                         }
@@ -188,7 +188,6 @@ public class RegisterActivity extends AppCompatActivity{
                     });
 
         } catch (IOException ex) {
-
             ex.printStackTrace();
         }
         finally {

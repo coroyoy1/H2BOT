@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import static  com.example.administrator.h2bot.customer.CustomerMapFragment.EXTRA_stationID;
+import static com.example.administrator.h2bot.customer.CustomerMapFragment.EXTRA_stationName;
 
 public class CustomerChatbotActivity extends AppCompatActivity {
     private static final String TAG = CustomerChatbotActivity.class.getSimpleName();
@@ -49,31 +50,30 @@ public class CustomerChatbotActivity extends AppCompatActivity {
     private String uuid = UUID.randomUUID().toString();
     private LinearLayout chatLayout;
     private EditText queryEditText;
+    private ImageView sendBtn;
 
     // Java V2
     private SessionsClient sessionsClient;
     private SessionName session;
     FirebaseDatabase db = FirebaseDatabase.getInstance();
     FirebaseAuth myAuth;
-    public String customerName;
+    TextView stationNameTv;
     ArrayList<UserFile> userFile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.customer_activity_chatbot);
-//        Bundle bundle = this.getArguments();
-//        if (bundle != null) {
-//            transaction = bundle.getString("transactionno");
-//            customerName = bundle.getString("customername");
-//
-//        }
 
+        Intent intent = getIntent();
+        String stationName = intent.getStringExtra(EXTRA_stationName);
+        stationNameTv = findViewById(R.id.stationNameTv);
+        stationNameTv.setText(stationName + "'s Assistant");
 
         final ScrollView scrollview = findViewById(R.id.chatScrollView);
         scrollview.post(() -> scrollview.fullScroll(ScrollView.FOCUS_DOWN));
 
         chatLayout = findViewById(R.id.chatLayout);
-        ImageView sendBtn = findViewById(R.id.sendBtn);
+        sendBtn = findViewById(R.id.sendBtn);
         sendBtn.setOnClickListener(this::sendMessage);
         myAuth = FirebaseAuth.getInstance();
         userFile = new ArrayList<>();
@@ -165,6 +165,14 @@ public class CustomerChatbotActivity extends AppCompatActivity {
             // process aiResponse here
             String botReply = detectIntentResponse.getQueryResult().getFulfillmentText();
             Log.d(TAG, "V2 Bot Reply: " + botReply);
+            if(botReply.equalsIgnoreCase("Sorry, the products of this station has not been setup. Please order again later. Have a nice day ahead!")){
+                queryEditText.setText("You can't reply on this conversation.");
+                queryEditText.setEnabled(false);
+                sendBtn.setEnabled(false);
+            }
+            if(botReply.equalsIgnoreCase("Okay. See you soon!")){
+                startActivity(new Intent(this, CustomerMainActivity.class));
+            }
             showTextView(botReply, BOT);
         } else {
             Log.d(TAG, "Bot Reply: Null");
@@ -177,7 +185,7 @@ public class CustomerChatbotActivity extends AppCompatActivity {
         FirebaseUser get_UId = myAuth.getCurrentUser();
         String get_id = get_UId.getUid();
         Intent intent = getIntent();
-        String stationID = intent.getStringExtra(EXTRA_stationID);
+        String stationId = intent.getStringExtra(EXTRA_stationID);
 
         userFileRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -186,9 +194,9 @@ public class CustomerChatbotActivity extends AppCompatActivity {
                     UserFile user = data.getValue(UserFile.class);
                     if(user.getUser_getUID().equals(get_id)){
                         userFile.add(user);
-                        customerName = user.getUser_firtname();
-                        Toast.makeText(CustomerChatbotActivity.this, "Name: " + stationID, Toast.LENGTH_SHORT).show();
-                        String msg = "I am " + customerName + " and the station id is " + stationID;
+                        String customerId = user.getUser_getUID();
+                        Toast.makeText(CustomerChatbotActivity.this, "Station ID: " + stationId, Toast.LENGTH_SHORT).show();
+                        String msg = stationId + " " + customerId;
                         QueryInput queryInput = QueryInput.newBuilder().setText(TextInput.newBuilder().setText(msg).setLanguageCode("en-US")).build();
                         new RequestJavaV2Task(CustomerChatbotActivity.this, session, sessionsClient, queryInput).execute();
                     }

@@ -125,6 +125,15 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!(LoginActivity.this).isFinishing())
+        {
+            progressDialog.show();
+        }
+    }
+
     private void signInNow()
     {
         String email = emailAddress.getText().toString();
