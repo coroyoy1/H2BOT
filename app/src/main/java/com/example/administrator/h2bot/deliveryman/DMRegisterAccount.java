@@ -156,6 +156,27 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
                 });
     }
 
+
+    public void getStationParent(String childDeliveryMan)
+    {
+        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("User_File");
+        databaseReference2.child(firebaseUser.getUid()).child("station_parent").setValue(GetAuth)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        showMessages("Successfully Added");
+                        performLogin(emailPass, passPass);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        showMessages("Fail to submit");
+                        progressDialog.dismiss();
+                    }
+                });
+    }
+
     public void registerDeliveryMan()
     {
         progressDialog.show();
@@ -221,8 +242,8 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
                                                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                                                 @Override
                                                                                                 public void onSuccess(Void aVoid) {
-                                                                                                    showMessages("Successfully Added");
-                                                                                                    performLogin(emailPass, passPass);
+                                                                                                    //showMessages("Successfully Added");
+                                                                                                    getStationParent(userd);
                                                                                                 }
                                                                                             })
                                                                                             .addOnFailureListener(new OnFailureListener() {

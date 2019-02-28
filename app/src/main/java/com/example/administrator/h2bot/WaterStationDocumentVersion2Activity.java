@@ -4,6 +4,8 @@ import com.example.administrator.h2bot.models.*;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -23,6 +25,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -31,6 +34,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.List;
 
 import io.grpc.Context;
 
@@ -58,12 +62,23 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
     boolean isClick0;
     ImageView imageStation;
     Button addPhotoStation;
+    private RadioButton radioPerGallDel;
+    private RadioButton radioFixDel;
+    private ProgressDialog progressDialog;
+    private double lat;
+    private double lng;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_water_station_document_version2);
+
+        progressDialog = new ProgressDialog(WaterStationDocumentVersion2Activity.this);
+        progressDialog.setMessage("Loading...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setProgress(0);
 
         intent = new Intent();
         storage = FirebaseStorage.getInstance();
@@ -118,39 +133,125 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         radioButtonvv = findViewById(R.id.radioFree);
         radioButton.setChecked(true);
 
+        radioPerGallDel = findViewById(R.id.radioPerGalSD);
+        radioFixDel = findViewById(R.id.radioFixSD);
+
+
+        if(radioButton.isChecked())
+        {
+            businessFreeOrNoText = "not";
+            businessDeliveryService = "inactive";
+        }
+
+
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                businessDeliveryFeePerGal.setVisibility(View.VISIBLE);
-                businessFreeOrNoText = "not";
-                businessDeliveryService = "active";
+                setChecked();
             }
         });
         radioButtonv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                businessDeliveryFeePerGal.setVisibility(View.INVISIBLE);
-                businessFreeOrNoText = "not";
-                businessDeliveryService = "inactive";
+                setChecked();
             }
         });
         radioButtonvv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                businessFreeOrNoText = "free";
-                businessDeliveryService = "active";
+                setChecked();
             }
         });
-        if(radioButton.isChecked())
+    }
+
+    public void setChecked()
+    {
+        if (radioButtonv.isChecked())
         {
-            radioCheck = "true";
+            businessMinNoCapacity.setVisibility(View.INVISIBLE);
+            businessMinNoCapacity.setText("");
+            radioPerGallDel.setVisibility(View.INVISIBLE);
+            radioFixDel.setVisibility(View.INVISIBLE);
+            businessDeliveryFeePerGal.setVisibility(View.INVISIBLE);
+            businessFreeOrNoText = "not";
+            businessDeliveryService = "inactive";
         }
-        else if(radioButtonv.isChecked())
+        else if(radioButton.isChecked())
         {
-            radioCheck = "false";
+            businessMinNoCapacity.setVisibility(View.VISIBLE);
+            businessMinNoCapacity.setText("");
+            radioPerGallDel.setVisibility(View.VISIBLE);
+            radioFixDel.setVisibility(View.VISIBLE);
+            businessDeliveryFeePerGal.setVisibility(View.VISIBLE);
+            businessFreeOrNoText = "not";
+            businessDeliveryService = "active";
+        }
+        else if(radioButtonvv.isChecked())
+        {
+            businessMinNoCapacity.setVisibility(View.INVISIBLE);
+            radioPerGallDel.setVisibility(View.INVISIBLE);
+            radioFixDel.setVisibility(View.INVISIBLE);
+            businessDeliveryFeePerGal.setVisibility(View.INVISIBLE);
+            businessFreeOrNoText = "free";
+            businessDeliveryService = "active";
+        }
+        else
+        {
+            showMessages("Check it first");
         }
     }
+
+    private void getLocationSetter()
+    {
+        progressDialog.show();
+        progressDialog.setMessage("Location Finishing");
+        Geocoder coder = new Geocoder(this);
+        List<Address> address;
+        Address LocationAddress = null;
+        String locateAddress = businessAddress.getText().toString();
+
+        try {
+            address = coder.getFromLocationName(locateAddress, 5);
+
+            LocationAddress = address.get(0);
+
+            lat = LocationAddress.getLatitude();
+            lng = LocationAddress.getLongitude();
+
+            String getLocateLatitude = String.valueOf(lat);
+            String getLocateLongtitude = String.valueOf(lng);
+
+            UserLocationAddress userLocationAddress = new UserLocationAddress(FirebaseAuth.getInstance().getCurrentUser().getUid(), getLocateLatitude, getLocateLongtitude);
+            DatabaseReference locationRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
+            locationRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userLocationAddress)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            showMessages("Successfully Submitted");
+                            progressDialog.dismiss();
+                            passToNextAct();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            showMessages("Error to get location");
+
+                            progressDialog.dismiss();
+                        }
+                    });
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+            progressDialog.dismiss();
+        }
+        finally {
+            showMessages("Error the locate your address, please change again");
+            progressDialog.dismiss();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -396,10 +497,8 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                 @Override
                                                                 public void onComplete(@NonNull Task<Void> task) {
-                                                                    showMessages("Successfully Submitted");
                                                                     progressDialog.dismiss();
-                                                                    Toast.makeText(WaterStationDocumentVersion2Activity.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                                                                    passToNextAct();
+                                                                    getLocationSetter();
                                                                 }
                                                             })
                                                             .addOnFailureListener(new OnFailureListener() {
@@ -530,7 +629,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
             {
                 showMessages("Images does not put");
             }
-            else if(imageForStationUri != null)
+            else if(imageForStationUri == null)
             {
                 showMessages("Station Photo should be display");
             }

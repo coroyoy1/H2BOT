@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.administrator.h2bot.LoginActivity;
 import com.example.administrator.h2bot.R;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -23,6 +24,7 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     FirebaseAuth mAuth;
+    GoogleMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +51,19 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
     }
     @Override
     public void onBackPressed() {
+        int count = getSupportFragmentManager().getBackStackEntryCount();
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if(count == 0)
+            {
+                super.onBackPressed();
+                //map.clear();
+
+            }
+            else {
+                getSupportFragmentManager().popBackStack();
+            }
         }
     }
 

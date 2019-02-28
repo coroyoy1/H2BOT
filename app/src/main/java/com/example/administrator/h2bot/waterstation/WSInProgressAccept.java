@@ -168,31 +168,29 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
 
     public void getOrderData()
     {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Transaction_Header_File");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Transaction_Header_File").child(transactionNo);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot postSnapShot : dataSnapshot.getChildren())
-                {
-                    if(postSnapShot.child("trans_no").getValue(String.class).equals(transactionNo)
-                            && postSnapShot.child("trans_status").getValue(String.class).equals("In-Progress"))
-                    {
-                        orderNoGET = postSnapShot.child("trans_no").getValue(String.class);
-                        customerNoGET = postSnapShot.child("customer_id").getValue(String.class);
-                        merchantNOGET = postSnapShot.child("merchant_id").getValue(String.class);
-                        dataIssuedGET = postSnapShot.child("trans_date_issued").getValue(String.class);
-                        deliveryStatusGET = postSnapShot.child("trans_delivered_service").getValue(String.class);
-                        transStatusGET = postSnapShot.child("trans_status").getValue(String.class);
-                        transTotalAmountGET = postSnapShot.child("trans_total_amount").getValue(String.class);
-                        transDeliveryFeeGET = postSnapShot.child("trans_total_delivery_fee").getValue(String.class);
-                        transTotalNoGallonGET = postSnapShot.child("trans_total_no_of_gallons").getValue(String.class);
 
-                        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Transaction_Detail_File");
+                    if(dataSnapshot.child("trans_no").getValue(String.class).equals(transactionNo)
+                            && dataSnapshot.child("trans_status").getValue(String.class).equals("In-Progress"))
+                    {
+                        orderNoGET = dataSnapshot.child("trans_no").getValue(String.class);
+                        customerNoGET = dataSnapshot.child("customer_id").getValue(String.class);
+                        merchantNOGET = dataSnapshot.child("merchant_id").getValue(String.class);
+                        dataIssuedGET = dataSnapshot.child("trans_date_issued").getValue(String.class);
+                        deliveryStatusGET = dataSnapshot.child("trans_delivered_service").getValue(String.class);
+                        transStatusGET = dataSnapshot.child("trans_status").getValue(String.class);
+                        transTotalAmountGET = dataSnapshot.child("trans_total_amount").getValue(String.class);
+                        transDeliveryFeeGET = dataSnapshot.child("trans_total_delivery_fee").getValue(String.class);
+                        transTotalNoGallonGET = dataSnapshot.child("trans_total_no_of_gallons").getValue(String.class);
+
+                        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Transaction_Detail_File").child(transactionNo);
                         databaseReference1.addValueEventListener(new ValueEventListener() {
                             @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                for(DataSnapshot postSnap : dataSnapshot.getChildren())
-                                {
+                            public void onDataChange(@NonNull DataSnapshot postSnap) {
+
                                     if(postSnap.child("trans_no").getValue(String.class).equals(transactionNo)
                                             && postSnap.child("trans_status").getValue(String.class).equals("In-Progress") )
                                     {
@@ -203,12 +201,11 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                                         transPricePerGallonDetail = postSnap.child("trans_price_per_gallon").getValue(String.class);
                                         transStatusDetail = postSnap.child("trans_status").getValue(String.class);
                                         transWaterTypeDetail = postSnap.child("trans_water_type").getValue(String.class);
-                                        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("User_File");
+                                        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("User_File").child(customerNoGET);
                                         databaseReference2.addValueEventListener(new ValueEventListener() {
                                             @Override
-                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                for(DataSnapshot post : dataSnapshot.getChildren())
-                                                {
+                                            public void onDataChange(@NonNull DataSnapshot post) {
+
                                                     if(customerNoGET.equals(post.child("user_getUID").getValue(String.class)))
                                                     {
                                                         customerIDUser = post.child("user_firtname").getValue(String.class)+" "+post.child("user_lastname").getValue(String.class);
@@ -218,7 +215,6 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                                                         progressDialog.dismiss();
 
                                                     }
-                                                }
                                                 orderNo.setText(orderNoGET);
                                                 customer.setText(customerIDUser);
                                                 contactNo.setText(contactNoUser);
@@ -242,7 +238,6 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                                         showMessages("Data is not available");
                                         progressDialog.dismiss();
                                     }
-                                }
                             }
 
                             @Override
@@ -258,7 +253,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                         progressDialog.dismiss();
                     }
                 }
-            }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -327,6 +322,10 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                 .commit();
         bundle.putString("TransactNoSeen1", transactionNo);
         additem.setArguments(bundle);
+//        Intent intent = new Intent(getActivity(), MapMerchantFragmentRenew.class);
+//        intent.putExtra("TransactNoSeen1", transactionNo);
+//        startActivity(intent);
+
     }
 
     @Override
@@ -337,7 +336,8 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                 viewLocationMeth();
                 break;
             case R.id.viewLocationButtonINACC:
-                //googleMap.clear();
+//                if(googleMap != null)
+//                    googleMap.clear();
                 viewLocationPass();
                 break;
         }

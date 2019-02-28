@@ -158,8 +158,9 @@ public class LoginActivity extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            showMessages("Account is not exists");
+                            showMessages("Account is not exists or internet connection is not connected/low connection");
                             progressDialog.dismiss();
+                            mAuth.signOut();
                         }
                     });
         }
@@ -198,12 +199,13 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else if(userType.equals("Delivery Man"))
                 {
-                    if(documentVerify.equals("inactive"))
-                    {
-                        finish();
-                        startActivity(new Intent(LoginActivity.this, DeliveryManDocumentActivity.class));
-                    }
-                    else if(documentVerify.equals("active"))
+//                    if(documentVerify.equals("inactive"))
+//                    {
+//                        finish();
+//                        startActivity(new Intent(LoginActivity.this, DeliveryManDocumentActivity.class));
+//                    }
+//                    else
+                    if(documentVerify.equals("active"))
                     {
                         finish();
                         startActivity(new Intent(LoginActivity.this, DeliveryManMainActivity.class));

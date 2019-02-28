@@ -14,7 +14,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:background="@android:color/darker_gray"
+                android:background="@drawable/z_linearlayoutdesign"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
@@ -239,6 +239,32 @@
                         android:text="Address:" />
                     <TextView
                         android:id="@+id/addressINACC"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:textSize="18dp"
+                        android:textColor="@android:color/white"
+                        android:layout_marginLeft="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="sample edit" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:textSize="18dp"
+                        android:layout_weight="1"
+                        android:textColor="@android:color/white"
+                        android:layout_marginLeft="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Date to Deliver:" />
+                    <TextView
+                        android:id="@+id/datedeliveredINACC"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:textSize="18dp"

@@ -23,6 +23,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.administrator.h2bot.models.UserLocationAddress;
 import com.google.android.gms.maps.model.LatLng;
 
 import com.example.administrator.h2bot.R;
@@ -43,6 +45,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -90,6 +94,7 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
     DatabaseReference addressesRef, businessRef;
     DatabaseReference usersLocRef;
     LocationManager locationManager;
+    Location dislocation;
 
     ArrayList<UserFile> arrayListUserFile;
     ArrayList<TransactionHeaderFileModel> arrayListBusinessInfo;
@@ -118,6 +123,21 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(map != null)
+        {
+            map.clear();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //map.clear();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -125,10 +145,11 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
 //        marker.remove();
 
         Bundle bundle = this.getArguments();
-        if(bundle != null)
-        {
+        if(bundle != null) {
             transactNum = bundle.getString("TransactNoSeen1");
+
         }
+
         return view;
     }
 
@@ -170,12 +191,75 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
         Toast.makeText(getActivity(), "Connection failed. . .", Toast.LENGTH_SHORT).show();
     }
 
+    public void destinationData()
+    {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Transaction_Header_File").child(transactNum);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                TransactionHeaderFileModel transactionHeaderFileModel = dataSnapshot.getValue(TransactionHeaderFileModel.class);
+                String userOrderNo = transactionHeaderFileModel.getTrans_no();
+                String userMerchantId = transactionHeaderFileModel.getMerchant_id();
+                String userCustomerId = transactionHeaderFileModel.getCustomer_id();
+
+                if(userMerchantId.equals(firebaseUser.getUid()) && userOrderNo.equals(transactNum))
+                {
+                    DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("User_File").child(userCustomerId);
+                    databaseReference1.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            UserFile userFile = dataSnapshot.getValue(UserFile.class);
+                            String fileCustomerId = userFile.getUser_getUID();
+                            if(userCustomerId.equals(fileCustomerId))
+                            {
+                                arrayListBusinessInfo.add(transactionHeaderFileModel);
+                                arrayListUserFile.add(userFile);
+                                myAddresses = userFile.getUser_address();
+                                try {
+                                    myListAddresses = mGeocoder.getFromLocationName(myAddresses, 1);
+                                    if (myListAddresses != null) {
+                                        Address location = myListAddresses.get(0);
+                                        latLong = new LatLng(location.getLatitude(), location.getLongitude());
+                                        setgetLAT setHere = new setgetLAT();
+                                        LatLng staticLat = setHere.getSetgetLATData();
+                                        String addressString = userFile.getUser_address();
+                                        String fullnameString = userFile.getUser_lastname() + ", " + userFile.getUser_firtname();
+                                        MarkerOptions mvMarkerOption = new MarkerOptions();
+                                        mvMarkerOption.position(latLong);
+                                        mvMarkerOption.snippet("Customer Name: " + fullnameString + "\n" + "Address: " + addressString);
+                                        mvMarkerOption.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                                        map.addMarker(mvMarkerOption).showInfoWindow();
+                                    }
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        if(map != null)
-        {
-            map.clear();
-        }
+        mAuth = FirebaseAuth.getInstance();
+        firebaseUser = mAuth.getCurrentUser();
         map = googleMap;
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             buildGoogleApiClient();
@@ -184,6 +268,9 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
         }
         float zoomLevel = 16.0f;
         map.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+
+        destinationData();
+
         map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker marker) {
@@ -208,7 +295,6 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
                 return linearLayout;
             }
         });
-
     }
 
     public class TaskRequestDirections extends AsyncTask<String, Void, String>
@@ -252,25 +338,32 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
             return routes;
         }
 
+
+
+
         @Override
         protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
-            ArrayList points = null;
+            ArrayList<LatLng> points = new ArrayList<>();
             polylineOptions = null;
             for(List<HashMap<String, String>>path:lists)
             {
-                points = new ArrayList();
                 polylineOptions = new PolylineOptions();
                 for (HashMap<String, String>point:path)
                 {
                     double lat = Double.parseDouble(point.get("lat"));
-                    double lon = Double.parseDouble(point.get("lon"));
+                    double lon = Double.parseDouble(point.get("lng"));
 
-                    points.add(new LatLng(lat, lon));
+                    points.add(mLatLng);
+                    points.add(latLong);
+
                 }
-                polylineOptions.addAll(points);
+                //polylineOptions.addAll(points);
+                HashMap<String, String> pointer = new HashMap<>();
+
+                polylineOptions = new PolylineOptions().add(mLatLng, latLong);
                 polylineOptions.width(15);
                 polylineOptions.color(Color.BLUE);
-                polylineOptions.geodesic(true);
+//                polylineOptions.geodesic(true);
             }
             if(polylineOptions!=null)
             {
@@ -278,16 +371,15 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
             }
             else
             {
-                //map.addPolyline(polylineOptions);
+//                map.addPolyline(polylineOptions);
                 Toast.makeText(getActivity(), "Direction not found", Toast.LENGTH_SHORT).show();
             }
+
         }
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        mAuth = FirebaseAuth.getInstance();
-        firebaseUser = mAuth.getCurrentUser();
         mLastLocation = location;
         if(mCurrentLocationMarker != null){
             mCurrentLocationMarker.remove();
@@ -300,72 +392,6 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
         mMarkerOption.title("You");
         mMarkerOption.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Transaction_Header_File").child(transactNum);
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                TransactionHeaderFileModel transactionHeaderFileModel = dataSnapshot.getValue(TransactionHeaderFileModel.class);
-                String userOrderNo = transactionHeaderFileModel.getTrans_no();
-                String userMerchantId = transactionHeaderFileModel.getMerchant_id();
-                String userCustomerId = transactionHeaderFileModel.getCustomer_id();
-
-                if(userMerchantId.equals(firebaseUser.getUid()) && userOrderNo.equals(transactNum))
-                {
-                    DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("User_File").child(userCustomerId);
-                    databaseReference1.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                            UserFile userFile = dataSnapshot.getValue(UserFile.class);
-                            String fileCustomerId = userFile.getUser_getUID();
-                            if(userCustomerId.equals(fileCustomerId))
-                            {
-                                arrayListBusinessInfo.add(transactionHeaderFileModel);
-                                arrayListUserFile.add(userFile);
-                                myAddresses = userFile.getUser_address();
-                                try {
-                                    myListAddresses = mGeocoder.getFromLocationName(myAddresses, 1);
-                                    if (myListAddresses != null) {
-                                        Address location = myListAddresses.get(0);
-                                        latLong = new LatLng(location.getLatitude(), location.getLongitude());
-                                        setgetLAT setHere = new setgetLAT();
-                                        LatLng staticLat = setHere.getSetgetLATData();
-                                        String addressString = userFile.getUser_address();
-                                        String fullnameString = userFile.getUser_lastname() + ", " + userFile.getUser_firtname();
-                                        MarkerOptions mvMarkerOption = new MarkerOptions();
-                                        mvMarkerOption.position(latLong);
-                                        mvMarkerOption.snippet("Customer Name: " + fullnameString + "\n" + "Address: " + addressString);
-                                        mvMarkerOption.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                                        map.addMarker(mvMarkerOption).showInfoWindow();
-                                        if(mLatLng != null && latLong != null) {
-                                            TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
-                                            taskRequestDirections.execute(getRequestURL(mLatLng, latLong));
-                                        }
-                                    }
-
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
-
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
         mCurrentLocationMarker = map.addMarker(mMarkerOption);
         map.addMarker(mMarkerOption).showInfoWindow();
         float zoomLevel = 16.0f;
@@ -373,6 +399,11 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
 
         if(mGoogleApiClient != null){
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
+        if(mLatLng !=null && latLong !=null)
+        {
+            TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+            taskRequestDirections.execute(getRequestURL(mLatLng, latLong));
         }
     }
 
@@ -479,6 +510,52 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
                 return;
         }
     }
+
+//    private void getLocationSetter()
+//    {
+//        Geocoder coder = new Geocoder(this);
+//        List<Address> address;
+//        Address LocationAddress = null;
+//        String locateAddress = addressRegister.getText().toString();
+//
+//        try {
+//            address = coder.getFromLocationName(locateAddress, 5);
+//
+//            LocationAddress = address.get(0);
+//
+//            lat = LocationAddress.getLatitude();
+//            lng = LocationAddress.getLongitude();
+//
+//            String getLocateLatitude = String.valueOf(lat);
+//            String getLocateLongtitude = String.valueOf(lng);
+//
+//            UserLocationAddress userLocationAddress = new UserLocationAddress(FirebaseAuth.getInstance().getCurrentUser().getUid(), getLocateLatitude, getLocateLongtitude);
+//            DatabaseReference locationRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
+//            locationRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userLocationAddress)
+//                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                        @Override
+//                        public void onSuccess(Void aVoid) {
+//                            showMessage("Successfully Registered");
+//                            progressDialog.dismiss();
+//                            passToNextActivity();
+//                        }
+//                    })
+//                    .addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            showMessage("Error to get location");
+//                            progressDialog.dismiss();
+//                        }
+//                    });
+//
+//        } catch (IOException ex) {
+//
+//            ex.printStackTrace();
+//        }
+//        finally {
+//            showMessage("Error the locate your address, please change again");
+//        }
+//    }
 
     public boolean checkUserLocationPermission()
     {

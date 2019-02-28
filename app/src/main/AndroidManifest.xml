@@ -54,7 +54,8 @@
         <activity
             android:name=".zCreateAccountOptionUserTypeActivity"
             android:theme="@style/Theme.Design.Light.NoActionBar" />
-        <activity android:name=".deliveryman.DeliveryManDocumentActivity" />
+        <activity android:name=".deliveryman.DeliveryManDocumentActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".tempAccessActivity" />
         <activity
             android:name=".LoginActivity"
