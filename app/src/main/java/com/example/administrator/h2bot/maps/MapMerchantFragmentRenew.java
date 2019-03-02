@@ -159,7 +159,7 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
             checkUserLocationPermission();
         }
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map1);
         arrayListUserFile = new ArrayList<UserFile>();
         arrayListBusinessInfo = new ArrayList<TransactionHeaderFileModel>();
         mAuth = FirebaseAuth.getInstance();

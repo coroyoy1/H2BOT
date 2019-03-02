@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 public class WSBusinessInfoFragment extends Fragment implements View.OnClickListener
 {
@@ -30,8 +33,11 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
     FirebaseAuth mAuth;
     FirebaseUser firebaseUser;
 
-    Button updateBI;
+    Button updateBI, updateDocBI, updateInfo, cancelBI;
     TextView stationName, stationAddress, stationHours, stationTelNo, stationFeePerGal, stationDelivery, stationStatus;
+    ImageView imageView;
+
+    LinearLayout linearLayoutUp, linearLayoutUpNext;
 
     @Nullable
     @Override
@@ -45,6 +51,13 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
        stationFeePerGal = view.findViewById(R.id.stationFeePerGalBI);
        stationDelivery = view.findViewById(R.id.stationDeliveryBI);
        stationStatus = view.findViewById(R.id.stationStatusBI);
+       imageView = view.findViewById(R.id.imageWaterStation);
+
+       linearLayoutUp = view.findViewById(R.id.linearForUpdate);
+       linearLayoutUpNext = view.findViewById(R.id.linearForUpdateNext);
+       linearLayoutUpNext.setVisibility(View.GONE);
+
+
 
        mAuth = FirebaseAuth.getInstance();
        firebaseUser = mAuth.getCurrentUser();
@@ -56,6 +69,8 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
                    UserWSBusinessInfoFile userWSBusinessInfoFile = dataSnapshot.getValue(UserWSBusinessInfoFile.class);
                    if(userWSBusinessInfoFile != null)
                    {
+                       String image = userWSBusinessInfoFile.getBusiness_station_photo();
+                       Picasso.get().load(image).into(imageView);
                        String businessTime = userWSBusinessInfoFile.getBusiness_start_time()+" - "+userWSBusinessInfoFile.getBusiness_end_time();
                         stationName.setText("Station Name: "+userWSBusinessInfoFile.getBusiness_name());
                         stationAddress.setText("Full Address: "+userWSBusinessInfoFile.getBusiness_address());
@@ -78,7 +93,12 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
        });
 
        updateBI = view.findViewById(R.id.updateButtonWSBI);
+       updateDocBI = view.findViewById(R.id.updateDocumentWSBI);
+       updateInfo = view.findViewById(R.id.updateInfoWSBI);
+       cancelBI = view.findViewById(R.id.cancelWSBI);
+
        updateBI.setOnClickListener(this);
+
 
        return view;
     }
@@ -92,7 +112,8 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
         switch (v.getId())
         {
             case R.id.updateButtonWSBI:
-
+                linearLayoutUpNext.setVisibility(View.VISIBLE);
+                linearLayoutUp.setVisibility(View.GONE);
                 break;
         }
     }

@@ -44,8 +44,6 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ws_product_add, container, false);
 
-        Objects.requireNonNull(getActivity()).onBackPressed();
-
         waterProductPrice = view.findViewById(R.id.waterPrice);
         waterProductType = view.findViewById(R.id.waterSpinner);
 

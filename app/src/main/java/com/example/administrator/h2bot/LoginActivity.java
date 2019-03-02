@@ -125,15 +125,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if(!(LoginActivity.this).isFinishing())
-        {
-            progressDialog.show();
-        }
-    }
-
     private void signInNow()
     {
         String email = emailAddress.getText().toString();
@@ -141,20 +132,21 @@ public class LoginActivity extends AppCompatActivity {
 
         if(email.isEmpty() || password.isEmpty())
         {
+            progressDialog.dismiss();
             showMessages("Please check your email address or password.");
         }
         else
         {
             if(!(LoginActivity.this).isFinishing())
             {
-                progressDialog.show();
+                progressDialog.dismiss();
             }
             mAuth.signInWithEmailAndPassword(emailAddress.getText().toString(), passwordType.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task)
                 {
 
-                    userHERE = mAuth.getCurrentUser().getUid();
+                    userHERE = currentUser.getUid();
                     if(!task.isSuccessful())
                     {
                         showMessages("Please check your internet connection or credentials.");
@@ -169,7 +161,6 @@ public class LoginActivity extends AppCompatActivity {
                         public void onFailure(@NonNull Exception e) {
                             showMessages("Account is not exists or internet connection is not connected/low connection");
                             progressDialog.dismiss();
-                            mAuth.signOut();
                         }
                     });
         }
@@ -188,69 +179,77 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(new Intent(LoginActivity.this, CustomerMainActivity.class));
 //                    showMessages("Successfully logged-in as Customer");
                     finish();
+                    progressDialog.dismiss();
                 }
                 else if(userType.equals("Water Station")){
                     if(documentVerify.equals("inactive"))
                     {
+                        progressDialog.dismiss();
                         startActivity(new Intent(LoginActivity.this, WaterStationDocumentVersion2Activity.class));
                         finish();
                     }
                     else if(documentVerify.equals("unconfirmed"))
                     {
+                        progressDialog.dismiss();
                         startActivity(new Intent(LoginActivity.this, MerchantAccessVerification.class));
                     }
                     else if(documentVerify.equals("active"))
                     {
+                        progressDialog.dismiss();
                         startActivity(new Intent(LoginActivity.this, WaterStationMainActivity.class));
                         finish();
                     }
                     showMessages("Successfully logged-in as Station Owner");
+                    progressDialog.dismiss();
                 }
                 else if(userType.equals("Delivery Man"))
                 {
-//                    if(documentVerify.equals("inactive"))
-//                    {
-//                        finish();
-//                        startActivity(new Intent(LoginActivity.this, DeliveryManDocumentActivity.class));
-//                    }
-//                    else
                     if(documentVerify.equals("active"))
                     {
+                        progressDialog.dismiss();
                         finish();
                         startActivity(new Intent(LoginActivity.this, DeliveryManMainActivity.class));
                     }
                     showMessages("Successfully logged-in as Delivery Man");
+                    progressDialog.dismiss();
                 }
                 else if(userType.equals("Water Dealer"))
                 {
                     if(documentVerify.equals("inactive"))
                     {
+                        progressDialog.dismiss();
                         startActivity(new Intent(LoginActivity.this, WaterPeddlerDocumentActivity.class));
                         showMessages("Water Dealer Not Verified");
                     }
                     else if(documentVerify.equals("active"))
                     {
+                        progressDialog.dismiss();
                         startActivity(new Intent(LoginActivity.this, WaterPeddlerHomeActivity.class));
                         showMessages("Water Dealer Verified");
                     }
                     showMessages("Successfully logged-in as Water Dealer");
+                    progressDialog.dismiss();
                 }
                 else if(userType.equals("Third Party Affiliate"))
                 {
                     if(documentVerify.equals("inactive"))
                     {
+                        progressDialog.dismiss();
                         showMessages("Your registration is still on process. Please wait for the confirmation that will be sent through SMS.");
                     }
                     else if(documentVerify.equals("active"))
                     {
+                        progressDialog.dismiss();
                         startActivity(new Intent(LoginActivity.this, TPAAffiliateMainActivity.class));
                         showMessages("Successfully logged-in as Third Party Affiliate");
                         finish();
                     }
+                    progressDialog.dismiss();
                 }
                 else
                 {
                     showMessages("Failed to Login");
+                    progressDialog.dismiss();
                     return;
                 }
             }

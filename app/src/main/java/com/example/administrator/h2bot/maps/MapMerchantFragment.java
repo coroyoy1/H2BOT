@@ -125,7 +125,7 @@ public class MapMerchantFragment extends Fragment implements
             checkUserLocationPermission();
         }
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map1);
 
         arrayListUserFile = new ArrayList<UserFile>();
         arrayListBusinessInfo = new ArrayList<TransactionHeaderFileModel>();

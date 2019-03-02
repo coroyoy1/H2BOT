@@ -1,5 +1,6 @@
 package com.example.administrator.h2bot.deliveryman;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -24,11 +25,18 @@ public class DeliveryManMainActivity extends AppCompatActivity implements Naviga
     private ActionBarDrawerToggle actionBarDrawerToggle;
     FirebaseAuth mAuth;
     GoogleMap map;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delivery_man_main);
+
+        progressDialog = new ProgressDialog(DeliveryManMainActivity.this);
+        progressDialog.setMessage("Loading...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setProgress(0);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -76,33 +84,31 @@ public class DeliveryManMainActivity extends AppCompatActivity implements Naviga
         return super.onOptionsItemSelected(item);
     }
 
+
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch(menuItem.getItemId())
         {
             case R.id.nav_transactions_dm:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_dm,
-                        new DMTransactionsFragment()).commit();
-                Objects.requireNonNull(getSupportActionBar()).setTitle("Transactions");
-                showMessages("Transactions");
+                        new DMCompleteFragment()).commit();
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Completed Orders");
                 break;
             case R.id.nav_inprogress_dm:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_dm,
                         new DMInProgressFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("In-Progress");
-                showMessages("In-Progress");
                 break;
             case R.id.nav_accountsettings_dm:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_dm,
                         new DMAccountSettingsFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Account Settings");
-                showMessages("Account Settings");
                 break;
             case R.id.nav_feedback_dm:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_dm,
                         new DMFeedbackFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Feedback");
-                showMessages("Feedback");
                 break;
             case R.id.nav_logout_dm:
                 mAuth.signOut();
@@ -111,6 +117,7 @@ public class DeliveryManMainActivity extends AppCompatActivity implements Naviga
                 startActivity(intent3);
                 intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent3.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                progressDialog.dismiss();
                 showMessages("Successfully Logout");
                 break;
         }

@@ -14,7 +14,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:background="@drawable/z_linearlayoutdesign"
+                android:background="@drawable/z_linearlayoutdesign_orange"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
@@ -31,7 +31,7 @@
                     android:textSize="24dp" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/imageViewINACC"
+                    android:id="@+id/imageViewINDMDM"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:layout_gravity="center"
@@ -54,7 +54,7 @@
                         android:layout_height="wrap_content"
                         android:text="Order No:" />
                     <TextView
-                        android:id="@+id/orderNoINACC"
+                        android:id="@+id/orderNoINDMDM"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:textSize="18dp"
@@ -82,7 +82,7 @@
                         android:layout_height="wrap_content"
                         android:text="Customer:" />
                     <TextView
-                        android:id="@+id/customerINACC"
+                        android:id="@+id/customerINDMDM"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:textSize="18dp"
@@ -108,7 +108,7 @@
                         android:layout_height="wrap_content"
                         android:text="Contact NO.:" />
                     <TextView
-                        android:id="@+id/contactNoINACC"
+                        android:id="@+id/contactNoINDMDM"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:textSize="18dp"
@@ -134,7 +134,7 @@
                         android:layout_height="wrap_content"
                         android:text="Water Type:" />
                     <TextView
-                        android:id="@+id/waterTypeINACC"
+                        android:id="@+id/waterTypeINDMDM"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:textSize="18dp"
@@ -160,7 +160,7 @@
                         android:layout_height="wrap_content"
                         android:text="Item Quantity:" />
                     <TextView
-                        android:id="@+id/itemQuantityINACC"
+                        android:id="@+id/itemQuantityINDMDM"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:textSize="18dp"
@@ -186,7 +186,7 @@
                         android:layout_height="wrap_content"
                         android:text="Price per Gallon:" />
                     <TextView
-                        android:id="@+id/pricePerGallonINACC"
+                        android:id="@+id/pricePerGallonINDMDM"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:textSize="18dp"
@@ -212,7 +212,7 @@
                         android:layout_height="wrap_content"
                         android:text="Service:" />
                     <TextView
-                        android:id="@+id/serviceINACC"
+                        android:id="@+id/serviceINDMDM"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:textSize="18dp"
@@ -238,7 +238,7 @@
                         android:layout_height="wrap_content"
                         android:text="Address:" />
                     <TextView
-                        android:id="@+id/addressINACC"
+                        android:id="@+id/addressINDMDM"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:textSize="18dp"
@@ -264,7 +264,7 @@
                         android:layout_height="wrap_content"
                         android:text="Date to Deliver:" />
                     <TextView
-                        android:id="@+id/datedeliveredINACC"
+                        android:id="@+id/datedeliveredINDMDM"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:textSize="18dp"
@@ -290,7 +290,7 @@
                         android:layout_height="wrap_content"
                         android:text="Delivery Fee:" />
                     <TextView
-                        android:id="@+id/deliveryFeeINACC"
+                        android:id="@+id/deliveryFeeINDMDM"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:textSize="18dp"
@@ -316,7 +316,7 @@
                         android:layout_height="wrap_content"
                         android:text="Total Price:" />
                     <TextView
-                        android:id="@+id/totalPriceINACC"
+                        android:id="@+id/totalPriceINDMDM"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:textSize="18dp"
@@ -347,7 +347,7 @@
                 android:orientation="horizontal"
                 android:layout_marginBottom="20dp">
                 <Button
-                    android:id="@+id/launchQRINACC"
+                    android:id="@+id/launchQRINDMDM"
                     android:text="Launch QR"
                     android:textColor="@android:color/white"
                     android:layout_marginLeft="5dp"
@@ -357,7 +357,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/z_greenbluebutton"/>
                 <Button
-                    android:id="@+id/viewLocationButtonINACC"
+                    android:id="@+id/viewLocationButtonINDMDM"
                     android:background="@drawable/z_darkbluebutton"
                     android:textColor="@android:color/white"
                     android:text="View Location"
@@ -367,14 +367,7 @@
                     android:layout_height="60dp"
                     android:layout_weight="1" />
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-                <Switch
-                    android:id="@+id/switchbuttonIN"
-                    android:theme="@style/SwitchCompatTheme"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content" />
+
         </LinearLayout>
     </ScrollView>
 

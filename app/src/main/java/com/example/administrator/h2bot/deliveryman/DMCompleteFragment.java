@@ -12,12 +12,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.adapter.DMCompletedOrderAdapter;
 import com.example.administrator.h2bot.adapter.DMInProgressOrdersAdapter;
-import com.example.administrator.h2bot.adapter.WSInProgressOrdersAdapter;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
-import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserWSDMFile;
-import com.example.administrator.h2bot.waterstation.WSInProgressFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,10 +27,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DMInProgressFragment extends Fragment implements WSInProgressOrdersAdapter.OnItemClickListener{
-
+public class DMCompleteFragment extends Fragment{
     private RecyclerView recyclerView;
-    private DMInProgressOrdersAdapter POAdapter;
+    private DMCompletedOrderAdapter POAdapter;
     private List<TransactionHeaderFileModel> uploadPO;
     private List<UserWSDMFile> uploadDM;
     FirebaseUser firebaseUser;
@@ -41,8 +38,8 @@ public class DMInProgressFragment extends Fragment implements WSInProgressOrders
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_dm_inprogress, container, false);
-        recyclerView = view.findViewById(R.id.recyclerViewDMFrag);
+        View view = inflater.inflate(R.layout.fragment_dm_completeorder, container, false);
+        recyclerView = view.findViewById(R.id.recyclerViewDMCom);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -88,13 +85,13 @@ public class DMInProgressFragment extends Fragment implements WSInProgressOrders
                                                                 if(transactionHeaderFileModel != null)
                                                                 {
                                                                     if(transactionHeaderFileModel.getMerchant_id().equals(merchantnum)
-                                                                            && transactionHeaderFileModel.getTrans_status().equals("In-Progress"))
+                                                                            && transactionHeaderFileModel.getTrans_status().equals("Completed"))
                                                                     {
                                                                         uploadPO.add(transactionHeaderFileModel);
                                                                     }
                                                                 }
                                                             }
-                                                            POAdapter = new DMInProgressOrdersAdapter(getActivity(), uploadPO);
+                                                            POAdapter = new DMCompletedOrderAdapter(getActivity(), uploadPO);
                                                             recyclerView.setAdapter(POAdapter);
                                                             //POAdapter.setOnItemClickListener(DMInProgressFragment.this::onItemClick);
                                                         }
@@ -124,10 +121,5 @@ public class DMInProgressFragment extends Fragment implements WSInProgressOrders
     }
     private void showMessage(String s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onItemClick(int position) {
-
     }
 }

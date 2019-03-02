@@ -21,7 +21,7 @@ public class MapDirectActivity extends FragmentActivity implements OnMapReadyCal
         setContentView(R.layout.activity_map_direct);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.map1);
         mapFragment.getMapAsync(this);
     }
 

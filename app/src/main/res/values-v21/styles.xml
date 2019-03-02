@@ -4,4 +4,12 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="SwitchCompatTheme" >
+        <item name="colorControlActivated">@android:color/holo_blue_dark</item>
+    </style>
+    <style name="SwitchCompatStyle" >
+        <item name="android:thumb">@drawable/ic_there</item>
+        <item name="thumbTint">@android:color/holo_blue_dark</item>
+        <item name="trackTint">@android:color/darker_gray</item>
+    </style>
 </resources>

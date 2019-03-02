@@ -1,5 +1,6 @@
 package com.example.administrator.h2bot.waterstation;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.administrator.h2bot.LoginActivity;
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.deliveryman.DeliveryManMainActivity;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,11 +27,18 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
     private ActionBarDrawerToggle actionBarDrawerToggle;
     FirebaseAuth mAuth;
     GoogleMap map;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_water_station_main);
+
+        progressDialog = new ProgressDialog(WaterStationMainActivity.this);
+        progressDialog.setMessage("Loading...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setProgress(0);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -58,8 +67,6 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
             if(count == 0)
             {
                 super.onBackPressed();
-                //map.clear();
-
             }
             else {
                 getSupportFragmentManager().popBackStack();
@@ -134,6 +141,7 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
             case R.id.nav_logout_ws:
                 mAuth.signOut();
                 finish();
+                progressDialog.dismiss();
                 Intent intent3 = new Intent(WaterStationMainActivity.this, LoginActivity.class);
                 startActivity(intent3);
                 intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

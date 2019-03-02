@@ -14,12 +14,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.RadioGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import com.example.administrator.h2bot.maps.MapMerchantActivity;
 import com.example.administrator.h2bot.maps.MapMerchantFragmentRenew;
 import com.example.administrator.h2bot.models.CaptureActivityPortrait;
 import com.example.administrator.h2bot.R;
@@ -40,11 +44,12 @@ import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class WSInProgressAccept extends Fragment implements View.OnClickListener {
+public class WSInProgressAccept extends Fragment implements View.OnClickListener, Switch.OnCheckedChangeListener {
 
 
     TextView orderNo, customer, contactNo, waterType, itemQuantity, pricePerGallon,  service, address, deliveryFee, totalPrice;
     Button launchQR, viewLocation;
+    Switch switcBroadcast;
     String orderNoGET, customerNoGET, merchantNOGET, transactionNo, dataIssuedGET, deliveryStatusGET
             ,transStatusGET, transTotalAmountGET, transDeliveryFeeGET, transTotalNoGallonGET,
             transDeliveryFeePerGallonDetail, transNoDetail, transNoOfGallonDetail, transPartialAmountDetail, transPricePerGallonDetail
@@ -74,6 +79,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
         launchQR = view.findViewById(R.id.launchQRINACC);
         viewLocation = view.findViewById(R.id.viewLocationButtonINACC);
         imageView = view.findViewById(R.id.imageViewINACC);
+        switcBroadcast = view.findViewById(R.id.switchbuttonIN);
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
@@ -83,6 +89,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
 
         launchQR.setOnClickListener(this);
         viewLocation.setOnClickListener(this);
+        switcBroadcast.setOnCheckedChangeListener(this);
 
         progressDialog.show();
 
@@ -328,6 +335,12 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
 
     }
 
+    public void getLocationUser()
+    {
+        Intent intent = new Intent(getActivity(), MapMerchantActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public void onClick(View v) {
         switch(v.getId())
@@ -338,8 +351,20 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
             case R.id.viewLocationButtonINACC:
 //                if(googleMap != null)
 //                    googleMap.clear();
-                viewLocationPass();
+                //viewLocationPass();
+                getLocationUser();
                 break;
+        }
+    }
+
+
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if(buttonView.isChecked())
+        {
+            Intent intent = new Intent(getActivity(), WSBroadcast.class);
+            startActivity(intent);
         }
     }
 }

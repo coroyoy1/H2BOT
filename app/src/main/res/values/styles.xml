@@ -20,4 +20,9 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="SwitchCompatTheme" >
+        <item name="android:thumb">@drawable/switchthumb_default</item>
+        <item name="trackTint">@android:color/holo_blue_dark</item>
+        <item name="colorControlActivated">@android:color/holo_blue_dark</item>
+    </style>
 </resources>

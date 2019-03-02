@@ -25,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WSPendingOrdersFragment extends Fragment {
+public class WSPendingOrdersFragment extends Fragment{
 
     private RecyclerView recyclerViewPOConnect;
     private PendingListAdapter POAdapter;
