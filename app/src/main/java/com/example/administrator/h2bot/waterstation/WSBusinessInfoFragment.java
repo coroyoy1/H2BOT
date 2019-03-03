@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.deliveryman.DMCompletedAcception;
 import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -98,7 +100,9 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
        cancelBI = view.findViewById(R.id.cancelWSBI);
 
        updateBI.setOnClickListener(this);
-
+       updateDocBI.setOnClickListener(this);
+       updateInfo.setOnClickListener(this);
+       cancelBI.setOnClickListener(this);
 
        return view;
     }
@@ -114,6 +118,22 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
             case R.id.updateButtonWSBI:
                 linearLayoutUpNext.setVisibility(View.VISIBLE);
                 linearLayoutUp.setVisibility(View.GONE);
+                break;
+            case R.id.updateInfoWSBI:
+                WSBusinessInformationUpdate additem = new WSBusinessInformationUpdate();
+                AppCompatActivity activity = (AppCompatActivity)v.getContext();
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                        .replace(R.id.fragment_container_ws, additem)
+                        .addToBackStack(null)
+                        .commit();
+                break;
+            case R.id.updateDocumentWSBI:
+                break;
+            case R.id.cancelWSBI:
+                linearLayoutUpNext.setVisibility(View.GONE);
+                linearLayoutUp.setVisibility(View.VISIBLE);
                 break;
         }
     }

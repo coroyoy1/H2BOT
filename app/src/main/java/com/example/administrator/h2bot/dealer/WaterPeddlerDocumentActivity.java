@@ -14,8 +14,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
@@ -48,7 +50,8 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
     Uri mImageUri;
     String image1;
     Boolean check1;
-
+    EditText dealerName,dealerAddress,dealerNo,dealerBusinesshoursStart,dealerBusinesshoursEnd,dealerCapacity,stationDeliverySD;
+    RadioButton radioYes,radioNo,radioFree,radioPerGalSD,radioFixSD;
     private FirebaseAuth mAuth;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
@@ -61,19 +64,14 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_water_peddler_document);
 
-//        drawerLayout = findViewById(R.id.customer_drawer);
-//        drawerLayout.closeDrawers();
-//        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
-//        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-//        NavigationView navigationView = findViewById(R.id.nav_view);
-//        navigationView.setNavigationItemSelectedListener(this);
-//        actionBarDrawerToggle.syncState();
-//        if (savedInstanceState == null) {
-//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerMapFragment()).commit();
-//            navigationView.setCheckedItem(R.id.map);
-//            Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
-//        }
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        dealerName = findViewById(R.id.dealerName);
+        dealerAddress = findViewById(R.id.dealerAddress);
+        dealerNo = findViewById(R.id.dealerNo);
+        dealerBusinesshoursStart = findViewById(R.id.dealerBusinesshoursStart);
+        dealerBusinesshoursEnd = findViewById(R.id.dealerBusinesshoursEnd);
+        dealerCapacity = findViewById(R.id.dealerCapacity);
+        stationDeliverySD = findViewById(R.id.stationDeliverySD);
+
 
     //ImageView
         driverLicenseImageView = findViewById(R.id.driverLicenseImageView);
