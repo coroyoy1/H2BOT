@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+
+        <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:textColor="@android:color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your Profile"
+        android:textSize="18dp"
+        android:textStyle="bold"/>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profileImageAS"
+        android:layout_width="150dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="10dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@android:color/darker_gray"
+        android:orientation="vertical">
+
+        <TextView
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/userTypeAS"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[none/none/none/none/]"
+            android:textSize="18dp" />
+
+        <TextView
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/stationNameAS"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[none/none/none/none/]"
+            android:textSize="18dp" />
+
+        <TextView
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/fullNameAS"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[none/none/none/none/]"
+            android:textSize="18dp" />
+
+        <TextView
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/addressAS"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[none/none/none/none/]"
+            android:textSize="18dp" />
+
+        <TextView
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/emailAS"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[none/none/none/none/]"
+            android:textSize="18dp" />
+
+        <TextView
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/contactAS"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:text="[none/none/none/none/]"
+            android:layout_marginBottom="10dp"
+            android:textSize="18dp" />
+    </LinearLayout>
+
+    <TextView
+        android:textColor="@android:color/holo_green_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Document Verified"
+        android:textSize="18dp"
+        android:textStyle="bold"/>
+    <Button
+        android:id="@+id/updateAccount"
+        android:layout_width="170dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:text="Update Account"
+        android:background="@drawable/z_darkbluebutton"
+        android:textColor="@android:color/white"/>
+
+
+</LinearLayout>
+</RelativeLayout>

@@ -1,4 +1,4 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.dealer;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.CaptureActivityPortrait;
 import com.google.zxing.integration.android.IntentIntegrator;
 

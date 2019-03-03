@@ -1,4 +1,6 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.dealer;
+import com.example.administrator.h2bot.LoginActivity;
+import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.customer.*;
 
 import android.app.Dialog;
@@ -47,8 +49,8 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
         if(savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp,
                     new WPPendingOrdersFragment()).commit();
-            Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
-            showMessages("Map");
+            Objects.requireNonNull(getSupportActionBar()).setTitle("Pending");
+            showMessages("Pending");
         }
     }
     @Override
@@ -99,7 +101,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
                 break;
             case R.id.nav_businessinfo_wp:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp,
-                        new WPBusinessInfoFragment()).commit();
+                        new WPBusinessInfoFragment2()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Business Info");
                 showMessages("Business Info");
                 break;
@@ -111,7 +113,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
                 break;
             case R.id.nav_accountsettings_wp:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp,
-                        new CustomerAccountSettingFragment()).commit();
+                        new WPAccountSettingsFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Account Settings");
                 showMessages("Account Settings");
                 break;

@@ -73,9 +73,9 @@
         <activity
             android:name=".RegisterActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".WaterPeddlerDocumentActivity" />
+        <activity android:name=".dealer.WaterPeddlerDocumentActivity" />
         <activity
-            android:name=".WaterPeddlerHomeActivity"
+            android:name=".dealer.WaterPeddlerHomeActivity"
             android:theme="@style/Theme.Design.Light" />
         <activity android:name=".WaterStationHomeActivity" />
         <activity android:name=".WaterAffiliateHomeActivity" />

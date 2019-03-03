@@ -1,4 +1,4 @@
-package com.example.administrator.h2bot;
+package com.example.administrator.h2bot.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,12 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.dealer.WPInProgressAccept;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
+import com.example.administrator.h2bot.waterstation.WSInProgressAccept;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class WPInProgressAdapter extends RecyclerView.Adapter<WPInProgressAdapter.ViewHolder>{
+public class WPInProgressOrdersAdapter extends RecyclerView.Adapter<WPInProgressOrdersAdapter.ViewHolder>{
     private Context mContext;
     private List<TransactionHeaderFileModel> mUploads;
     private OnItemClickListener mListener;
@@ -28,52 +30,37 @@ public class WPInProgressAdapter extends RecyclerView.Adapter<WPInProgressAdapte
         mListener = listener;
     }
 
-    public WPInProgressAdapter(Context context, ArrayList<TransactionHeaderFileModel> uploads) {
+    public WPInProgressOrdersAdapter(Context context, List<TransactionHeaderFileModel> uploads) {
         mContext = context;
         mUploads = uploads;
     }
 
     @NonNull
     @Override
-    public WPInProgressAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.wpinprogressxml, viewGroup, false);
+    public WPInProgressOrdersAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View v = LayoutInflater.from(mContext).inflate(R.layout.x_merchant_transaction_inprogressorder, viewGroup, false);
         return new ViewHolder(v);
     }
     @Override
-    public void onBindViewHolder(@NonNull WPInProgressAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull WPInProgressOrdersAdapter.ViewHolder viewHolder, int i) {
         final TransactionHeaderFileModel currentData = mUploads.get(i);
                 viewHolder.transactionNo.setText(currentData.getTrans_no());
                 viewHolder.status.setText(currentData.getTrans_status());
-//                viewHolder.customername.setText(currentData.getCustomerName());
-//                viewHolder.address.setText(currentData.getAddress());
-//                viewHolder.contactno.setText(currentData.getContactNo());
-//                viewHolder.deliveryfee.setText(currentData.getDeliveryFee());
-//                viewHolder.itemquantity.setText(currentData.getItemQuantity());
-//                viewHolder.pricepergallon.setText(currentData.getPricePerGallon());
-//                viewHolder.service.setText(currentData.getService());
-//                viewHolder.totalprice.setText(currentData.getTotalPrice());
-//                viewHolder.watertype.setText(currentData.getWaterType());
-                viewHolder.details.setText(">>");
 
            String transactno= currentData.getTrans_no();
             String status= currentData.getTrans_status();
-//        String customername= currentData.getCustomerName();
-//        String address= currentData.getAddress();
-//        String contactno= currentData.getContactNo();
-//        String deliveryfee= currentData.getDeliveryFee();
-//        String itemquantity= currentData.getItemQuantity();
-//        String pricepergallon= currentData.getPricePerGallon();
-//        String service= currentData.getService();
-//        String totalprice= currentData.getTotalPrice();
-//        String watertype= currentData.getWaterType();
-
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WPPendingTransactionFragment detail = new WPPendingTransactionFragment();
-                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp, detail).addToBackStack(null).commit();
+                WPInProgressAccept additem = new WPInProgressAccept();
+                AppCompatActivity activity = (AppCompatActivity)v.getContext();
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                        .replace(R.id.fragment_container_wp, additem)
+                        .addToBackStack(null)
+                        .commit();
                 Bundle args = new Bundle();
                 args.putString("transactionno", currentData.getTrans_no());
                 args.putString("status", currentData.getTrans_status());
@@ -86,7 +73,7 @@ public class WPInProgressAdapter extends RecyclerView.Adapter<WPInProgressAdapte
 //                args.putString("service", currentData.getService());
 //                args.putString("totalprice", currentData.getTotalPrice());
 //                args.putString("watertype", currentData.getWaterType());
-                detail.setArguments(args);
+                  additem.setArguments(args);
             }
         });
 
@@ -102,7 +89,7 @@ public class WPInProgressAdapter extends RecyclerView.Adapter<WPInProgressAdapte
 //                viewHolder.service.setText(uploadCurrent.getService());
 //                viewHolder.totalprice.setText(uploadCurrent.getTotalPrice());
 //                viewHolder.watertype.setText(uploadCurrent.getWaterType());
-                viewHolder.details.setText(">>");
+//                viewHolder.details.setText(">>");
 
     }
 
@@ -116,8 +103,8 @@ public class WPInProgressAdapter extends RecyclerView.Adapter<WPInProgressAdapte
         public ViewHolder(View itemView) {
             super(itemView);
 
-            transactionNo = itemView.findViewById(R.id.transactionNo);
-            status = itemView.findViewById(R.id.status);
+            transactionNo = itemView.findViewById(R.id.transactionNoIN);
+            status = itemView.findViewById(R.id.transactionStatusIN);
 //            details = itemView.findViewById(R.id.details);
 //            address = itemView.findViewById(R.id.address);
 //            customername = itemView.findViewById(R.id.customername);
