@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
 import com.google.android.gms.common.ConnectionResult;
@@ -344,45 +345,16 @@ public class TPAMapFragment extends Fragment implements OnMapReadyCallback, Goog
 
     public void GetAllStations(){
 
-        addressesRef = FirebaseDatabase.getInstance().getReference("User_File");
+        addressesRef = FirebaseDatabase.getInstance().getReference("Order_File");
         businessRef = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
 
         addressesRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot data: dataSnapshot.getChildren()){
-                    UserFile user = data.getValue(UserFile.class);
+                for(DataSnapshot data: dataSnapshot.getChildren())
+                {
+                    OrderModel order = data.getValue(OrderModel.class);
 
-                    if(user.getUser_type().equalsIgnoreCase("Customer")
-                    && user.getUser_status().equalsIgnoreCase("active")){
-                        arrayListUserFile.add(user);
-
-                        customerName = user.getUser_firtname() + " " + user.getUser_lastname();
-                        userType = user.getUser_type();
-                        myAddresses = user.getUser_address();
-
-                        try {
-                            myListAddresses = mGeocoder.getFromLocationName(myAddresses, 1);
-                            if (myListAddresses != null) {
-                                Address location = myListAddresses.get(0);
-                                latLong = new LatLng(location.getLatitude(), location.getLongitude());
-
-                                String name = customerName;
-                                String type = "Type: " + userType;
-                                String address = "Address: " + myAddresses;
-                                String status = "Status: OPEN";
-
-                                map.addMarker(new MarkerOptions().position(latLong).title(name).snippet(type
-                                        + "\n" + address
-                                        + "\n" + status));
-                                map.addMarker(new MarkerOptions().position(latLong));
-                                map.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-                            }
-                        }
-                        catch (Exception e){
-                            e.printStackTrace();
-                        }
-                    }
                 }
             }
 
@@ -391,6 +363,50 @@ public class TPAMapFragment extends Fragment implements OnMapReadyCallback, Goog
 
             }
         });
+//        addressesRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot data: dataSnapshot.getChildren()){
+//                    UserFile user = data.getValue(UserFile.class);
+//
+//                    if(user.getUser_type().equalsIgnoreCase("Water Station") || user.getUser_type().equalsIgnoreCase("Water Dealer")
+//                            && user.getUser_status().equalsIgnoreCase("active")){
+//                        arrayListUserFile.add(user);
+//
+//                        customerName = user.getUser_firtname() + " " + user.getUser_lastname();
+//                        userType = user.getUser_type();
+//                        myAddresses = user.getUser_address();
+//
+//                        try {
+//                            myListAddresses = mGeocoder.getFromLocationName(myAddresses, 1);
+//                            if (myListAddresses != null) {
+//                                Address location = myListAddresses.get(0);
+//                                latLong = new LatLng(location.getLatitude(), location.getLongitude());
+//
+//                                String name = customerName;
+//                                String type = "Type: " + userType;
+//                                String address = "Address: " + myAddresses;
+//                                String status = "Status: OPEN";
+//
+//                                map.addMarker(new MarkerOptions().position(latLong).title(name).snippet(type
+//                                        + "\n" + address
+//                                        + "\n" + status));
+//                                map.addMarker(new MarkerOptions().position(latLong));
+//                                map.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+//                            }
+//                        }
+//                        catch (Exception e){
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
 //        addressesRef.addValueEventListener(new ValueEventListener() {
 //            @Override

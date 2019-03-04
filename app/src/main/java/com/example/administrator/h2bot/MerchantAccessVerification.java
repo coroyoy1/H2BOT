@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.administrator.h2bot.dealer.WaterPeddlerDocumentActivity;
+import com.example.administrator.h2bot.dealer.WaterPeddlerHomeActivity;
 import com.example.administrator.h2bot.deliveryman.DeliveryManDocumentActivity;
 import com.example.administrator.h2bot.deliveryman.DeliveryManMainActivity;
 import com.example.administrator.h2bot.waterstation.WaterStationMainActivity;
@@ -34,7 +36,7 @@ public class MerchantAccessVerification extends AppCompatActivity implements Vie
 
         mAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Users");
+        databaseReference = firebaseDatabase.getReference("User_File");
 
         buttonLogout = findViewById(R.id.logoutAV);
         buttonUpdate = findViewById(R.id.updateAV);
@@ -50,16 +52,16 @@ public class MerchantAccessVerification extends AppCompatActivity implements Vie
         referenceGet.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String userType = dataSnapshot.child("userType").getValue().toString();
+                String userType = dataSnapshot.child("user_type").getValue().toString();
                 if(userType.equals("Water Station"))
                 {
-                    String activateStat = dataSnapshot.child("status").getValue().toString();
+                    String activateStat = dataSnapshot.child("user_status").getValue().toString();
                     if(activateStat.equals("active"))
                     {
                         finish();
                         startActivity(new Intent(MerchantAccessVerification.this, WaterStationMainActivity.class));
                     }
-                    else if(activateStat.equals("unconfirmed"))
+                    else if(activateStat.equals("unverified"))
                     {
                         startActivity(new Intent(MerchantAccessVerification.this, WaterStationDocumentVersion2Activity.class));
                     }
@@ -70,7 +72,7 @@ public class MerchantAccessVerification extends AppCompatActivity implements Vie
                 }
                 else if(userType.equals("Delivery Man"))
                 {
-                    String activateStat = dataSnapshot.child("status").getValue().toString();
+                    String activateStat = dataSnapshot.child("user_status").getValue().toString();
                     if(activateStat.equals("active"))
                     {
                         finish();
@@ -89,9 +91,23 @@ public class MerchantAccessVerification extends AppCompatActivity implements Vie
                 {
                     showMessages("Third Affiliate");
                 }
+
                 else if(userType.equals("Water Dealer"))
                 {
-                    showMessages("Water Dealer");
+                    String activateStat = dataSnapshot.child("user_status").getValue().toString();
+                    if(activateStat.equals("active"))
+                    {
+                        finish();
+                        startActivity(new Intent(MerchantAccessVerification.this, WaterPeddlerHomeActivity.class));
+                    }
+                    else if(activateStat.equals("unverified"))
+                    {
+                        startActivity(new Intent(MerchantAccessVerification.this, WaterPeddlerDocumentActivity.class));
+                    }
+                    else
+                    {
+                        showMessages("Error to pass intent");
+                    }
                 }
                 else
                 {
@@ -122,7 +138,7 @@ public class MerchantAccessVerification extends AppCompatActivity implements Vie
                 break;
             case R.id.updateAV:
                 checkUserType();
-                //startActivity(new Intent(MerchantAccessVerification.this, WaterStationDocumentVersion2Activity.class));
+//                startActivity(new Intent(MerchantAccessVerification.this, WaterStationDocumentVersion2Activity.class));
                 break;
         }
     }

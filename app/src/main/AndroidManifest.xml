@@ -59,7 +59,8 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" /> <!-- <activity android:name=".tpaaffiliate.TPAAffiliateMainActivity"> </activity> -->
         <activity android:name=".WPTPAAffiliateDocumentsActivity" />
         <activity android:name=".zCreateStationDetailsActivity" />
-        <activity android:name=".tpaaffiliate.TPAAffiliateMainActivity" />
+        <activity android:name=".tpaaffiliate.TPAAffiliateMainActivity"
+            android:theme="@style/Theme.Design.Light"/>
         <activity
             android:name=".zCreateAccountOptionUserTypeActivity"
             android:theme="@style/Theme.Design.Light.NoActionBar" />
@@ -73,7 +74,9 @@
         <activity
             android:name=".RegisterActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".dealer.WaterPeddlerDocumentActivity" />
+        <activity android:name=".dealer.WaterPeddlerDocumentActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <activity
             android:name=".dealer.WaterPeddlerHomeActivity"
             android:theme="@style/Theme.Design.Light" />
