@@ -17,7 +17,6 @@
         <ImageView
             android:id="@+id/imageViewUIWS"
             android:src="@drawable/ic_image_black_24dp"
-            android:tint="@android:color/holo_blue_dark"
             android:layout_width="match_parent"
             android:layout_height="230dp" />
         <Button
@@ -127,6 +126,7 @@
             </RadioGroup>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/linearMinGal"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -141,6 +141,7 @@
                 android:background="@drawable/edit_text_border"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/linearDelFee"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -169,6 +170,7 @@
             </RadioGroup>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/linearDelFeeNext"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

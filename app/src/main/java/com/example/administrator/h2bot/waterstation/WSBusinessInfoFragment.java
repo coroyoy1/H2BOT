@@ -130,6 +130,14 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
                         .commit();
                 break;
             case R.id.updateDocumentWSBI:
+                WSBusinessDocumentUpdate updateitem = new WSBusinessDocumentUpdate();
+                AppCompatActivity updateActivity = (AppCompatActivity)v.getContext();
+                updateActivity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                        .replace(R.id.fragment_container_ws, updateitem)
+                        .addToBackStack(null)
+                        .commit();
                 break;
             case R.id.cancelWSBI:
                 linearLayoutUpNext.setVisibility(View.GONE);

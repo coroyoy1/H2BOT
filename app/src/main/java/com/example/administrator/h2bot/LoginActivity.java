@@ -20,6 +20,7 @@ import com.example.administrator.h2bot.waterstation.WaterStationMainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,10 +36,10 @@ public class LoginActivity extends AppCompatActivity {
     EditText emailAddress, passwordType;
     Button loginNow;
     ProgressDialog progressDialog;
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseDatabase databaseConnection;
-    private DatabaseReference refConnection;
+     FirebaseAuth mAuth;
+    FirebaseAuth.AuthStateListener mAuthListener;
+    // FirebaseDatabase databaseConnection;
+     DatabaseReference refConnection;
     FirebaseUser currentUser;
     String userHERE;
 
@@ -47,8 +48,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        //FirebaseApp.initializeApp(this);
 
-        databaseConnection = FirebaseDatabase.getInstance();
+        //databaseConnection = FirebaseDatabase.getInstance();
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
@@ -59,6 +61,8 @@ public class LoginActivity extends AppCompatActivity {
         passwordType = findViewById(R.id.passwordEditText);
         register = findViewById(R.id.registerAccount);
         loginNow = findViewById(R.id.logInBtn);
+
+
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
 
