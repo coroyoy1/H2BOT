@@ -247,7 +247,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
             progressDialog.dismiss();
         }
         finally {
-            showMessages("Error the locate your address, please change again");
+            showMessages("Error to locate your address, please change again");
             progressDialog.dismiss();
         }
     }

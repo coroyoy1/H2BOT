@@ -48,15 +48,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp">
+
         <TextView
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Requirements are sucessfully sent. Please wait for admin for confirmation to your document."
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:text="Requirements are sucessfully sent. Please wait for the admin to verify  your document."
+            android:textColor="@android:color/holo_blue_dark"
             android:textSize="24dp"
-            android:textStyle="italic"
-            android:textColor="@android:color/holo_blue_dark"/>
+            android:textStyle="italic" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -75,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:textSize="24dp"
-            android:text="No Verified"
+            android:text="Unverified"
             android:textColor="@android:color/holo_red_dark"
             android:layout_weight="1"/>
     </LinearLayout>

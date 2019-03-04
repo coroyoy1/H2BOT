@@ -223,6 +223,11 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(new Intent(LoginActivity.this, WaterPeddlerDocumentActivity.class));
                         showMessages("Water Dealer Not Verified");
                     }
+                    else if(documentVerify.equals("unverified"))
+                    {
+                        progressDialog.dismiss();
+                        startActivity(new Intent(LoginActivity.this, MerchantAccessVerification.class));
+                    }
                     else if(documentVerify.equals("active"))
                     {
                         progressDialog.dismiss();
