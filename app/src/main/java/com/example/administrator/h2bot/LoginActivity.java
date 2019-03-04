@@ -147,7 +147,6 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task)
                 {
-
                     userHERE = currentUser.getUid();
                     if(!task.isSuccessful())
                     {
