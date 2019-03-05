@@ -57,10 +57,12 @@
         <activity
             android:name=".customer.CustomerChatbotActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" /> <!-- <activity android:name=".tpaaffiliate.TPAAffiliateMainActivity"> </activity> -->
-        <activity android:name=".WPTPAAffiliateDocumentsActivity" />
+        <activity android:name=".WPTPAAffiliateDocumentsActivity"
+            android:theme="@style/Theme.AppCompat.Light"/>
         <activity android:name=".zCreateStationDetailsActivity" />
         <activity android:name=".tpaaffiliate.TPAAffiliateMainActivity"
-            android:theme="@style/Theme.Design.Light"/>
+            android:theme="@style/Theme.Design.Light"
+            />
         <activity
             android:name=".zCreateAccountOptionUserTypeActivity"
             android:theme="@style/Theme.Design.Light.NoActionBar" />

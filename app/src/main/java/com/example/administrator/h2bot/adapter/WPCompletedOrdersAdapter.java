@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.dealer.WPCompletedAccept;
+import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 
 
@@ -19,16 +20,16 @@ import java.util.List;
 
 public class WPCompletedOrdersAdapter extends RecyclerView.Adapter<WPCompletedOrdersAdapter.ViewHolder>{
     private Context mContext;
-    private List<TransactionHeaderFileModel> mUploads;
+    private List<OrderModel> mUploads;
     private WPCompletedOrdersAdapter.OnItemClickListener mListener;
 
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
     public void setOnItemClickListener(WPCompletedOrdersAdapter.OnItemClickListener listener) {
-        mListener = (WPCompletedOrdersAdapter.OnItemClickListener) listener;
+        mListener = listener;
     }
-    public WPCompletedOrdersAdapter(Context context, List<TransactionHeaderFileModel> uploads) {
+    public WPCompletedOrdersAdapter(Context context, List<OrderModel> uploads) {
         mContext = context;
         mUploads = uploads;
     }
@@ -42,11 +43,11 @@ public class WPCompletedOrdersAdapter extends RecyclerView.Adapter<WPCompletedOr
 
     @Override
     public void onBindViewHolder(@NonNull WPCompletedOrdersAdapter.ViewHolder viewHolder, int i) {
-        final TransactionHeaderFileModel currentData = mUploads.get(i);
-        viewHolder.transactionNo.setText(currentData.getTrans_no());
-        viewHolder.status.setText(currentData.getTrans_status());
-        String transactno= currentData.getTrans_no();
-        String status= currentData.getTrans_status();
+        final OrderModel currentData = mUploads.get(i);
+        viewHolder.transactionNo.setText(currentData.getOrder_no());
+        viewHolder.status.setText(currentData.getOrder_status());
+        String transactno= currentData.getOrder_no();
+        String status= currentData.getOrder_status();
 
        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
            @Override
@@ -60,14 +61,14 @@ public class WPCompletedOrdersAdapter extends RecyclerView.Adapter<WPCompletedOr
                        .addToBackStack(null)
                        .commit();
                Bundle args = new Bundle();
-               args.putString("transactionno", currentData.getTrans_no());
-               args.putString("status", currentData.getTrans_status());
+               args.putString("transactionno", currentData.getOrder_no());
+               args.putString("status", currentData.getOrder_status());
                additem.setArguments(args);
            }
        });
-        TransactionHeaderFileModel uploadCurrent = mUploads.get(i);
-        viewHolder.transactionNo.setText(uploadCurrent.getTrans_no());
-        viewHolder.status.setText(uploadCurrent.getTrans_status());
+        OrderModel uploadCurrent = mUploads.get(i);
+        viewHolder.transactionNo.setText(uploadCurrent.getOrder_no());
+        viewHolder.status.setText(uploadCurrent.getOrder_status());
     }
 
     @Override

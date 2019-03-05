@@ -1,7 +1,5 @@
 package com.example.administrator.h2bot.dealer;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -13,9 +11,7 @@ import android.view.ViewGroup;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.adapter.WPCompletedOrdersAdapter;
-import com.example.administrator.h2bot.adapter.WSCompleterdOrdersAdapter;
-import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
-import com.example.administrator.h2bot.waterstation.WSTransactionsFragment;
+import com.example.administrator.h2bot.models.OrderModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,9 +27,10 @@ public class WPTransactionFragment extends Fragment {
     RecyclerView recyclerView;
     FirebaseUser currentUser;
     private DatabaseReference mDatabaseRef;
+    private DatabaseReference mDatabaseRef2;
     private RecyclerView.LayoutManager mLayoutManager;
     private WPCompletedOrdersAdapter mAdapter;
-    private List<TransactionHeaderFileModel> mUploads;
+    private List<OrderModel> mUploads;
 
 
     public WPTransactionFragment() {
@@ -42,32 +39,47 @@ public class WPTransactionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wptransaction, container, false);
-        mUploads = new ArrayList<>();
+        mUploads = new ArrayList<OrderModel>();
         recyclerView = view.findViewById(R.id.recyclerView);
 
-        mUploads = new ArrayList<>();
+        mUploads = new ArrayList<OrderModel>();
         //mUploads2 = new ArrayList<>();
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
 
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("Transaction_Header_File");
-
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String currendId = currentUser.getUid();
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("Transaction_Header_File");
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("Order_File");
         //mDatabaseRef2 = FirebaseDatabase.getInstance().getReference("Transaction_Detail_File");
 
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    TransactionHeaderFileModel transactionHeader = postSnapshot.getValue(TransactionHeaderFileModel.class);
-                    if(transactionHeader.getMerchant_id().equals(currendId) && transactionHeader.getTrans_status().equals("Completed"))
-                        // TransactionDetailFileModel transactionDetail = postSnapshot.getValue(TransactionDetailFileModel.class);
-                        mUploads.add(transactionHeader);
+                for(DataSnapshot data: dataSnapshot.getChildren()){
+
+
                 }
+//                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+//                    for(DataSnapshot postSnapshot2 : dataSnapshot.getChildren()) {
+//                        mDatabaseRef2 = FirebaseDatabase.getInstance().getReference("Order_File").child(currendId);
+//                        mDatabaseRef2.addValueEventListener(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                                OrderModel orderModel = postSnapshot2.getValue(OrderModel.class);
+//                                if (orderModel.getOrder_station_id().equals(currendId) && orderModel.getOrder_status().equals("Completed"))
+//                                    // TransactionDetailFileModel transactionDetail = postSnapshot.getValue(TransactionDetailFileModel.class);
+//                                    mUploads.add(orderModel);
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                            }
+//                        });
+//                    }
+//                }
                 mAdapter = new WPCompletedOrdersAdapter(getActivity(), mUploads);
                 recyclerView.setAdapter(mAdapter);
                 mAdapter.setOnItemClickListener(WPTransactionFragment.this::onItemClick);

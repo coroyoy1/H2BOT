@@ -86,7 +86,7 @@ public class OrderModel {
         this.order_station_id = order_station_id;
     }
 
-    public String getOrder_status() {
+        public String getOrder_status() {
         return order_status;
     }
 

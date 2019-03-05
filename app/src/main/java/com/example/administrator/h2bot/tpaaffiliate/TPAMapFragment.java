@@ -19,6 +19,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,7 +85,7 @@ public class TPAMapFragment extends Fragment implements OnMapReadyCallback, Goog
     DatabaseReference usersLocRef;
     LocationManager locationManager;
 
-    ArrayList<UserFile> arrayListUserFile;
+    ArrayList<OrderModel> arrayListUserFile;
     ArrayList<UserWSBusinessInfoFile> arrayListBusinessInfo;
 
     Geocoder mGeocoder;
@@ -128,7 +129,7 @@ public class TPAMapFragment extends Fragment implements OnMapReadyCallback, Goog
         bottomSheetBehavior.setHideable(true);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
-        arrayListUserFile = new ArrayList<UserFile>();
+        arrayListUserFile = new ArrayList<OrderModel>();
         arrayListBusinessInfo = new ArrayList<UserWSBusinessInfoFile>();
 
         mAuth = FirebaseAuth.getInstance();
@@ -353,9 +354,57 @@ public class TPAMapFragment extends Fragment implements OnMapReadyCallback, Goog
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot data: dataSnapshot.getChildren())
                 {
+                    for(DataSnapshot dataa: dataSnapshot.getChildren())
+                    {
 
-                    OrderModel order = data.getValue(OrderModel.class);
-
+                    OrderModel order = dataa.getValue(OrderModel.class);
+                    String customerID =  order.getOrder_customer_id();
+                    String merchantID = order.getOrder_station_id();
+                    Log.d("customerID", ""+ data.child("order_address").getValue(String.class));
+                    Log.d("merchantID", ""+ order.getOrder_station_id());
+                    Toast.makeText(getActivity(), customerID+","+merchantID, Toast.LENGTH_SHORT).show();
+//                    if(order.getOrder_status().equalsIgnoreCase("Broadcasting")) {
+//                        businessRef.addValueEventListener(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                                for (DataSnapshot data2 : dataSnapshot.getChildren()) {
+//                                    UserWSBusinessInfoFile info = data2.getValue(UserWSBusinessInfoFile.class);
+//                                    String merchantName = info.getBusiness_name();
+//                                    customerName = merchantName;
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                            }
+//                        });
+//                        arrayListUserFile.add(order);
+//                        userType = order.getOrder_status();
+//                        myAddresses = order.getOrder_address();
+//
+//                        try {
+//                            myListAddresses = mGeocoder.getFromLocationName(myAddresses, 1);
+//                            if (myListAddresses != null) {
+//                                Address location = myListAddresses.get(0);
+//                                latLong = new LatLng(location.getLatitude(), location.getLongitude());
+//
+//                                String name = customerName;
+//                                String type = "Type: " + userType;
+//                                String address = "Address: " + myAddresses;
+//                                String status = "Status: OPEN";
+//
+//                                map.addMarker(new MarkerOptions().position(latLong).title(name).snippet(type
+//                                        + "\n" + address
+//                                        + "\n" + status));
+//                                map.addMarker(new MarkerOptions().position(latLong));
+//                                map.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+//                            }
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+                    }
                 }
             }
 

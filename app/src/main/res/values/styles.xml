@@ -9,7 +9,10 @@
     </style>
 
     <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
+    <style name="AppFullScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowFullscreen">true</item>/>
+    </style>
     <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="TextAppearance.AppCompat.Widget.ActionBar.Title" parent="@android:style/TextAppearance">
