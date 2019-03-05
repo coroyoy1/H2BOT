@@ -335,20 +335,20 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                             if(status.equals("AC"))
                             {
                                 DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
-                                reference1.child(customerId).child(merchantId).child("order_status").setValue("In-Progress")
+                                reference1.child(customerId).child(merchantId).child(transactionNo).child("order_status").setValue("In-Progress")
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 showMessages("Successfully updated");
-//                                            WSInProgressFragment additem = new WSInProgressFragment();
-//                                            AppCompatActivity activity = (AppCompatActivity)getContext();
-//                                            activity.getSupportFragmentManager()
-//                                                    .beginTransaction()
-//                                                    .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-//                                                    .replace(R.id.fragment_container_ws, additem)
-//                                                    .addToBackStack(null)
-//                                                    .commit();
-//                                            Objects.requireNonNull(((AppCompatActivity)getActivity()).getSupportActionBar()).setTitle("In-Progress");
+                                            WSInProgressFragment additem = new WSInProgressFragment();
+                                            AppCompatActivity activity = (AppCompatActivity)getContext();
+                                            activity.getSupportFragmentManager()
+                                                    .beginTransaction()
+                                                    .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                                                    .replace(R.id.fragment_container_ws, additem)
+                                                    .addToBackStack(null)
+                                                    .commit();
+                                            Objects.requireNonNull(((AppCompatActivity)getActivity()).getSupportActionBar()).setTitle("In-Progress");
                                             progressDialog.dismiss();
                                             }
                                         })

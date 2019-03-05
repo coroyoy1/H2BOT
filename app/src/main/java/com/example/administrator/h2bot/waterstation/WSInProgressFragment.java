@@ -58,13 +58,13 @@ public class WSInProgressFragment extends Fragment implements WSInProgressOrders
                             if(status.equals("AC"))
                             {
                                 DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
-                                reference1.child(customerId)
+                                reference1.child(customerId).child(merchantId)
                                         .addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                 for (DataSnapshot post : dataSnapshot.getChildren())
                                                 {
-                                                    OrderModel orderModel = post.child(merchantId).getValue(OrderModel.class);
+                                                    OrderModel orderModel = post.getValue(OrderModel.class);
                                                     if(orderModel != null)
                                                     {
                                                         if(orderModel.getOrder_station_id().equals(merchantId)

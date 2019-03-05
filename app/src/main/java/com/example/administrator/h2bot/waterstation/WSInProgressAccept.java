@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -169,7 +170,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                 progressDialog.show();
                 if(transactNoScan.equals(transactionNo))
                 {
-                    setOrderSucess(transactNoScan);
+                    updateOrder(transactNoScan);
                 }
                 else
                 {
@@ -267,146 +268,55 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
 
     }
 
-
-
-    public void getOrderData()
+    private void updateOrder(String transactionSet)
     {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Transaction_Header_File").child(transactionNo);
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                    if(dataSnapshot.child("trans_no").getValue(String.class).equals(transactionNo)
-                            && dataSnapshot.child("trans_status").getValue(String.class).equals("In-Progress"))
-                    {
-                        orderNoGET = dataSnapshot.child("trans_no").getValue(String.class);
-                        customerNoGET = dataSnapshot.child("customer_id").getValue(String.class);
-                        merchantNOGET = dataSnapshot.child("merchant_id").getValue(String.class);
-                        dataIssuedGET = dataSnapshot.child("trans_date_issued").getValue(String.class);
-                        deliveryStatusGET = dataSnapshot.child("trans_delivered_service").getValue(String.class);
-                        transStatusGET = dataSnapshot.child("trans_status").getValue(String.class);
-                        transTotalAmountGET = dataSnapshot.child("trans_total_amount").getValue(String.class);
-                        transDeliveryFeeGET = dataSnapshot.child("trans_total_delivery_fee").getValue(String.class);
-                        transTotalNoGallonGET = dataSnapshot.child("trans_total_no_of_gallons").getValue(String.class);
-
-                        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Transaction_Detail_File").child(transactionNo);
-                        databaseReference1.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot postSnap) {
-
-                                    if(postSnap.child("trans_no").getValue(String.class).equals(transactionNo)
-                                            && postSnap.child("trans_status").getValue(String.class).equals("In-Progress") )
-                                    {
-                                        transDeliveryFeePerGallonDetail = postSnap.child("trans_delivery_fee_per_gallon").getValue(String.class);
-                                        transNoDetail = postSnap.child("trans_no").getValue(String.class);
-                                        transNoOfGallonDetail = postSnap.child("trans_no_of_gallons").getValue(String.class);
-                                        transPartialAmountDetail = postSnap.child("trans_partial_amount").getValue(String.class);
-                                        transPricePerGallonDetail = postSnap.child("trans_price_per_gallon").getValue(String.class);
-                                        transStatusDetail = postSnap.child("trans_status").getValue(String.class);
-                                        transWaterTypeDetail = postSnap.child("trans_water_type").getValue(String.class);
-                                        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("User_File").child(customerNoGET);
-                                        databaseReference2.addValueEventListener(new ValueEventListener() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_Customer_File");
+        reference.child(firebaseUser.getUid())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        MerchantCustomerFile merchantCustomerFile = dataSnapshot.getValue(MerchantCustomerFile.class);
+                        if(merchantCustomerFile != null)
+                        {
+                            String customerId = merchantCustomerFile.getCustomer_id();
+                            String merchantId = merchantCustomerFile.getStation_id();
+                            String status = merchantCustomerFile.getStatus();
+                            if(status.equals("AC"))
+                            {
+                                DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
+                                reference1.child(customerId).child(merchantId).child(transactionSet).setValue("order_status")
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
-                                            public void onDataChange(@NonNull DataSnapshot post) {
-
-                                                    if(customerNoGET.equals(post.child("user_getUID").getValue(String.class)))
-                                                    {
-                                                        customerIDUser = post.child("user_firtname").getValue(String.class)+" "+post.child("user_lastname").getValue(String.class);
-                                                        contactNoUser = post.child("user_phone_no").getValue(String.class);
-                                                        String imageUi = post.child("user_uri").getValue(String.class);
-                                                        Picasso.get().load(imageUi).fit().centerCrop().into(imageView);
-                                                        progressDialog.dismiss();
-
-                                                    }
-                                                orderNo.setText(orderNoGET);
-                                                customer.setText(customerIDUser);
-                                                contactNo.setText(contactNoUser);
-                                                waterType.setText(transWaterTypeDetail);
-                                                itemQuantity.setText(transTotalNoGallonGET);
-                                                pricePerGallon.setText(transPricePerGallonDetail);
-                                                service.setText(deliveryStatusGET);
-                                                deliveryFee.setText(transDeliveryFeeGET);
-                                                totalPrice.setText(transTotalAmountGET);
+                                            public void onSuccess(Void aVoid) {
+                                                showMessages("Successfully updated");
+                                                WSTransactionsFragment additem = new WSTransactionsFragment();
+                                                AppCompatActivity activity = (AppCompatActivity)getContext();
+                                                activity.getSupportFragmentManager()
+                                                        .beginTransaction()
+                                                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                                                        .replace(R.id.fragment_container_ws, additem)
+                                                        .addToBackStack(null)
+                                                        .commit();
+                                                Objects.requireNonNull(((AppCompatActivity)getActivity()).getSupportActionBar()).setTitle("Completed Orders");
+                                                progressDialog.dismiss();
                                             }
-
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
                                             @Override
-                                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                showMessages("User file does not have this data");
+                                            public void onFailure(@NonNull Exception e) {
+                                                showMessages("Data does updated");
                                                 progressDialog.dismiss();
                                             }
                                         });
-                                    }
-                                    else
-                                    {
-                                        showMessages("Data is not available");
-                                        progressDialog.dismiss();
-                                    }
                             }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                showMessages("Data is not available");
-                                progressDialog.dismiss();
-                            }
-                        });
+                        }
                     }
-                    else
-                    {
-                        showMessages("Data does not available");
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
                         progressDialog.dismiss();
                     }
-                }
-
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                showMessages("Data does not available");
-                progressDialog.dismiss();
-            }
-        });
-    }
-
-    public void setOrderSucess(String transactionSet)
-    {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Transaction_Header_File");
-        databaseReference.child(transactionSet).child("trans_status").setValue("Completed")
-        .addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Transaction_Detail_File");
-                databaseReference1.child(transactionSet).child("trans_status").setValue("Completed")
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                showMessages("Successfully perform task");
-                                WSTransactionsFragment additem = new WSTransactionsFragment();
-                                AppCompatActivity activity = (AppCompatActivity)getContext();
-                                activity.getSupportFragmentManager()
-                                        .beginTransaction()
-                                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                                        .replace(R.id.fragment_container_ws, additem)
-                                        .addToBackStack(null)
-                                        .commit();
-                                Objects.requireNonNull(((AppCompatActivity)getActivity()).getSupportActionBar()).setTitle("Completed Orders");
-                                progressDialog.dismiss();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                showMessages("Fail to complete the task, please check internet connection");
-                                progressDialog.dismiss();
-                            }
-                        });
-            }
-        })
-        .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                showMessages("Fail to complete the task, please repeat it again or check internet connection");
-                progressDialog.dismiss();
-            }
-        });
+                });
     }
 
     private void showMessages(String s) {
