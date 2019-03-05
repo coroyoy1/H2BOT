@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="320dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:padding="20dp"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/generate_qr_code"
+        android:layout_gravity="center"
+        android:layout_width="279dp"
+        android:layout_height="279dp"
+        android:background="@mipmap/ic_launcher"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/dismissBtn"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_blue_dark"
+            android:text="Close"
+            android:layout_marginTop="20dp"
+            android:textAllCaps="false"
+            android:textColor="#f5f6fa"
+            android:textSize="15sp" />
+    </LinearLayout>
+</LinearLayout>

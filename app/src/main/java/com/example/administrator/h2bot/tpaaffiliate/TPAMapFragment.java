@@ -4,12 +4,14 @@ package com.example.administrator.h2bot.tpaaffiliate;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,7 +21,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,8 +32,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
-import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.UserFile;
+import com.example.administrator.h2bot.models.UserLocationAddress;
 import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -75,31 +76,16 @@ public class TPAMapFragment extends Fragment implements OnMapReadyCallback, Goog
     private Location mLastLocation;
     private Marker mCurrentLocationMarker;
     private static final int REQUEST_USER_LOCATION_CODE = 99;
-
-    private ChildEventListener mChilExventListener;
-    private Location mCurrentLocation;
-    private Marker marker;
-    LinearLayout linearLayout;
     public FirebaseAuth mAuth;
-    DatabaseReference addressesRef, businessRef;
-    DatabaseReference usersLocRef;
-    LocationManager locationManager;
-
-    ArrayList<OrderModel> arrayListUserFile;
+    DatabaseReference userFileRef, businessRef, userLatLongRef;
+    ArrayList<UserFile> arrayListUserFile;
     ArrayList<UserWSBusinessInfoFile> arrayListBusinessInfo;
-
-    Geocoder mGeocoder;
-    List<Address> myListAddresses;
-    List<UserWSBusinessInfoFile> myBusinessInfos;
-    String myAddresses, stationName, userType, stationId, customerName;
-    String addresses;
+    ArrayList<UserLocationAddress> arrayListMerchantLatLong;
+    String stationAddress, stationName, userType, stationId, station_id_snip;
     LatLng latLong = null;
-
-    private Map<Marker, Map<String, Object>> hashMapMarkers = new HashMap<>();
-    private Map<String, Object> dataModel = new HashMap<>();
-
-    private BottomSheetBehavior bottomSheetBehavior;
-    private View bottomSheet;
+    double latitude, longitude;
+    private BottomSheetBehavior sheetBehavior, bottomSheetBehavior;
+    private View bottomSheet, bottomSheetCustomer;
 
     public TPAMapFragment() {
         // Required empty public constructor
@@ -129,13 +115,14 @@ public class TPAMapFragment extends Fragment implements OnMapReadyCallback, Goog
         bottomSheetBehavior.setHideable(true);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
-        arrayListUserFile = new ArrayList<OrderModel>();
+        bottomSheetCustomer = view.findViewById(R.id.bottom_sheet_customer);
+        bottomSheetCustomer.setVisibility(View.GONE);
+
+        arrayListUserFile = new ArrayList<UserFile>();
         arrayListBusinessInfo = new ArrayList<UserWSBusinessInfoFile>();
+        arrayListMerchantLatLong = new ArrayList<UserLocationAddress>();
 
         mAuth = FirebaseAuth.getInstance();
-        mGeocoder = new Geocoder(getActivity().getApplicationContext());
-
-
 
         mapFragment.getMapAsync(this);
         ChildEventListener mChildEventListener;
@@ -152,12 +139,85 @@ public class TPAMapFragment extends Fragment implements OnMapReadyCallback, Goog
         float zoomLevel = 16.0f;
         map.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
 
-        GetAllStations();
+        userFileRef = FirebaseDatabase.getInstance().getReference("User_File");
+        businessRef = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
+        userLatLongRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
+
+        userFileRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot userData : dataSnapshot.getChildren()) {
+                    UserFile userFile = userData.getValue(UserFile.class);
+                    businessRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot infoFile : dataSnapshot.getChildren()) {
+                                UserWSBusinessInfoFile businessInfo = infoFile.getValue(UserWSBusinessInfoFile.class);
+                                userLatLongRef.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot latlongFile : dataSnapshot.getChildren()) {
+                                            UserLocationAddress locationFile = latlongFile.getValue(UserLocationAddress.class);
+                                            if (userFile.getUser_getUID().equals(businessInfo.getBusiness_id())
+                                                    && businessInfo.getBusiness_id().equals(locationFile.getUser_id())) {
+                                                if (userFile.getUser_type().equals("Water Station")) {
+                                                    if (userFile.getUser_status().equalsIgnoreCase("Active")) {
+                                                        arrayListUserFile.add(userFile);
+                                                        arrayListBusinessInfo.add(businessInfo);
+                                                        arrayListMerchantLatLong.add(locationFile);
+
+                                                        stationId = businessInfo.getBusiness_id();
+                                                        stationAddress = businessInfo.getBusiness_address();
+                                                        stationName = businessInfo.getBusiness_name();
+                                                        userType = userFile.getUser_type();
+
+                                                        latitude = Double.parseDouble(locationFile.getUser_latitude());
+                                                        longitude = Double.parseDouble(locationFile.getUser_longtitude());
+                                                        latLong = new LatLng(latitude, longitude);
+
+
+                                                        String status = "Status: OPEN";
+                                                        String type = "Type: " + userType;
+                                                        station_id_snip = stationId;
+
+                                                        map.addMarker(new MarkerOptions()
+                                                                .position(latLong).title(stationName)
+                                                                .snippet(type + "\n" + status)
+                                                                .icon(BitmapDescriptorFactory
+                                                                        .defaultMarker(BitmapDescriptorFactory.HUE_RED))).setTag(stationId);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 Toast.makeText(getActivity(), "" + marker.getTitle(), Toast.LENGTH_SHORT).show();
+                bottomSheetCustomer.setVisibility(View.VISIBLE);
                 if(!marker.getTitle().equalsIgnoreCase("You")){
                     updateBottomSheetContent(marker);
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -165,6 +225,7 @@ public class TPAMapFragment extends Fragment implements OnMapReadyCallback, Goog
                 else{
                     if(bottomSheetBehavior.STATE_COLLAPSED == BottomSheetBehavior.STATE_COLLAPSED){
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                        bottomSheetCustomer.setVisibility(View.GONE);
                     }
                 }
                 return false;
@@ -199,6 +260,7 @@ public class TPAMapFragment extends Fragment implements OnMapReadyCallback, Goog
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
+                bottomSheetCustomer.setVisibility(View.GONE);
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         });
@@ -294,36 +356,68 @@ public class TPAMapFragment extends Fragment implements OnMapReadyCallback, Goog
     }
 
     private void updateBottomSheetContent(Marker marker) {
-//        TextView stationName = bottomSheet.findViewById(R.id.stationName);
-//        Button orderBtn = bottomSheet.findViewById(R.id.orderBtn);
-//        stationName.setText(marker.getTitle());
+        TextView stationName = bottomSheet.findViewById(R.id.stationName);
+        TextView fundAmt = bottomSheet.findViewById(R.id.fundAmt);
+        Button orderBtn = bottomSheet.findViewById(R.id.orderBtn);
+        Button scanCode = bottomSheetCustomer.findViewById(R.id.scanCode);
+        Button callBtn = bottomSheetCustomer.findViewById(R.id.callBtn);
+        Button sendMsg = bottomSheetCustomer.findViewById(R.id.sendMsg);
+        stationName.setText(marker.getTitle());
+        String amtNeeded = fundAmt.getText().toString();
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-//        orderBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-//                dialog.setCancelable(false);
-//                dialog.setTitle("CONFIRMATION");
-//                dialog.setMessage("Are you sure you want to accept this order?" );
-//                dialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        Toast.makeText(getActivity(), "Accepted", Toast.LENGTH_SHORT).show();
-//                        snackBar();
-//                    }
-//                })
-//                        .setNegativeButton("Cancel ", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                dialog.dismiss();
-//                            }
-//                        });
-//
-//                final AlertDialog alert = dialog.create();
-//                alert.show();
-//            }
-//        });
+        sendMsg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse("smsto:09234288302");
+                Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
+                intent.putExtra("sms_body", "");
+                startActivity(intent);
+            }
+        });
+
+        callBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel: 09234288302"));
+                startActivity(intent);
+                Toast.makeText(getActivity(), "Calling....", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        scanCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), TPAScanCodeActivity.class));
+            }
+        });
+
+        orderBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+                dialog.setCancelable(false);
+                dialog.setTitle("CONFIRMATION");
+                dialog.setMessage("Use " + amtNeeded + " of load?");
+                dialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(getActivity(), "Accepted", Toast.LENGTH_SHORT).show();
+                        snackBar();
+                    }
+                })
+                        .setNegativeButton("Cancel ", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                final AlertDialog alert = dialog.create();
+                alert.show();
+            }
+        });
     }
 
 
@@ -342,185 +436,5 @@ public class TPAMapFragment extends Fragment implements OnMapReadyCallback, Goog
             }
         }).setActionTextColor(getResources().getColor(android.R.color.white ));
         snackbar.show();
-    }
-
-    public void GetAllStations(){
-
-        addressesRef = FirebaseDatabase.getInstance().getReference("Order_File");
-        businessRef = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
-
-        addressesRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot data: dataSnapshot.getChildren())
-                {
-                    for(DataSnapshot dataa: dataSnapshot.getChildren())
-                    {
-
-                    OrderModel order = dataa.getValue(OrderModel.class);
-                    String customerID =  order.getOrder_customer_id();
-                    String merchantID = order.getOrder_station_id();
-                    Log.d("customerID", ""+ data.child("order_address").getValue(String.class));
-                    Log.d("merchantID", ""+ order.getOrder_station_id());
-                    Toast.makeText(getActivity(), customerID+","+merchantID, Toast.LENGTH_SHORT).show();
-//                    if(order.getOrder_status().equalsIgnoreCase("Broadcasting")) {
-//                        businessRef.addValueEventListener(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                                for (DataSnapshot data2 : dataSnapshot.getChildren()) {
-//                                    UserWSBusinessInfoFile info = data2.getValue(UserWSBusinessInfoFile.class);
-//                                    String merchantName = info.getBusiness_name();
-//                                    customerName = merchantName;
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                            }
-//                        });
-//                        arrayListUserFile.add(order);
-//                        userType = order.getOrder_status();
-//                        myAddresses = order.getOrder_address();
-//
-//                        try {
-//                            myListAddresses = mGeocoder.getFromLocationName(myAddresses, 1);
-//                            if (myListAddresses != null) {
-//                                Address location = myListAddresses.get(0);
-//                                latLong = new LatLng(location.getLatitude(), location.getLongitude());
-//
-//                                String name = customerName;
-//                                String type = "Type: " + userType;
-//                                String address = "Address: " + myAddresses;
-//                                String status = "Status: OPEN";
-//
-//                                map.addMarker(new MarkerOptions().position(latLong).title(name).snippet(type
-//                                        + "\n" + address
-//                                        + "\n" + status));
-//                                map.addMarker(new MarkerOptions().position(latLong));
-//                                map.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-//                            }
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-//        addressesRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot data: dataSnapshot.getChildren()){
-//                    UserFile user = data.getValue(UserFile.class);
-//
-//                    if(user.getUser_type().equalsIgnoreCase("Water Station") || user.getUser_type().equalsIgnoreCase("Water Dealer")
-//                            && user.getUser_status().equalsIgnoreCase("active")){
-//                        arrayListUserFile.add(user);
-//
-//                        customerName = user.getUser_firtname() + " " + user.getUser_lastname();
-//                        userType = user.getUser_type();
-//                        myAddresses = user.getUser_address();
-//
-//                        try {
-//                            myListAddresses = mGeocoder.getFromLocationName(myAddresses, 1);
-//                            if (myListAddresses != null) {
-//                                Address location = myListAddresses.get(0);
-//                                latLong = new LatLng(location.getLatitude(), location.getLongitude());
-//
-//                                String name = customerName;
-//                                String type = "Type: " + userType;
-//                                String address = "Address: " + myAddresses;
-//                                String status = "Status: OPEN";
-//
-//                                map.addMarker(new MarkerOptions().position(latLong).title(name).snippet(type
-//                                        + "\n" + address
-//                                        + "\n" + status));
-//                                map.addMarker(new MarkerOptions().position(latLong));
-//                                map.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-//                            }
-//                        }
-//                        catch (Exception e){
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-
-//        addressesRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//
-//                for(DataSnapshot data: dataSnapshot.getChildren()){
-//
-//                    UserFile users = data.getValue(UserFile.class);
-//
-//                    businessRef.addValueEventListener(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            for (DataSnapshot data2: dataSnapshot.getChildren()){
-//
-//                                UserWSBusinessInfoFile info = data2.getValue(UserWSBusinessInfoFile.class);
-//
-//                                if(users.getUser_getUID().equals(info.getBusiness_id())){
-//                                    if(users.getUser_type().equals("Customer")){
-//                                        if(users.getUser_status().equalsIgnoreCase("active")){
-//                                            arrayListUserFile.add(users);
-//                                            arrayListBusinessInfo.add(info);
-//
-//                                            myAddresses = users.getUser_address();
-//                                            stationName = info.getBusiness_name();
-//                                            userType = users.getUser_type();
-//                                            stationId = info.getBusiness_id();
-//                                            try {
-//                                                myListAddresses = mGeocoder.getFromLocationName(myAddresses, 1);
-//                                                if (myListAddresses != null) {
-//                                                    Address location = myListAddresses.get(0);
-//                                                    latLong = new LatLng(location.getLatitude(), location.getLongitude());
-//                                                    String status = "Status: OPEN";
-//                                                    String type = "Type: " + userType;
-//                                                    String address = "Address: " + myAddresses;
-//                                                    stationId = "ID: " + stationId;
-//                                                    map.addMarker(new MarkerOptions().position(latLong).title(stationName).snippet(stationId
-//                                                            + "\n" + type
-//                                                            + "\n" + address
-//                                                            + "\n" + status));
-//                                                    map.addMarker(new MarkerOptions().position(latLong));
-//                                                    map.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-//                                                }
-//                                            }
-//                                            catch (Exception e){
-//                                                e.printStackTrace();
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//                            Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
-//            }
-//        });
     }
 }

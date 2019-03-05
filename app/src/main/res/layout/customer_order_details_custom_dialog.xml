@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -18,8 +19,9 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:gravity="center"
+                android:layout_margin="5dp"
                 android:background="@android:color/holo_blue_dark"
                 android:orientation="horizontal"
                 android:padding="5dp">
@@ -34,6 +36,7 @@
                     android:textStyle="bold|italic" />
 
                 <TextView
+                    android:id="@+id/order_no"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -58,7 +61,7 @@
                     android:text="Type: " />
 
                 <TextView
-                    android:id="@+id/waterType"
+                    android:id="@+id/water_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -80,7 +83,7 @@
                     android:text="Price/gal: " />
 
                 <TextView
-                    android:id="@+id/pricePerGallon"
+                    android:id="@+id/price_per_gallon"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -121,28 +124,6 @@
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Station: " />
-
-                <TextView
-                    android:id="@+id/stationName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Nature Spring Station"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="2dp">
-
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="Address: " />
 
                 <TextView
@@ -168,7 +149,7 @@
                     android:text="Service: " />
 
                 <TextView
-                    android:id="@+id/serviceType"
+                    android:id="@+id/service_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -191,7 +172,7 @@
                     android:text="Delivery Date: " />
 
                 <TextView
-                    android:id="@+id/deliveryDate"
+                    android:id="@+id/delivery_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -213,7 +194,7 @@
                     android:text="Delivery Fee: " />
 
                 <TextView
-                    android:id="@+id/deliveryFee"
+                    android:id="@+id/delivery_fee"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -241,7 +222,7 @@
                     android:text="Pending"/>
             </LinearLayout>
             <TextView
-                android:id="@+id/totalAmt"
+                android:id="@+id/total_amt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -250,6 +231,45 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/qr_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:textAlignment="center"
+                android:visibility="gone"
+                android:text="QR CODE"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <Button
+                    android:id="@+id/updateOrderBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="2.5dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/holo_blue_dark"
+                    android:text="UPDATE ORDER"
+                    android:textColor="#f5f6fa" />
+
+                <Button
+                    android:id="@+id/cancelBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2.5dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/holo_blue_dark"
+                    android:text="CANCEL ORDER"
+                    android:textColor="#f5f6fa" />
+            </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -257,13 +277,15 @@
                 android:padding="5dp">
 
                 <Button
-                    android:id="@+id/okayBtn"
+                    android:id="@+id/viewQrQodeBtn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@android:color/holo_blue_dark"
-                    android:text="OKAY"
-                    android:textColor="#f5f6fa" />
+                    android:text="VIEW QR CODE"
+                    android:onClick="generateQrCode"
+                    android:textColor="#f5f6fa"
+                    tools:ignore="OnClick" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

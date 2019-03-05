@@ -2,6 +2,7 @@ package com.example.administrator.h2bot.customer;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -12,12 +13,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.LoginActivity;
 import com.example.administrator.h2bot.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.util.Objects;
 
@@ -58,7 +65,7 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
                 break;
 
             case R.id.my_order:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerOrdersFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerStationFragment()).commit();
                 Toast.makeText(this, "Orders", Toast.LENGTH_SHORT).show();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("My Orders");
                 break;
@@ -67,12 +74,6 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerAccountSettingFragment()).commit();
                 Toast.makeText(this, "Account Settings", Toast.LENGTH_SHORT).show();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Account Settings");
-                break;
-
-            case R.id.delivered_orders:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerDeliveredOrdersFragment()).commit();
-                Toast.makeText(this, "Delivered Orders", Toast.LENGTH_SHORT).show();
-                Objects.requireNonNull(getSupportActionBar()).setTitle("Delivered Orders");
                 break;
         }
         if (menuItem.getItemId() == R.id.logout) {
@@ -128,21 +129,28 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         dialog.show();
     }
 
-//    public void OrderInfoPopup(View view) {
-//        dialog.setContentView(R.layout.order_info_popup);
-//        dialog.show();
-//    }
-//
-//    public void TransactionInfoPopup(View view) {
-//        dialog.setContentView(R.layout.transaction_popup);
-//        dialog.show();
-//    }
-
-    public void showQrCode(View view) {
+    public void generateQrCode(View view) {
+        String get_qrCode = CustomerAllOrdersAdapter.qrCode;
+        ImageView generate_qr_code;
+        String qrString;
         Button dismissBtn;
-        dialog.setContentView(R.layout.qr_code_popup);
+        dialog.setContentView(R.layout.customer_generate_qr_code);
         dismissBtn = dialog.findViewById(R.id.dismissBtn);
+        generate_qr_code = dialog.findViewById(R.id.generate_qr_code);
 
+        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+        try
+        {
+            qrString = get_qrCode;
+            BitMatrix bitMatrix = multiFormatWriter.encode(qrString, BarcodeFormat.AZTEC,279, 279);
+            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+            generate_qr_code.setImageBitmap(bitmap);
+            }
+            catch(WriterException e)
+            {
+                e.printStackTrace();
+            }
         dismissBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
