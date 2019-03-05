@@ -1,13 +1,17 @@
 package com.example.administrator.h2bot.customer;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -37,6 +41,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 
 import static  com.example.administrator.h2bot.customer.CustomerMapFragment.EXTRA_stationID;
@@ -51,6 +56,7 @@ public class CustomerChatbotActivity extends AppCompatActivity {
     private LinearLayout chatLayout;
     private EditText queryEditText;
     private ImageView sendBtn;
+    Dialog dialog;
 
     // Java V2
     private SessionsClient sessionsClient;
@@ -69,6 +75,7 @@ public class CustomerChatbotActivity extends AppCompatActivity {
         stationNameTv = findViewById(R.id.stationNameTv);
         stationNameTv.setText(stationName + "'s Assistant");
 
+        dialog = new Dialog(this);
         final ScrollView scrollview = findViewById(R.id.chatScrollView);
         scrollview.post(() -> scrollview.fullScroll(ScrollView.FOCUS_DOWN));
 
@@ -170,6 +177,27 @@ public class CustomerChatbotActivity extends AppCompatActivity {
                 queryEditText.setEnabled(false);
                 sendBtn.setEnabled(false);
             }
+            else if(botReply.equalsIgnoreCase("Communication error or check your internet connection.")){
+                queryEditText.setText("You can't reply on this conversation.");
+                queryEditText.setEnabled(false);
+                sendBtn.setEnabled(false);
+            }
+            else if(botReply.equalsIgnoreCase("Your order is being processed. We will just notify you for more details.")){
+                Button okayBtn;
+                dialog.setContentView(R.layout.order_info_popup);
+                dialog.setCanceledOnTouchOutside(false);
+                okayBtn = dialog.findViewById(R.id.okayBtn);
+
+                okayBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        startActivity(new Intent(CustomerChatbotActivity.this, CustomerMainActivity.class));
+                    }
+                });
+                this.dialog.show();
+            }
+
             if(botReply.equalsIgnoreCase("Okay. See you soon!")){
                 startActivity(new Intent(this, CustomerMainActivity.class));
             }

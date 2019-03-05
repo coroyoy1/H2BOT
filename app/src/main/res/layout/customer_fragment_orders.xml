@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:background="#DCDCDC	"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <LinearLayout
@@ -16,111 +16,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="ORDER NO"
-            android:textAlignment="center"
-            android:textColor="#f5f6fa"
-            android:textStyle="bold"
+            android:text="STATION NAME"
+            android:layout_marginLeft="10dp"
+            android:textColor="#FFFFFF"
             android:textSize="15dp" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAlignment="center"
-            android:text="STATUS"
-            android:textSize="15dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="#f5f6fa"
             android:textStyle="bold"
-            android:textColor="#f5f6fa" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:textColor="#f5f6fa" />
+            android:textSize="15dp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/orders"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="1dp"
-        android:background="#FFFFFF"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="00000001"
-            android:textAlignment="center"
-            android:textColor="#000000"
-            android:textSize="12dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Pending"
-            android:textAlignment="center"
-            android:textColor="#000000"
-            android:textSize="12dp"
-            android:textStyle="italic" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:paddingRight="30dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:textColor="#f5f6fa" />
-        </LinearLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#FFFFFF"
-        android:gravity="center"
-        android:layout_marginBottom="1dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="00000002"
-            android:textAlignment="center"
-            android:textColor="#000000"
-            android:textSize="12dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:text="Pending"
-            android:textStyle="italic"
-            android:textColor="#000000"
-            android:textSize="12dp"/>
-
-        <LinearLayout
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:paddingRight="30dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:textColor="#f5f6fa" />
-        </LinearLayout>
-    </LinearLayout>
+    </android.support.v7.widget.RecyclerView>
 </LinearLayout>

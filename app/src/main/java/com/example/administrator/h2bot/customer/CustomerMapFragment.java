@@ -2,6 +2,7 @@ package com.example.administrator.h2bot.customer;
 
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,7 +19,6 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,13 +28,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.administrator.h2bot.LoginActivity;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserLocationAddress;
 import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -43,6 +46,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -64,8 +69,11 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  */
 public class CustomerMapFragment extends Fragment implements
-        OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        OnMapReadyCallback
+        , GoogleApiClient.ConnectionCallbacks
+        , GoogleApiClient.OnConnectionFailedListener
+        , LocationListener
+        , ResultCallback<Status> {
 
 
     // User Permissions
@@ -93,8 +101,7 @@ public class CustomerMapFragment extends Fragment implements
 
     Geocoder mGeocoder;
     List<Address> myListAddresses;
-    String stationAddress, stationName, userType, stationId;
-    String station_id_snip;
+    String stationAddress, stationName, userType, stationId, station_id_snip;
     LatLng latLong = null;
     double latitude, longitude;
 
@@ -121,7 +128,7 @@ public class CustomerMapFragment extends Fragment implements
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkUserLocationPermission();
         }
 
@@ -146,7 +153,6 @@ public class CustomerMapFragment extends Fragment implements
         mGeocoder = new Geocoder(getActivity().getApplicationContext());
 
 
-
 //        usersLocRef = FirebaseDatabase.getInstance().getReference("User_File").child(mAuth.getCurrentUser().getUid());
         mapFragment.getMapAsync(this);
         ChildEventListener mChildEventListener;
@@ -154,7 +160,7 @@ public class CustomerMapFragment extends Fragment implements
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View view, int i) {
-                if(i == BottomSheetBehavior.STATE_COLLAPSED)
+                if (i == BottomSheetBehavior.STATE_COLLAPSED)
                     return;
             }
 
@@ -168,7 +174,7 @@ public class CustomerMapFragment extends Fragment implements
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             buildGoogleApiClient();
             map.setMyLocationEnabled(true);
             Toast.makeText(getActivity(), "Permission granted", Toast.LENGTH_SHORT).show();
@@ -183,23 +189,23 @@ public class CustomerMapFragment extends Fragment implements
         userFileRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot userData : dataSnapshot.getChildren()){
+                for (DataSnapshot userData : dataSnapshot.getChildren()) {
                     UserFile userFile = userData.getValue(UserFile.class);
                     businessRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot infoFile : dataSnapshot.getChildren()){
+                            for (DataSnapshot infoFile : dataSnapshot.getChildren()) {
                                 UserWSBusinessInfoFile businessInfo = infoFile.getValue(UserWSBusinessInfoFile.class);
                                 userLatLongRef.addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        for (DataSnapshot latlongFile : dataSnapshot.getChildren()){
+                                        for (DataSnapshot latlongFile : dataSnapshot.getChildren()) {
                                             UserLocationAddress locationFile = latlongFile.getValue(UserLocationAddress.class);
-                                            if(userFile.getUser_getUID().equals(businessInfo.getBusiness_id())
-                                                    && businessInfo.getBusiness_id().equals(locationFile.getUser_id())){
-                                                if(userFile.getUser_type().equals("Water Station")
-                                                        || userFile.getUser_type().equals("Water Dealer")){
-                                                    if(userFile.getUser_status().equalsIgnoreCase("Active")){
+                                            if (userFile.getUser_getUID().equals(businessInfo.getBusiness_id())
+                                                    && businessInfo.getBusiness_id().equals(locationFile.getUser_id())) {
+                                                if (userFile.getUser_type().equals("Water Station")
+                                                        || userFile.getUser_type().equals("Water Dealer")) {
+                                                    if (userFile.getUser_status().equalsIgnoreCase("Active")) {
                                                         arrayListUserFile.add(userFile);
                                                         arrayListBusinessInfo.add(businessInfo);
                                                         arrayListMerchantLatLong.add(locationFile);
@@ -219,10 +225,10 @@ public class CustomerMapFragment extends Fragment implements
                                                         station_id_snip = stationId;
 
                                                         map.addMarker(new MarkerOptions()
-                                                            .position(latLong).title(stationName)
-                                                            .snippet(type + "\n" + status)
-                                                            .icon(BitmapDescriptorFactory
-                                                            .defaultMarker(BitmapDescriptorFactory.HUE_RED))).setTag(stationId);
+                                                                .position(latLong).title(stationName)
+                                                                .snippet(type + "\n" + status)
+                                                                .icon(BitmapDescriptorFactory
+                                                                        .defaultMarker(BitmapDescriptorFactory.HUE_RED))).setTag(stationId);
                                                     }
                                                 }
                                             }
@@ -253,20 +259,19 @@ public class CustomerMapFragment extends Fragment implements
 
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
-        public boolean onMarkerClick(Marker marker) {
-            if(!marker.getTitle().equalsIgnoreCase("You")){
-                updateBottomSheetContent(marker);
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                marker.showInfoWindow();
-            }
-            else{
-                if(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED){
+            public boolean onMarkerClick(Marker marker) {
+                if (!marker.getTitle().equalsIgnoreCase("You")) {
+                    updateBottomSheetContent(marker);
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    marker.showInfoWindow();
+                } else {
+                    if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    }
                 }
+                return false;
             }
-            return false;
-        }
-    });
+        });
 
         map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
@@ -309,43 +314,38 @@ public class CustomerMapFragment extends Fragment implements
     }
 
 
-
-
-    public boolean checkUserLocationPermission(){
-        if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)){
+    public boolean checkUserLocationPermission() {
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_USER_LOCATION_CODE);
-            }
-            else{
+            } else {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_USER_LOCATION_CODE);
             }
             return false;
-        }
-        else{
+        } else {
             return true;
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
+        switch (requestCode) {
             case REQUEST_USER_LOCATION_CODE:
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                        if(mGoogleApiClient == null){
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        if (mGoogleApiClient == null) {
                             buildGoogleApiClient();
                         }
                         map.setMyLocationEnabled(true);
                     }
-                }
-                else{
+                } else {
                     Toast.makeText(getActivity(), "Permission denied...", Toast.LENGTH_SHORT).show();
                 }
                 return;
         }
     }
 
-    protected synchronized void buildGoogleApiClient(){
+    protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -358,10 +358,11 @@ public class CustomerMapFragment extends Fragment implements
     @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
-        if(mCurrentLocationMarker != null){
+        if (mCurrentLocationMarker != null) {
             mCurrentLocationMarker.remove();
         }
         LatLng mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+        geofence(mLatLng);
         MarkerOptions mMarkerOption = new MarkerOptions();
         mMarkerOption.position(mLatLng);
         mMarkerOption.title("You");
@@ -372,9 +373,94 @@ public class CustomerMapFragment extends Fragment implements
         float zoomLevel = 16.0f;
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, zoomLevel));
 
-        if(mGoogleApiClient != null){
+        if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
+    }
+
+    Marker geofenceMarker;
+
+    private void geofence(LatLng latLng) {
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(latLng)
+                .title("You");
+        if (map != null) {
+            if (geofenceMarker != null) {
+                geofenceMarker.remove();
+            }
+            geofenceMarker = map.addMarker(markerOptions);
+        }
+    }
+
+    GeofencingRequest geofencingRequest;
+
+    private void startGeofence() {
+        if (geofenceMarker != null) {
+            Geofence geofence = createGeofence(geofenceMarker.getPosition(), 400f);
+            geofencingRequest = createGeoRequest(geofence);
+            addGeoFence(geofence);
+        }
+    }
+
+    @Override
+    public void onResult(@NonNull Status status) {
+        drawGeofence();
+
+    }
+
+    Circle geofenceLimits;
+
+    private void drawGeofence() {
+        if (geofenceLimits != null) {
+            geofenceLimits.remove();
+        }
+        CircleOptions circleOptions = new CircleOptions()
+                .center(geofenceMarker.getPosition())
+                .strokeColor(Color.argb(50, 70, 70, 70))
+                .fillColor(Color.argb(100, 150, 150, 150))
+                .radius(400f);
+
+        geofenceLimits = map.addCircle(circleOptions);
+    }
+
+    private void addGeoFence(Geofence geofence) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        LocationServices.GeofencingApi.addGeofences(mGoogleApiClient, geofencingRequest, createGeofencingPendingIntent())
+                .setResultCallback(this);
+    }
+
+    PendingIntent geofencePendingIntent;
+    private PendingIntent createGeofencingPendingIntent() {
+        if(geofencePendingIntent != null){
+            return geofencePendingIntent;
+        }
+        Intent i = new Intent(getActivity(), GeofenceTransitionService.class);
+        return PendingIntent.getService(getActivity(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private GeofencingRequest createGeoRequest(Geofence geofence) {
+        return new GeofencingRequest.Builder()
+                .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+                .addGeofence(geofence)
+                .build();
+    }
+
+    private Geofence createGeofence(LatLng position, float v) {
+        return new Geofence.Builder()
+                .setRequestId("My geofence")
+                .setCircularRegion(position.latitude, position.longitude, v)
+                .setExpirationDuration(60 * 60 * 1000)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER|Geofence.GEOFENCE_TRANSITION_EXIT)
+                .build();
     }
 
     @Override

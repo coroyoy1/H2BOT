@@ -59,25 +59,11 @@ public class TPAAffiliateMainActivity extends AppCompatActivity implements Navig
                 drawerLayout.closeDrawer(GravityCompat.START);
                 break;
 
-            case R.id.inProgress:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TPAInprogressFragment()).commit();
-                Toast.makeText(this, "In progress", Toast.LENGTH_SHORT).show();
-                Objects.requireNonNull(getSupportActionBar()).setTitle("In progress");
-                drawerLayout.closeDrawer(GravityCompat.START);
-                break;
-
             case R.id.delivered_orders:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TPADeliveredOrdersFragment()).commit();
                 Toast.makeText(this, "Delivered Orders", Toast.LENGTH_SHORT).show();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Delivered Orders");
                 drawerLayout.closeDrawer(GravityCompat.START);
-                break;
-
-            case R.id.load_wallet:
-                final Dialog fundDialog = new Dialog(this);
-                fundDialog.setContentView(R.layout.tpa_add_fund_popup);
-                fundDialog.show();
-                drawerLayout.isDrawerOpen(GravityCompat.START);
                 break;
 
             case R.id.account_settings:
