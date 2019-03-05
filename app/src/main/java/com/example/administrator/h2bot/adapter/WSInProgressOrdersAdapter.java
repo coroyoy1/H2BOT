@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 import com.example.administrator.h2bot.waterstation.WSCompletedAccept;
 import com.example.administrator.h2bot.waterstation.WSInProgressAccept;
@@ -20,7 +21,7 @@ import java.util.List;
 
 public class WSInProgressOrdersAdapter extends RecyclerView.Adapter<WSInProgressOrdersAdapter.ViewHolder>{
     private Context mContext;
-    private List<TransactionHeaderFileModel> mUploads;
+    private List<OrderModel> mUploads;
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener {
@@ -31,7 +32,7 @@ public class WSInProgressOrdersAdapter extends RecyclerView.Adapter<WSInProgress
         mListener = listener;
     }
 
-    public WSInProgressOrdersAdapter(Context context, List<TransactionHeaderFileModel> uploads) {
+    public WSInProgressOrdersAdapter(Context context, List<OrderModel> uploads) {
         mContext = context;
         mUploads = uploads;
     }
@@ -44,31 +45,9 @@ public class WSInProgressOrdersAdapter extends RecyclerView.Adapter<WSInProgress
     }
     @Override
     public void onBindViewHolder(@NonNull WSInProgressOrdersAdapter.ViewHolder viewHolder, int i) {
-        final TransactionHeaderFileModel currentData = mUploads.get(i);
-                viewHolder.transactionNo.setText(currentData.getTrans_no());
-                viewHolder.status.setText(currentData.getTrans_status());
-//                viewHolder.customername.setText(currentData.getCustomerName());
-//                viewHolder.address.setText(currentData.getAddress());
-//                viewHolder.contactno.setText(currentData.getContactNo());
-//                viewHolder.deliveryfee.setText(currentData.getDeliveryFee());
-//                viewHolder.itemquantity.setText(currentData.getItemQuantity());
-//                viewHolder.pricepergallon.setText(currentData.getPricePerGallon());
-//                viewHolder.service.setText(currentData.getService());
-//                viewHolder.totalprice.setText(currentData.getTotalPrice());
-//                viewHolder.watertype.setText(currentData.getWaterType());
-        //viewHolder.details.setText(">>");
-
-           String transactno= currentData.getTrans_no();
-            String status= currentData.getTrans_status();
-//        String customername= currentData.getCustomerName();
-//        String address= currentData.getAddress();
-//        String contactno= currentData.getContactNo();
-//        String deliveryfee= currentData.getDeliveryFee();
-//        String itemquantity= currentData.getItemQuantity();
-//        String pricepergallon= currentData.getPricePerGallon();
-//        String service= currentData.getService();
-//        String totalprice= currentData.getTotalPrice();
-//        String watertype= currentData.getWaterType();
+        final OrderModel currentData = mUploads.get(i);
+                viewHolder.transactionNo.setText(currentData.getOrder_no());
+                viewHolder.status.setText(currentData.getOrder_status());
 
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -83,35 +62,15 @@ public class WSInProgressOrdersAdapter extends RecyclerView.Adapter<WSInProgress
                         .addToBackStack(null)
                         .commit();
                 Bundle args = new Bundle();
-                args.putString("transactionno", currentData.getTrans_no());
-                args.putString("status", currentData.getTrans_status());
-//                args.putString("customername", currentData.getCustomerName());
-//                args.putString("address", currentData.getAddress());
-//                args.putString("contactno", currentData.getContactNo());
-//                args.putString("deliveryfee", currentData.getDeliveryFee());
-//                args.putString("itemquantity", currentData.getItemQuantity());
-//                args.putString("pricepergallon", currentData.getPricePerGallon());
-//                args.putString("service", currentData.getService());
-//                args.putString("totalprice", currentData.getTotalPrice());
-//                args.putString("watertype", currentData.getWaterType());
+                args.putString("transactionno", currentData.getOrder_no());
+                args.putString("status", currentData.getOrder_status());
                   additem.setArguments(args);
             }
         });
 
-                TransactionHeaderFileModel uploadCurrent = mUploads.get(i);
-                viewHolder.transactionNo.setText(uploadCurrent.getTrans_no());
-                viewHolder.status.setText(uploadCurrent.getTrans_status());
-//                viewHolder.customername.setText(uploadCurrent.getCustomerName());
-//                viewHolder.address.setText(uploadCurrent.getAddress());
-//                viewHolder.contactno.setText(uploadCurrent.getContactNo());
-//                viewHolder.deliveryfee.setText(uploadCurrent.getDeliveryFee());
-//                viewHolder.itemquantity.setText(uploadCurrent.getItemQuantity());
-//                viewHolder.pricepergallon.setText(uploadCurrent.getPricePerGallon());
-//                viewHolder.service.setText(uploadCurrent.getService());
-//                viewHolder.totalprice.setText(uploadCurrent.getTotalPrice());
-//                viewHolder.watertype.setText(uploadCurrent.getWaterType());
-//                viewHolder.details.setText(">>");
-
+                OrderModel uploadCurrent = mUploads.get(i);
+                viewHolder.transactionNo.setText(uploadCurrent.getOrder_no());
+                viewHolder.status.setText(uploadCurrent.getOrder_status());
     }
 
     @Override
@@ -126,18 +85,6 @@ public class WSInProgressOrdersAdapter extends RecyclerView.Adapter<WSInProgress
 
             transactionNo = itemView.findViewById(R.id.transactionNoIN);
             status = itemView.findViewById(R.id.transactionStatusIN);
-//            details = itemView.findViewById(R.id.details);
-//            address = itemView.findViewById(R.id.address);
-//            customername = itemView.findViewById(R.id.customername);
-//            contactno = itemView.findViewById(R.id.contactno);
-//            deliveryfee = itemView.findViewById(R.id.deliveryfee);
-//            itemquantity = itemView.findViewById(R.id.itemquantity);
-//            pricepergallon = itemView.findViewById(R.id.pricepergallon);
-//            service = itemView.findViewById(R.id.service);
-//            totalprice = itemView.findViewById(R.id.totalprice);
-//            watertype = itemView.findViewById(R.id.watertype);
-
-
             itemView.setOnClickListener(new View    .OnClickListener() {
                 @Override
                 public void onClick(View v) {

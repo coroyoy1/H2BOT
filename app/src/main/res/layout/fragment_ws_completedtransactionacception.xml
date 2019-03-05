@@ -251,7 +251,14 @@
                         android:textColor="@android:color/white"
                         android:textSize="18dp" />
 
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
                     <TextView
+                        android:textAlignment="center"
                         android:id="@+id/addressCOMACC"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -279,7 +286,7 @@
                         android:layout_height="wrap_content"
                         android:text="Date to Deliver:" />
                     <TextView
-                        android:id="@+id/datedeliveredPOACC"
+                        android:id="@+id/datedeliveredCOMACC"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:textSize="18dp"

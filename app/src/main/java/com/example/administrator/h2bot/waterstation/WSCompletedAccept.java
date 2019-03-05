@@ -63,7 +63,7 @@ public class WSCompletedAccept extends Fragment implements View.OnClickListener 
         backButton = view.findViewById(R.id.backCOMACC);
         imageView = view.findViewById(R.id.imageViewINACC);
         deliveryMethod = view.findViewById(R.id.MethodCOMACC);
-        deliveryDate = view.findViewById(R.id.datedeliveredCOMDMDM);
+        deliveryDate = view.findViewById(R.id.datedeliveredCOMACC);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -107,47 +107,53 @@ public class WSCompletedAccept extends Fragment implements View.OnClickListener 
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                 OrderModel orderModel = dataSnapshot.getValue(OrderModel.class);
-                                                if(orderModel != null)
-                                                {
-                                                    orderNo.setText(orderModel.getOrder_no());
-                                                    itemQuantity.setText(orderModel.getOrder_qty());
-                                                    pricePerGallon.setText(orderModel.getOrder_price_per_gallon());
-                                                    totalPrice.setText(orderModel.getOrder_total_amt());
-                                                    waterType.setText(orderModel.getOrder_water_type());
-                                                    address.setText(orderModel.getOrder_address());
-                                                    deliveryMethod.setText(orderModel.getOrder_delivery_method());
+                                                if (orderModel != null) {
+                                                    if (orderModel.getOrder_status().equals("Completed")) {
+                                                        orderNo.setText(orderModel.getOrder_no());
+                                                        itemQuantity.setText(orderModel.getOrder_qty());
+                                                        pricePerGallon.setText(orderModel.getOrder_price_per_gallon());
+                                                        totalPrice.setText(orderModel.getOrder_total_amt());
+                                                        waterType.setText(orderModel.getOrder_water_type());
+                                                        address.setText(orderModel.getOrder_address());
+                                                        deliveryMethod.setText(orderModel.getOrder_delivery_method());
 
-                                                    DateTime date = new DateTime(orderModel.getOrder_delivery_date());
-                                                    String dateString = date.toLocalDate().toString();
+                                                        DateTime date = new DateTime(orderModel.getOrder_delivery_date());
+                                                        String dateString = date.toLocalDate().toString();
 
-                                                    deliveryDate.setText(dateString);
-                                                    deliveryFee.setText(orderModel.getOrder_delivery_fee());
+                                                        deliveryDate.setText(dateString);
+                                                        deliveryFee.setText(orderModel.getOrder_delivery_fee());
 
-                                                    DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_File");
-                                                    reference2.child(orderModel.getOrder_customer_id())
-                                                            .addValueEventListener(new ValueEventListener() {
-                                                                @Override
-                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                    UserFile userFile = dataSnapshot.getValue(UserFile.class);
-                                                                    String customerPicture = userFile.getUser_uri();
-                                                                    Picasso.get().load(customerPicture).into(imageView);
-                                                                    progressDialog.dismiss();
-                                                                }
+                                                        DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_File");
+                                                        reference2.child(orderModel.getOrder_customer_id())
+                                                                .addValueEventListener(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                        UserFile userFile = dataSnapshot.getValue(UserFile.class);
+                                                                        if (userFile != null) {
+                                                                            String customerPicture = userFile.getUser_uri();
+                                                                            Picasso.get().load(customerPicture).into(imageView);
+                                                                            contactNo.setText(userFile.getUser_phone_no());
+                                                                            String fullname = userFile.getUser_firtname() + " " + userFile.getUser_lastname();
+                                                                            customer.setText(fullname);
+                                                                            progressDialog.dismiss();
+                                                                        }
+                                                                    }
 
-                                                                @Override
-                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                        progressDialog.dismiss();
+                                                                    }
+                                                                });
 
-                                                                }
-                                                            });
 
+                                                    }
 
                                                 }
-
                                             }
 
                                             @Override
                                             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                                                progressDialog.dismiss();
                                             }
                                         });
                             }
@@ -156,7 +162,7 @@ public class WSCompletedAccept extends Fragment implements View.OnClickListener 
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        progressDialog.dismiss();
                     }
                 });
     }

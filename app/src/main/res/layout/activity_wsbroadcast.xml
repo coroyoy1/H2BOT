@@ -9,7 +9,6 @@
     android:layout_gravity="center"
     android:gravity="center">
 
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -20,6 +19,11 @@
         android:textColor="@android:color/white"
         android:background="@android:color/holo_blue_dark"/>
 
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -29,11 +33,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/radiowave"/>
+        <TextView
+            android:id="@+id/timer"
+            android:textAlignment="center"
+            android:text="00:00"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:layout_marginBottom="10dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
             <Button
                 android:id="@+id/broadcastActivate"
                 android:layout_width="match_parent"
@@ -55,5 +68,7 @@
         </LinearLayout>
 
     </LinearLayout>
+
+</ScrollView>
 
 </RelativeLayout>

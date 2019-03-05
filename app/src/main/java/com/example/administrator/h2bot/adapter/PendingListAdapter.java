@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 import com.example.administrator.h2bot.waterstation.WSPendingOrderAcceptDeclineFragment;
 
@@ -19,9 +20,19 @@ import java.util.List;
 public class PendingListAdapter extends RecyclerView.Adapter<PendingListAdapter.ImageViewholder> {
 
     private Context contextHolder;
-    private List<TransactionHeaderFileModel> uploadHolder;
+    private List<OrderModel> uploadHolder;
 
-    public PendingListAdapter(Context context, List<TransactionHeaderFileModel> uploads)
+    private WSInProgressOrdersAdapter.OnItemClickListener mListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(WSInProgressOrdersAdapter.OnItemClickListener listener) {
+        mListener = listener;
+    }
+
+    public PendingListAdapter(Context context, List<OrderModel> uploads)
     {
         contextHolder = context;
         uploadHolder = uploads;
@@ -36,9 +47,9 @@ public class PendingListAdapter extends RecyclerView.Adapter<PendingListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewholder imageViewholder, int i) {
-        final TransactionHeaderFileModel currentData = uploadHolder.get(i);
-        String transactionNo = currentData.getTrans_no();
-        String transactionStatus = currentData.getTrans_status();
+        final OrderModel currentData = uploadHolder.get(i);
+        String transactionNo = currentData.getOrder_no();
+        String transactionStatus = currentData.getOrder_status();
         imageViewholder.transactionNoText.setText(transactionNo);
         imageViewholder.transactionStatusText.setText(transactionStatus);
 
@@ -55,7 +66,7 @@ public class PendingListAdapter extends RecyclerView.Adapter<PendingListAdapter.
                         .commit();
 
                 Bundle bundle = new Bundle();
-                bundle.putString("transactNoString", transactionNo);
+                bundle.putString("transactionno", transactionNo);
                 additem.setArguments(bundle);
             }
         });
@@ -72,6 +83,17 @@ public class PendingListAdapter extends RecyclerView.Adapter<PendingListAdapter.
             super(itemView);
             transactionNoText = itemView.findViewById(R.id.transactionNoPEN);
             transactionStatusText = itemView.findViewById(R.id.transactionStatusPEN);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            mListener.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 }
