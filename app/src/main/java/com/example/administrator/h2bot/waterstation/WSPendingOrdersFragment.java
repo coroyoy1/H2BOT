@@ -33,6 +33,7 @@ public class WSPendingOrdersFragment extends Fragment implements PendingListAdap
     private RecyclerView recyclerViewPOConnect;
     private PendingListAdapter POAdapter;
     private List<OrderModel> uploadPO;
+    FirebaseUser firebaseUser;
 
     @Nullable
     @Override
@@ -43,87 +44,46 @@ public class WSPendingOrdersFragment extends Fragment implements PendingListAdap
         recyclerViewPOConnect.setHasFixedSize(true);
         recyclerViewPOConnect.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         uploadPO = new ArrayList<>();
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_Customer_File");
-        reference.child(firebaseUser.getUid())
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        displayAllData();
 
-                        MerchantCustomerFile merchantCustomerFile = dataSnapshot.getValue(MerchantCustomerFile.class);
-                        if(merchantCustomerFile != null)
+        return view;
+    }
+
+    private void displayAllData()
+    {
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
+        databaseReference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                {
+                    for (DataSnapshot post : dataSnapshot1.child(firebaseUser.getUid()).getChildren())
+                    {
+                        OrderModel orderModel = post.getValue(OrderModel.class);
+                        if(orderModel != null)
                         {
-                            String merchantId = merchantCustomerFile.getStation_id();
-                            String customerId = merchantCustomerFile.getCustomer_id();
-                            String status = merchantCustomerFile.getStatus();
-                            if(status.equals("AC"))
+                            if(orderModel.getOrder_station_id().equals(firebaseUser.getUid())
+                                    && orderModel.getOrder_status().equals("Pending"))
                             {
-                                DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
-                                reference1.child(customerId).child(merchantId)
-                                        .addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                for (DataSnapshot post : dataSnapshot.getChildren())
-                                                {
-                                                    OrderModel orderModel = post.getValue(OrderModel.class);
-                                                    if(orderModel != null)
-                                                    {
-                                                        if(orderModel.getOrder_station_id().equals(merchantId)
-                                                                && orderModel.getOrder_customer_id().equals(customerId)
-                                                                && orderModel.getOrder_status().equals("Pending"))
-                                                        {
-                                                            uploadPO.add(orderModel);
-                                                        }
-                                                    }
-                                                }
-                                                POAdapter = new PendingListAdapter(getActivity(), uploadPO);
-                                                recyclerViewPOConnect.setAdapter(POAdapter);
-                                                POAdapter.setOnItemClickListener(WSPendingOrdersFragment.this::onItemClick);
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                            }
-                                        });
+                                uploadPO.add(orderModel);
                             }
                         }
                     }
+                    POAdapter = new PendingListAdapter(getActivity(), uploadPO);
+                    recyclerViewPOConnect.setAdapter(POAdapter);
+                    POAdapter.setOnItemClickListener(WSPendingOrdersFragment.this::onItemClick);
+                }
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                });
-
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Transaction_Header_File");
-//        databaseReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot postSnapshot : dataSnapshot.getChildren())
-//                {
-////                    if(postSnapshot.child())
-//  //                  String detUserMerchant = postSnapshot.child("merchant_id").getValue(String.class);
-//                    TransactionHeaderFileModel transactionHeaderFileModel = postSnapshot.getValue(TransactionHeaderFileModel.class);
-//                    if(transactionHeaderFileModel.getMerchant_id().equals(firebaseUser.getUid())
-//                            && transactionHeaderFileModel.getTrans_status().equals("Pending"))
-//                    {
-//                        uploadPO.add(transactionHeaderFileModel);
-//                    }
-//                }
-//                POAdapter = new PendingListAdapter(getActivity(), uploadPO);
-//                recyclerViewPOConnect.setAdapter(POAdapter);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                showMessage("Data does not exists!");
-//            }
-//        });
-        return view;
+            }
+        });
     }
 
     private void showMessage(String s) {

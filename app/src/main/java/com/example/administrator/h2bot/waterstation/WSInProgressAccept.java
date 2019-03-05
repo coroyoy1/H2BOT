@@ -24,6 +24,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import com.example.administrator.h2bot.adapter.WSInProgressOrdersAdapter;
 import com.example.administrator.h2bot.maps.MapMerchantActivity;
 import com.example.administrator.h2bot.maps.MapMerchantFragmentRenew;
 import com.example.administrator.h2bot.models.CaptureActivityPortrait;
@@ -113,7 +114,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
         {
             transactionNo = bundle.getString("transactionno");
         }
-        getCustomerOrder();
+        displayAllData();
 
         return view;
     }
@@ -185,6 +186,77 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
             showMessages("Error to scan");
         }
     }
+
+
+
+    private void displayAllData()
+    {
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
+        databaseReference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                {
+                    for (DataSnapshot post : dataSnapshot1.child(firebaseUser.getUid()).getChildren())
+                    {
+                        OrderModel orderModel = post.getValue(OrderModel.class);
+                        if(orderModel != null)
+                        {
+                            if(orderModel.getOrder_station_id().equals(firebaseUser.getUid())
+                                    && orderModel.getOrder_status().equals("In-Progress") && orderModel.getOrder_no().equals(transactionNo))
+                            {
+                                if(orderModel.getOrder_status().equals("In-Progress")) {
+                                    orderNo.setText(orderModel.getOrder_no());
+                                    itemQuantity.setText(orderModel.getOrder_qty());
+                                    pricePerGallon.setText(orderModel.getOrder_price_per_gallon());
+                                    totalPrice.setText(orderModel.getOrder_total_amt());
+                                    waterType.setText(orderModel.getOrder_water_type());
+                                    address.setText(orderModel.getOrder_address());
+                                    deliveryMethod.setText(orderModel.getOrder_delivery_method());
+
+                                    DateTime date = new DateTime(orderModel.getOrder_delivery_date());
+                                    String dateString = date.toLocalDate().toString();
+
+                                    deliveryDate.setText(dateString);
+                                    deliveryFee.setText(orderModel.getOrder_delivery_fee());
+
+                                    DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_File");
+                                    reference2.child(orderModel.getOrder_customer_id())
+                                            .addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    UserFile userFile = dataSnapshot.getValue(UserFile.class);
+                                                    if (userFile != null) {
+                                                        String customerPicture = userFile.getUser_uri();
+                                                        Picasso.get().load(customerPicture).into(imageView);
+                                                        contactNo.setText(userFile.getUser_phone_no());
+                                                        String fullname = userFile.getUser_firtname() + " " + userFile.getUser_lastname();
+                                                        customer.setText(fullname);
+                                                        progressDialog.dismiss();
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                    progressDialog.dismiss();
+                                                }
+                                            });
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
 
     public void getCustomerOrder()
     {
@@ -270,6 +342,28 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
 
     private void updateOrder(String transactionSet)
     {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                {
+                    for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren())
+                    {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void updateOrder1(String transactionSet)
+    {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_Customer_File");
         reference.child(firebaseUser.getUid())
                 .addValueEventListener(new ValueEventListener() {
@@ -284,7 +378,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                             if(status.equals("AC"))
                             {
                                 DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
-                                reference1.child(customerId).child(merchantId).child(transactionSet).setValue("order_status")
+                                reference1.child(customerId).child(merchantId).child(transactionSet).child("order_status").setValue("Completed")
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {

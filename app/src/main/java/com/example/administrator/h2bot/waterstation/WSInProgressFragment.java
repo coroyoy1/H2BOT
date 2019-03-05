@@ -31,6 +31,7 @@ public class WSInProgressFragment extends Fragment implements WSInProgressOrders
     private RecyclerView recyclerView;
     private WSInProgressOrdersAdapter POAdapter;
     private List<OrderModel> uploadPO;
+    FirebaseUser firebaseUser;
 
     @Nullable
     @Override
@@ -40,64 +41,48 @@ public class WSInProgressFragment extends Fragment implements WSInProgressOrders
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         uploadPO = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_Customer_File");
-        reference.child(firebaseUser.getUid())
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        MerchantCustomerFile merchantCustomerFile = dataSnapshot.getValue(MerchantCustomerFile.class);
-                        if(merchantCustomerFile != null)
-                        {
-                            String merchantId = merchantCustomerFile.getStation_id();
-                            String customerId = merchantCustomerFile.getCustomer_id();
-                            String status = merchantCustomerFile.getStatus();
-                            if(status.equals("AC"))
-                            {
-                                DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
-                                reference1.child(customerId).child(merchantId)
-                                        .addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                for (DataSnapshot post : dataSnapshot.getChildren())
-                                                {
-                                                    OrderModel orderModel = post.getValue(OrderModel.class);
-                                                    if(orderModel != null)
-                                                    {
-                                                        if(orderModel.getOrder_station_id().equals(merchantId)
-                                                                && orderModel.getOrder_customer_id().equals(customerId)
-                                                                && orderModel.getOrder_status().equals("In-Progress"))
-                                                        {
-                                                            uploadPO.add(orderModel);
-                                                        }
-                                                    }
-                                                }
-                                                POAdapter = new WSInProgressOrdersAdapter(getActivity(), uploadPO);
-                                                recyclerView.setAdapter(POAdapter);
-                                                POAdapter.setOnItemClickListener(WSInProgressFragment.this::onItemClick);
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                            }
-                                        });
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+        displayAllData();
         return view;
     }
     private void showMessage(String s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+    }
+
+
+    private void displayAllData()
+    {
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
+        databaseReference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                {
+                    for (DataSnapshot post : dataSnapshot1.child(firebaseUser.getUid()).getChildren())
+                    {
+                        OrderModel orderModel = post.getValue(OrderModel.class);
+                        if(orderModel != null)
+                        {
+                            if(orderModel.getOrder_station_id().equals(firebaseUser.getUid())
+                                    && orderModel.getOrder_status().equals("In-Progress"))
+                            {
+                                uploadPO.add(orderModel);
+                            }
+                        }
+                    }
+                    POAdapter = new WSInProgressOrdersAdapter(getActivity(), uploadPO);
+                    recyclerView.setAdapter(POAdapter);
+                    POAdapter.setOnItemClickListener(WSInProgressFragment.this::onItemClick);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override

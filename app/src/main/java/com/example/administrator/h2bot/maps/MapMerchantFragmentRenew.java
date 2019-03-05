@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.h2bot.models.MerchantCustomerFile;
 import com.example.administrator.h2bot.models.UserLocationAddress;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -191,70 +192,27 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
         Toast.makeText(getActivity(), "Connection failed. . .", Toast.LENGTH_SHORT).show();
     }
 
-    public void destinationData()
+
+    public void locateCustomer()
     {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Transaction_Header_File").child(transactNum);
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                TransactionHeaderFileModel transactionHeaderFileModel = dataSnapshot.getValue(TransactionHeaderFileModel.class);
-                String userOrderNo = transactionHeaderFileModel.getTrans_no();
-                String userMerchantId = transactionHeaderFileModel.getMerchant_id();
-                String userCustomerId = transactionHeaderFileModel.getCustomer_id();
-
-                if(userMerchantId.equals(firebaseUser.getUid()) && userOrderNo.equals(transactNum))
-                {
-                    DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("User_File").child(userCustomerId);
-                    databaseReference1.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                            UserFile userFile = dataSnapshot.getValue(UserFile.class);
-                            String fileCustomerId = userFile.getUser_getUID();
-                            if(userCustomerId.equals(fileCustomerId))
-                            {
-                                arrayListBusinessInfo.add(transactionHeaderFileModel);
-                                arrayListUserFile.add(userFile);
-                                myAddresses = userFile.getUser_address();
-                                try {
-                                    myListAddresses = mGeocoder.getFromLocationName(myAddresses, 1);
-                                    if (myListAddresses != null) {
-                                        Address location = myListAddresses.get(0);
-                                        latLong = new LatLng(location.getLatitude(), location.getLongitude());
-                                        setgetLAT setHere = new setgetLAT();
-                                        LatLng staticLat = setHere.getSetgetLATData();
-                                        String addressString = userFile.getUser_address();
-                                        String fullnameString = userFile.getUser_lastname() + ", " + userFile.getUser_firtname();
-                                        MarkerOptions mvMarkerOption = new MarkerOptions();
-                                        mvMarkerOption.position(latLong);
-                                        mvMarkerOption.snippet("Customer Name: " + fullnameString + "\n" + "Address: " + addressString);
-                                        mvMarkerOption.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                                        map.addMarker(mvMarkerOption).showInfoWindow();
-                                    }
-
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_Customer_File");
+        reference.child(firebaseUser.getUid())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for(DataSnapshot postSnap : dataSnapshot.getChildren())
+                        {
 
                         }
-                    });
-                }
-            }
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+                    }
+                });
     }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -268,8 +226,6 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
         }
         float zoomLevel = 16.0f;
         map.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-
-        destinationData();
 
         map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
