@@ -43,14 +43,14 @@ public class WPCompletedOrdersAdapter extends RecyclerView.Adapter<WPCompletedOr
 
     @Override
     public void onBindViewHolder(@NonNull WPCompletedOrdersAdapter.ViewHolder viewHolder, int i) {
-        final OrderModel currentData = mUploads.get(i);
-        viewHolder.transactionNo.setText(currentData.getOrder_no());
-        viewHolder.status.setText(currentData.getOrder_status());
-        String transactno= currentData.getOrder_no();
-        String status= currentData.getOrder_status();
+               final OrderModel currentData = mUploads.get(i);
+               viewHolder.transactionNo.setText(currentData.getOrder_no());
+               viewHolder.status.setText(currentData.getOrder_status());
+               String transactno= currentData.getOrder_no();
+               String status= currentData.getOrder_status();
 
-       viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-           @Override
+               viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                   @Override
            public void onClick(View v) {
                WPCompletedAccept additem = new WPCompletedAccept();
                AppCompatActivity activity = (AppCompatActivity)v.getContext();

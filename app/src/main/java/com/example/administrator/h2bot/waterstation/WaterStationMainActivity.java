@@ -2,23 +2,40 @@ package com.example.administrator.h2bot.waterstation;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.LoginActivity;
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.WSCompletedOrdersInformationFragment;
+import com.example.administrator.h2bot.adapter.WSCompleterdOrdersAdapter;
+import com.example.administrator.h2bot.adapter.WSInProgressOrdersAdapter;
 import com.example.administrator.h2bot.deliveryman.DeliveryManMainActivity;
+import com.example.administrator.h2bot.models.MerchantCustomerFile;
+import com.example.administrator.h2bot.models.OrderModel;
+import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class WaterStationMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -27,7 +44,17 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
     private ActionBarDrawerToggle actionBarDrawerToggle;
     FirebaseAuth mAuth;
     GoogleMap map;
+    TextView nav_pendingorders_ws,nav_inprogress_ws;
     private ProgressDialog progressDialog;
+    FirebaseUser currentUser;
+    String currendId;
+    int countPending;
+    int countInprogress;
+
+    private OrderModel Adapter;
+    private ArrayList<OrderModel> adapter;
+    private ArrayList<OrderModel> adapter2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +66,10 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
-
+        adapter = new ArrayList<OrderModel>();
         mAuth = FirebaseAuth.getInstance();
-
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        currendId = currentUser.getUid();
         drawerLayout = findViewById(R.id.wsdrawer_layout);
         drawerLayout.closeDrawers();
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_wsdrawer_open, R.string.navigation_wsdrawer_close);
@@ -51,13 +79,80 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
+        nav_pendingorders_ws=(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
+                findItem(R.id.nav_pendingorders_ws));
+        nav_inprogress_ws=(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
+                findItem(R.id.nav_inprogress_ws));
         if(savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
-                    new WSInProgressFragment()).commit();
-            Objects.requireNonNull(getSupportActionBar()).setTitle("In-Progress");
+                    new WSTransactionsFragment()).commit();
+            Objects.requireNonNull(getSupportActionBar()).setTitle("Completed Orders");
         }
+
+       initializeCountDrawer();
     }
+
+    private void initializeCountDrawer(){
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
+        databaseReference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                adapter.clear();
+                adapter2.clear();
+                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                {
+                    for (DataSnapshot post : dataSnapshot1.child(currendId).getChildren())
+                    {
+                        OrderModel orderModel = post.getValue(OrderModel.class);
+                        if(orderModel != null)
+                        {
+                            if(orderModel.getOrder_station_id().equals(currendId)
+                                    && orderModel.getOrder_status().equals("Pending"))
+                            {
+                                adapter.add(orderModel);
+                                adapter.size();
+                                countPending = adapter.size();
+                                Log.d("CountInprogress", ""+countPending);
+                                if(countPending != 0)
+                                {
+                                    nav_pendingorders_ws.setGravity(Gravity.CENTER_VERTICAL);
+                                    nav_pendingorders_ws.setBackgroundResource(R.drawable.cornerborder4);
+                                    nav_pendingorders_ws.setTextSize(20);
+                                    nav_pendingorders_ws.setTypeface(null, Typeface.BOLD);
+                                    nav_pendingorders_ws.setTextColor(getResources().getColor(R.color.colorAccent));
+                                    nav_pendingorders_ws.setText("" + countPending);
+                                }
+                            }
+                            if(orderModel.getOrder_station_id().equals(currendId)
+                                    && orderModel.getOrder_status().equals("In-Progress"))
+                            {
+                                adapter2.add(orderModel);
+                                adapter2.size();
+                                countInprogress = adapter2.size();
+                                Log.d("CountInprogress", ""+countInprogress);
+                                if(countInprogress != 0)
+                                {
+                                    nav_inprogress_ws.setGravity(Gravity.CENTER_VERTICAL);
+                                    nav_inprogress_ws.setBackgroundResource(R.drawable.cornerborder4);
+                                    nav_inprogress_ws.setTextSize(20);
+                                    nav_inprogress_ws.setTypeface(null, Typeface.BOLD);
+                                    nav_inprogress_ws.setTextColor(getResources().getColor(R.color.colorAccent));
+                                    nav_inprogress_ws.setText("" + countInprogress);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     @Override
     public void onBackPressed() {
         int count = getSupportFragmentManager().getBackStackEntryCount();

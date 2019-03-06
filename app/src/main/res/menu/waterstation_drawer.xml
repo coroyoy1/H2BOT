@@ -1,34 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view_ws">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:showIn="navigation_view_ws"
+    >
 
     <group android:checkableBehavior="single">
         <item android:id="@+id/nav_transactions_ws"
+            app:actionViewClass="android.widget.TextView"
                 android:icon="@drawable/ic_transactions"
                 android:title="Completed Orders"
+
             />
         <item android:id="@+id/nav_pendingorders_ws"
+            app:actionViewClass="android.widget.TextView"
             android:icon="@drawable/ic_pendingorders"
             android:title="Pending Orders"
             />
         <item android:id="@+id/nav_inprogress_ws"
+            app:actionViewClass="android.widget.TextView"
             android:icon="@drawable/ic_inprogress"
             android:title="In-Progress"
             />
         <item android:id="@+id/nav_dailyrecords_ws"
+            app:actionViewClass="android.widget.TextView"
             android:icon="@drawable/ic_dailyrecords"
             android:title="Sales Reports"
             />
         <item android:id="@+id/nav_additem_ws"
+            app:actionViewClass="android.widget.TextView"
             android:icon="@drawable/ic_additem"
             android:title="Business Info"
             />
         <item android:id="@+id/nav_productlist_ws"
+            app:actionViewClass="android.widget.TextView"
             android:icon="@drawable/ic_list"
             android:title="Product List"
             />
         <item android:id="@+id/nav_deliveryman_ws"
+            app:actionViewClass="android.widget.TextView"
             android:icon="@drawable/ic_deliveryman"
             android:title="Delivery Man"
             />
