@@ -15,6 +15,12 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="com.sec.android.provider.badge.permission.READ"/>
+    <uses-permission android:name="com.sec.android.provider.badge.permission.WRITE"/>
+    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
+    <uses-permission android:name="com.huawei.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.huawei.android.launcher.permission.WRITE_SETTINGS" />
+
 
     <permission
         android:name="com.example.permission.MAPS_RECEIVE"
@@ -75,9 +81,9 @@
         <activity
             android:name=".RegisterActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".WaterPeddlerDocumentActivity" />
+        <activity android:name="dealer.WaterPeddlerDocumentActivity" />
         <activity
-            android:name=".WaterPeddlerHomeActivity"
+            android:name="dealer.WaterPeddlerHomeActivity"
             android:theme="@style/Theme.Design.Light" />
         <activity android:name=".WaterStationHomeActivity" />
         <activity android:name=".WaterAffiliateHomeActivity" />

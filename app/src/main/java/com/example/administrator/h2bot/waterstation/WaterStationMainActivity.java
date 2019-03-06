@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,6 +68,7 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
         adapter = new ArrayList<OrderModel>();
+        adapter2 = new ArrayList<OrderModel>();
         mAuth = FirebaseAuth.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         currendId = currentUser.getUid();
@@ -99,28 +101,49 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 adapter.clear();
                 adapter2.clear();
+                nav_pendingorders_ws.setVisibility(View.VISIBLE);
+                Log.d("ambotnimo","AMBOT");
                 for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                 {
+                    Log.d("gago","ka");
                     for (DataSnapshot post : dataSnapshot1.child(currendId).getChildren())
                     {
+                        Log.d("mas","ka");
                         OrderModel orderModel = post.getValue(OrderModel.class);
                         if(orderModel != null)
                         {
+                            Log.d("kako ","ka");
                             if(orderModel.getOrder_station_id().equals(currendId)
                                     && orderModel.getOrder_status().equals("Pending"))
                             {
                                 adapter.add(orderModel);
                                 adapter.size();
+                                nav_pendingorders_ws.setVisibility(View.VISIBLE);
                                 countPending = adapter.size();
-                                Log.d("CountInprogress", ""+countPending);
-                                if(countPending != 0)
-                                {
+                                Log.d("CountPending", ""+countPending);
+
                                     nav_pendingorders_ws.setGravity(Gravity.CENTER_VERTICAL);
-                                    nav_pendingorders_ws.setBackgroundResource(R.drawable.cornerborder4);
                                     nav_pendingorders_ws.setTextSize(20);
                                     nav_pendingorders_ws.setTypeface(null, Typeface.BOLD);
                                     nav_pendingorders_ws.setTextColor(getResources().getColor(R.color.colorAccent));
                                     nav_pendingorders_ws.setText("" + countPending);
+
+                            }
+                            else
+                            {
+                                countPending = adapter.size();
+
+                                if (countPending==0)
+                                {
+                                    nav_pendingorders_ws.setVisibility(View.INVISIBLE);
+                                }
+                                else
+                                {
+                                    nav_pendingorders_ws.setGravity(Gravity.CENTER_VERTICAL);
+                                    nav_pendingorders_ws.setTextSize(20);
+                                    nav_pendingorders_ws.setTypeface(null, Typeface.BOLD);
+                                    nav_pendingorders_ws.setTextColor(getResources().getColor(R.color.colorAccent));
+                                    nav_pendingorders_ws.setText(""+ countPending);
                                 }
                             }
                             if(orderModel.getOrder_station_id().equals(currendId)
@@ -133,7 +156,6 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                                 if(countInprogress != 0)
                                 {
                                     nav_inprogress_ws.setGravity(Gravity.CENTER_VERTICAL);
-                                    nav_inprogress_ws.setBackgroundResource(R.drawable.cornerborder4);
                                     nav_inprogress_ws.setTextSize(20);
                                     nav_inprogress_ws.setTypeface(null, Typeface.BOLD);
                                     nav_inprogress_ws.setTextColor(getResources().getColor(R.color.colorAccent));
