@@ -63,6 +63,7 @@ public class WSInProgressOrdersAdapter extends RecyclerView.Adapter<WSInProgress
                         .commit();
                 Bundle args = new Bundle();
                 args.putString("transactionno", currentData.getOrder_no());
+                args.putString("transactioncustomer", currentData.getOrder_customer_id());
                 args.putString("status", currentData.getOrder_status());
                   additem.setArguments(args);
             }

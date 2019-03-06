@@ -53,7 +53,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
     TextView orderNo, customer, contactNo, waterType, itemQuantity, pricePerGallon, service, deliveryFee, totalPrice, address, deliveryMethod, deliveryDate;
     String transDeliveryFeePerGallonDetail, transNoDetail, transNoOfGallonDetail, transPartialAmountDetail, transPricePerGallonDetail, transStatusDetail, transWaterTypeDetail;
     String customerIDUser, contactNoUser;
-    String orderNoGET , customerNoGET , merchantNOGET , dataIssuedGET , deliveryStatusGET , transStatusGET , transTotalAmountGET , transDeliveryFeeGET, transTotalNoGallonGET;
+    String orderNoGET , customerNoGET , merchantNOGET , dataIssuedGET , deliveryStatusGET , transStatusGET , transTotalAmountGET , transDeliveryFeeGET, transTotalNoGallonGET, customerNo;
     CircleImageView imageView;
     Bundle args;
      public WSPendingOrderAcceptDeclineFragment() {
@@ -102,6 +102,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
         if(args != null)
         {
             transactionNo = args.getString("transactionno");
+            customerNo = args.getString("transactioncustomer");
             showMessages(transactionNo);
         }
         getCustomerOrder();
@@ -115,7 +116,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
     public void getCustomerOrder()
     {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_Customer_File");
-        reference.child(firebaseUser.getUid())
+        reference.child(firebaseUser.getUid()).child(customerNo)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -194,108 +195,6 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
 
     }
 
-
-    public void getOrderData()
-    {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Transaction_Header_File");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot postSnapShot : dataSnapshot.getChildren())
-                {
-                    if(postSnapShot.child("trans_no").getValue(String.class).equals(transactionNo)
-                            && postSnapShot.child("trans_status").getValue(String.class).equals("Pending"))
-                    {
-                        orderNoGET = postSnapShot.child("trans_no").getValue(String.class);
-                        customerNoGET = postSnapShot.child("customer_id").getValue(String.class);
-                        merchantNOGET = postSnapShot.child("merchant_id").getValue(String.class);
-                        dataIssuedGET = postSnapShot.child("trans_date_issued").getValue(String.class);
-                        deliveryStatusGET = postSnapShot.child("trans_delivered_service").getValue(String.class);
-                        transStatusGET = postSnapShot.child("trans_status").getValue(String.class);
-                        transTotalAmountGET = postSnapShot.child("trans_total_amount").getValue(String.class);
-                        transDeliveryFeeGET = postSnapShot.child("trans_total_delivery_fee").getValue(String.class);
-                        transTotalNoGallonGET = postSnapShot.child("trans_total_no_of_gallons").getValue(String.class);
-
-                        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Transaction_Detail_File");
-                        databaseReference1.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                for(DataSnapshot postSnap : dataSnapshot.getChildren())
-                                {
-                                    if(postSnap.child("trans_no").getValue(String.class).equals(transactionNo))
-                                    {
-                                        transDeliveryFeePerGallonDetail = postSnap.child("trans_delivery_fee_per_gallon").getValue(String.class);
-                                        transNoDetail = postSnap.child("trans_no").getValue(String.class);
-                                        transNoOfGallonDetail = postSnap.child("trans_no_of_gallons").getValue(String.class);
-                                        transPartialAmountDetail = postSnap.child("trans_partial_amount").getValue(String.class);
-                                        transPricePerGallonDetail = postSnap.child("trans_price_per_gallon").getValue(String.class);
-                                        transStatusDetail = postSnap.child("trans_status").getValue(String.class);
-                                        transWaterTypeDetail = postSnap.child("trans_water_type").getValue(String.class);
-                                        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("User_File");
-                                        databaseReference2.addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                for(DataSnapshot post : dataSnapshot.getChildren())
-                                                {
-                                                    if(customerNoGET.equals(post.child("user_getUID").getValue(String.class)))
-                                                    {
-                                                        customerIDUser = post.child("user_firtname").getValue(String.class)+" "+post.child("user_lastname").getValue(String.class);
-                                                        contactNoUser = post.child("user_phone_no").getValue(String.class);
-                                                        String imageUi = post.child("user_uri").getValue(String.class);
-                                                        Picasso.get().load(imageUi).fit().centerCrop().into(imageView);
-                                                        progressDialog.dismiss();
-                                                    }
-                                                }
-                                                orderNo.setText(orderNoGET);
-                                                customer.setText(customerIDUser);
-                                                contactNo.setText(contactNoUser);
-                                                waterType.setText(transWaterTypeDetail);
-                                                itemQuantity.setText(transTotalNoGallonGET);
-                                                pricePerGallon.setText(transPricePerGallonDetail);
-                                                service.setText(deliveryStatusGET);
-                                                deliveryFee.setText(transDeliveryFeeGET);
-                                                totalPrice.setText(transTotalAmountGET);
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                showMessages("User file does not have this data");
-                                                progressDialog.dismiss();
-                                            }
-                                        });
-                                    }
-                                    else
-                                    {
-                                        showMessages("Data is not available");
-                                        progressDialog.dismiss();
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                showMessages("Data is not available");
-                                progressDialog.dismiss();
-                            }
-                        });
-                    }
-                    else
-                    {
-                        showMessages("Data does not available");
-                        progressDialog.dismiss();
-                    }
-                }
-        }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                showMessages("Data does not available");
-                progressDialog.dismiss();
-            }
-        });
-    }
-
-
     public void dialogView()
     {
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -322,7 +221,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
     private void updateStatus()
     {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_Customer_File");
-        reference.child(firebaseUser.getUid())
+        reference.child(firebaseUser.getUid()).child(customerNo)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

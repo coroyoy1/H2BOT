@@ -1,4 +1,6 @@
 package com.example.administrator.h2bot;
+import com.example.administrator.h2bot.dealer.WaterPeddlerDocumentActivity;
+import com.example.administrator.h2bot.dealer.WaterPeddlerHomeActivity;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.tpaaffiliate.*;
 import com.example.administrator.h2bot.customer.*;

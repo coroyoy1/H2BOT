@@ -62,7 +62,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
     String orderNoGET, customerNoGET, merchantNOGET, transactionNo, dataIssuedGET, deliveryStatusGET
             ,transStatusGET, transTotalAmountGET, transDeliveryFeeGET, transTotalNoGallonGET,
             transDeliveryFeePerGallonDetail, transNoDetail, transNoOfGallonDetail, transPartialAmountDetail, transPricePerGallonDetail
-            ,transStatusDetail, transWaterTypeDetail, customerIDUser, contactNoUser;
+            ,transStatusDetail, transWaterTypeDetail, customerIDUser, contactNoUser, customerNo;
     CircleImageView imageView;
     ProgressDialog progressDialog;
     String transactNoScan;
@@ -113,6 +113,8 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
         if (bundle != null)
         {
             transactionNo = bundle.getString("transactionno");
+            customerNo = bundle.getString("transactioncustomer");
+
         }
         displayAllData();
 
@@ -342,30 +344,8 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
 
     private void updateOrder(String transactionSet)
     {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
-                {
-                    for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren())
-                    {
-
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void updateOrder1(String transactionSet)
-    {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_Customer_File");
-        reference.child(firebaseUser.getUid())
+        reference.child(firebaseUser.getUid()).child(customerNo)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -429,10 +409,6 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                 .commit();
         bundle.putString("TransactNoSeen1", transactionNo);
         additem.setArguments(bundle);
-//        Intent intent = new Intent(getActivity(), MapMerchantFragmentRenew.class);
-//        intent.putExtra("TransactNoSeen1", transactionNo);
-//        startActivity(intent);
-
     }
 
     public void getLocationUser()

@@ -67,6 +67,7 @@ public class PendingListAdapter extends RecyclerView.Adapter<PendingListAdapter.
 
                 Bundle bundle = new Bundle();
                 bundle.putString("transactionno", transactionNo);
+                bundle.putString("transactioncustomer", currentData.getOrder_customer_id());
                 additem.setArguments(bundle);
             }
         });

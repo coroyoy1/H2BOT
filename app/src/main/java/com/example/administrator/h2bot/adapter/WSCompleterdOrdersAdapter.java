@@ -47,30 +47,6 @@ public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterd
         final OrderModel currentData = mUploads.get(i);
                 viewHolder.transactionNo.setText(currentData.getOrder_no());
                 viewHolder.status.setText(currentData.getOrder_status());
-//                viewHolder.customername.setText(currentData.getCustomerName());
-//                viewHolder.address.setText(currentData.getAddress());
-//                viewHolder.contactno.setText(currentData.getContactNo());
-//                viewHolder.deliveryfee.setText(currentData.getDeliveryFee());
-//                viewHolder.itemquantity.setText(currentData.getItemQuantity());
-//                viewHolder.pricepergallon.setText(currentData.getPricePerGallon());
-//                viewHolder.service.setText(currentData.getService());
-//                viewHolder.totalprice.setText(currentData.getTotalPrice());
-//                viewHolder.watertype.setText(currentData.getWaterType());
-//                viewHolder.details.setText(">>");
-
-           String transactno= currentData.getOrder_no();
-            String status= currentData.getOrder_status();
-//        String customername= currentData.getCustomerName();
-//        String address= currentData.getAddress();
-//        String contactno= currentData.getContactNo();
-//        String deliveryfee= currentData.getDeliveryFee();
-//        String itemquantity= currentData.getItemQuantity();
-//        String pricepergallon= currentData.getPricePerGallon();
-//        String service= currentData.getService();
-//        String totalprice= currentData.getTotalPrice();
-//        String watertype= currentData.getWaterType();
-
-
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -84,16 +60,8 @@ public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterd
                             .commit();
                     Bundle args = new Bundle();
                     args.putString("transactionno", currentData.getOrder_no());
-                    args.putString("status", currentData.getOrder_status());
-    //                args.putString("customername", currentData.getCustomerName());
-    //                args.putString("address", currentData.getAddress());
-    //                args.putString("contactno", currentData.getContactNo());
-    //                args.putString("deliveryfee", currentData.getDeliveryFee());
-    //                args.putString("itemquantity", currentData.getItemQuantity());
-    //                args.putString("pricepergallon", currentData.getPricePerGallon());
-    //                args.putString("service", currentData.getService());
-    //                args.putString("totalprice", currentData.getTotalPrice());
-    //                args.putString("watertype", currentData.getWaterType());
+                    args.putString("transactioncustomer", currentData.getOrder_customer_id());
+                    args.putString("status", currentData.getOrder_status());;
                         additem.setArguments(args);
                 }
             });
@@ -101,17 +69,6 @@ public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterd
                     OrderModel uploadCurrent = mUploads.get(i);
                     viewHolder.transactionNo.setText(uploadCurrent.getOrder_no());
                     viewHolder.status.setText(uploadCurrent.getOrder_status());
-    //                viewHolder.customername.setText(uploadCurrent.getCustomerName());
-    //                viewHolder.address.setText(uploadCurrent.getAddress());
-    //                viewHolder.contactno.setText(uploadCurrent.getContactNo());
-    //                viewHolder.deliveryfee.setText(uploadCurrent.getDeliveryFee());
-    //                viewHolder.itemquantity.setText(uploadCurrent.getItemQuantity());
-    //                viewHolder.pricepergallon.setText(uploadCurrent.getPricePerGallon());
-    //                viewHolder.service.setText(uploadCurrent.getService());
-    //                viewHolder.totalprice.setText(uploadCurrent.getTotalPrice());
-    //                viewHolder.watertype.setText(uploadCurrent.getWaterType());
-    //                viewHolder.details.setText(">>");
-
         }
 
     @Override
@@ -126,18 +83,6 @@ public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterd
 
             transactionNo = itemView.findViewById(R.id.transactionNoCOM);
             status = itemView.findViewById(R.id.transactionStatusCOM);
-//            details = itemView.findViewById(R.id.t);
-//            address = itemView.findViewById(R.id.address);
-//            customername = itemView.findViewById(R.id.customername);
-//            contactno = itemView.findViewById(R.id.contactno);
-//            deliveryfee = itemView.findViewById(R.id.deliveryfee);
-//            itemquantity = itemView.findViewById(R.id.itemquantity);
-//            pricepergallon = itemView.findViewById(R.id.pricepergallon);
-//            service = itemView.findViewById(R.id.service);
-//            totalprice = itemView.findViewById(R.id.totalprice);
-//            watertype = itemView.findViewById(R.id.watertype);
-
-
             itemView.setOnClickListener(new View    .OnClickListener() {
                 @Override
                 public void onClick(View v) {

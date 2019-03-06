@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.adapter.WSCompleterdOrdersAdapter;
+import com.example.administrator.h2bot.adapter.WSInProgressOrdersAdapter;
 import com.example.administrator.h2bot.models.MerchantCustomerFile;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
@@ -51,96 +52,42 @@ public class WSTransactionsFragment extends Fragment implements WSCompleterdOrde
         recyclerView.setHasFixedSize(true);
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String currendId = currentUser.getUid();
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_Customer_File");
-        reference.child(currendId)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                            MerchantCustomerFile merchantCustomerFile = dataSnapshot.getValue(MerchantCustomerFile.class);
-                            if(merchantCustomerFile != null)
-                            {
-                                String merchantId = merchantCustomerFile.getStation_id();
-                                String customerId = merchantCustomerFile.getCustomer_id();
-                                String status = merchantCustomerFile.getStatus();
-                                if(status.equals("AC"))
-                                {
-                                    DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
-                                    reference1.child(customerId).child(merchantId)
-                                            .addValueEventListener(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    for (DataSnapshot post : dataSnapshot.getChildren())
-                                                    {
-                                                        OrderModel orderModel = post.getValue(OrderModel.class);
-                                                        if(orderModel != null)
-                                                        {
-                                                            if(orderModel.getOrder_station_id().equals(merchantId)
-                                                                    && orderModel.getOrder_customer_id().equals(customerId)
-                                                                    && orderModel.getOrder_status().equals("Completed"))
-                                                            {
-                                                                mUploads.add(orderModel);
-                                                            }
-                                                        }
-                                                    }
-                                                    mAdapter = new WSCompleterdOrdersAdapter(getActivity(), mUploads);
-                                                    recyclerView.setAdapter(mAdapter);
-                                                    mAdapter.setOnItemClickListener(WSTransactionsFragment.this::onItemClick);
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                }
-                                            });
-                                }
-                            }
-                        }
-
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-//        mDatabaseRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-//                    Log.d("Orderno","Hahahys");
-//                        mDatabaseRef2 = FirebaseDatabase.getInstance().getReference("Order_File").child(currendId);
-//                        mDatabaseRef2.addValueEventListener(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                                for (DataSnapshot postSnapshot2 : dataSnapshot.getChildren()) {
-//                                    OrderModel orderModel = postSnapshot2.getValue(OrderModel.class);
-//                                    Log.d("Orderno",""+orderModel.getOrder_no());
-//                                    if (orderModel.getOrder_station_id().equals(currendId) && orderModel.getOrder_status().equals("Completed"))
-//                                        // TransactionDetailFileModel transactionDetail = postSnapshot.getValue(TransactionDetailFileModel.class);
-//                                        mUploads.add(orderModel);
-//                                }
-//                            }
-//                            @Override
-//                            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                            }
-//                        });
-//                }
-//                mAdapter = new WSCompleterdOrdersAdapter(getActivity(), mUploads);
-//                recyclerView.setAdapter(mAdapter);
-//                mAdapter.setOnItemClickListener(WSTransactionsFragment.this::onItemClick);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
+        displayAllData();
         return view;
 
+    }
+
+    private void displayAllData()
+    {
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
+        databaseReference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                {
+                    for (DataSnapshot post : dataSnapshot1.child(currentUser.getUid()).getChildren())
+                    {
+                        OrderModel orderModel = post.getValue(OrderModel.class);
+                        if(orderModel != null)
+                        {
+                            if(orderModel.getOrder_station_id().equals(currentUser.getUid())
+                                    && orderModel.getOrder_status().equals("Completed"))
+                            {
+                                mUploads.add(orderModel);
+                            }
+                        }
+                    }
+                    mAdapter = new WSCompleterdOrdersAdapter(getActivity(), mUploads);
+                    recyclerView.setAdapter(mAdapter);
+                    mAdapter.setOnItemClickListener(WSTransactionsFragment.this::onItemClick);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
