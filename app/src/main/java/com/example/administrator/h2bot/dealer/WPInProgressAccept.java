@@ -187,7 +187,7 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
                 progressDialog.show();
                 if(transactNoScan.equals(transactionNo))
                 {
-                    setOrderSucess(transactNoScan);
+                    updateOrder(transactNoScan);
                 }
                 else
                 {
@@ -204,7 +204,7 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
     }
     private void displayAllData()
     {
-        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
         databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -215,7 +215,7 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
                         OrderModel orderModel = post.getValue(OrderModel.class);
                         if(orderModel != null)
                         {
-                            if(orderModel.getOrder_station_id().equals(firebaseUser.getUid())
+                            if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid())
                                     && orderModel.getOrder_status().equals("In-Progress") && orderModel.getOrder_no().equals(transactionNo))
                             {
                                 if(orderModel.getOrder_status().equals("In-Progress")) {
@@ -457,7 +457,56 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
                 break;
         }
     }
+    private void updateOrder(String transactionSet)
+    {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_File");
+        reference.child(firebaseUser.getUid()).child(customerNo)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        MerchantCustomerFile merchantCustomerFile = dataSnapshot.getValue(MerchantCustomerFile.class);
+                        if(merchantCustomerFile != null)
+                        {
+                            String customerId = merchantCustomerFile.getCustomer_id();
+                            String merchantId = merchantCustomerFile.getStation_id();
+                            String status = merchantCustomerFile.getStatus();
+                            if(status.equals("AC"))
+                            {
+                                DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
+                                reference1.child(customerId).child(merchantId).child(transactionSet).child("order_status").setValue("Completed")
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                showMessages("Successfully updated");
+                                                WSTransactionsFragment additem = new WSTransactionsFragment();
+                                                AppCompatActivity activity = (AppCompatActivity)getContext();
+                                                activity.getSupportFragmentManager()
+                                                        .beginTransaction()
+                                                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                                                        .replace(R.id.fragment_container_ws, additem)
+                                                        .addToBackStack(null)
+                                                        .commit();
+                                                Objects.requireNonNull(((AppCompatActivity)getActivity()).getSupportActionBar()).setTitle("Completed Orders");
+                                                progressDialog.dismiss();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                showMessages("Data does updated");
+                                                progressDialog.dismiss();
+                                            }
+                                        });
+                            }
+                        }
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        progressDialog.dismiss();
+                    }
+                });
+    }
 
 
     @Override

@@ -101,7 +101,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
                         if(orderModel != null)
                         {
                             Log.d("kako ","ka");
-                            if(orderModel.getOrder_station_id().equals(currendId)
+                            if(orderModel.getOrder_merchant_id().equals(currendId)
                                     && orderModel.getOrder_status().equals("Pending"))
                             {
                                 adapter.add(orderModel);
@@ -134,7 +134,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
                                     nav_pendingorders_wp.setText(""+ countPending);
                                 }
                             }
-                            if(orderModel.getOrder_station_id().equals(currendId)
+                            if(orderModel.getOrder_merchant_id().equals(currendId)
                                     && orderModel.getOrder_status().equals("In-Progress"))
                             {
                                 adapter2.add(orderModel);

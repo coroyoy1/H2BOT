@@ -112,7 +112,7 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
 
     public void getOrderData()
     {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_Customer_File");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_File");
         reference.child(firebaseUser.getUid()).child(customerNo)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -125,7 +125,7 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
                             String status = merchantCustomerFile.getStatus();
                             if(status.equals("AC"))
                             {
-                                DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
+                                DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
                                 reference1.child(customerId).child(merchantId).child(transactionNo)
                                         .addValueEventListener(new ValueEventListener() {
                                             @Override

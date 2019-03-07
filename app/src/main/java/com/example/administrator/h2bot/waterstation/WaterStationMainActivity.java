@@ -112,8 +112,20 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                         OrderModel orderModel = post.getValue(OrderModel.class);
                         if(orderModel != null)
                         {
-                            Log.d("kako ",""+orderModel.getOrder_station_id()+"="+currendId);
-                            if(orderModel.getOrder_station_id().equals(currendId)
+                            Log.d("merchantid ",""+orderModel.getOrder_merchant_id()+"="+currendId);
+                            Log.d("customerid ",""+orderModel.getOrder_customer_id()+"="+currendId);
+                            Log.d("address ",""+orderModel.getOrder_address()+"="+currendId);
+                            Log.d("deliverydate ",""+orderModel.getOrder_delivery_date()+"="+currendId);
+                            Log.d("deliveryfee ",""+orderModel.getOrder_delivery_fee()+"="+currendId);
+                            Log.d("deliverymethod ",""+orderModel.getOrder_delivery_method()+"="+currendId);
+                            Log.d("orderno ",""+orderModel.getOrder_no()+"="+currendId);
+                            Log.d("orderpricepergallon ",""+orderModel.getOrder_price_per_gallon()+"="+currendId);
+                            Log.d("orderqty ",""+orderModel.getOrder_qty()+"="+currendId);
+                            Log.d("orderstataus ",""+orderModel.getOrder_status()+"="+currendId);
+                            Log.d("totalamount ",""+orderModel.getOrder_total_amt()+"="+currendId);
+                            Log.d("watertype ",""+orderModel.getOrder_water_type()+"="+currendId);
+
+                            if(orderModel.getOrder_merchant_id().equals(currendId)
                                     && orderModel.getOrder_status().equals("Pending"))
                             {
                                 adapter.add(orderModel);
@@ -146,7 +158,7 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                                     nav_pendingorders_ws.setText(""+ countPending);
                                 }
                             }
-                            if(orderModel.getOrder_station_id().equals(currendId)
+                            if(orderModel.getOrder_merchant_id().equals(currendId)
                                     && orderModel.getOrder_status().equals("In-Progress"))
                             {
                                 adapter2.add(orderModel);

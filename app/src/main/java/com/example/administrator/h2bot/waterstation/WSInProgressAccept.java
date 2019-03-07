@@ -193,7 +193,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
 
     private void displayAllData()
     {
-        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
         databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -204,7 +204,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                         OrderModel orderModel = post.getValue(OrderModel.class);
                         if(orderModel != null)
                         {
-                            if(orderModel.getOrder_station_id().equals(firebaseUser.getUid())
+                            if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid())
                                     && orderModel.getOrder_status().equals("In-Progress") && orderModel.getOrder_no().equals(transactionNo))
                             {
                                 if(orderModel.getOrder_status().equals("In-Progress")) {
@@ -261,7 +261,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
 
     private void updateOrder(String transactionSet)
     {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_Customer_File");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_File");
         reference.child(firebaseUser.getUid()).child(customerNo)
                 .addValueEventListener(new ValueEventListener() {
                     @Override

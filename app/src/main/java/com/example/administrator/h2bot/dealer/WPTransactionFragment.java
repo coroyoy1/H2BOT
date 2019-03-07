@@ -53,7 +53,7 @@ public class WPTransactionFragment extends Fragment {
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String currendId = currentUser.getUid();
-        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
         databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -65,7 +65,7 @@ public class WPTransactionFragment extends Fragment {
                         OrderModel orderModel = post.getValue(OrderModel.class);
                         if(orderModel != null)
                         {
-                            if(orderModel.getOrder_station_id().equals(currentUser.getUid())
+                            if(orderModel.getOrder_merchant_id().equals(currentUser.getUid())
                                     && orderModel.getOrder_status().equals("Completed"))
                             {
                                 mUploads.add(orderModel);

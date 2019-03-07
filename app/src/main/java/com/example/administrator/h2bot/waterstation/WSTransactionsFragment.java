@@ -115,7 +115,7 @@ public class WSTransactionsFragment extends Fragment implements WSCompleterdOrde
                         OrderModel orderModel = post.getValue(OrderModel.class);
                         if(orderModel != null)
                         {
-                            if(orderModel.getOrder_station_id().equals(currentUser.getUid())
+                            if(orderModel.getOrder_merchant_id().equals(currentUser.getUid())
                                     && orderModel.getOrder_status().equals("Completed"))
                             {
                                 mUploads.add(orderModel);

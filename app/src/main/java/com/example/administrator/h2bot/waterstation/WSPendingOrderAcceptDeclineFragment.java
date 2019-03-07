@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,7 +115,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
 
     public void getCustomerOrder()
     {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_Customer_File");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_File");
         reference.child(firebaseUser.getUid()).child(customerNo)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -124,10 +125,12 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                         {
                             String customerId = merchantCustomerFile.getCustomer_id();
                             String merchantId = merchantCustomerFile.getStation_id();
+                            Log.d("merchant IDDDDD ",""+merchantCustomerFile.getStation_id());
+                            Log.d("customer IDDDDD ",""+merchantCustomerFile.getCustomer_id());
                             String status = merchantCustomerFile.getStatus();
                             if(status.equals("AC"))
                             {
-                                DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
+                                DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
                                 reference1.child(customerId).child(merchantId).child(transactionNo)
                                         .addValueEventListener(new ValueEventListener() {
                                             @Override
@@ -135,6 +138,19 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                                                 OrderModel orderModel = dataSnapshot.getValue(OrderModel.class);
                                                 if(orderModel != null)
                                                 {
+                                                    Log.d("merchantid ",""+orderModel.getOrder_merchant_id()+"=");
+                                                    Log.d("customerid ",""+orderModel.getOrder_customer_id()+"=");
+                                                    Log.d("address ",""+orderModel.getOrder_address()+"=");
+                                                    Log.d("deliverydate ",""+orderModel.getOrder_delivery_date()+"=");
+                                                    Log.d("deliveryfee ",""+orderModel.getOrder_delivery_fee()+"=");
+                                                    Log.d("deliverymethod ",""+orderModel.getOrder_delivery_method()+"=");
+                                                    Log.d("orderno ",""+orderModel.getOrder_no()+"=");
+                                                    Log.d("orderpricepergallon ",""+orderModel.getOrder_price_per_gallon()+"=");
+                                                    Log.d("orderqty ",""+orderModel.getOrder_qty()+"=");
+                                                    Log.d("orderstataus ",""+orderModel.getOrder_status()+"=");
+                                                    Log.d("totalamount ",""+orderModel.getOrder_total_amt()+"=");
+                                                    Log.d("watertype ",""+orderModel.getOrder_water_type()+"=");
+
                                                     if(orderModel.getOrder_status().equals("Pending")) {
                                                         orderNo.setText(orderModel.getOrder_no());
                                                         itemQuantity.setText(orderModel.getOrder_qty());
@@ -245,6 +261,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                                                     .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                                                     .replace(R.id.fragment_container_ws, additem)
                                                     .addToBackStack(null)
+
                                                     .commit();
                                             Objects.requireNonNull(((AppCompatActivity)getActivity()).getSupportActionBar()).setTitle("In-Progress");
                                             progressDialog.dismiss();
@@ -263,6 +280,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                     }
 
                     @Override
+
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         showMessages("Order does not exists");
                         progressDialog.dismiss();

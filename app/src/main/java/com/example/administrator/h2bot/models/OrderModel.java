@@ -9,7 +9,7 @@ public class OrderModel {
     String order_no;
     String order_price_per_gallon;
     String order_qty;
-    String order_station_id;
+    String order_merchant_id;
     String order_status;
     String order_total_amt;
     String order_water_type;
@@ -78,12 +78,12 @@ public class OrderModel {
         this.order_qty = order_qty;
     }
 
-    public String getOrder_station_id() {
-        return order_station_id;
+    public String getOrder_merchant_id() {
+        return order_merchant_id;
     }
 
-    public void setOrder_station_id(String order_station_id) {
-        this.order_station_id = order_station_id;
+    public void setOrder_merchant_id(String order_station_id) {
+        this.order_merchant_id = order_station_id;
     }
 
         public String getOrder_status() {
@@ -116,7 +116,7 @@ public class OrderModel {
     }
 
     public OrderModel(String order_address, String order_customer_id,String order_delivery_date,String order_delivery_fee,String order_delivery_method, String order_no,
-                      String order_price_per_gallon,String order_qty,String order_station_id, String order_status, String order_total_amt, String order_water_type)
+                      String order_price_per_gallon,String order_qty,String order_merchant_id, String order_status, String order_total_amt, String order_water_type)
     {
         this.order_address = order_address;
         this.order_customer_id = order_customer_id;
@@ -126,7 +126,7 @@ public class OrderModel {
         this.order_no = order_no;
         this.order_price_per_gallon = order_price_per_gallon;
         this.order_qty = order_qty;
-        this.order_station_id = order_station_id;
+        this.order_merchant_id = order_merchant_id;
         this.order_status = order_status;
         this.order_total_amt = order_total_amt;
         this.order_water_type = order_water_type;

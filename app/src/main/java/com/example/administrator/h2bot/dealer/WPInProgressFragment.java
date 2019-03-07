@@ -54,7 +54,7 @@ public class WPInProgressFragment extends Fragment implements WPInProgressAdapte
         uploadPO = new ArrayList<>();
 
 
-        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
         databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -66,7 +66,7 @@ public class WPInProgressFragment extends Fragment implements WPInProgressAdapte
                         OrderModel orderModel = post.getValue(OrderModel.class);
                         if(orderModel != null)
                         {
-                            if(orderModel.getOrder_station_id().equals(firebaseUser.getUid())
+                            if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid())
                                     && orderModel.getOrder_status().equals("In-Progress"))
                             {
                                 uploadPO.add(orderModel);

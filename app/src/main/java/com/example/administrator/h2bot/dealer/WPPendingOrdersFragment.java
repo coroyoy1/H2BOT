@@ -50,7 +50,7 @@ public class WPPendingOrdersFragment extends Fragment implements WPPendingListAd
 
         uploadPO = new ArrayList<>();
 
-        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
         databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -61,7 +61,7 @@ public class WPPendingOrdersFragment extends Fragment implements WPPendingListAd
                         OrderModel orderModel = post.getValue(OrderModel.class);
                         if(orderModel != null)
                         {
-                            if(orderModel.getOrder_station_id().equals(firebaseUser.getUid())
+                            if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid())
                                     && orderModel.getOrder_status().equals("Pending"))
                             {
                                 uploadPO.add(orderModel);

@@ -110,7 +110,7 @@ public class WSPendingOrdersFragment extends Fragment implements PendingListAdap
                         OrderModel orderModel = post.getValue(OrderModel.class);
                         if(orderModel != null)
                         {
-                            if(orderModel.getOrder_station_id().equals(firebaseUser.getUid())
+                            if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid())
                                     && orderModel.getOrder_status().equals("Pending"))
                             {
                                 uploadPO.add(orderModel);
