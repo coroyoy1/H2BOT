@@ -87,8 +87,8 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                 findItem(R.id.nav_inprogress_ws));
         if(savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
-                    new WSTransactionsFragment()).commit();
-            Objects.requireNonNull(getSupportActionBar()).setTitle("Completed Orders");
+                    new WSPendingOrdersFragment()).commit();
+            Objects.requireNonNull(getSupportActionBar()).setTitle("Pending Orders");
         }
 
        initializeCountDrawer();
@@ -178,16 +178,16 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
     @Override
     public void onBackPressed() {
         int count = getSupportFragmentManager().getBackStackEntryCount();
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            if(count == 0)
+//        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+//            drawerLayout.closeDrawer(GravityCompat.START);
+//        } else {
+            if(count > 0)
             {
-                super.onBackPressed();
+                getSupportFragmentManager().popBackStackImmediate();
             }
             else {
-                getSupportFragmentManager().popBackStack();
-            }
+                super.onBackPressed();
+//            }
         }
     }
 

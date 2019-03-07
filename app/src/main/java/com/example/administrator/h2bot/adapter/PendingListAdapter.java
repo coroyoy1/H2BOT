@@ -22,13 +22,13 @@ public class PendingListAdapter extends RecyclerView.Adapter<PendingListAdapter.
     private Context contextHolder;
     private List<OrderModel> uploadHolder;
 
-    private WSInProgressOrdersAdapter.OnItemClickListener mListener;
+    private PendingListAdapter.OnItemClickListener mListener;
 
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
 
-    public void setOnItemClickListener(WSInProgressOrdersAdapter.OnItemClickListener listener) {
+    public void setOnItemClickListener(PendingListAdapter.OnItemClickListener listener) {
         mListener = listener;
     }
 

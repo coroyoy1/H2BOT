@@ -340,8 +340,10 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                 .replace(R.id.fragment_container_ws, additem)
                 .addToBackStack(null)
                 .commit();
-        args.putString("TransactNoSeen1", transactionNo);
-        additem.setArguments(args);
+        Bundle args1 = new Bundle();
+        args1.putString("transcationno", transactionNo);
+        args1.putString("transactioncustomer", transactionNo);
+        additem.setArguments(args1);
     }
 
     @Override
