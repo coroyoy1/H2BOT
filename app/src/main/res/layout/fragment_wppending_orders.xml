@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="405dp">
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerViewPOConnect"
+                android:id="@+id/recyclerViewPO"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
             </android.support.v7.widget.RecyclerView>

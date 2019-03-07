@@ -41,7 +41,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
     private ActionBarDrawerToggle actionBarDrawerToggle;
     FirebaseAuth mAuth;
     Dialog dialog;
-    TextView nav_pendingorders_wp, nav_inprogress_wp;
+    TextView nav_pending_orders_wp, nav_inprogress_wp;
     private ArrayList<OrderModel> adapter;
     private ArrayList<OrderModel> adapter2;
     FirebaseUser currentUser;
@@ -66,10 +66,10 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
         NavigationView navigationView = findViewById(R.id.nav_view_wp);
         navigationView.setNavigationItemSelectedListener(this);
         actionBarDrawerToggle.syncState();
-        nav_pendingorders_wp=(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
-                findItem(R.id.nav_pendingorders_ws));
+        nav_pending_orders_wp=(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
+                findItem(R.id.nav_pending_orders_wp));
         nav_inprogress_wp=(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
-                findItem(R.id.nav_inprogress_ws));
+                findItem(R.id.nav_inprogress_wp));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -89,7 +89,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 adapter.clear();
                 adapter2.clear();
-                nav_pendingorders_wp.setVisibility(View.VISIBLE);
+                nav_pending_orders_wp.setVisibility(View.VISIBLE);
                 Log.d("ambotnimo","AMBOT");
                 for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                 {
@@ -106,15 +106,15 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
                             {
                                 adapter.add(orderModel);
                                 adapter.size();
-                                nav_pendingorders_wp.setVisibility(View.VISIBLE);
+                                nav_pending_orders_wp.setVisibility(View.VISIBLE);
                                 countPending = adapter.size();
                                 Log.d("CountPending", ""+countPending);
 
-                                nav_pendingorders_wp.setGravity(Gravity.CENTER_VERTICAL);
-                                nav_pendingorders_wp.setTextSize(20);
-                                nav_pendingorders_wp.setTypeface(null, Typeface.BOLD);
-                                nav_pendingorders_wp.setTextColor(getResources().getColor(R.color.colorAccent));
-                                nav_pendingorders_wp.setText("" + countPending);
+                                nav_pending_orders_wp.setGravity(Gravity.CENTER_VERTICAL);
+                                nav_pending_orders_wp.setTextSize(20);
+                                nav_pending_orders_wp.setTypeface(null, Typeface.BOLD);
+                                nav_pending_orders_wp.setTextColor(getResources().getColor(R.color.colorAccent));
+                                nav_pending_orders_wp.setText("" + countPending);
 
                             }
                             else
@@ -123,15 +123,15 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
 
                                 if (countPending==0)
                                 {
-                                    nav_pendingorders_wp.setVisibility(View.INVISIBLE);
+                                    nav_pending_orders_wp.setVisibility(View.INVISIBLE);
                                 }
                                 else
                                 {
-                                    nav_pendingorders_wp.setGravity(Gravity.CENTER_VERTICAL);
-                                    nav_pendingorders_wp.setTextSize(20);
-                                    nav_pendingorders_wp.setTypeface(null, Typeface.BOLD);
-                                    nav_pendingorders_wp.setTextColor(getResources().getColor(R.color.colorAccent));
-                                    nav_pendingorders_wp.setText(""+ countPending);
+                                    nav_pending_orders_wp.setGravity(Gravity.CENTER_VERTICAL);
+                                    nav_pending_orders_wp.setTextSize(20);
+                                    nav_pending_orders_wp.setTypeface(null, Typeface.BOLD);
+                                    nav_pending_orders_wp.setTextColor(getResources().getColor(R.color.colorAccent));
+                                    nav_pending_orders_wp.setText(""+ countPending);
                                 }
                             }
                             if(orderModel.getOrder_merchant_id().equals(currendId)
@@ -156,15 +156,15 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
 
                                 if (countPending==0)
                                 {
-                                    nav_pendingorders_wp.setVisibility(View.INVISIBLE);
+                                    nav_inprogress_wp.setVisibility(View.INVISIBLE);
                                 }
                                 else
                                 {
-                                    nav_pendingorders_wp.setGravity(Gravity.CENTER_VERTICAL);
-                                    nav_pendingorders_wp.setTextSize(20);
-                                    nav_pendingorders_wp.setTypeface(null, Typeface.BOLD);
-                                    nav_pendingorders_wp.setTextColor(getResources().getColor(R.color.colorAccent));
-                                    nav_pendingorders_wp.setText(""+ countPending);
+                                    nav_inprogress_wp.setGravity(Gravity.CENTER_VERTICAL);
+                                    nav_inprogress_wp.setTextSize(20);
+                                    nav_inprogress_wp.setTypeface(null, Typeface.BOLD);
+                                    nav_inprogress_wp.setTextColor(getResources().getColor(R.color.colorAccent));
+                                    nav_inprogress_wp.setText(""+ countPending);
                                 }
                             }
                         }
@@ -233,7 +233,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
                 break;
             case R.id.nav_productlist_wp:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp,
-                        new WSProductListFragment()).commit();
+                        new WPProductListFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Product List");
                 showMessages("Product List");
                 break;

@@ -176,19 +176,19 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                             }
                             else
                             {
-                                countPending = adapter.size();
+                                countInprogress = adapter.size();
 
-                                if (countPending==0)
+                                if (countInprogress==0)
                                 {
-                                    nav_pendingorders_ws.setVisibility(View.INVISIBLE);
+                                    nav_inprogress_ws.setVisibility(View.INVISIBLE);
                                 }
                                 else
                                 {
-                                    nav_pendingorders_ws.setGravity(Gravity.CENTER_VERTICAL);
-                                    nav_pendingorders_ws.setTextSize(20);
-                                    nav_pendingorders_ws.setTypeface(null, Typeface.BOLD);
-                                    nav_pendingorders_ws.setTextColor(getResources().getColor(R.color.colorAccent));
-                                    nav_pendingorders_ws.setText(""+ countPending);
+                                    nav_inprogress_ws.setGravity(Gravity.CENTER_VERTICAL);
+                                    nav_inprogress_ws.setTextSize(20);
+                                    nav_inprogress_ws.setTypeface(null, Typeface.BOLD);
+                                    nav_inprogress_ws.setTextColor(getResources().getColor(R.color.colorAccent));
+                                    nav_inprogress_ws.setText(""+ countInprogress);
                                 }
                             }
                         }
