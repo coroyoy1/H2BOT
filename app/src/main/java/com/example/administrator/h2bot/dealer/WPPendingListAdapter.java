@@ -11,6 +11,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.adapter.PendingListAdapter;
+import com.example.administrator.h2bot.adapter.WPInProgressOrdersAdapter;
+import com.example.administrator.h2bot.adapter.WSInProgressOrdersAdapter;
+import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 import com.example.administrator.h2bot.waterstation.WSPendingOrderAcceptDeclineFragment;
 
@@ -19,9 +23,19 @@ import java.util.List;
 public class WPPendingListAdapter extends RecyclerView.Adapter<WPPendingListAdapter.ImageViewholder> {
 
     private Context contextHolder;
-    private List<TransactionHeaderFileModel> uploadHolder;
+    private List<OrderModel> uploadHolder;
 
-    public WPPendingListAdapter(Context context, List<TransactionHeaderFileModel> uploads)
+    private WPInProgressOrdersAdapter.OnItemClickListener mListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(WPInProgressOrdersAdapter.OnItemClickListener listener) {
+        mListener = listener;
+    }
+
+    public WPPendingListAdapter(Context context, List<OrderModel> uploads)
     {
         contextHolder = context;
         uploadHolder = uploads;
@@ -29,18 +43,19 @@ public class WPPendingListAdapter extends RecyclerView.Adapter<WPPendingListAdap
 
     @NonNull
     @Override
-    public ImageViewholder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public WPPendingListAdapter.ImageViewholder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(contextHolder).inflate(R.layout.x_merchant_transaction_pendingorder, viewGroup, false);
-        return new ImageViewholder(view);
+        return new WPPendingListAdapter.ImageViewholder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ImageViewholder imageViewholder, int i) {
-        final TransactionHeaderFileModel currentData = uploadHolder.get(i);
-        String transactionNo = currentData.getTrans_no();
-        String transactionStatus = currentData.getTrans_status();
+    public void onBindViewHolder(@NonNull WPPendingListAdapter.ImageViewholder imageViewholder, int i) {
+        final OrderModel currentData = uploadHolder.get(i);
+        String transactionNo = currentData.getOrder_no();
+        String transactionStatus = currentData.getOrder_status();
         imageViewholder.transactionNoText.setText(transactionNo);
         imageViewholder.transactionStatusText.setText(transactionStatus);
+
 
         imageViewholder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +70,8 @@ public class WPPendingListAdapter extends RecyclerView.Adapter<WPPendingListAdap
                         .commit();
 
                 Bundle bundle = new Bundle();
-                bundle.putString("transactNoString", transactionNo);
+                bundle.putString("transactionno", transactionNo);
+                bundle.putString("transactioncustomer", currentData.getOrder_customer_id());
                 additem.setArguments(bundle);
             }
         });
@@ -72,6 +88,17 @@ public class WPPendingListAdapter extends RecyclerView.Adapter<WPPendingListAdap
             super(itemView);
             transactionNoText = itemView.findViewById(R.id.transactionNoPEN);
             transactionStatusText = itemView.findViewById(R.id.transactionStatusPEN);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            mListener.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 }

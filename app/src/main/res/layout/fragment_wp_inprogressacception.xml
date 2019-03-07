@@ -345,7 +345,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="20dp">
+                android:layout_marginBottom="10dp">
                 <Button
                     android:id="@+id/launchQRINACC"
                     android:text="Launch QR"
@@ -367,7 +367,33 @@
                     android:layout_height="60dp"
                     android:layout_weight="1" />
             </LinearLayout>
-
+            <LinearLayout
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp">
+                <Button
+                    android:id="@+id/launchSMS"
+                    android:text="SMS Customer"
+                    android:textColor="@android:color/white"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/z_greenbluebutton"/>
+                <Button
+                    android:id="@+id/launchCall"
+                    android:background="@drawable/z_darkbluebutton"
+                    android:textColor="@android:color/white"
+                    android:text="Call Customer"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

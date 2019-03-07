@@ -95,7 +95,7 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
     }
 
     private void initializeCountDrawer(){
-        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
         databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -112,7 +112,7 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                         OrderModel orderModel = post.getValue(OrderModel.class);
                         if(orderModel != null)
                         {
-                            Log.d("kako ","ka");
+                            Log.d("kako ",""+orderModel.getOrder_station_id()+"="+currendId);
                             if(orderModel.getOrder_station_id().equals(currendId)
                                     && orderModel.getOrder_status().equals("Pending"))
                             {
@@ -160,6 +160,23 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                                     nav_inprogress_ws.setTypeface(null, Typeface.BOLD);
                                     nav_inprogress_ws.setTextColor(getResources().getColor(R.color.colorAccent));
                                     nav_inprogress_ws.setText("" + countInprogress);
+                                }
+                            }
+                            else
+                            {
+                                countPending = adapter.size();
+
+                                if (countPending==0)
+                                {
+                                    nav_pendingorders_ws.setVisibility(View.INVISIBLE);
+                                }
+                                else
+                                {
+                                    nav_pendingorders_ws.setGravity(Gravity.CENTER_VERTICAL);
+                                    nav_pendingorders_ws.setTextSize(20);
+                                    nav_pendingorders_ws.setTypeface(null, Typeface.BOLD);
+                                    nav_pendingorders_ws.setTextColor(getResources().getColor(R.color.colorAccent));
+                                    nav_pendingorders_ws.setText(""+ countPending);
                                 }
                             }
                         }

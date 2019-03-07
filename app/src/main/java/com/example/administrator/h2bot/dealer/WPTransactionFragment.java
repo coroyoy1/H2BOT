@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.adapter.WPCompletedOrdersAdapter;
+import com.example.administrator.h2bot.adapter.WSCompleterdOrdersAdapter;
 import com.example.administrator.h2bot.models.OrderModel;
+import com.example.administrator.h2bot.waterstation.WSTransactionsFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -51,38 +53,29 @@ public class WPTransactionFragment extends Fragment {
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String currendId = currentUser.getUid();
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("Order_File");
-        //mDatabaseRef2 = FirebaseDatabase.getInstance().getReference("Transaction_Detail_File");
-
-        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
+        databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot data: dataSnapshot.getChildren()){
-
-
+                mUploads.clear();
+                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                {
+                    for (DataSnapshot post : dataSnapshot1.child(currentUser.getUid()).getChildren())
+                    {
+                        OrderModel orderModel = post.getValue(OrderModel.class);
+                        if(orderModel != null)
+                        {
+                            if(orderModel.getOrder_station_id().equals(currentUser.getUid())
+                                    && orderModel.getOrder_status().equals("Completed"))
+                            {
+                                mUploads.add(orderModel);
+                            }
+                        }
+                    }
+                    mAdapter = new WPCompletedOrdersAdapter(getActivity(), mUploads);
+                    recyclerView.setAdapter(mAdapter);
+                    mAdapter.setOnItemClickListener(WPTransactionFragment.this::onItemClick);
                 }
-//                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-//                    for(DataSnapshot postSnapshot2 : dataSnapshot.getChildren()) {
-//                        mDatabaseRef2 = FirebaseDatabase.getInstance().getReference("Order_File").child(currendId);
-//                        mDatabaseRef2.addValueEventListener(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                                OrderModel orderModel = postSnapshot2.getValue(OrderModel.class);
-//                                if (orderModel.getOrder_station_id().equals(currendId) && orderModel.getOrder_status().equals("Completed"))
-//                                    // TransactionDetailFileModel transactionDetail = postSnapshot.getValue(TransactionDetailFileModel.class);
-//                                    mUploads.add(orderModel);
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                            }
-//                        });
-//                    }
-//                }
-                mAdapter = new WPCompletedOrdersAdapter(getActivity(), mUploads);
-                recyclerView.setAdapter(mAdapter);
-                mAdapter.setOnItemClickListener(WPTransactionFragment.this::onItemClick);
             }
 
             @Override

@@ -5,21 +5,34 @@ import com.example.administrator.h2bot.customer.*;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.waterstation.WSProductListFragment;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 
@@ -28,21 +41,35 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
     private ActionBarDrawerToggle actionBarDrawerToggle;
     FirebaseAuth mAuth;
     Dialog dialog;
+    TextView nav_pendingorders_wp, nav_inprogress_wp;
+    private ArrayList<OrderModel> adapter;
+    private ArrayList<OrderModel> adapter2;
+    FirebaseUser currentUser;
+    String currendId;
+    int countPending;
+    int countInprogress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_water_peddler_home);
-
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        currendId = currentUser.getUid();
         mAuth = FirebaseAuth.getInstance();
         dialog = new Dialog(this);
         drawerLayout = findViewById(R.id.wpdrawer_layout);
         drawerLayout.closeDrawers();
+        adapter = new ArrayList<OrderModel>();
+        adapter2 = new ArrayList<OrderModel>();
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_wsdrawer_open, R.string.navigation_wsdrawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         NavigationView navigationView = findViewById(R.id.nav_view_wp);
         navigationView.setNavigationItemSelectedListener(this);
         actionBarDrawerToggle.syncState();
+        nav_pendingorders_wp=(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
+                findItem(R.id.nav_pendingorders_ws));
+        nav_inprogress_wp=(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
+                findItem(R.id.nav_inprogress_ws));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -52,6 +79,105 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
             Objects.requireNonNull(getSupportActionBar()).setTitle("Pending");
             showMessages("Pending");
         }
+        initializeCountDrawer();
+
+    }
+    private void initializeCountDrawer(){
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
+        databaseReference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                adapter.clear();
+                adapter2.clear();
+                nav_pendingorders_wp.setVisibility(View.VISIBLE);
+                Log.d("ambotnimo","AMBOT");
+                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                {
+                    Log.d("gago","ka");
+                    for (DataSnapshot post : dataSnapshot1.child(currendId).getChildren())
+                    {
+                        Log.d("mas","ka");
+                        OrderModel orderModel = post.getValue(OrderModel.class);
+                        if(orderModel != null)
+                        {
+                            Log.d("kako ","ka");
+                            if(orderModel.getOrder_station_id().equals(currendId)
+                                    && orderModel.getOrder_status().equals("Pending"))
+                            {
+                                adapter.add(orderModel);
+                                adapter.size();
+                                nav_pendingorders_wp.setVisibility(View.VISIBLE);
+                                countPending = adapter.size();
+                                Log.d("CountPending", ""+countPending);
+
+                                nav_pendingorders_wp.setGravity(Gravity.CENTER_VERTICAL);
+                                nav_pendingorders_wp.setTextSize(20);
+                                nav_pendingorders_wp.setTypeface(null, Typeface.BOLD);
+                                nav_pendingorders_wp.setTextColor(getResources().getColor(R.color.colorAccent));
+                                nav_pendingorders_wp.setText("" + countPending);
+
+                            }
+                            else
+                            {
+                                countPending = adapter.size();
+
+                                if (countPending==0)
+                                {
+                                    nav_pendingorders_wp.setVisibility(View.INVISIBLE);
+                                }
+                                else
+                                {
+                                    nav_pendingorders_wp.setGravity(Gravity.CENTER_VERTICAL);
+                                    nav_pendingorders_wp.setTextSize(20);
+                                    nav_pendingorders_wp.setTypeface(null, Typeface.BOLD);
+                                    nav_pendingorders_wp.setTextColor(getResources().getColor(R.color.colorAccent));
+                                    nav_pendingorders_wp.setText(""+ countPending);
+                                }
+                            }
+                            if(orderModel.getOrder_station_id().equals(currendId)
+                                    && orderModel.getOrder_status().equals("In-Progress"))
+                            {
+                                adapter2.add(orderModel);
+                                adapter2.size();
+                                countInprogress = adapter2.size();
+                                Log.d("CountInprogress", ""+countInprogress);
+                                if(countInprogress != 0)
+                                {
+                                    nav_inprogress_wp.setGravity(Gravity.CENTER_VERTICAL);
+                                    nav_inprogress_wp.setTextSize(20);
+                                    nav_inprogress_wp.setTypeface(null, Typeface.BOLD);
+                                    nav_inprogress_wp.setTextColor(getResources().getColor(R.color.colorAccent));
+                                    nav_inprogress_wp.setText("" + countInprogress);
+                                }
+                            }
+                            else
+                            {
+                                countPending = adapter.size();
+
+                                if (countPending==0)
+                                {
+                                    nav_pendingorders_wp.setVisibility(View.INVISIBLE);
+                                }
+                                else
+                                {
+                                    nav_pendingorders_wp.setGravity(Gravity.CENTER_VERTICAL);
+                                    nav_pendingorders_wp.setTextSize(20);
+                                    nav_pendingorders_wp.setTypeface(null, Typeface.BOLD);
+                                    nav_pendingorders_wp.setTextColor(getResources().getColor(R.color.colorAccent));
+                                    nav_pendingorders_wp.setText(""+ countPending);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
     @Override
     public void onBackPressed() {

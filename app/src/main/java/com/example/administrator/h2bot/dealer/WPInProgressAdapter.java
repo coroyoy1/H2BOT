@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class WPInProgressAdapter extends RecyclerView.Adapter<WPInProgressAdapter.ViewHolder>{
     private Context mContext;
-    private List<TransactionHeaderFileModel> mUploads;
+    private List<OrderModel> mUploads;
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener {
@@ -29,7 +30,7 @@ public class WPInProgressAdapter extends RecyclerView.Adapter<WPInProgressAdapte
         mListener = listener;
     }
 
-    public WPInProgressAdapter(Context context, ArrayList<TransactionHeaderFileModel> uploads) {
+    public WPInProgressAdapter(Context context, ArrayList<OrderModel> uploads) {
         mContext = context;
         mUploads = uploads;
     }
@@ -42,30 +43,27 @@ public class WPInProgressAdapter extends RecyclerView.Adapter<WPInProgressAdapte
     }
     @Override
     public void onBindViewHolder(@NonNull WPInProgressAdapter.ViewHolder viewHolder, int i) {
-        final TransactionHeaderFileModel currentData = mUploads.get(i);
-                viewHolder.transactionNo.setText(currentData.getTrans_no());
-                viewHolder.status.setText(currentData.getTrans_status());
-
-           String transactno= currentData.getTrans_no();
-            String status= currentData.getTrans_status();
+        final OrderModel currentData = mUploads.get(i);
+        viewHolder.transactionNo.setText(currentData.getOrder_no());
+        viewHolder.status.setText(currentData.getOrder_status());
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WPPendingTransactionFragment detail = new WPPendingTransactionFragment();
+                WPInProgressAccept detail = new WPInProgressAccept();
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp, detail).addToBackStack(null).commit();
                 Bundle args = new Bundle();
-                args.putString("transactionno", currentData.getTrans_no());
-                args.putString("status", currentData.getTrans_status());
-
+                args.putString("transactionno", currentData.getOrder_no());
+                args.putString("transactioncustomer", currentData.getOrder_customer_id());
+                args.putString("status", currentData.getOrder_status());
                 detail.setArguments(args);
             }
         });
 
-                TransactionHeaderFileModel uploadCurrent = mUploads.get(i);
-                viewHolder.transactionNo.setText(uploadCurrent.getTrans_no());
-                viewHolder.status.setText(uploadCurrent.getTrans_status());
+                OrderModel uploadCurrent = mUploads.get(i);
+        viewHolder.transactionNo.setText(uploadCurrent.getOrder_no());
+        viewHolder.status.setText(uploadCurrent.getOrder_status());
     }
 
     @Override

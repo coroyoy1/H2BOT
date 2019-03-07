@@ -14,6 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.models.MerchantCustomerFile;
+import com.example.administrator.h2bot.models.OrderModel;
+import com.example.administrator.h2bot.models.UserFile;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,18 +26,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import org.joda.time.DateTime;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class WPCompletedAccept extends Fragment implements View.OnClickListener {
 
-    TextView orderNo, customer, contactNo, waterType, itemQuantity, pricePerGallon,  service, address, deliveryFee, totalPrice;
+    TextView orderNo, deliveryDate, customer, contactNo, waterType, itemQuantity, pricePerGallon,  service, address, deliveryFee, totalPrice, deliveryMethod;
     Button backButton;
     String orderNoGET, customerNoGET, merchantNOGET, transactionNo, dataIssuedGET, deliveryStatusGET
             ,transStatusGET, transTotalAmountGET, transDeliveryFeeGET, transTotalNoGallonGET,
             transDeliveryFeePerGallonDetail, transNoDetail, transNoOfGallonDetail, transPartialAmountDetail, transPricePerGallonDetail
-            ,transStatusDetail, transWaterTypeDetail, customerIDUser, contactNoUser;
+            ,transStatusDetail, transWaterTypeDetail, customerIDUser, contactNoUser, customerNo ;
     CircleImageView imageView;
     ProgressDialog progressDialog;
+    FirebaseUser firebaseUser;
 
     @Nullable
     @Override
@@ -51,19 +59,22 @@ public class WPCompletedAccept extends Fragment implements View.OnClickListener 
         totalPrice = view.findViewById(R.id.totalPriceCOMACC);
         backButton = view.findViewById(R.id.backCOMACC);
         imageView = view.findViewById(R.id.imageViewINACC);
+        deliveryMethod = view.findViewById(R.id.MethodCOMACC);
+        deliveryDate = view.findViewById(R.id.datedeliveredCOMACC);
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
-
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         progressDialog.show();
 
         Bundle bundle = this.getArguments();
         if(bundle != null)
         {
             transactionNo = bundle.getString("transactionno");
+            customerNo = bundle.getString("transactioncustomer");
         }
         getOrderData();
 
@@ -72,102 +83,83 @@ public class WPCompletedAccept extends Fragment implements View.OnClickListener 
 
     public void getOrderData()
     {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Transaction_Header_File");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot postSnapShot : dataSnapshot.getChildren())
-                {
-                    if(postSnapShot.child("trans_no").getValue(String.class).equals(transactionNo)
-                            && postSnapShot.child("trans_status").getValue(String.class).equals("Completed"))
-                    {
-                        orderNoGET = postSnapShot.child("trans_no").getValue(String.class);
-                        customerNoGET = postSnapShot.child("customer_id").getValue(String.class);
-                        merchantNOGET = postSnapShot.child("merchant_id").getValue(String.class);
-                        dataIssuedGET = postSnapShot.child("trans_date_issued").getValue(String.class);
-                        deliveryStatusGET = postSnapShot.child("trans_delivered_service").getValue(String.class);
-                        transStatusGET = postSnapShot.child("trans_status").getValue(String.class);
-                        transTotalAmountGET = postSnapShot.child("trans_total_amount").getValue(String.class);
-                        transDeliveryFeeGET = postSnapShot.child("trans_total_delivery_fee").getValue(String.class);
-                        transTotalNoGallonGET = postSnapShot.child("trans_total_no_of_gallons").getValue(String.class);
-
-                        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Transaction_Detail_File");
-                        databaseReference1.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                for(DataSnapshot postSnap : dataSnapshot.getChildren())
-                                {
-                                    if(postSnap.child("trans_no").getValue(String.class).equals(transactionNo))
-                                    {
-                                        transDeliveryFeePerGallonDetail = postSnap.child("trans_delivery_fee_per_gallon").getValue(String.class);
-                                        transNoDetail = postSnap.child("trans_no").getValue(String.class);
-                                        transNoOfGallonDetail = postSnap.child("trans_no_of_gallons").getValue(String.class);
-                                        transPartialAmountDetail = postSnap.child("trans_partial_amount").getValue(String.class);
-                                        transPricePerGallonDetail = postSnap.child("trans_price_per_gallon").getValue(String.class);
-                                        transStatusDetail = postSnap.child("trans_status").getValue(String.class);
-                                        transWaterTypeDetail = postSnap.child("trans_water_type").getValue(String.class);
-                                        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("User_File");
-                                        databaseReference2.addValueEventListener(new ValueEventListener() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_Customer_File");
+        reference.child(firebaseUser.getUid()).child(customerNo)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        MerchantCustomerFile merchantCustomerFile = dataSnapshot.getValue(MerchantCustomerFile.class);
+                        if(merchantCustomerFile != null)
+                        {
+                            String customerId = merchantCustomerFile.getCustomer_id();
+                            String merchantId = merchantCustomerFile.getStation_id();
+                            String status = merchantCustomerFile.getStatus();
+                            if(status.equals("AC"))
+                            {
+                                DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
+                                reference1.child(customerId).child(merchantId).child(transactionNo)
+                                        .addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                for(DataSnapshot post : dataSnapshot.getChildren())
-                                                {
-                                                    if(customerNoGET.equals(post.child("user_getUID").getValue(String.class)))
-                                                    {
-                                                        customerIDUser = post.child("user_firtname").getValue(String.class)+" "+post.child("user_lastname").getValue(String.class);
-                                                        contactNoUser = post.child("user_phone_no").getValue(String.class);
-                                                        String imageUi = post.child("user_uri").getValue(String.class);
-                                                        Picasso.get().load(imageUi).fit().centerCrop().into(imageView);
-                                                        progressDialog.dismiss();
+                                                OrderModel orderModel = dataSnapshot.getValue(OrderModel.class);
+                                                if (orderModel != null) {
+                                                    if (orderModel.getOrder_status().equals("Completed")) {
+                                                        orderNo.setText(orderModel.getOrder_no());
+                                                        itemQuantity.setText(orderModel.getOrder_qty());
+                                                        pricePerGallon.setText(orderModel.getOrder_price_per_gallon());
+                                                        totalPrice.setText(orderModel.getOrder_total_amt());
+                                                        waterType.setText(orderModel.getOrder_water_type());
+                                                        address.setText(orderModel.getOrder_address());
+                                                        deliveryMethod.setText(orderModel.getOrder_delivery_method());
+
+                                                        DateTime date = new DateTime(orderModel.getOrder_delivery_date());
+                                                        String dateString = date.toLocalDate().toString();
+
+                                                        deliveryDate.setText(dateString);
+                                                        deliveryFee.setText(orderModel.getOrder_delivery_fee());
+
+                                                        DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_File");
+                                                        reference2.child(orderModel.getOrder_customer_id())
+                                                                .addValueEventListener(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                        UserFile userFile = dataSnapshot.getValue(UserFile.class);
+                                                                        if (userFile != null) {
+                                                                            String customerPicture = userFile.getUser_uri();
+                                                                            Picasso.get().load(customerPicture).into(imageView);
+                                                                            contactNo.setText(userFile.getUser_phone_no());
+                                                                            String fullname = userFile.getUser_firtname() + " " + userFile.getUser_lastname();
+                                                                            customer.setText(fullname);
+                                                                            progressDialog.dismiss();
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                        progressDialog.dismiss();
+                                                                    }
+                                                                });
+
+
                                                     }
+
                                                 }
-                                                orderNo.setText(orderNoGET);
-                                                customer.setText(customerIDUser);
-                                                contactNo.setText(contactNoUser);
-                                                waterType.setText(transWaterTypeDetail);
-                                                itemQuantity.setText(transTotalNoGallonGET);
-                                                pricePerGallon.setText(transPricePerGallonDetail);
-                                                service.setText(deliveryStatusGET);
-                                                deliveryFee.setText(transDeliveryFeeGET);
-                                                totalPrice.setText(transTotalAmountGET);
                                             }
 
                                             @Override
                                             public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                showMessages("User file does not have this data");
                                                 progressDialog.dismiss();
                                             }
                                         });
-                                    }
-                                    else
-                                    {
-                                        showMessages("Data is not available");
-                                        progressDialog.dismiss();
-                                    }
-                                }
                             }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                showMessages("Data is not available");
-                                progressDialog.dismiss();
-                            }
-                        });
+                        }
                     }
-                    else
-                    {
-                        showMessages("Data does not available");
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
                         progressDialog.dismiss();
                     }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                showMessages("Data does not available");
-                progressDialog.dismiss();
-            }
-        });
+                });
     }
 
     private void showMessages(String s) {

@@ -78,7 +78,6 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
         waterType = view.findViewById(R.id.waterTypePOACC);
         itemQuantity = view.findViewById(R.id.itemQuantityPOACC);
         pricePerGallon = view.findViewById(R.id.pricePerGallonPOACC);
-        service = view.findViewById(R.id.servicePOACC);
         deliveryFee = view.findViewById(R.id.deliveryFeePOACC);
         totalPrice = view.findViewById(R.id.totalPricePOACC);
         imageView = view.findViewById(R.id.imageViewPOACC);

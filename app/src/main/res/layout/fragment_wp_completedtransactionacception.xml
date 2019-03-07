@@ -17,8 +17,8 @@
                 android:background="@drawable/z_linearlayoutdesign"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -163,7 +163,7 @@
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
-                        android:text="Item Quantity:"
+                        android:text="Quantity:"
                         android:textColor="@android:color/white"
                         android:textSize="18dp" />
 
@@ -251,7 +251,14 @@
                         android:textColor="@android:color/white"
                         android:textSize="18dp" />
 
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
                     <TextView
+                        android:textAlignment="center"
                         android:id="@+id/addressCOMACC"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -279,7 +286,7 @@
                         android:layout_height="wrap_content"
                         android:text="Date to Deliver:" />
                     <TextView
-                        android:id="@+id/datedeliveredPOACC"
+                        android:id="@+id/datedeliveredCOMACC"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:textSize="18dp"
@@ -306,6 +313,34 @@
 
                     <TextView
                         android:id="@+id/deliveryFeeCOMACC"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="sample edit"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Method:"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
+
+                    <TextView
+                        android:id="@+id/MethodCOMACC"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
