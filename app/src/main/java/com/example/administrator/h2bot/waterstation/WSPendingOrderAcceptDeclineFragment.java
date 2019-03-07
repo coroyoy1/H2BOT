@@ -235,7 +235,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
 
     private void updateStatus()
     {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_Customer_File");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_File");
         reference.child(firebaseUser.getUid()).child(customerNo)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -248,7 +248,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                             String status = merchantCustomerFile.getStatus();
                             if(status.equals("AC"))
                             {
-                                DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
+                                DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
                                 reference1.child(customerId).child(merchantId).child(transactionNo).child("order_status").setValue("In-Progress")
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
