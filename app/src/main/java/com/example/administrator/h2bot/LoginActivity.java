@@ -69,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if(currentUser != null)
         {
+            progressDialog.show();
             userHERE = currentUser.getUid();
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File").child(currentUser.getUid());
                     databaseReference.addValueEventListener(new ValueEventListener() {
@@ -112,7 +113,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 signInNow();
-//                tempLogin();
             }
         });
     }
@@ -126,15 +126,6 @@ public class LoginActivity extends AppCompatActivity {
             progressDialog.dismiss();
         }
     }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        if(!(LoginActivity.this).isFinishing())
-//        {
-//            progressDialog.show();
-//        }
-//    }
 
     private void signInNow()
     {
@@ -210,12 +201,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else if(userType.equals("Delivery Man"))
                 {
-//                    if(documentVerify.equals("inactive"))
-//                    {
-//                        finish();
-//                        startActivity(new Intent(LoginActivity.this, DeliveryManDocumentActivity.class));
-//                    }
-//                    else
                     if(documentVerify.equals("active"))
                     {
                         finish();

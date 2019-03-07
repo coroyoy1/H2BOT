@@ -117,7 +117,7 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
 
     FirebaseAuth mauth;
     FirebaseUser firebaseUser;
-    String transactNum;
+    String transactNum ,customerNo;
 
     public MapMerchantFragmentRenew()
     {
@@ -136,21 +136,18 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //map.clear();
+        map.clear();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_map_direct, container, false);
-//        marker.remove();
-
         Bundle bundle = this.getArguments();
         if(bundle != null) {
-            transactNum = bundle.getString("TransactNoSeen1");
-
+            transactNum = bundle.getString("transactionno");
+            customerNo = bundle.getString("transactioncustomer");
         }
-
         return view;
     }
 
@@ -159,7 +156,6 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             checkUserLocationPermission();
         }
-
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map1);
         arrayListUserFile = new ArrayList<UserFile>();
         arrayListBusinessInfo = new ArrayList<TransactionHeaderFileModel>();
@@ -182,6 +178,7 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
 
     }
 
+
     @Override
     public void onConnectionSuspended(int i) {
         Toast.makeText(getActivity(), "Connection suspended. . .", Toast.LENGTH_SHORT).show();
@@ -193,16 +190,61 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
     }
 
 
-    public void locateCustomer()
+    public void locateCustomer(LatLng pLatLng)
     {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_Customer_File");
-        reference.child(firebaseUser.getUid())
+        reference.child(firebaseUser.getUid()).child(customerNo)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for(DataSnapshot postSnap : dataSnapshot.getChildren())
+                        MerchantCustomerFile merchantCustomerFile = dataSnapshot.getValue(MerchantCustomerFile.class);
+                        if(merchantCustomerFile != null)
                         {
+                            String merchantId = merchantCustomerFile.getStation_id();
+                            String customerId = merchantCustomerFile.getStation_id();
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_LatLong");
+                            databaseReference.child(customerId)
+                                    .addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            UserLocationAddress userLocationAddress = dataSnapshot.getValue(UserLocationAddress.class);
+                                            if(userLocationAddress != null)
+                                            {
+                                                double latitude = Double.parseDouble(userLocationAddress.getUser_latitude());
+                                                double longtitude = Double.parseDouble(userLocationAddress.getUser_longtitude());
+                                                LatLng latLng = new LatLng(latitude, longtitude);
+                                                if(mLatLng !=null)
+                                                {
+                                                    TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+                                                    taskRequestDirections.execute(getRequestURL(pLatLng, latLng));
+                                                    DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("User_File");
+                                                    reference1.child(customerId).addValueEventListener(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                            UserFile userFile = dataSnapshot.getValue(UserFile.class);
+                                                            if(userFile != null)
+                                                            {
+                                                                String address = userFile.getUser_address();
+                                                                String fullname = userFile.getUser_lastname()+", "+userFile.getUser_firtname();
+                                                                map.addMarker(new MarkerOptions().position(latLng).snippet("Customer Name: "+fullname+"\n"+"Address: "+address)
+                                                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                                                            }
+                                                        }
 
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
                         }
                     }
 
@@ -299,36 +341,29 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
 
         @Override
         protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
-            ArrayList<LatLng> points = new ArrayList<>();
-            polylineOptions = null;
-            for(List<HashMap<String, String>>path:lists)
-            {
+            ArrayList points = null;
+            PolylineOptions polylineOptions = null;
+
+            for (List<HashMap<String, String>> path : lists) {
+                points = new ArrayList();
                 polylineOptions = new PolylineOptions();
-                for (HashMap<String, String>point:path)
-                {
+
+                for (HashMap<String, String> point : path) {
                     double lat = Double.parseDouble(point.get("lat"));
-                    double lon = Double.parseDouble(point.get("lng"));
+                    double lon = Double.parseDouble(point.get("lon"));
 
-                    points.add(mLatLng);
-                    points.add(latLong);
-
+                    points.add(new LatLng(lat,lon));
                 }
-                //polylineOptions.addAll(points);
-                HashMap<String, String> pointer = new HashMap<>();
-
-                polylineOptions = new PolylineOptions().add(mLatLng, latLong);
+                polylineOptions.addAll(points);
                 polylineOptions.width(15);
                 polylineOptions.color(Color.BLUE);
-//                polylineOptions.geodesic(true);
+                polylineOptions.geodesic(true);
             }
-            if(polylineOptions!=null)
-            {
+
+            if (polylineOptions!=null) {
                 map.addPolyline(polylineOptions);
-            }
-            else
-            {
-//                map.addPolyline(polylineOptions);
-                Toast.makeText(getActivity(), "Direction not found", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), "Direction not found!", Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -341,8 +376,6 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
             mCurrentLocationMarker.remove();
         }
         mLatLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-        setgetLAT setIt = new setgetLAT();
-        setIt.setSetgetLATData(mLatLng);
         MarkerOptions mMarkerOption = new MarkerOptions();
         mMarkerOption.position(mLatLng);
         mMarkerOption.title("You");
@@ -356,33 +389,9 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
         if(mGoogleApiClient != null){
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
-        if(mLatLng !=null && latLong !=null)
-        {
-            TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
-            taskRequestDirections.execute(getRequestURL(mLatLng, latLong));
-        }
+        locateCustomer(mLatLng);
+
     }
-
-    public class setgetLAT
-    {
-        public LatLng setgetLATData;
-        public setgetLAT() {
-        }
-
-        public LatLng getSetgetLATData() {
-            return setgetLATData;
-        }
-
-        public void setSetgetLATData(LatLng setgetLATData) {
-            this.setgetLATData = setgetLATData;
-        }
-
-        public setgetLAT(LatLng setgetLATData)
-        {
-            this.setgetLATData = setgetLATData;
-        }
-    }
-
 
     private String getRequestURL(LatLng origin, LatLng dest)
     {

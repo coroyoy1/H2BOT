@@ -182,7 +182,7 @@ public class RegisterActivity extends AppCompatActivity{
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            showMessage("Error to get location");
+                            //showMessage("Error to get location");
                             progressDialog.dismiss();
                         }
                     });

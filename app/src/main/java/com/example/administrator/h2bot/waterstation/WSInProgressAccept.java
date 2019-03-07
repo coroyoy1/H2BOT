@@ -123,7 +123,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
 
 
 
-    public void viewLocationMeth()
+    public void cameraDisplay()
     {
 
             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -141,7 +141,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
             };
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setMessage("Are you sure to display?").setPositiveButton("Yes", dialogClickListener)
+            builder.setMessage("This can led to use your camera").setPositiveButton("Yes", dialogClickListener)
                     .setNegativeButton("No", dialogClickListener).show();
     }
 
@@ -259,89 +259,6 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
     }
 
 
-
-    public void getCustomerOrder()
-    {
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_Customer_File");
-            reference.child(firebaseUser.getUid())
-                    .addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            MerchantCustomerFile merchantCustomerFile = dataSnapshot.getValue(MerchantCustomerFile.class);
-                            if(merchantCustomerFile != null)
-                            {
-                                String customerId = merchantCustomerFile.getCustomer_id();
-                                String merchantId = merchantCustomerFile.getStation_id();
-                                String status = merchantCustomerFile.getStatus();
-                                if(status.equals("AC"))
-                                {
-                                    DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
-                                    reference1.child(customerId).child(merchantId).child(transactionNo)
-                                            .addValueEventListener(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    OrderModel orderModel = dataSnapshot.getValue(OrderModel.class);
-                                                    if(orderModel != null)
-                                                    {
-                                                        if(orderModel.getOrder_status().equals("In-Progress")) {
-                                                            orderNo.setText(orderModel.getOrder_no());
-                                                            itemQuantity.setText(orderModel.getOrder_qty());
-                                                            pricePerGallon.setText(orderModel.getOrder_price_per_gallon());
-                                                            totalPrice.setText(orderModel.getOrder_total_amt());
-                                                            waterType.setText(orderModel.getOrder_water_type());
-                                                            address.setText(orderModel.getOrder_address());
-                                                            deliveryMethod.setText(orderModel.getOrder_delivery_method());
-
-                                                            DateTime date = new DateTime(orderModel.getOrder_delivery_date());
-                                                            String dateString = date.toLocalDate().toString();
-
-                                                            deliveryDate.setText(dateString);
-                                                            deliveryFee.setText(orderModel.getOrder_delivery_fee());
-
-                                                            DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_File");
-                                                            reference2.child(orderModel.getOrder_customer_id())
-                                                                    .addValueEventListener(new ValueEventListener() {
-                                                                        @Override
-                                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                            UserFile userFile = dataSnapshot.getValue(UserFile.class);
-                                                                            if (userFile != null) {
-                                                                                String customerPicture = userFile.getUser_uri();
-                                                                                Picasso.get().load(customerPicture).into(imageView);
-                                                                                contactNo.setText(userFile.getUser_phone_no());
-                                                                                String fullname = userFile.getUser_firtname() + " " + userFile.getUser_lastname();
-                                                                                customer.setText(fullname);
-                                                                                progressDialog.dismiss();
-                                                                            }
-                                                                        }
-
-                                                                        @Override
-                                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                                            progressDialog.dismiss();
-                                                                        }
-                                                                    });
-
-                                                        }
-                                                    }
-
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                    progressDialog.dismiss();
-                                                }
-                                            });
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            progressDialog.dismiss();
-                        }
-                    });
-
-    }
-
     private void updateOrder(String transactionSet)
     {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_Customer_File");
@@ -407,14 +324,10 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                 .replace(R.id.fragment_container_ws, additem)
                 .addToBackStack(null)
                 .commit();
-        bundle.putString("TransactNoSeen1", transactionNo);
-        additem.setArguments(bundle);
-    }
-
-    public void getLocationUser()
-    {
-        Intent intent = new Intent(getActivity(), MapMerchantActivity.class);
-        startActivity(intent);
+        Bundle bundle1 = new Bundle();
+        bundle1.putString("transactionno", transactionNo);
+        bundle1.putString("transactioncustomer", customerNo);
+        additem.setArguments(bundle1);
     }
 
     @Override
@@ -422,13 +335,10 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
         switch(v.getId())
         {
             case R.id.launchQRINACC:
-                viewLocationMeth();
+                cameraDisplay();
                 break;
             case R.id.viewLocationButtonINACC:
-//                if(googleMap != null)
-//                    googleMap.clear();
-                //viewLocationPass();
-                getLocationUser();
+                viewLocationPass();
                 break;
         }
     }
