@@ -118,7 +118,7 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
                     updateBtn.setVisibility(View.GONE);
                 }
                 else if(status.getText().toString().equalsIgnoreCase("Cancelled")
-                    || status.getText().toString().equalsIgnoreCase("Delivered")){
+                    || status.getText().toString().equalsIgnoreCase("Completed")){
                     cancelBtn.setVisibility(View.GONE);
                     updateBtn.setVisibility(View.GONE);
                     viewQrQodeBtn.setVisibility(View.GONE);

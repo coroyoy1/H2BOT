@@ -65,7 +65,11 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TPAMapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+public class TPAMapFragment extends Fragment
+        implements
+        OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
 

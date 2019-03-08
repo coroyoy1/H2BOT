@@ -40,6 +40,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -73,6 +74,7 @@ public class RegisterActivity extends AppCompatActivity{
     TextView headerTitle;
     FirebaseUser currentUser;
     FirebaseAuth.AuthStateListener mAuthListener;
+    String device_token_id;
 
 
     private FirebaseAuth mAuth;
@@ -242,6 +244,18 @@ public class RegisterActivity extends AppCompatActivity{
                                             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                                             String uidString = firebaseUser.getUid();
 
+                                            firebaseUser.getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+                                                @Override
+                                                public void onSuccess(GetTokenResult getTokenResult) {
+                                                    device_token_id = getTokenResult.getToken();
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Toast.makeText(RegisterActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+
                                             StorageReference mStorage = FirebaseStorage.getInstance().getReference("users_photos").child(uidString);
                                             mStorage.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                                 @Override
@@ -277,6 +291,7 @@ public class RegisterActivity extends AppCompatActivity{
                                                             UserAccountFile userAccountFile = new UserAccountFile(uidString,
                                                                     emailRegister.getText().toString(),
                                                                     passwordRegister.getText().toString(),
+                                                                    device_token_id,
                                                                     "active");
                                                             FirebaseDatabase.getInstance().getReference("User_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userFile)
                                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {

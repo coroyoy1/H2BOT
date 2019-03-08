@@ -11,6 +11,7 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -148,6 +149,7 @@ public class LoginActivity extends AppCompatActivity {
                 {
 
                     userHERE = mAuth.getCurrentUser().getUid();
+                    Log.d("EserHere",""+userHERE);
                     if(!task.isSuccessful())
                     {
                         showMessages("Please check your internet connection or credentials.");

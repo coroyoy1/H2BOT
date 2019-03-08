@@ -4,10 +4,8 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +19,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.models.CustomerToMerchantNotifModel;
+import com.example.administrator.h2bot.models.OrderFileModel;
+import com.example.administrator.h2bot.models.TransactionNoModel;
 import com.example.administrator.h2bot.models.UserFile;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.api.client.util.DateTime;
 import com.google.api.gax.core.FixedCredentialsProvider;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
@@ -33,15 +37,17 @@ import com.google.cloud.dialogflow.v2.SessionsSettings;
 import com.google.cloud.dialogflow.v2.TextInput;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.apache.commons.codec.binary.StringUtils;
+
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.UUID;
 
 import static  com.example.administrator.h2bot.customer.CustomerMapFragment.EXTRA_stationID;
@@ -62,9 +68,15 @@ public class CustomerChatbotActivity extends AppCompatActivity {
     private SessionsClient sessionsClient;
     private SessionName session;
     FirebaseDatabase db = FirebaseDatabase.getInstance();
+    DatabaseReference notifRef, customerFileRef;
     FirebaseAuth myAuth;
     TextView stationNameTv;
     ArrayList<UserFile> userFile;
+    ArrayList<TransactionNoModel> totalTransactionNo;
+    ArrayList<OrderFileModel> orderFile;
+    ArrayList<CustomerToMerchantNotifModel> customerNotifRef;
+    String stationId;
+    String myOrderNo, orderNo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +95,12 @@ public class CustomerChatbotActivity extends AppCompatActivity {
         sendBtn = findViewById(R.id.sendBtn);
         sendBtn.setOnClickListener(this::sendMessage);
         myAuth = FirebaseAuth.getInstance();
+        notifRef = db.getReference("Notification").child("Customer_Notification");
+        customerFileRef = db.getReference("Customer_File");
         userFile = new ArrayList<>();
+        totalTransactionNo = new ArrayList<TransactionNoModel>();
+        orderFile = new ArrayList<OrderFileModel>();
+        customerNotifRef = new ArrayList<CustomerToMerchantNotifModel>();
 
         queryEditText = findViewById(R.id.queryEditText);
         queryEditText.setOnKeyListener((view, keyCode, event) -> {
@@ -184,13 +201,59 @@ public class CustomerChatbotActivity extends AppCompatActivity {
             }
             else if(botReply.equalsIgnoreCase("Your order is being processed. We will just notify you for more details.")){
                 Button okayBtn;
-                dialog.setContentView(R.layout.order_info_popup);
+                dialog.setContentView(R.layout.customer_chatbot_order_info_popup);
                 dialog.setCanceledOnTouchOutside(false);
                 okayBtn = dialog.findViewById(R.id.okayBtn);
+
+
 
                 okayBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        String userId = myAuth.getCurrentUser().getUid();
+                        String token_id = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjkwYmVmMzI2MmVkMzI0MzZkNzhlMjdjYWJhYzg3YmIwZWUxZGYwYzIiLCJ0eXAiOiJKV1QifQ";
+                        customerFileRef.child(myAuth.getCurrentUser().getUid()).child(stationId).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for(DataSnapshot data: dataSnapshot.getChildren()){
+                                    OrderFileModel orderFileModel = data.getValue(OrderFileModel.class);
+                                    TransactionNoModel noOfOrders = data.getValue(TransactionNoModel.class);
+                                    totalTransactionNo.add(noOfOrders);
+                                    orderFile.add(orderFileModel);
+                                    orderFileModel.setOrderNo(data.child("order_no").getValue(String.class));
+                                    myOrderNo = orderFileModel.getOrderNo();
+                                }
+                                orderNo = String.format("%08d", totalTransactionNo.size());
+                                Toast.makeText(CustomerChatbotActivity.this, "Order no: " + myOrderNo, Toast.LENGTH_SHORT).show();
+                                myAuth.getCurrentUser().getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+                                    @Override
+                                    public void onSuccess(GetTokenResult getTokenResult) {
+                                        String token_id = getTokenResult.getToken();
+                                    }
+                                });
+                                CustomerToMerchantNotifModel notify = new CustomerToMerchantNotifModel(
+                                        userId, stationId, myOrderNo, userId,"", stationId,
+                                        "New order received", myOrderNo, "Pending", token_id
+                                );
+                                notifRef.child(userId).child(stationId).child(myOrderNo).setValue(notify)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(CustomerChatbotActivity.this, "Order sent to the station", Toast.LENGTH_SHORT).show();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(CustomerChatbotActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Toast.makeText(CustomerChatbotActivity.this, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
                         dialog.dismiss();
                         startActivity(new Intent(CustomerChatbotActivity.this, CustomerMainActivity.class));
                     }
@@ -213,7 +276,7 @@ public class CustomerChatbotActivity extends AppCompatActivity {
         FirebaseUser get_UId = myAuth.getCurrentUser();
         String get_id = get_UId.getUid();
         Intent intent = getIntent();
-        String stationId = intent.getStringExtra(EXTRA_stationID);
+        stationId = intent.getStringExtra(EXTRA_stationID);
 
         userFileRef.addValueEventListener(new ValueEventListener() {
             @Override

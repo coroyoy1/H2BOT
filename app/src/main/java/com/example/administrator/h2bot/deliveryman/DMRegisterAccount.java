@@ -29,6 +29,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -63,6 +64,7 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
     StorageReference storageReference;
     ProgressDialog progressDialog;
     String GetAuth;
+    String device_token_id;
 
     String emailPass, passPass;
 
@@ -185,6 +187,18 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
                     @Override
                     public void onSuccess(AuthResult authResult) {
                        String userd = FirebaseAuth.getInstance().getUid();
+                       FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                       currentUser.getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+                           @Override
+                           public void onSuccess(GetTokenResult getTokenResult) {
+                               device_token_id = getTokenResult.getToken();
+                           }
+                       }).addOnFailureListener(new OnFailureListener() {
+                           @Override
+                           public void onFailure(@NonNull Exception e) {
+                               Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                           }
+                       });
                        storageReference.child(userd)
                                .putFile(uri)
                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -225,6 +239,7 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
                                                                                     userd,
                                                                                     emailDM.getText().toString(),
                                                                                     passwordDM.getText().toString(),
+                                                                                    device_token_id,
                                                                                     "active"
                                                                             );
                                                                             DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("User_Account_File");

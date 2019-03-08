@@ -50,22 +50,21 @@ public class CustomerStationFragment extends Fragment {
         orderList = new ArrayList<OrderFileModel>();
         businessInfoList = new ArrayList<UserWSBusinessInfoFile>();
 
-        orderFileRef = db.getReference("Customer_Order_File").child(firebaseUser.getUid());
+        orderFileRef = db.getReference("Customer_File").child(firebaseUser.getUid());
         businessInfoRef = db.getReference("User_WS_Business_Info_File");
 
         businessInfoRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                businessInfoList.clear();
                 for(DataSnapshot data: dataSnapshot.getChildren()){
                     UserWSBusinessInfoFile infoFile = data.getValue(UserWSBusinessInfoFile.class);
                     orderFileRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for(DataSnapshot data2: dataSnapshot.getChildren()){
-                                OrderFileModel orderFile = data2.getValue(OrderFileModel.class);
                                 if(infoFile.getBusiness_id().equals(data2.getKey())){
                                     businessInfoList.add(infoFile);
-                                    orderList.add(orderFile);
                                 }
                             }
                             customerOrderAdapter = new CustomerStationAdapter(getActivity(), businessInfoList);

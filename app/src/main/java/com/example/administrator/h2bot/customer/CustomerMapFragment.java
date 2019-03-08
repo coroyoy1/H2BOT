@@ -72,8 +72,7 @@ public class CustomerMapFragment extends Fragment implements
         OnMapReadyCallback
         , GoogleApiClient.ConnectionCallbacks
         , GoogleApiClient.OnConnectionFailedListener
-        , LocationListener
-        , ResultCallback<Status> {
+        , LocationListener{
 
 
     // User Permissions
@@ -177,7 +176,7 @@ public class CustomerMapFragment extends Fragment implements
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             buildGoogleApiClient();
             map.setMyLocationEnabled(true);
-            Toast.makeText(getActivity(), "Permission granted", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "Permission granted", Toast.LENGTH_SHORT).show();
         }
         float zoomLevel = 16.0f;
         map.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
@@ -362,7 +361,6 @@ public class CustomerMapFragment extends Fragment implements
             mCurrentLocationMarker.remove();
         }
         LatLng mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-        geofence(mLatLng);
         MarkerOptions mMarkerOption = new MarkerOptions();
         mMarkerOption.position(mLatLng);
         mMarkerOption.title("You");
@@ -378,90 +376,6 @@ public class CustomerMapFragment extends Fragment implements
         }
     }
 
-    Marker geofenceMarker;
-
-    private void geofence(LatLng latLng) {
-        MarkerOptions markerOptions = new MarkerOptions()
-                .position(latLng)
-                .title("You");
-        if (map != null) {
-            if (geofenceMarker != null) {
-                geofenceMarker.remove();
-            }
-            geofenceMarker = map.addMarker(markerOptions);
-        }
-    }
-
-    GeofencingRequest geofencingRequest;
-
-    private void startGeofence() {
-        if (geofenceMarker != null) {
-            Geofence geofence = createGeofence(geofenceMarker.getPosition(), 400f);
-            geofencingRequest = createGeoRequest(geofence);
-            addGeoFence(geofence);
-        }
-    }
-
-    @Override
-    public void onResult(@NonNull Status status) {
-        drawGeofence();
-
-    }
-
-    Circle geofenceLimits;
-
-    private void drawGeofence() {
-        if (geofenceLimits != null) {
-            geofenceLimits.remove();
-        }
-        CircleOptions circleOptions = new CircleOptions()
-                .center(geofenceMarker.getPosition())
-                .strokeColor(Color.argb(50, 70, 70, 70))
-                .fillColor(Color.argb(100, 150, 150, 150))
-                .radius(400f);
-
-        geofenceLimits = map.addCircle(circleOptions);
-    }
-
-    private void addGeoFence(Geofence geofence) {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        LocationServices.GeofencingApi.addGeofences(mGoogleApiClient, geofencingRequest, createGeofencingPendingIntent())
-                .setResultCallback(this);
-    }
-
-    PendingIntent geofencePendingIntent;
-    private PendingIntent createGeofencingPendingIntent() {
-        if(geofencePendingIntent != null){
-            return geofencePendingIntent;
-        }
-        Intent i = new Intent(getActivity(), GeofenceTransitionService.class);
-        return PendingIntent.getService(getActivity(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    private GeofencingRequest createGeoRequest(Geofence geofence) {
-        return new GeofencingRequest.Builder()
-                .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
-                .addGeofence(geofence)
-                .build();
-    }
-
-    private Geofence createGeofence(LatLng position, float v) {
-        return new Geofence.Builder()
-                .setRequestId("My geofence")
-                .setCircularRegion(position.latitude, position.longitude, v)
-                .setExpirationDuration(60 * 60 * 1000)
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER|Geofence.GEOFENCE_TRANSITION_EXIT)
-                .build();
-    }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
