@@ -394,6 +394,7 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
         mCurrentLocationMarker = map.addMarker(mMarkerOption);
         map.addMarker(mMarkerOption).showInfoWindow();
         float zoomLevel = 16.0f;
+
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, zoomLevel));
 
         if(mGoogleApiClient != null){
