@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Water Product"
+            android:textSize="28dp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"/>
+
+        <Spinner
+            android:id="@+id/waterSpinner"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@android:color/white"
+            android:layout_marginLeft="31dp"
+            android:layout_marginRight="31dp">
+        </Spinner>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="28dp"
+                android:layout_height="50dp"
+                android:text="₱"
+                android:layout_marginLeft="30dp"
+                android:textColor="@android:color/black"
+                android:textSize="30sp" />
+
+            <EditText
+                android:id="@+id/waterPrice"
+                android:layout_width="match_parent"
+                android:layout_marginRight="30dp"
+                android:layout_height="50dp"
+                android:textAlignment="center"
+                android:hint="Price per Gallon"
+                android:inputType="textPersonName"
+                android:background="@drawable/edit_text_border"/>
+        </LinearLayout>
+        <Button
+
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:id="@+id/waterAdd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/z_darkbluebutton"
+            android:text="Add"
+            android:textColor="@android:color/white" />
+        <Button
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:id="@+id/waterBack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/z_graybuttomv"
+            android:text="Back"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+</RelativeLayout>
