@@ -176,7 +176,7 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                             }
                             else
                             {
-                                countInprogress = adapter.size();
+                                countInprogress = adapter2.size();
 
                                 if (countInprogress==0)
                                 {

@@ -57,6 +57,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
     String orderNoGET , customerNoGET , merchantNOGET , dataIssuedGET , deliveryStatusGET , transStatusGET , transTotalAmountGET , transDeliveryFeeGET, transTotalNoGallonGET, customerNo;
     CircleImageView imageView;
     Bundle args;
+    String customerId;
      public WSPendingOrderAcceptDeclineFragment() {
 
     }
@@ -123,10 +124,10 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                         MerchantCustomerFile merchantCustomerFile = dataSnapshot.getValue(MerchantCustomerFile.class);
                         if(merchantCustomerFile != null)
                         {
-                            String customerId = merchantCustomerFile.getCustomer_id();
+                            customerId = merchantCustomerFile.getCustomer_id();
                             String merchantId = merchantCustomerFile.getStation_id();
                             Log.d("merchant IDDDDD ",""+merchantCustomerFile.getStation_id());
-                            Log.d("customer IDDDDD ",""+merchantCustomerFile.getCustomer_id());
+                            Log.d("customerKOYAWAKA",""+merchantCustomerFile.getCustomer_id());
                             String status = merchantCustomerFile.getStatus();
                             if(status.equals("AC"))
                             {
@@ -138,19 +139,6 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                                                 OrderModel orderModel = dataSnapshot.getValue(OrderModel.class);
                                                 if(orderModel != null)
                                                 {
-                                                    Log.d("merchantid ",""+orderModel.getOrder_merchant_id()+"=");
-                                                    Log.d("customerid ",""+orderModel.getOrder_customer_id()+"=");
-                                                    Log.d("address ",""+orderModel.getOrder_address()+"=");
-                                                    Log.d("deliverydate ",""+orderModel.getOrder_delivery_date()+"=");
-                                                    Log.d("deliveryfee ",""+orderModel.getOrder_delivery_fee()+"=");
-                                                    Log.d("deliverymethod ",""+orderModel.getOrder_delivery_method()+"=");
-                                                    Log.d("orderno ",""+orderModel.getOrder_no()+"=");
-                                                    Log.d("orderpricepergallon ",""+orderModel.getOrder_price_per_gallon()+"=");
-                                                    Log.d("orderqty ",""+orderModel.getOrder_qty()+"=");
-                                                    Log.d("orderstataus ",""+orderModel.getOrder_status()+"=");
-                                                    Log.d("totalamount ",""+orderModel.getOrder_total_amt()+"=");
-                                                    Log.d("watertype ",""+orderModel.getOrder_water_type()+"=");
-
                                                     if(orderModel.getOrder_status().equals("Pending")) {
                                                         orderNo.setText(orderModel.getOrder_no());
                                                         itemQuantity.setText(orderModel.getOrder_qty());
@@ -243,7 +231,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                         MerchantCustomerFile merchantCustomerFile = dataSnapshot.getValue(MerchantCustomerFile.class);
                         if(merchantCustomerFile != null)
                         {
-                            String customerId = merchantCustomerFile.getCustomer_id();
+                            customerId = merchantCustomerFile.getCustomer_id();
                             String merchantId = merchantCustomerFile.getStation_id();
                             String status = merchantCustomerFile.getStatus();
                             if(status.equals("AC"))
@@ -359,7 +347,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                 .commit();
         Bundle args1 = new Bundle();
         args1.putString("transcationno", transactionNo);
-        args1.putString("transactioncustomer", transactionNo);
+        args1.putString("transactioncustomer", customerId);
         additem.setArguments(args1);
     }
 

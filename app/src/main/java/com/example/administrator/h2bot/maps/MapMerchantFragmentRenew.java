@@ -16,6 +16,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -192,12 +193,14 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
 
     public void locateCustomer(LatLng pLatLng)
     {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_Customer_File");
+        Log.d("MercantQAQU",""+firebaseUser.getUid()+"="+customerNo);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_File");
         reference.child(firebaseUser.getUid()).child(customerNo)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         MerchantCustomerFile merchantCustomerFile = dataSnapshot.getValue(MerchantCustomerFile.class);
+                        Log.d("MercantGago","hi");
                         if(merchantCustomerFile != null)
                         {
                             String merchantId = merchantCustomerFile.getStation_id();
@@ -208,14 +211,18 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                             UserLocationAddress userLocationAddress = dataSnapshot.getValue(UserLocationAddress.class);
+                                            Log.d("Polyline",""+userLocationAddress.getUser_id()+","+userLocationAddress.getUser_longtitude());
                                             if(userLocationAddress != null)
                                             {
+                                                Log.d("Pasudla","gago");
                                                 double latitude = Double.parseDouble(userLocationAddress.getUser_latitude());
                                                 double longtitude = Double.parseDouble(userLocationAddress.getUser_longtitude());
                                                 LatLng latLng = new LatLng(latitude, longtitude);
                                                 if(mLatLng !=null)
                                                 {
                                                     TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
+                                                    Log.d("pLatLng",""+pLatLng);
+                                                    Log.d("latLng",""+latLng);
                                                     taskRequestDirections.execute(getRequestURL(pLatLng, latLng));
                                                     DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("User_File");
                                                     reference1.child(customerId).addValueEventListener(new ValueEventListener() {
@@ -225,8 +232,9 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
                                                             if(userFile != null)
                                                             {
                                                                 String address = userFile.getUser_address();
+                                                                Log.d("AddressPolyLine",""+address);
                                                                 String fullname = userFile.getUser_lastname()+", "+userFile.getUser_firtname();
-                                                                map.addMarker(new MarkerOptions().position(latLng).snippet("Customer Name: "+fullname+"\n"+"Address: "+address)
+                                                                map.addMarker(new MarkerOptions().position(latLng).snippet("Station Name: "+fullname+"\n"+"Address: "+address)
                                                                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
                                                             }
                                                         }
@@ -341,17 +349,18 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
 
         @Override
         protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
-            ArrayList points = null;
+            ArrayList points;
             PolylineOptions polylineOptions = null;
-
+            Log.d("GRABEGRABE","HI");
             for (List<HashMap<String, String>> path : lists) {
                 points = new ArrayList();
                 polylineOptions = new PolylineOptions();
-
+                Log.d("MAU",""+points);
                 for (HashMap<String, String> point : path) {
                     double lat = Double.parseDouble(point.get("lat"));
                     double lon = Double.parseDouble(point.get("lon"));
-
+                    Log.d("LATLAT",""+lat);
+                    Log.d("LONLON",""+lon);
                     points.add(new LatLng(lat,lon));
                 }
                 polylineOptions.addAll(points);
@@ -363,6 +372,7 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
             if (polylineOptions!=null) {
                 map.addPolyline(polylineOptions);
             } else {
+                Log.d("PauwiNaAko","OUT");
                 Toast.makeText(getActivity(), "Direction not found!", Toast.LENGTH_SHORT).show();
             }
 
@@ -391,6 +401,7 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
         }
         locateCustomer(mLatLng);
 
+        
     }
 
     private String getRequestURL(LatLng origin, LatLng dest)
