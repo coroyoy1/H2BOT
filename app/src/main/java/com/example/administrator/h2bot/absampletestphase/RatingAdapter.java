@@ -23,16 +23,6 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ImageViewh
     private Context contextHolder;
     private List<RatingModel> uploadHolder;
 
-    private RatingAdapter.OnItemClickListener mListener;
-
-    public interface OnItemClickListener {
-        void onItemClick(int position);
-    }
-
-    public void setOnItemClickListener(RatingAdapter.OnItemClickListener listener) {
-        mListener = listener;
-    }
-
     public RatingAdapter(Context context, List<RatingModel> uploads)
     {
         contextHolder = context;
@@ -73,17 +63,6 @@ public class RatingAdapter extends RecyclerView.Adapter<RatingAdapter.ImageViewh
             super(itemView);
             ratingBar = itemView.findViewById(R.id.ratingBarFEED);
             textView = itemView.findViewById(R.id.commentFEED);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            mListener.onItemClick(position);
-                        }
-                    }
-                }
-            });
         }
     }
 }

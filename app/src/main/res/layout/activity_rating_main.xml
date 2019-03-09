@@ -16,10 +16,7 @@
         android:gravity="center"
         android:textSize="18dp"/>
 
-    <ScrollView
-        android:layout_centerVertical="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+
 
         <LinearLayout
             android:layout_marginTop="120dp"
@@ -56,6 +53,4 @@
                 android:layout_height="match_parent">
             </android.support.v7.widget.RecyclerView>
         </LinearLayout>
-
-    </ScrollView>
 </RelativeLayout>

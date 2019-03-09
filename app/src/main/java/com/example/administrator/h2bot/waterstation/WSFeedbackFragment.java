@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WSFeedbackFragment extends Fragment implements View.OnClickListener, WSInProgressOrdersAdapter.OnItemClickListener {
+public class WSFeedbackFragment extends Fragment implements View.OnClickListener {
 
     RatingBar rateStar;
     TextView rateText;
@@ -53,7 +54,6 @@ public class WSFeedbackFragment extends Fragment implements View.OnClickListener
         View view = inflater.inflate(R.layout.activity_rating_main, container, false);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
         uploadPO = new ArrayList<>();
         //Dialog
         findViewId(view);
@@ -63,6 +63,7 @@ public class WSFeedbackFragment extends Fragment implements View.OnClickListener
                 showDialogRate();
             }
         });
+
         return view;
     }
 
@@ -73,6 +74,8 @@ public class WSFeedbackFragment extends Fragment implements View.OnClickListener
         rateStar = view.findViewById(R.id.rateStarsFeedback);
         rateText = view.findViewById(R.id.textViewStar);
         recyclerViewRate = view.findViewById(R.id.recyclerViewRatingFeedback);
+        recyclerViewRate.setHasFixedSize(true);
+        recyclerViewRate.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         displayReviews();
         totalRating();
@@ -117,24 +120,18 @@ public class WSFeedbackFragment extends Fragment implements View.OnClickListener
 
     private void displayReviews()
     {
-        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Ratings");
-        databaseReference1.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+        DatabaseReference getAllReview = FirebaseDatabase.getInstance().getReference("Ratings");
+        getAllReview.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                uploadPO.clear();
                 for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                 {
-                        RatingModel ratingModel = dataSnapshot1.getValue(RatingModel.class);
-                        if(ratingModel != null)
-                        {
-                            if(ratingModel.getRating_merchant_id().equals(firebaseUser.getUid()) &&
-                            ratingModel.getRating_status().equals("AC")) {
-                                uploadPO.add(ratingModel);
-                            }
-                        }
+                    RatingModel ratingModel = dataSnapshot1.getValue(RatingModel.class);
+                    uploadPO.add(ratingModel);
                 }
                 POAdapter = new RatingAdapter(getActivity(), uploadPO);
                 recyclerViewRate.setAdapter(POAdapter);
-                POAdapter.setOnItemClickListener(WSFeedbackFragment.this::onItemClick);
             }
 
             @Override
@@ -222,10 +219,5 @@ public class WSFeedbackFragment extends Fragment implements View.OnClickListener
         {
 
         }
-    }
-
-    @Override
-    public void onItemClick(int position) {
-
     }
 }
