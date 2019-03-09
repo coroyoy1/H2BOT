@@ -147,14 +147,13 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task)
                 {
-
-                    userHERE = mAuth.getCurrentUser().getUid();
                     Log.d("EserHere",""+userHERE);
                     if(!task.isSuccessful())
                     {
                         showMessages("Please check your internet connection or credentials.");
                     }
                     else {
+                        userHERE = mAuth.getCurrentUser().getUid();
                         userTypeLogin();
                 }
                 }
