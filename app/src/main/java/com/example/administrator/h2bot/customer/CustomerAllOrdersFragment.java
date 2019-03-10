@@ -58,12 +58,12 @@ public class CustomerAllOrdersFragment extends Fragment {
 
     public void getDataForRecycler()
     {
-        orderList.clear();
-        transactionList.clear();
-        orderFileRef = db.getReference("Customer_Order_File").child(firebaseUser.getUid()).child(getStation_Id);
+        orderFileRef = db.getReference("Customer_File").child(firebaseUser.getUid()).child(getStation_Id);
         orderFileRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                orderList.clear();
+                transactionList.clear();
                 for(DataSnapshot data: dataSnapshot.getChildren()){
                     TransactionNoModel transNo = data.getValue(TransactionNoModel.class);
                     OrderFileModel order = data.getValue(OrderFileModel.class);

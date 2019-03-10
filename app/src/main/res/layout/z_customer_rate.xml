@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginRight="60dp"
+    android:layout_marginLeft="60dp"
+    android:layout_width="match_parent"
+    android:layout_height="240dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/linearLayoutRating"
+        android:layout_width="match_parent"
+        android:layout_height="240dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="Rate"
+            android:textSize="24dp"
+            android:background="@android:color/holo_blue_dark"
+            android:textColor="@android:color/white"
+            />
+
+        <RatingBar
+            android:id="@+id/ratingStarsFeedback"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:numStars="5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/addtionalRate"
+            android:inputType="textEmailAddress"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:hint="Additional Comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <Button
+                android:id="@+id/submitRatingButton"
+                android:textColor="@android:color/white"
+                android:text="Submit"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:layout_marginRight="2dp"
+                android:layout_marginLeft="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_blue_dark"/>
+            <!--<Button-->
+                <!--android:id="@+id/neverRatingButton"-->
+                <!--android:layout_weight="1"-->
+                <!--android:textColor="@android:color/white"-->
+                <!--android:text="Never"-->
+                <!--android:layout_marginRight="2dp"-->
+                <!--android:layout_marginLeft="2dp"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@android:color/holo_orange_light" />-->
+            <Button
+                android:id="@+id/laterRatingButton"
+                android:layout_weight="1"
+                android:textColor="@android:color/white"
+                android:text="Later"
+                android:layout_gravity="center"
+                android:layout_marginRight="2dp"
+                android:layout_marginLeft="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>
