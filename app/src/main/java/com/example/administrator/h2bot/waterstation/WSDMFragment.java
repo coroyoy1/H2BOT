@@ -81,6 +81,7 @@ public class WSDMFragment extends Fragment implements View.OnClickListener{
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                uploadDM.clear();
                 for(DataSnapshot postSnapShot : dataSnapshot.getChildren())
                 {
                     UserWSDMFile getDM = postSnapShot.getValue(UserWSDMFile.class);

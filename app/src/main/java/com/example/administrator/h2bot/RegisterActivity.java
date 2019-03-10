@@ -356,7 +356,7 @@ public class RegisterActivity extends AppCompatActivity{
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure of your email, password, and full address? If YES? Press Yes").setPositiveButton("Yes", dialogClickListener)
+        builder.setMessage("Are you sure of your fill-up information?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
     }
 

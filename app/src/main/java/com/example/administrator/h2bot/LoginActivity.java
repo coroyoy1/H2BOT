@@ -43,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase databaseConnection;
-    private DatabaseReference refConnection;
     FirebaseUser currentUser;
     String userHERE;
 
@@ -54,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         databaseConnection = FirebaseDatabase.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
@@ -65,14 +65,12 @@ public class LoginActivity extends AppCompatActivity {
         register = findViewById(R.id.registerAccount);
         loginNow = findViewById(R.id.logInBtn);
         mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
 
 
-        if(currentUser != null)
+        if(mAuth.getCurrentUser() != null)
         {
             progressDialog.show();
-            userHERE = currentUser.getUid();
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File").child(currentUser.getUid());
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File").child(mAuth.getCurrentUser().getUid());
                     databaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -143,17 +141,16 @@ public class LoginActivity extends AppCompatActivity {
             {
                 progressDialog.show();
             }
-            mAuth.signInWithEmailAndPassword(emailAddress.getText().toString(), passwordType.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(emailAddress.getText().toString(), passwordType.getText().toString())
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task)
                 {
-                    Log.d("EserHere",""+userHERE);
                     if(!task.isSuccessful())
                     {
                         showMessages("Please check your internet connection or credentials.");
                     }
                     else {
-                        userHERE = mAuth.getCurrentUser().getUid();
                         userTypeLogin();
                 }
                 }
@@ -171,88 +168,88 @@ public class LoginActivity extends AppCompatActivity {
 
     private void userTypeLogin()
     {
-        refConnection = FirebaseDatabase.getInstance().getReference("User_File").child(userHERE);
-        refConnection.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String userType = dataSnapshot.child("user_type").getValue(String.class);
-                String documentVerify = dataSnapshot.child("user_status").getValue(String.class);
-                if (userType.equals("Customer") && documentVerify.equals("active")) {
-                    //Temporary Output
-                    startActivity(new Intent(LoginActivity.this, CustomerMainActivity.class));
-//                    showMessages("Successfully logged-in as Customer");
-                    finish();
-                }
-                else if(userType.equals("Water Station")){
-                    if(documentVerify.equals("inactive"))
-                    {
-                        startActivity(new Intent(LoginActivity.this, WaterStationDocumentVersion2Activity.class));
+           DatabaseReference refConnection = FirebaseDatabase.getInstance().getReference("User_File").child(mAuth.getCurrentUser().getUid());
+            refConnection.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String userType = dataSnapshot.child("user_type").getValue(String.class);
+                    String documentVerify = dataSnapshot.child("user_status").getValue(String.class);
+                    if (userType.equals("Customer") && documentVerify.equals("active")) {
+                        //Temporary Output
+                        startActivity(new Intent(LoginActivity.this, CustomerMainActivity.class));
                         finish();
                     }
-                    else if(documentVerify.equals("unconfirmed"))
-                    {
-                        startActivity(new Intent(LoginActivity.this, MerchantAccessVerification.class));
-                    }
-                    else if(documentVerify.equals("active"))
-                    {
-                        startActivity(new Intent(LoginActivity.this, WaterStationMainActivity.class));
-                        finish();
-                    }
-                    showMessages("Successfully logged-in as Station Owner");
-                }
-                else if(userType.equals("Delivery Man"))
-                {
-                    if(documentVerify.equals("active"))
-                    {
-                        finish();
-                        startActivity(new Intent(LoginActivity.this, DeliveryManMainActivity.class));
-                    }
-                    showMessages("Successfully logged-in as Delivery Man");
-                }
-                else if(userType.equals("Water Dealer"))
-                {
-                    if(documentVerify.equals("inactive"))
-                    {
-                        startActivity(new Intent(LoginActivity.this, WaterPeddlerDocumentActivity.class));
-                        showMessages("Water Dealer Not Verified");
-                    }
-                    else if(documentVerify.equals("active"))
-                    {
-                        startActivity(new Intent(LoginActivity.this, WaterPeddlerHomeActivity.class));
-                        showMessages("Water Dealer Verified");
-                    }
-                    else if(documentVerify.equals("unverified"))
-                    {
-                        startActivity(new Intent(LoginActivity.this, MerchantAccessVerification.class));
-                        showMessages("Need verification");
-                    }
-                    showMessages("Successfully logged-in as Water Dealer");
-                }
-                else if(userType.equals("Third Party Affiliate"))
-                {
-                    if(documentVerify.equals("inactive"))
-                    {
-                        showMessages("Your registration is still on process. Please wait for the confirmation that will be sent through SMS.");
-                    }
-                    else if(documentVerify.equals("active"))
-                    {
-                        startActivity(new Intent(LoginActivity.this, TPAAffiliateMainActivity.class));
-                        showMessages("Successfully logged-in as Third Party Affiliate");
-                        finish();
-                    }
-                }
-                else
-                {
-                    showMessages("Failed to Login");
-                    return;
-                }
-            }
+                    else if(userType.equals("Water Station")){
+                        if(documentVerify.equals("inactive") || documentVerify.equals("Inactive"))
+                        {
+                            startActivity(new Intent(LoginActivity.this, WaterStationDocumentVersion2Activity.class));
+                            finish();
+                        }
+                        else if(documentVerify.equals("unverified") || documentVerify.equals("Unverified"))
+                        {
+                            startActivity(new Intent(LoginActivity.this, MerchantAccessVerification.class));
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                showMessages("Failed to find existing data of the account");
-            }
-        });
+                        }
+                        else if(documentVerify.equals("active") || documentVerify.equals("Active"))
+                        {
+                            startActivity(new Intent(LoginActivity.this, WaterStationMainActivity.class));
+                            finish();
+                            showMessages("Successfully logged-in as Station Owner");
+                        }
+                    }
+                    else if(userType.equals("Delivery Man"))
+                    {
+                        if(documentVerify.equals("active"))
+                        {
+                            finish();
+                            startActivity(new Intent(LoginActivity.this, DeliveryManMainActivity.class));
+                        }
+                        showMessages("Successfully logged-in as Delivery Man");
+                    }
+                    else if(userType.equals("Water Dealer"))
+                    {
+                        if(documentVerify.equals("inactive"))
+                        {
+                            startActivity(new Intent(LoginActivity.this, WaterPeddlerDocumentActivity.class));
+                            showMessages("Water Dealer Not Verified");
+                        }
+                        else if(documentVerify.equals("active"))
+                        {
+                            startActivity(new Intent(LoginActivity.this, WaterPeddlerHomeActivity.class));
+                            showMessages("Water Dealer Verified");
+                        }
+                        else if(documentVerify.equals("unverified"))
+                        {
+                            startActivity(new Intent(LoginActivity.this, MerchantAccessVerification.class));
+                            showMessages("Need verification");
+                        }
+                        showMessages("Successfully logged-in as Water Dealer");
+                    }
+                    else if(userType.equals("Third Party Affiliate"))
+                    {
+                        if(documentVerify.equals("inactive"))
+                        {
+                            showMessages("Your registration is still on process. Please wait for the confirmation that will be sent through SMS.");
+                        }
+                        else if(documentVerify.equals("active"))
+                        {
+                            startActivity(new Intent(LoginActivity.this, TPAAffiliateMainActivity.class));
+                            showMessages("Successfully logged-in as Third Party Affiliate");
+                            finish();
+                        }
+                    }
+                    else
+                    {
+                        showMessages("Failed to Login");
+                        return;
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    showMessages("Failed to find existing data of the account");
+                }
+            });
     }
 
     private void showMessages(String s)

@@ -65,6 +65,8 @@ public class WSCompletedAccept extends Fragment implements View.OnClickListener 
         deliveryMethod = view.findViewById(R.id.MethodCOMACC);
         deliveryDate = view.findViewById(R.id.datedeliveredCOMACC);
 
+        backButton = view.findViewById(R.id.backCOMACC);
+
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         progressDialog = new ProgressDialog(getActivity());
@@ -72,6 +74,8 @@ public class WSCompletedAccept extends Fragment implements View.OnClickListener 
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
+
+        backButton.setOnClickListener(this);
 
         progressDialog.show();
 
@@ -178,7 +182,7 @@ public class WSCompletedAccept extends Fragment implements View.OnClickListener 
         switch (v.getId())
         {
             case R.id.backCOMACC:
-                WSCompletedAccept additem = new WSCompletedAccept();
+                WSTransactionsFragment additem = new WSTransactionsFragment();
                 AppCompatActivity activity = (AppCompatActivity)v.getContext();
                 activity.getSupportFragmentManager()
                         .beginTransaction()

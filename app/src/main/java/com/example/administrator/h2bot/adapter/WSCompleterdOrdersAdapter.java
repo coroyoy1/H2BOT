@@ -51,12 +51,12 @@ public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterd
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    WPCompletedAccept additem = new WPCompletedAccept();
+                    WSCompletedAccept additem = new WSCompletedAccept();
                     AppCompatActivity activity = (AppCompatActivity)v.getContext();
                     activity.getSupportFragmentManager()
                             .beginTransaction()
-                            .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                            .replace(R.id.fragment_container_wp, additem)
+                            .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                            .replace(R.id.fragment_container_ws, additem)
                             .addToBackStack(null)
                             .commit();
                     Bundle args = new Bundle();
