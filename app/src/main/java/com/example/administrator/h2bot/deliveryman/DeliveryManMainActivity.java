@@ -105,11 +105,11 @@ public class DeliveryManMainActivity extends AppCompatActivity implements Naviga
                         new DMAccountSettingsFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Account Settings");
                 break;
-            case R.id.nav_feedback_dm:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_dm,
-                        new DMFeedbackFragment()).commit();
-                Objects.requireNonNull(getSupportActionBar()).setTitle("Feedback");
-                break;
+//            case R.id.nav_feedback_dm:
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_dm,
+//                        new DMFeedbackFragment()).commit();
+//                Objects.requireNonNull(getSupportActionBar()).setTitle("Feedback");
+//                break;
             case R.id.nav_logout_dm:
                 mAuth.signOut();
                 finish();

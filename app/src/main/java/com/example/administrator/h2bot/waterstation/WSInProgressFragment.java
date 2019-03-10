@@ -24,10 +24,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -98,36 +100,42 @@ public class WSInProgressFragment extends Fragment implements WSInProgressOrders
 
     private void displayAllData()
     {
-        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
-        databaseReference1.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                uploadPO.clear();
-                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
-                {
-                    for (DataSnapshot post : dataSnapshot1.child(firebaseUser.getUid()).getChildren())
+        try {
+            DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
+            databaseReference1.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    uploadPO.clear();
+                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                     {
-                        OrderModel orderModel = post.getValue(OrderModel.class);
-                        if(orderModel != null)
+                        for (DataSnapshot post : dataSnapshot1.child(firebaseUser.getUid()).getChildren())
                         {
-                            if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid())
-                                    && orderModel.getOrder_status().equals("In-Progress"))
+                            OrderModel orderModel = post.getValue(OrderModel.class);
+                            if(orderModel != null)
                             {
-                                uploadPO.add(orderModel);
+                                if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid())
+                                        && orderModel.getOrder_status().equals("In-Progress"))
+                                {
+                                    uploadPO.add(orderModel);
+                                }
                             }
                         }
+                        POAdapter = new WSInProgressOrdersAdapter(getActivity(), uploadPO);
+                        recyclerView.setAdapter(POAdapter);
+                        POAdapter.setOnItemClickListener(WSInProgressFragment.this::onItemClick);
                     }
-                    POAdapter = new WSInProgressOrdersAdapter(getActivity(), uploadPO);
-                    recyclerView.setAdapter(POAdapter);
-                    POAdapter.setOnItemClickListener(WSInProgressFragment.this::onItemClick);
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
+        catch (DatabaseException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -1,11 +1,15 @@
 package com.example.administrator.h2bot.deliveryman;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +18,7 @@ import android.widget.Toast;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.adapter.DMInProgressOrdersAdapter;
 import com.example.administrator.h2bot.adapter.WSInProgressOrdersAdapter;
+import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserWSDMFile;
@@ -22,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -33,7 +39,7 @@ public class DMInProgressFragment extends Fragment implements WSInProgressOrders
 
     private RecyclerView recyclerView;
     private DMInProgressOrdersAdapter POAdapter;
-    private List<TransactionHeaderFileModel> uploadPO;
+    private List<OrderModel> uploadPO;
     private List<UserWSDMFile> uploadDM;
     FirebaseUser firebaseUser;
     String firebaseUID;
@@ -46,65 +52,90 @@ public class DMInProgressFragment extends Fragment implements WSInProgressOrders
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(event.getAction() == KeyEvent.ACTION_DOWN)
+                {
+                    if (keyCode == KeyEvent.KEYCODE_BACK)
+                    {
+                        attemptToExit();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         firebaseUID = firebaseUser.getUid();
 
         uploadPO = new ArrayList<>();
 
-        getInProgressData();
+        displayData();
 
         return view;
     }
 
-
-    public void getInProgressData()
+    public void attemptToExit()
     {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File");
-        databaseReference.child(firebaseUser.getUid())
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String stationId = dataSnapshot.child("station_parent").getValue(String.class);
-                        if(stationId != null)
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        getActivity().finish();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Are you sure to exit application?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+    }
+
+    public void displayData()
+    {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_DM_File");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                {
+                    for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren())
+                    {
+                        UserWSDMFile userWSDMFile = dataSnapshot2.getValue(UserWSDMFile.class);
+                        if(userWSDMFile != null)
                         {
-                            DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("User_WS_DM_File");
-                            databaseReference1.child(stationId).child(firebaseUser.getUid())
-                                    .addValueEventListener(new ValueEventListener() {
+                            String merchantId = userWSDMFile.getStation_id();
+                            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
+                            reference1.addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            UserWSDMFile userWSDMFile = dataSnapshot.getValue(UserWSDMFile.class);
-                                            if(userWSDMFile != null)
+                                            uploadPO.clear();
+                                            for (DataSnapshot dataSnapshot3 : dataSnapshot.getChildren())
                                             {
-                                                String merchantnum = userWSDMFile.getStation_id();
-                                                if(merchantnum != null)
+                                                for (DataSnapshot dataSnapshot4 : dataSnapshot3.child(merchantId).getChildren())
                                                 {
-                                                    DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("Transaction_Header_File");
-                                                    databaseReference2.addValueEventListener(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                            for (DataSnapshot post : dataSnapshot.getChildren())
-                                                            {
-                                                                TransactionHeaderFileModel transactionHeaderFileModel = post.getValue(TransactionHeaderFileModel.class);
-                                                                if(transactionHeaderFileModel != null)
-                                                                {
-                                                                    if(transactionHeaderFileModel.getMerchant_id().equals(merchantnum)
-                                                                            && transactionHeaderFileModel.getTrans_status().equals("In-Progress"))
-                                                                    {
-                                                                        uploadPO.add(transactionHeaderFileModel);
-                                                                    }
-                                                                }
-                                                            }
-                                                            POAdapter = new DMInProgressOrdersAdapter(getActivity(), uploadPO);
-                                                            recyclerView.setAdapter(POAdapter);
-                                                            //POAdapter.setOnItemClickListener(DMInProgressFragment.this::onItemClick);
+                                                    OrderModel orderModel = dataSnapshot4.getValue(OrderModel.class);
+                                                    if(orderModel != null)
+                                                    {
+                                                        if (orderModel.getOrder_merchant_id().equals(merchantId)
+                                                                && orderModel.getOrder_status().equals("In-Progress"))
+                                                        {
+                                                            uploadPO.add(orderModel);
                                                         }
-
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                        }
-                                                    });
+                                                    }
                                                 }
+                                                POAdapter = new DMInProgressOrdersAdapter(getActivity(), uploadPO);
+                                                recyclerView.setAdapter(POAdapter);
                                             }
                                         }
 
@@ -116,12 +147,17 @@ public class DMInProgressFragment extends Fragment implements WSInProgressOrders
                         }
                     }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
 
-                    }
-                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
+
     private void showMessage(String s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
     }

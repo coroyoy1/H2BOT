@@ -144,6 +144,11 @@ public class RegisterActivity extends AppCompatActivity{
                     showMessage("Photo is not yet set!");
                     progressDialog.dismiss();
                 }
+                else if (contactNoString.length() > 11)
+                {
+                    showMessage("Contact no. must be maximum of 11 characters");
+                    progressDialog.dismiss();
+                }
                 else
                 {
                     CreateAccount(emailAddressString, passwordString);

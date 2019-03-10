@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.deliveryman.DMInProgressAcception;
+import com.example.administrator.h2bot.models.OrderFileModel;
+import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 import com.example.administrator.h2bot.waterstation.WSPendingOrderAcceptDeclineFragment;
 
@@ -24,10 +26,10 @@ import static java.security.AccessController.getContext;
 public class DMInProgressOrdersAdapter extends RecyclerView.Adapter<DMInProgressOrdersAdapter.ImageViewholder> {
 
     private Context contextHolder;
-    private List<TransactionHeaderFileModel> uploadHolder;
+    private List<OrderModel> uploadHolder;
 
 
-    public DMInProgressOrdersAdapter(Context context, List<TransactionHeaderFileModel>data)
+    public DMInProgressOrdersAdapter(Context context, List<OrderModel>data)
     {
         contextHolder = context;
         uploadHolder = data;
@@ -40,9 +42,9 @@ public class DMInProgressOrdersAdapter extends RecyclerView.Adapter<DMInProgress
 
     @Override
     public void onBindViewHolder(@NonNull DMInProgressOrdersAdapter.ImageViewholder imageViewholder, int i) {
-        final TransactionHeaderFileModel currentData = uploadHolder.get(i);
-        String transactionNo = currentData.getTrans_no();
-        String transactionStatus = currentData.getTrans_status();
+        final OrderModel currentData = uploadHolder.get(i);
+        String transactionNo = currentData.getOrder_no();
+        String transactionStatus = currentData.getOrder_status();
         imageViewholder.transactionNoText.setText(transactionNo);
         imageViewholder.transactionStatusText.setText(transactionStatus);
 
