@@ -1,5 +1,6 @@
 package com.example.administrator.h2bot.dealer;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
@@ -39,6 +41,7 @@ public class WPInProgressFragment extends Fragment implements WPInProgressAdapte
 
     private WPInProgressOrdersAdapter POAdapter;
     private List<OrderModel> uploadPO;
+    RelativeLayout noOrdersLayout;
     public WPInProgressFragment() {
         // Required empty public constructor
     }
@@ -50,7 +53,7 @@ public class WPInProgressFragment extends Fragment implements WPInProgressAdapte
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        noOrdersLayout = view.findViewById(R.id.noOrdersLayout);
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         uploadPO = new ArrayList<>();
@@ -69,8 +72,10 @@ public class WPInProgressFragment extends Fragment implements WPInProgressAdapte
                         if(orderModel != null)
                         {
                             if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid())
-                                    && orderModel.getOrder_status().equals("In-Progress"))
+                                    && orderModel.getOrder_status().equals("In-Progress") || orderModel.getOrder_status().equals("Dispatched"))
                             {
+                                noOrdersLayout.setVisibility(View.INVISIBLE);
+                                recyclerView.setVisibility(View.VISIBLE);
                                 uploadPO.add(orderModel);
                             }
                         }
@@ -78,6 +83,11 @@ public class WPInProgressFragment extends Fragment implements WPInProgressAdapte
                     POAdapter = new WPInProgressOrdersAdapter(getActivity(), uploadPO);
                     recyclerView.setAdapter(POAdapter);
                     POAdapter.setOnItemClickListener(WPInProgressFragment.this::onItemClick);
+                }
+                if(uploadPO.size() == 0)
+                {
+                    noOrdersLayout.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
                 }
             }
 
@@ -106,7 +116,7 @@ public class WPInProgressFragment extends Fragment implements WPInProgressAdapte
         return view;
     }
     private void showMessage(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -129,5 +139,9 @@ public class WPInProgressFragment extends Fragment implements WPInProgressAdapte
                 }
             }
         };
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Are you sure to exit the application?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+
     }
 }

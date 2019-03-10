@@ -82,13 +82,13 @@ public class WPBusinessInfoFragment2 extends Fragment implements View.OnClickLis
                    }
                    else
                    {
-                       showMessages("Data does not exists");
+                       showMessages("Data does not exist");
                    }
            }
 
            @Override
            public void onCancelled(@NonNull DatabaseError databaseError) {
-                showMessages("Does not exists!");
+                showMessages("Data does not exist!");
            }
        });
 

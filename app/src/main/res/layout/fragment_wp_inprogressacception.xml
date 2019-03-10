@@ -378,12 +378,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_weight="1"
-                    android:background="@drawable/z_greenbluebutton"/>
+                    android:background="@drawable/z_darkbluebutton"/>
                 <Button
                     android:id="@+id/viewLocationButtonINACC"
                     android:background="@drawable/z_darkbluebutton"
                     android:textColor="@android:color/white"
                     android:text="View Location"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_weight="1" />
+                <Button
+                    android:id="@+id/Dispatch"
+                    android:background="@drawable/z_darkbluebutton"
+                    android:textColor="@android:color/white"
+                    android:text="Dispatch"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_width="match_parent"
@@ -405,10 +415,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_weight="1"
-                    android:background="@android:color/holo_orange_dark"/>
+                    android:background="@drawable/z_darkbluebutton"/>
                 <Button
                     android:id="@+id/launchCall"
-                    android:background="@android:color/holo_purple"
+                    android:background="@drawable/z_darkbluebutton"
                     android:textColor="@android:color/white"
                     android:text="Call"
                     android:layout_marginLeft="5dp"

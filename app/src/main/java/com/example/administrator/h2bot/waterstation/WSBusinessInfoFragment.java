@@ -104,13 +104,13 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
                    }
                    else
                    {
-                       showMessages("Data does not exists");
+                       showMessages("Data does not exist");
                    }
            }
 
            @Override
            public void onCancelled(@NonNull DatabaseError databaseError) {
-                showMessages("Does not exists!");
+                showMessages("Does not exist!");
            }
        });
 
@@ -145,7 +145,7 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage("Are you sure to exit application?").setPositiveButton("Yes", dialogClickListener)
+        builder.setMessage("Are you sure to exit the application?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
     }
 

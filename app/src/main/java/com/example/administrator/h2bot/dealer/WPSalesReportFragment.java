@@ -1,5 +1,6 @@
 package com.example.administrator.h2bot.dealer;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -62,5 +63,8 @@ public class WPSalesReportFragment extends Fragment {
                 }
             }
         };
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Are you sure to exit the application?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
     }
 }

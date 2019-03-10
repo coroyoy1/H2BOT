@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.adapter.WSCompleterdOrdersAdapter;
@@ -44,7 +45,7 @@ public class WSTransactionsFragment extends Fragment implements WSCompleterdOrde
     private RecyclerView.LayoutManager mLayoutManager;
     private WSCompleterdOrdersAdapter mAdapter;
     private List<OrderModel> mUploads;
-
+    RelativeLayout noOrdersLayout;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ws_transactions, container, false);
@@ -69,11 +70,10 @@ public class WSTransactionsFragment extends Fragment implements WSCompleterdOrde
 
         mUploads = new ArrayList<>();
         //mUploads2 = new ArrayList<>();
-
+        noOrdersLayout = view.findViewById(R.id.noOrdersLayout);
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
-
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         displayAllData();
         return view;
@@ -97,7 +97,7 @@ public class WSTransactionsFragment extends Fragment implements WSCompleterdOrde
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage("Are you sure to exit application?").setPositiveButton("Yes", dialogClickListener)
+        builder.setMessage("Are you sure to exit the application?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
     }
 
@@ -118,6 +118,8 @@ public class WSTransactionsFragment extends Fragment implements WSCompleterdOrde
                             if(orderModel.getOrder_merchant_id().equals(currentUser.getUid())
                                     && orderModel.getOrder_status().equals("Completed"))
                             {
+                                noOrdersLayout.setVisibility(View.INVISIBLE);
+                                recyclerView.setVisibility(View.VISIBLE);
                                 mUploads.add(orderModel);
                             }
                         }
@@ -125,6 +127,11 @@ public class WSTransactionsFragment extends Fragment implements WSCompleterdOrde
                     mAdapter = new WSCompleterdOrdersAdapter(getActivity(), mUploads);
                     recyclerView.setAdapter(mAdapter);
                     mAdapter.setOnItemClickListener(WSTransactionsFragment.this::onItemClick);
+                }
+                if(mUploads.size() == 0)
+                {
+                    noOrdersLayout.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
                 }
             }
 

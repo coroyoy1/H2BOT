@@ -97,7 +97,7 @@ public class WPProductListFragment extends Fragment implements View.OnClickListe
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+
             }
         });
         view.setFocusableInTouchMode(true);
@@ -139,7 +139,7 @@ public class WPProductListFragment extends Fragment implements View.OnClickListe
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage("Are you sure to exit application?").setPositiveButton("Yes", dialogClickListener)
+        builder.setMessage("Are you sure to exit the application?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
     }
 

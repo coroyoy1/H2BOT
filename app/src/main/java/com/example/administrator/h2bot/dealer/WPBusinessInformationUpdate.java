@@ -161,7 +161,7 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
                                 }
                                 else
                                 {
-                                    showMessage("Radio button does not selected");
+                                    showMessage("Check any radio button");
                                     return;
                                 }
 
@@ -201,7 +201,7 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                showMessage("Error to update image");
+                                showMessage("Failed to update image");
                             }
                         });
                     }
@@ -209,7 +209,7 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        showMessage("Error to update your information");
+                        showMessage("Failed to update your information");
                     }
                 });
     }
@@ -251,7 +251,7 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            showMessage("Error to get location");
+                            showMessage("Failed to get location");
                             progressDialog.dismiss();
                         }
                     });
@@ -262,7 +262,7 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
             progressDialog.dismiss();
         }
         finally {
-            showMessage("Error the locate your address, please change again");
+            showMessage("Failed to locate your address");
             progressDialog.dismiss();
         }
     }
@@ -277,7 +277,7 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
             && waterStationStartTime.getText().toString().isEmpty()
             && waterStationEndTime.getText().toString().isEmpty())
             {
-                showMessage("Please kindly input the requirements!");
+                showMessage("Please fill all the fields!");
             }
             else
             {
@@ -299,7 +299,7 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
 
         else
         {
-            showMessage("Image does not selected");
+            showMessage("Select an image");
         }
     }
 

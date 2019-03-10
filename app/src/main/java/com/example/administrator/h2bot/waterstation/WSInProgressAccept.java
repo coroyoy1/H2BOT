@@ -141,7 +141,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
             };
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setMessage("This can led to use your camera").setPositiveButton("Yes", dialogClickListener)
+            builder.setMessage("Launch camera?").setPositiveButton("Yes", dialogClickListener)
                     .setNegativeButton("No", dialogClickListener).show();
     }
 
@@ -177,7 +177,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                 }
                 else
                 {
-                    showMessages("QR is not specific to the order number, please search for the specific order");
+                    showMessages("Failed");
                     progressDialog.dismiss();
                 }
             }
@@ -279,7 +279,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                showMessages("Successfully updated");
+                                                showMessages("Updated successfully");
                                                 WSTransactionsFragment additem = new WSTransactionsFragment();
                                                 AppCompatActivity activity = (AppCompatActivity)getContext();
                                                 activity.getSupportFragmentManager()
@@ -295,7 +295,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                showMessages("Data does updated");
+                                                showMessages("Failed to updated");
                                                 progressDialog.dismiss();
                                             }
                                         });

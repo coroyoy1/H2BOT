@@ -54,7 +54,7 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
 
 
     TextView orderNo, customer, contactNo, waterType, itemQuantity, pricePerGallon,  service, address, deliveryFee, totalPrice, deliveryMethod, deliveryDate;
-    Button launchQR, viewLocation, launchSMS, launchCall;
+    Button launchQR, viewLocation, launchSMS, launchCall, Dispatch;
     Switch switcBroadcast;
     String orderNoGET, customerNoGET, merchantNOGET, transactionNo, dataIssuedGET, deliveryStatusGET
             ,transStatusGET, transTotalAmountGET, transDeliveryFeeGET, transTotalNoGallonGET,
@@ -92,6 +92,7 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
 
         launchSMS = view.findViewById(R.id.launchSMS);
         launchCall = view.findViewById(R.id.launchCall);
+        Dispatch = view.findViewById(R.id.Dispatch);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -131,6 +132,19 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
                 intent.setData(Uri.parse("tel:"+contactNo.getText().toString()));
                 startActivity(intent);
                 Toast.makeText(getActivity(), "Calling....", Toast.LENGTH_LONG).show();
+            }
+        });
+        Dispatch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Dispatch.getText().toString().equals("Dispatch Order"))
+                {
+                    dialogView();
+                }
+                else
+                {
+                    Toast.makeText(getActivity(), "The order is already dispatching", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         view.setFocusableInTouchMode(true);
@@ -209,7 +223,7 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
                 }
                 else
                 {
-                    showMessages("QR is not specific to the order number, please search for the specific order");
+                    showMessages("Failed to detect the QR code");
                     progressDialog.dismiss();
                 }
             }
@@ -544,5 +558,25 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
                 }
             }
         };
+    }
+    public void dialogView()
+    {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
+                        reference1.child(customerNo).child(firebaseUser.getUid()).child(transactionNo).child("order_status").setValue("Dispatched");
+                        Dispatch.setText("Dispatched");
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Are you sure to dispatch this order?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
     }
 }

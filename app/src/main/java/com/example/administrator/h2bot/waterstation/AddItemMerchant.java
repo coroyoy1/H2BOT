@@ -214,7 +214,7 @@ public class AddItemMerchant extends Fragment {
                         }
                     });
         } else {
-            Toast.makeText(getActivity(), "No file selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "No image selected", Toast.LENGTH_SHORT).show();
         }
 
     }

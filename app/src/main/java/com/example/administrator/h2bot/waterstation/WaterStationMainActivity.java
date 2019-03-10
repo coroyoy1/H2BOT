@@ -102,6 +102,7 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                 adapter.clear();
                 adapter2.clear();
                 nav_pendingorders_ws.setVisibility(View.VISIBLE);
+                nav_inprogress_ws.setVisibility(View.VISIBLE);
                 Log.d("ambotnimo","AMBOT");
                 for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                 {
@@ -292,7 +293,7 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                 startActivity(intent3);
                 intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent3.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                showMessages("Successfully Logout");
+                showMessages("logout Successfully");
                 break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -300,6 +301,6 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
     }
     public void showMessages(String message)
     {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

@@ -56,7 +56,23 @@
                 android:layout_height="match_parent">
 
             </android.support.v7.widget.RecyclerView>
-
+            <RelativeLayout
+                android:orientation="vertical"
+                android:id="@+id/noOrdersLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                >
+                <TextView
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/NoOrders"
+                    android:text="No completed orders yet"
+                    android:textSize="15dp"
+                    />
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

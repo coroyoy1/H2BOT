@@ -110,7 +110,7 @@ public class WPProductListIntent extends Fragment implements View.OnClickListene
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    showMessage("Successfully Deleted");
+                    showMessage("Deleted successfully");
                     WPProductListFragment additem = new WPProductListFragment();
                     AppCompatActivity activity = (AppCompatActivity)getContext();
                     activity.getSupportFragmentManager()
@@ -125,7 +125,7 @@ public class WPProductListIntent extends Fragment implements View.OnClickListene
             .addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    showMessage("Error to delete data, Please check internet connection!");
+                    showMessage("Failed to delete the data, Please check internet connection!");
                     progressDialog.dismiss();
                 }
             });

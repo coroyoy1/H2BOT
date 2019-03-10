@@ -126,7 +126,7 @@
                 android:hint="Address" />
 
             <EditText
-                android:inputType="textEmailAddress"
+                android:inputType="number"
                 android:id="@+id/RegisterContact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

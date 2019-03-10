@@ -1,5 +1,6 @@
 package com.example.administrator.h2bot.dealer;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
@@ -35,7 +37,7 @@ public class WPPendingOrdersFragment extends Fragment implements WPPendingListAd
     private WPPendingListAdapter POAdapter;
     private List<OrderModel> uploadPO;
     FirebaseUser firebaseUser;
-
+    RelativeLayout noOrdersLayout;
     public WPPendingOrdersFragment() {
 
     }
@@ -47,7 +49,7 @@ public class WPPendingOrdersFragment extends Fragment implements WPPendingListAd
         recyclerViewPOConnect = view.findViewById(R.id.recyclerViewPO);
         recyclerViewPOConnect.setHasFixedSize(true);
         recyclerViewPOConnect.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        noOrdersLayout = view.findViewById(R.id.noOrdersLayout);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         uploadPO = new ArrayList<>();
@@ -66,6 +68,8 @@ public class WPPendingOrdersFragment extends Fragment implements WPPendingListAd
                             if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid())
                                     && orderModel.getOrder_status().equals("Pending"))
                             {
+                                noOrdersLayout.setVisibility(View.INVISIBLE);
+                                recyclerViewPOConnect.setVisibility(View.VISIBLE);
                                 uploadPO.add(orderModel);
                             }
                         }
@@ -73,6 +77,11 @@ public class WPPendingOrdersFragment extends Fragment implements WPPendingListAd
                     POAdapter = new WPPendingListAdapter(getActivity(), uploadPO);
                     recyclerViewPOConnect.setAdapter(POAdapter);
                     POAdapter.setOnItemClickListener(WPPendingOrdersFragment.this::onItemClick);
+                }
+                if(uploadPO.size() == 0)
+                {
+                    noOrdersLayout.setVisibility(View.VISIBLE);
+                    recyclerViewPOConnect.setVisibility(View.GONE);
                 }
             }
 
@@ -102,7 +111,7 @@ public class WPPendingOrdersFragment extends Fragment implements WPPendingListAd
         return view;
     }
     private void showMessage(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -125,5 +134,8 @@ public class WPPendingOrdersFragment extends Fragment implements WPPendingListAd
                 }
             }
         };
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Are you sure to exit the application?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
     }
 }

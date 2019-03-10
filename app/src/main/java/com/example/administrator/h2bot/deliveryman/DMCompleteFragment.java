@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
@@ -35,7 +36,7 @@ public class DMCompleteFragment extends Fragment{
     private List<UserWSDMFile> uploadDM;
     FirebaseUser firebaseUser;
     String firebaseUID;
-
+    RelativeLayout noOrdersLayout;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -46,7 +47,7 @@ public class DMCompleteFragment extends Fragment{
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         firebaseUID = firebaseUser.getUid();
-
+        noOrdersLayout = view.findViewById(R.id.noOrdersLayout);
         uploadPO = new ArrayList<>();
 
         displayData();
@@ -83,12 +84,19 @@ public class DMCompleteFragment extends Fragment{
                                                 if (orderModel.getOrder_merchant_id().equals(merchantId)
                                                         && orderModel.getOrder_status().equals("In-Progress"))
                                                 {
+                                                    noOrdersLayout.setVisibility(View.INVISIBLE);
+                                                    recyclerView.setVisibility(View.VISIBLE);
                                                     uploadPO.add(orderModel);
                                                 }
                                             }
                                         }
                                         POAdapter = new DMCompletedOrderAdapter(getActivity(), uploadPO);
                                         recyclerView.setAdapter(POAdapter);
+                                    }
+                                    if(uploadPO.size() == 0)
+                                    {
+                                        noOrdersLayout.setVisibility(View.VISIBLE);
+                                        recyclerView.setVisibility(View.GONE);
                                     }
                                 }
 

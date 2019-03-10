@@ -139,25 +139,39 @@
                 android:id="@+id/dealerBusinesshoursStart"
                 android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
                 android:hint="Start Time"
-                android:inputType="textEmailAddress"
+                android:inputType="number"
                 android:textAlignment="center"
                 android:textSize="18dp"
-                android:layout_marginTop="10dp"
-
                 android:layout_marginRight="2dp"/>
+            <Spinner
+                android:id="@+id/startSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+            </Spinner>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="untill"/>
             <EditText
                 android:layout_marginLeft="2dp"
                 android:id="@+id/dealerBusinesshoursEnd"
                 android:layout_weight="1"
+                android:layout_marginStart="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
                 android:hint="End Time"
-                android:inputType="textEmailAddress"
+                android:inputType="number"
                 android:textAlignment="center"
                 android:textSize="18dp"
-                android:layout_marginTop="10dp"/>
+                />
+            <Spinner
+                android:id="@+id/endSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
         </LinearLayout>
         <RadioGroup
             android:gravity="center"

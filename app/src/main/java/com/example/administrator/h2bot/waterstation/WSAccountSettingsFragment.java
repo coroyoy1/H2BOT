@@ -169,7 +169,7 @@ public class WSAccountSettingsFragment extends Fragment implements View.OnClickL
 
     public void showMessage(String s)
     {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     @Override
