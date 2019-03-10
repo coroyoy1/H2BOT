@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.adapter.DMCompletedOrderAdapter;
 import com.example.administrator.h2bot.adapter.DMInProgressOrdersAdapter;
+import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 import com.example.administrator.h2bot.models.UserWSDMFile;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,7 +31,7 @@ import java.util.List;
 public class DMCompleteFragment extends Fragment{
     private RecyclerView recyclerView;
     private DMCompletedOrderAdapter POAdapter;
-    private List<TransactionHeaderFileModel> uploadPO;
+    private List<OrderModel> uploadPO;
     private List<UserWSDMFile> uploadDM;
     FirebaseUser firebaseUser;
     String firebaseUID;
@@ -48,77 +49,68 @@ public class DMCompleteFragment extends Fragment{
 
         uploadPO = new ArrayList<>();
 
-        getInProgressData();
+        displayData();
 
         return view;
     }
 
-
-    public void getInProgressData()
+    public void displayData()
     {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File");
-        databaseReference.child(firebaseUser.getUid())
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String stationId = dataSnapshot.child("station_parent").getValue(String.class);
-                        if(stationId != null)
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_DM_File");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                {
+                    for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren())
+                    {
+                        UserWSDMFile userWSDMFile = dataSnapshot2.getValue(UserWSDMFile.class);
+                        if(userWSDMFile != null)
                         {
-                            DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("User_WS_DM_File");
-                            databaseReference1.child(stationId).child(firebaseUser.getUid())
-                                    .addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            UserWSDMFile userWSDMFile = dataSnapshot.getValue(UserWSDMFile.class);
-                                            if(userWSDMFile != null)
+                            String merchantId = userWSDMFile.getStation_id();
+                            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
+                            reference1.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    uploadPO.clear();
+                                    for (DataSnapshot dataSnapshot3 : dataSnapshot.getChildren())
+                                    {
+                                        for (DataSnapshot dataSnapshot4 : dataSnapshot3.child(merchantId).getChildren())
+                                        {
+                                            OrderModel orderModel = dataSnapshot4.getValue(OrderModel.class);
+                                            if(orderModel != null)
                                             {
-                                                String merchantnum = userWSDMFile.getStation_id();
-                                                if(merchantnum != null)
+                                                if (orderModel.getOrder_merchant_id().equals(merchantId)
+                                                        && orderModel.getOrder_status().equals("In-Progress"))
                                                 {
-                                                    DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("Transaction_Header_File");
-                                                    databaseReference2.addValueEventListener(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                            for (DataSnapshot post : dataSnapshot.getChildren())
-                                                            {
-                                                                TransactionHeaderFileModel transactionHeaderFileModel = post.getValue(TransactionHeaderFileModel.class);
-                                                                if(transactionHeaderFileModel != null)
-                                                                {
-                                                                    if(transactionHeaderFileModel.getMerchant_id().equals(merchantnum)
-                                                                            && transactionHeaderFileModel.getTrans_status().equals("Completed"))
-                                                                    {
-                                                                        uploadPO.add(transactionHeaderFileModel);
-                                                                    }
-                                                                }
-                                                            }
-                                                            POAdapter = new DMCompletedOrderAdapter(getActivity(), uploadPO);
-                                                            recyclerView.setAdapter(POAdapter);
-                                                            //POAdapter.setOnItemClickListener(DMInProgressFragment.this::onItemClick);
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                        }
-                                                    });
+                                                    uploadPO.add(orderModel);
                                                 }
                                             }
                                         }
+                                        POAdapter = new DMCompletedOrderAdapter(getActivity(), uploadPO);
+                                        recyclerView.setAdapter(POAdapter);
+                                    }
+                                }
 
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                        }
-                                    });
+                                }
+                            });
                         }
                     }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
 
-                    }
-                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
+
     private void showMessage(String s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
     }

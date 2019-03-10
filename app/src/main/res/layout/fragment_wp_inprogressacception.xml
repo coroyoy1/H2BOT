@@ -405,10 +405,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_weight="1"
-                    android:background="@drawable/z_greenbluebutton"/>
+                    android:background="@android:color/holo_orange_dark"/>
                 <Button
                     android:id="@+id/launchCall"
-                    android:background="@drawable/z_darkbluebutton"
+                    android:background="@android:color/holo_purple"
                     android:textColor="@android:color/white"
                     android:text="Call"
                     android:layout_marginLeft="5dp"

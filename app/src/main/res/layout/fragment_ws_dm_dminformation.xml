@@ -59,6 +59,16 @@
                     android:id="@+id/addressDMDM"/>
 
                 <TextView
+                    android:id="@+id/emailAddDMDM"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Email Address"
+                    android:textColor="@android:color/white"
+                    android:textSize="18dp" />
+
+                <TextView
                     android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -67,16 +77,6 @@
                     android:textColor="@android:color/white"
                     android:textSize="18dp"
                     android:id="@+id/contactNoDMDM"/>
-
-                <TextView
-                    android:layout_marginTop="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Email Address"
-                    android:layout_marginLeft="20dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp"
-                    android:id="@+id/emailAddDMDM"/>
 
 
                 <TextView

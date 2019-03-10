@@ -55,7 +55,7 @@ public class DMInProgressOrdersAdapter extends RecyclerView.Adapter<DMInProgress
                 AppCompatActivity activity = (AppCompatActivity)v.getContext();
                 activity.getSupportFragmentManager()
                         .beginTransaction()
-                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
                         .replace(R.id.fragment_container_dm, additem)
                         .addToBackStack(null)
                         .commit();

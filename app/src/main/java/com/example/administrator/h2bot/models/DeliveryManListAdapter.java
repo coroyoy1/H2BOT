@@ -52,7 +52,7 @@ public class DeliveryManListAdapter extends RecyclerView.Adapter<DeliveryManList
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 activity.getSupportFragmentManager()
                         .beginTransaction()
-                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_out_right, android.R.anim.slide_in_left)
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
                         .replace(R.id.fragment_container_ws, addInformation)
                         .addToBackStack(null)
                         .commit();
@@ -64,7 +64,7 @@ public class DeliveryManListAdapter extends RecyclerView.Adapter<DeliveryManList
                 args.putString("ContactNoDM", currentData.getUser_phone_no());
                 args.putString("StatusDM", currentData.getUser_status());
                 args.putString("ImageDM", currentData.getUser_uri());
-                args.putString("UIDDM", currentData.getUser_getUID());
+                args.putString("uidDelMan", currentData.getUser_getUID());
                 addInformation.setArguments(args);
             }
         });
