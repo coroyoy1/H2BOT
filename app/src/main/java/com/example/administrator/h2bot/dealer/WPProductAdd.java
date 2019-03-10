@@ -30,7 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class WPProductAdd extends Fragment implements View.OnClickListener {
 
     EditText waterProductName, waterProductPrice;
-    Spinner waterProductType;
+    EditText waterProductType;
     Button backProductButton, addProductButton;
 
     FirebaseAuth mAuth;
@@ -66,7 +66,7 @@ public class WPProductAdd extends Fragment implements View.OnClickListener {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_spinner_item, arraySpinner);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        waterProductType.setAdapter(adapter);
+
 
 
         progressDialog = new ProgressDialog(getActivity());
@@ -116,7 +116,7 @@ public class WPProductAdd extends Fragment implements View.OnClickListener {
     public void saveData()
     {
         String waterPriceString = waterProductPrice.getText().toString();
-        String waterTypeString = waterProductType.getSelectedItem().toString();
+        String waterTypeString = waterProductType.getText().toString();
 
         if(waterPriceString.equals("") && waterTypeString.equals(""))
         {

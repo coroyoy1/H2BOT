@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.UserAccountFile;
+import com.example.administrator.h2bot.models.UserAccountFile2;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserLocationAddress;
 import com.example.administrator.h2bot.waterstation.WSAccountSettingsFragment;
@@ -239,7 +240,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                                         @Override
                                                                                         public void onSuccess(Void aVoid) {
-                                                                                            UserAccountFile userAccountFile = new UserAccountFile(
+                                                                                            UserAccountFile2 userAccountFile = new UserAccountFile2(
                                                                                                     firebaseUser.getUid(),
                                                                                                     emailAddressString,
                                                                                                     passwordString,
