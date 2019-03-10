@@ -82,7 +82,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
         waterType = view.findViewById(R.id.waterTypeINACC);
         itemQuantity = view.findViewById(R.id.itemQuantityINACC);
         pricePerGallon = view.findViewById(R.id.pricePerGallonINACC);
-        service = view.findViewById(R.id.serviceINACC);
+       // service = view.findViewById(R.id.serviceINACC);
         address = view.findViewById(R.id.addressINACC);
         deliveryFee = view.findViewById(R.id.deliveryFeeINACC);
         totalPrice = view.findViewById(R.id.totalPriceINACC);

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,6 +72,7 @@ public class WPPendingListAdapter extends RecyclerView.Adapter<WPPendingListAdap
 
                 Bundle bundle = new Bundle();
                 bundle.putString("transactionno", transactionNo);
+                Log.d("transactionno",""+transactionNo);
                 bundle.putString("transactioncustomer", currentData.getOrder_customer_id());
                 additem.setArguments(bundle);
             }

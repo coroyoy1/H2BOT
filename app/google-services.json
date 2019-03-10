@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "1001575215804",
-    "firebase_url": "https://arcane-bit-229705.firebaseio.com",
-    "project_id": "arcane-bit-229705",
-    "storage_bucket": "arcane-bit-229705.appspot.com"
+    "project_number": "777314395711",
+    "firebase_url": "https://waterassistantagent.firebaseio.com",
+    "project_id": "waterassistantagent",
+    "storage_bucket": "waterassistantagent.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1001575215804:android:505b961c7e3dca07",
+        "mobilesdk_app_id": "1:777314395711:android:505b961c7e3dca07",
         "android_client_info": {
           "package_name": "com.example.administrator.h2bot"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1001575215804-tvbipl3d3depd73qfov7jaeaithiveqn.apps.googleusercontent.com",
+          "client_id": "777314395711-ec7bipjtkpjf3ejoiqe4icbid7convas.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCzsD3s5_EoCiE09N2xX-9QJTkY0jnW1no"
+          "current_key": "AIzaSyABi0MStBCe4Mew78ZVrj8kY7ZWYwF43hk"
         }
       ],
       "services": {

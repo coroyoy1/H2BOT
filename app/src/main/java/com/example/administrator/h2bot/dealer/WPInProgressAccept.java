@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,7 @@ import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class WPInProgressAccept extends Fragment implements View.OnClickListener , Switch.OnCheckedChangeListener{
+public class WPInProgressAccept extends Fragment implements View.OnClickListener{
 
 
 
@@ -78,7 +79,7 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
         waterType = view.findViewById(R.id.waterTypeINACC);
         itemQuantity = view.findViewById(R.id.itemQuantityINACC);
         pricePerGallon = view.findViewById(R.id.pricePerGallonINACC);
-        service = view.findViewById(R.id.serviceINACC);
+
         address = view.findViewById(R.id.addressINACC);
         deliveryFee = view.findViewById(R.id.deliveryFeeINACC);
         totalPrice = view.findViewById(R.id.totalPriceINACC);
@@ -102,7 +103,7 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
 
         launchQR.setOnClickListener(this);
         viewLocation.setOnClickListener(this);
-        switcBroadcast.setOnCheckedChangeListener(this);
+        //switcBroadcast.setOnCheckedChangeListener(this);
 
         progressDialog.show();
 
@@ -127,11 +128,28 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:"+contactNo));
+                intent.setData(Uri.parse("tel:"+contactNo.getText().toString()));
                 startActivity(intent);
                 Toast.makeText(getActivity(), "Calling....", Toast.LENGTH_LONG).show();
             }
         });
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(event.getAction() == KeyEvent.ACTION_DOWN)
+                {
+                    if (keyCode == KeyEvent.KEYCODE_BACK)
+                    {
+                        attemptToExit();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
         return view;
     }
 
@@ -201,6 +219,7 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
             super.onActivityResult(requestCode, resultCode, data);
             showMessages("Error to scan");
         }
+
     }
     private void displayAllData()
     {
@@ -429,7 +448,7 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
         activity.getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
-                .replace(R.id.fragment_container_ws, additem)
+                .replace(R.id.fragment_container_wp, additem)
                 .addToBackStack(null)
                 .commit();
         bundle.putString("TransactNoSeen1", transactionNo);
@@ -453,7 +472,7 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
 //                if(googleMap != null)
 //                    googleMap.clear();
                 //viewLocationPass();
-                getLocationUser();
+                viewLocationPass();
                 break;
         }
     }
@@ -509,12 +528,21 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
     }
 
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if(buttonView.isChecked())
-        {
-            Intent intent = new Intent(getActivity(), WSBroadcast.class);
-            startActivity(intent);
-        }
+    public void attemptToExit()
+    {
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        getActivity().finish();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
     }
 }

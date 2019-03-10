@@ -100,6 +100,24 @@ public class WPProductListFragment extends Fragment implements View.OnClickListe
                 Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(event.getAction() == KeyEvent.ACTION_DOWN)
+                {
+                    if (keyCode == KeyEvent.KEYCODE_BACK)
+                    {
+                        attemptToExit();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
+
         return view;
     }
 
@@ -143,4 +161,5 @@ public class WPProductListFragment extends Fragment implements View.OnClickListe
         }
 
     }
+
 }

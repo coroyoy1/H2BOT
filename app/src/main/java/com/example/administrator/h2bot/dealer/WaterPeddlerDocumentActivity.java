@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -30,6 +31,7 @@ import com.example.administrator.h2bot.models.UserLocationAddress;
 import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -262,6 +264,14 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                         getLocationSetter();
                                     }
                                 }, 500);
+                                Task<Uri> result1 = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                                result1.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        String addOne = uri.toString();
+                                        FirebaseDatabase.getInstance().getReference("User_WD_Docs_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("station_driver_license").setValue(addOne);
+                                    }
+                                });
                                 DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("User_File");
                                 databaseReference.child(currentUser).child("user_status").setValue("unverified");
 
@@ -269,6 +279,8 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                 databaseReference2.child(currentUser).child("user_status").setValue("unverified");
 
                                 Toast.makeText(WaterPeddlerDocumentActivity.this, "Upload successful" + currentuser, Toast.LENGTH_LONG).show();
+                                Log.d("capacity",""+dealerCapacity);
+                                startActivity(new Intent(WaterPeddlerDocumentActivity.this, MerchantAccessVerification.class));
                                 UserWSBusinessInfoFile userWSBusinessInfoFile = new UserWSBusinessInfoFile(currentUser, dealername, dealerstart, dealerend, businessDeliveryService, businessFreeOrNoText, dealerdeliveryfee, dealercapacity, dealerno, dealeraddress, "active", "");
                                 FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(currentUser).setValue(userWSBusinessInfoFile);
                             }

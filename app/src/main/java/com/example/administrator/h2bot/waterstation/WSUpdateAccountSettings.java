@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.dealer.WPAccountSettingsFragment;
 import com.example.administrator.h2bot.models.UserAccountFile;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserLocationAddress;
@@ -215,7 +216,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                         lastNameString,
                                                                         addressString,
                                                                         contactNoString,
-                                                                        "Water Station",
+                                                                        "Water Dealer",
                                                                         "active"
                                                                 );
                                                                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File");
@@ -240,7 +241,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                                         .addOnFailureListener(new OnFailureListener() {
                                                                                             @Override
                                                                                             public void onFailure(@NonNull Exception e) {
-                                                                                                showMessages("User Account does not successfully save");
+                                                                                                showMessages("Failed to update");
                                                                                                 progressDialog.dismiss();
                                                                                             }
                                                                                         });
@@ -250,7 +251,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                         .addOnFailureListener(new OnFailureListener() {
                                                                             @Override
                                                                             public void onFailure(@NonNull Exception e) {
-                                                                                showMessages("Data does not saved");
+                                                                                showMessages("Failed to update");
                                                                                 progressDialog.dismiss();
                                                                             }
                                                                         });
@@ -294,12 +295,12 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
 
     private void successMessages() {
         showMessages("Successfully Updated");
-        WSAccountSettingsFragment wsdmFragment = new WSAccountSettingsFragment();
+        WPAccountSettingsFragment wsdmFragment = new WPAccountSettingsFragment();
         AppCompatActivity activity = (AppCompatActivity)getContext();
         activity.getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
-                .replace(R.id.fragment_container_ws, wsdmFragment)
+                .replace(R.id.fragment_container_wp, wsdmFragment)
                 .addToBackStack(null)
                 .commit();
         progressDialog.dismiss();

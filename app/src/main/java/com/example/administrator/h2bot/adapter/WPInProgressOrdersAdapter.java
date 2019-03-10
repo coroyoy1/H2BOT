@@ -52,12 +52,12 @@ public class WPInProgressOrdersAdapter extends RecyclerView.Adapter<WPInProgress
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WSInProgressAccept additem = new WSInProgressAccept();
+                WPInProgressAccept additem = new WPInProgressAccept();
                 AppCompatActivity activity = (AppCompatActivity)v.getContext();
                 activity.getSupportFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                        .replace(R.id.fragment_container_ws, additem)
+                        .replace(R.id.fragment_container_wp, additem)
                         .addToBackStack(null)
                         .commit();
                 Bundle args = new Bundle();

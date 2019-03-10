@@ -53,8 +53,10 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_water_peddler_home);
+
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         currendId = currentUser.getUid();
+
         mAuth = FirebaseAuth.getInstance();
         dialog = new Dialog(this);
         drawerLayout = findViewById(R.id.wpdrawer_layout);
@@ -227,7 +229,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
                 break;
             case R.id.nav_businessinfo_wp:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp,
-                        new WPBusinessInfoFragment2()).commit();
+                        new WPBusinessInfoFragment ()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Business Info");
                 showMessages("Business Info");
                 break;

@@ -215,7 +215,6 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                 }
             }
         };
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setMessage("Are you sure to accept?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();

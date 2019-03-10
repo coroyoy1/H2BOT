@@ -220,6 +220,11 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(new Intent(LoginActivity.this, WaterPeddlerHomeActivity.class));
                         showMessages("Water Dealer Verified");
                     }
+                    else if(documentVerify.equals("unverified"))
+                    {
+                        startActivity(new Intent(LoginActivity.this, MerchantAccessVerification.class));
+                        showMessages("Need verification");
+                    }
                     showMessages("Successfully logged-in as Water Dealer");
                 }
                 else if(userType.equals("Third Party Affiliate"))

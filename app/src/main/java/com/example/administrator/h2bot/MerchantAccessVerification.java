@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -43,6 +44,7 @@ public class MerchantAccessVerification extends AppCompatActivity implements Vie
 
         buttonUpdate.setOnClickListener(this);
         buttonLogout.setOnClickListener(this);
+        Log.d("Pasudlako","Pasudla ko");
     }
 
     public void checkUserType()
@@ -67,6 +69,7 @@ public class MerchantAccessVerification extends AppCompatActivity implements Vie
                     }
                     else
                     {
+                        Log.d("Pasudlako",""+userType);
                         showMessages("Error to pass intent");
                     }
                 }
@@ -84,6 +87,7 @@ public class MerchantAccessVerification extends AppCompatActivity implements Vie
                     }
                     else
                     {
+                        Log.d("Pasudlako",""+userType);
                         showMessages("Error to pass intent");
                     }
                 }
@@ -102,15 +106,18 @@ public class MerchantAccessVerification extends AppCompatActivity implements Vie
                     }
                     else if(activateStat.equals("unverified"))
                     {
+                        Log.d("Pasudlako",""+userType);
                         startActivity(new Intent(MerchantAccessVerification.this, WaterPeddlerDocumentActivity.class));
                     }
                     else
                     {
+                        Log.d("Pasudlako",""+userType);
                         showMessages("Error to pass intent");
                     }
                 }
                 else
                 {
+                    Log.d("Pasudlako",""+userType);
                     showMessages("No available user");
                 }
             }
