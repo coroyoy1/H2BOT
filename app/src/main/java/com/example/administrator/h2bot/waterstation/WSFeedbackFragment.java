@@ -132,7 +132,6 @@ public class WSFeedbackFragment extends Fragment implements View.OnClickListener
                         rating_comment = additonalComment.getText().toString(),
                         rating_status = "AC";
                 ratingOfCustomer(rating_customer_id,rating_merchant_id, rating_number, rating_comment, rating_status);
-                showMessage(rateString);
             }
         });
         alertDialog.show();
@@ -156,7 +155,7 @@ public class WSFeedbackFragment extends Fragment implements View.OnClickListener
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage("Are you sure to exit application?").setPositiveButton("Yes", dialogClickListener)
+        builder.setMessage("Are you sure to exit the application?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
     }
 
@@ -240,20 +239,20 @@ public class WSFeedbackFragment extends Fragment implements View.OnClickListener
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        showMessage("Successfully rated");
+                        showMessage("Rated successfully");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        showMessage("Failed to attempt to save feedback");
+                        showMessage("Failed to save your feedback");
                     }
                 });
     }
 
 
     private void showMessage(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     @Override

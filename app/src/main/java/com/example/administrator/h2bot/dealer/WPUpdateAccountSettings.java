@@ -110,7 +110,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
             && passwordString.isEmpty()
             && confirmPasswordString.isEmpty())
         {
-            showMessages("Please fill up the data before update!");
+            showMessages("Please fill up all the fields before you update!");
         }
         else
         {
@@ -120,7 +120,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
     }
 
     private void showMessages(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     public void openGallery()
@@ -142,7 +142,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
         }
         else
         {
-            showMessages("Empty image");
+            showMessages("Choose an image");
         }
     }
 
@@ -176,7 +176,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            showMessage("Error to get location");
+                            showMessage("Failed to get location");
                             progressDialog.dismiss();
                         }
                     });
@@ -188,7 +188,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
     }
 
     private void showMessage(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -196,7 +196,6 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
 
     private void thisGetUpdateData(String firstNameString, String lastNameString, String addressString, String contactNoString, String emailAddressString, String passwordString, String confirmPasswordString) {
         progressDialog.show();
-        Log.d("Yahollo","Yahollo "+emailAddressString);
         if(uri!=null && !firstNameString.isEmpty() && !lastNameString.isEmpty() && !addressString.isEmpty() && !contactNoString.isEmpty()
                 && !emailAddressString.isEmpty() && !passwordString.isEmpty() && !confirmPasswordString.isEmpty())
         {
@@ -208,18 +207,15 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    Log.d("Yahallo", "Yahallo" + passwordWU.getText().toString());
                                     firebaseUser.updatePassword(passwordWU.getText().toString())
                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
-                                                    Log.d("Yahalli", "Yahalli");
                                                     StorageReference storageReference = FirebaseStorage.getInstance().getReference("users_photo");
                                                     storageReference.putFile(uri)
                                                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                                                 @Override
                                                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                                                    Log.d("Gago", "Gago");
                                                                     Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
                                                                     result.addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                         @Override
@@ -257,7 +253,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                                                     .addOnFailureListener(new OnFailureListener() {
                                                                                                         @Override
                                                                                                         public void onFailure(@NonNull Exception e) {
-                                                                                                            showMessages("User Account does not successfully save");
+                                                                                                            showMessages("Failed to save the user account");
                                                                                                             progressDialog.dismiss();
                                                                                                         }
                                                                                                     });
@@ -267,7 +263,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                                     .addOnFailureListener(new OnFailureListener() {
                                                                                         @Override
                                                                                         public void onFailure(@NonNull Exception e) {
-                                                                                            showMessages("Data does not saved");
+                                                                                            showMessages("Failed to save the data");
                                                                                             progressDialog.dismiss();
                                                                                         }
                                                                                     });
@@ -276,7 +272,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                             .addOnFailureListener(new OnFailureListener() {
                                                                                 @Override
                                                                                 public void onFailure(@NonNull Exception e) {
-                                                                                    showMessages("Image is not selected!");
+                                                                                    showMessages("Choose an image");
                                                                                     progressDialog.dismiss();
                                                                                 }
                                                                             });
@@ -285,7 +281,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                             .addOnFailureListener(new OnFailureListener() {
                                                                 @Override
                                                                 public void onFailure(@NonNull Exception e) {
-                                                                    showMessages("image error");
+                                                                    showMessages("Image error");
                                                                     progressDialog.dismiss();
                                                                 }
                                                             });
@@ -294,7 +290,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
-                                                    showMessages("password error");
+                                                    showMessages("Password error");
                                                     progressDialog.dismiss();
                                                 }
                                             });
@@ -303,7 +299,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    showMessages("Fail to update the information");
+                                    showMessages("Failed to update the information");
                                     progressDialog.dismiss();
                                 }
                             });
@@ -313,13 +309,13 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
         else
         {
             progressDialog.dismiss();
-            Toast.makeText(getActivity(), "Please fill all the fields and choose an image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Please fill up all the fields and choose an image", Toast.LENGTH_SHORT).show();
             return;
         }
     }
 
     private void successMessages() {
-        showMessages("Successfully Updated");
+        showMessages("Updated successfully");
         WSAccountSettingsFragment wsdmFragment = new WSAccountSettingsFragment();
         AppCompatActivity activity = (AppCompatActivity)getContext();
         activity.getSupportFragmentManager()

@@ -126,7 +126,7 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
 
         if(prodType.isEmpty() && prodPrice.isEmpty())
         {
-            showMessage("Please fill up the requirements1");
+            showMessage("Please fill up all the fields");
             return;
         }
         else
@@ -148,14 +148,14 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    showMessage("Successfully Updated Product");
+                    showMessage("Product updated successfully");
                     progressDialog.dismiss();
                 }
             })
             .addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    showMessage("Fail to Update, Please check your internet connection");
+                    showMessage("Failed to Update, Please check your internet connection");
                     progressDialog.dismiss();
                 }
             });

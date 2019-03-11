@@ -180,7 +180,7 @@ public class WPCompletedAccept extends Fragment implements View.OnClickListener 
     }
 
     private void showMessages(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
 

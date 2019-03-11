@@ -109,6 +109,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
                                 adapter.add(orderModel);
                                 adapter.size();
                                 nav_pending_orders_wp.setVisibility(View.VISIBLE);
+                                nav_inprogress_wp.setVisibility(View.VISIBLE);
                                 countPending = adapter.size();
                                 Log.d("CountPending", ""+countPending);
 
@@ -154,9 +155,9 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
                             }
                             else
                             {
-                                countPending = adapter.size();
+                                countInprogress  = adapter2.size();
 
-                                if (countPending==0)
+                                if (countInprogress==0)
                                 {
                                     nav_inprogress_wp.setVisibility(View.INVISIBLE);
                                 }
@@ -258,7 +259,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
                 startActivity(intent3);
                 intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent3.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                showMessages("Successfully Logout");
+                showMessages("Logout Successfully");
                 break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -286,7 +287,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
         saveChangesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(WaterPeddlerHomeActivity.this, "Temporary", Toast.LENGTH_SHORT).show();
+
             }
         });
         dialog.show();

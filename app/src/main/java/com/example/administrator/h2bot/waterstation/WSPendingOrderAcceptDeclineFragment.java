@@ -111,7 +111,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
     }
 
     private void showMessages(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     public void getCustomerOrder()
@@ -211,7 +211,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                         customerNo,
                         token,
                         dateStr,
-                        "Your Order has been Cancelled",
+                        "Your Order has been cancelled",
                         "Decline"
                 );
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Notification");
@@ -219,14 +219,14 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                showMessages("Successfully sent");
+                                showMessages("Sent successfully");
                                 //Add remove the database
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                showMessages("Fail to sent message, please check your internet connection");
+                                showMessages("Fail to send message, please check your internet connection");
                             }
                         });
             }
@@ -250,7 +250,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
             }
         };
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage("Are you sure to accept?").setPositiveButton("Yes", dialogClickListener)
+        builder.setMessage("Are you sure to accept the order?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
     }
 
@@ -291,7 +291,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                showMessages("Error to update order");
+                                                showMessages("Failed to update order");
                                                 progressDialog.dismiss();
                                             }
                                         });

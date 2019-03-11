@@ -126,12 +126,12 @@ public class WSBusinessDocumentUpdate extends Fragment implements View.OnClickLi
         }
         else
         {
-            showMessage("You dont choice any photo!");
+            showMessage("Choose an image");
         }
     }
 
     private void showMessage(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     public void openGallery()
@@ -146,7 +146,7 @@ public class WSBusinessDocumentUpdate extends Fragment implements View.OnClickLi
     {
         if(uri1 == null && uri2 == null && uri3 == null && uri4 == null && uri5 == null && uri6 == null)
         {
-            showMessage("Please insert a photo for requirement before proceed");
+            showMessage("Please an image before you proceed");
         }
         else
         {
@@ -322,7 +322,7 @@ public class WSBusinessDocumentUpdate extends Fragment implements View.OnClickLi
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
-                                                    showMessage("Image does not update, maybe internet connection is slow!");
+                                                    showMessage("Unsuccessful updating the image");
                                                     progressDialog.dismiss();
                                                 }
                                             });

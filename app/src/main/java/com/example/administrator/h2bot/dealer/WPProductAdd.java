@@ -120,7 +120,7 @@ public class WPProductAdd extends Fragment implements View.OnClickListener {
 
         if(waterPriceString.equals("") && waterTypeString.equals(""))
         {
-            showMessages("Fill up first the requirement");
+            showMessages("Fill up all the fields");
             return;
         }
         else {
@@ -129,7 +129,7 @@ public class WPProductAdd extends Fragment implements View.OnClickListener {
     }
 
     private void showMessages(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     private void addProduct(String waterPriceString, String waterTypeString) {
@@ -143,14 +143,14 @@ public class WPProductAdd extends Fragment implements View.OnClickListener {
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    showMessages("Product Successfully Added");
+                    showMessages("Item added successfully");
                     progressDialog.dismiss();
                 }
             })
             .addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    showMessages("Product does not added or the connection is interrupted");
+                    showMessages("Failed to add the item or the connection is interrupted");
                     progressDialog.show();
                 }
             });

@@ -1,5 +1,6 @@
 package com.example.administrator.h2bot.dealer;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +11,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.adapter.WPCompletedOrdersAdapter;
@@ -35,7 +38,8 @@ public class WPTransactionFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private WPCompletedOrdersAdapter mAdapter;
     private List<OrderModel> mUploads;
-
+    RelativeLayout noOrdersLayout;
+    int count;
 
     public WPTransactionFragment() {
 
@@ -52,6 +56,7 @@ public class WPTransactionFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
+        noOrdersLayout = view.findViewById(R.id.noOrdersLayout);
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String currendId = currentUser.getUid();
@@ -70,6 +75,8 @@ public class WPTransactionFragment extends Fragment {
                             if(orderModel.getOrder_merchant_id().equals(currentUser.getUid())
                                     && orderModel.getOrder_status().equals("Completed"))
                             {
+                                noOrdersLayout.setVisibility(View.INVISIBLE);
+                                recyclerView.setVisibility(View.VISIBLE);
                                 mUploads.add(orderModel);
                             }
                         }
@@ -78,12 +85,18 @@ public class WPTransactionFragment extends Fragment {
                     recyclerView.setAdapter(mAdapter);
                     mAdapter.setOnItemClickListener(WPTransactionFragment.this::onItemClick);
                 }
+                if(mUploads.size() == 0)
+                {
+                    noOrdersLayout.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
+
         });
         view.setFocusableInTouchMode(true);
         view.requestFocus();
@@ -119,6 +132,9 @@ public class WPTransactionFragment extends Fragment {
                 }
             }
         };
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Are you sure to exit the application?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
     }
     private void onItemClick(int i) {
     }

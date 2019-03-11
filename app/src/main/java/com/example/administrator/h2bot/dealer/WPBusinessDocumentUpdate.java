@@ -103,7 +103,7 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
         }
         else
         {
-            showMessage("You dont choice any photo!");
+            showMessage("Choose an image!");
         }
     }
 
@@ -116,14 +116,14 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Photo"), PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "Select image"), PICK_IMAGE_REQUEST);
     }
 
     public void getInput()
     {
         if(uri1 == null && uri2 == null && uri3 == null && uri4 == null && uri5 == null && uri6 == null)
         {
-            showMessage("Please insert a photo for requirement before proceed");
+            showMessage("Choose an image");
         }
         else
         {

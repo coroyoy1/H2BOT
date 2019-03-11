@@ -101,7 +101,6 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
             transactionNo = args.getString("transactionno");
             Log.d("transactionno",""+transactionNo);
             customerNo = args.getString("transactioncustomer");
-            showMessages(transactionNo);
         }
         getOrderData();
         view.setFocusableInTouchMode(true);
@@ -126,7 +125,7 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
     }
 
     private void showMessages(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -208,7 +207,7 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                showMessages("Data does not available");
+                showMessages("Data is not available");
                 progressDialog.dismiss();
             }
         });
@@ -276,7 +275,7 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                showMessages("Successfully updated");
+                                                showMessages("Updated Successfully");
                                                 WSInProgressFragment additem = new WSInProgressFragment();
                                                 AppCompatActivity activity = (AppCompatActivity)getContext();
                                                 activity.getSupportFragmentManager()
@@ -305,7 +304,7 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
                     @Override
 
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        showMessages("Order does not exists");
+                        showMessages("Order does not exist");
                         progressDialog.dismiss();
                     }
                 });
@@ -330,7 +329,7 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                showMessages("Successfully updated");
+                                                showMessages("Updated successfully");
                                                 WSInProgressFragment additem = new WSInProgressFragment();
                                                 AppCompatActivity activity = (AppCompatActivity)getContext();
                                                 activity.getSupportFragmentManager()
@@ -347,7 +346,7 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                showMessages("Error to update order");
+                                                showMessages("Failed to update order");
                                                 progressDialog.dismiss();
                                             }
                                         });
@@ -359,7 +358,7 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
                     @Override
 
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        showMessages("Order does not exists");
+                        showMessages("Order does not exist");
                         progressDialog.dismiss();
                     }
                 });

@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
@@ -39,7 +40,7 @@ public class WSInProgressFragment extends Fragment implements WSInProgressOrders
     private WSInProgressOrdersAdapter POAdapter;
     private List<OrderModel> uploadPO;
     FirebaseUser firebaseUser;
-
+    RelativeLayout noOrdersLayout;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class WSInProgressFragment extends Fragment implements WSInProgressOrders
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        noOrdersLayout = view.findViewById(R.id.noOrdersLayout);
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener(new View.OnKeyListener() {
@@ -90,12 +92,12 @@ public class WSInProgressFragment extends Fragment implements WSInProgressOrders
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage("Are you sure to exit application?").setPositiveButton("Yes", dialogClickListener)
+        builder.setMessage("Are you sure to exit the application?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
     }
 
     private void showMessage(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     private void displayAllData()
@@ -117,6 +119,8 @@ public class WSInProgressFragment extends Fragment implements WSInProgressOrders
                                         && orderModel.getOrder_status().equals("In-Progress")
                                         || orderModel.getOrder_status().equals("Dispatched"))
                                 {
+                                    noOrdersLayout.setVisibility(View.INVISIBLE);
+                                    recyclerView.setVisibility(View.VISIBLE);
                                     uploadPO.add(orderModel);
                                 }
                             }
@@ -124,6 +128,11 @@ public class WSInProgressFragment extends Fragment implements WSInProgressOrders
                         POAdapter = new WSInProgressOrdersAdapter(getActivity(), uploadPO);
                         recyclerView.setAdapter(POAdapter);
                         POAdapter.setOnItemClickListener(WSInProgressFragment.this::onItemClick);
+                    }
+                    if(uploadPO.size() == 0)
+                    {
+                        noOrdersLayout.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
                     }
                 }
 

@@ -1,5 +1,6 @@
 package com.example.administrator.h2bot;
 
+import com.example.administrator.h2bot.dealer.WaterPeddlerDocumentActivity;
 import com.example.administrator.h2bot.models.*;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -13,11 +14,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -47,7 +50,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
     ImageView image1, image2, image3, image4, image5, image6;
     Button button1, button2, button3, button4, button5, button6, buttonlogout, submitToFirebase;
     EditText businessName, businessStartTime, businessEndTime, businessDeliveryFeePerGal, businessMinNoCapacity, businessTelNo, businessAddress;
-
+    Spinner startSpinner, endSpinner;
     Boolean isClick1=false, isClick2=false, isClick3=false, isClick4=false, isClick5=false, isClick6=false;
     Intent intent;
     Uri uri1,uri2,uri3,uri4,uri5,uri6;
@@ -107,6 +110,24 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         button6 = (Button)findViewById(R.id.permitButton6);
         submitToFirebase = (Button)findViewById(R.id.submitButton);
         addPhotoStation = findViewById(R.id.stationPhotoUri);
+
+        startSpinner= findViewById(R.id.startSpinner);
+        endSpinner= findViewById(R.id.endSpinner);
+
+        String[] arraySpinner = new String[]{
+                "AM","PM"
+        };
+        String[] arraySpinner2 = new String[]{
+                "PM","AM"
+        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(WaterStationDocumentVersion2Activity.this,
+                android.R.layout.simple_spinner_item, arraySpinner);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(WaterStationDocumentVersion2Activity.this,
+                android.R.layout.simple_spinner_item, arraySpinner2);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        startSpinner.setAdapter(adapter);
+        endSpinner.setAdapter(adapter2);
 
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
@@ -602,8 +623,8 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
     public void stringData()
     {
         String businessNameText = businessName.getText().toString();
-        String businessStartTimeText = businessStartTime.getText().toString();
-        String businessEndTimeText = businessEndTime.getText().toString();
+        String businessStartTimeText = businessStartTime.getText().toString() + startSpinner.getSelectedItem().toString();
+        String businessEndTimeText = businessEndTime.getText().toString()+endSpinner.getSelectedItem().toString();
         String businessDeliveryFeePerGalText = businessDeliveryFeePerGal.getText().toString();
         String businessMinNoCapacityText = businessMinNoCapacity.getText().toString();
         String businessTelNoText = businessTelNo.getText().toString();

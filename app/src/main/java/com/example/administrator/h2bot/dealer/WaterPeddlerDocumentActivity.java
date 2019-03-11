@@ -1,7 +1,9 @@
 package com.example.administrator.h2bot.dealer;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Address;
@@ -15,13 +17,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.MerchantAccessVerification;
@@ -68,6 +73,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
     private DatabaseReference mDatabaseRef;
     private StorageTask mUploadTask,mUploadTask2;
     private ProgressDialog progressDialog;
+    Spinner startSpinner, endSpinner;
     private double lat;
     private double lng;
     Button chooseButton1,chooseButton2,SubmitButtonWaterPeddlerHomeActivity;
@@ -93,11 +99,26 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
         radioYes = findViewById(R.id.radioYes);
         radioNo = findViewById(R.id.radioNo);
         radioFree = findViewById(R.id.radioFree);
+        startSpinner= findViewById(R.id.startSpinner);
+        endSpinner= findViewById(R.id.endSpinner);
         radioYes.setChecked(true);
 
         radioPerGalSD = findViewById(R.id.radioPerGalSD);
         radioFixSD = findViewById(R.id.radioFixSD);
-
+        String[] arraySpinner = new String[]{
+                "AM","PM"
+        };
+        String[] arraySpinner2 = new String[]{
+                "PM","AM"
+        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(WaterPeddlerDocumentActivity.this,
+                android.R.layout.simple_spinner_item, arraySpinner);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(WaterPeddlerDocumentActivity.this,
+                android.R.layout.simple_spinner_item, arraySpinner2);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        startSpinner.setAdapter(adapter);
+        endSpinner.setAdapter(adapter2);
 
     //ImageView
         driverLicenseImageView = findViewById(R.id.driverLicenseImageView);
@@ -153,6 +174,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                 uploadDocument();
             }
         });
+
     }
 
     private void openGalery()
@@ -188,7 +210,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            showMessages("Successfully Submitted");
+                            showMessages("Submitted successfully");
                             progressDialog.dismiss();
                             Intent passIntent = new Intent(WaterPeddlerDocumentActivity.this, MerchantAccessVerification.class);
                             startActivity(passIntent);
@@ -197,7 +219,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            showMessages("Error to get location");
+                            showMessages("Failed to get location");
 
                             progressDialog.dismiss();
                         }
@@ -209,7 +231,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
             progressDialog.dismiss();
         }
         finally {
-            showMessages("Error to locate your address, please change again");
+            showMessages("Failed to locate your address");
             progressDialog.dismiss();
         }
     }
@@ -232,8 +254,8 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
         String dealername = dealerName.getText().toString();
         String dealeraddress = dealerAddress.getText().toString();
         String dealerno = dealerNo.getText().toString();
-        String dealerstart = dealerBusinesshoursStart.getText().toString();
-        String dealerend = dealerBusinesshoursEnd.getText().toString();
+        String dealerstart = dealerBusinesshoursStart.getText().toString() + startSpinner.getSelectedItem().toString();
+        String dealerend = dealerBusinesshoursEnd.getText().toString() + endSpinner.getSelectedItem().toString();
         String dealercapacity = dealerCapacity.getText().toString();
         String dealerdeliveryfee = dealerDeliveryFee.getText().toString();
         if (mImageUri != null) {
@@ -245,7 +267,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                     && dealerno.isEmpty()
                     && dealeraddress.isEmpty())
             {
-                showMessages("Please fill up the requirements");
+                showMessages("Please fill up tall the fields");
                 return;
             }
             else {
@@ -278,7 +300,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                 DatabaseReference databaseReference2= FirebaseDatabase.getInstance().getReference("User_Account_File");
                                 databaseReference2.child(currentUser).child("user_status").setValue("unverified");
 
-                                Toast.makeText(WaterPeddlerDocumentActivity.this, "Upload successful" + currentuser, Toast.LENGTH_LONG).show();
+                                Toast.makeText(WaterPeddlerDocumentActivity.this, "Uploaded successfully" + currentuser, Toast.LENGTH_SHORT).show();
                                 Log.d("capacity",""+dealerCapacity);
                                 startActivity(new Intent(WaterPeddlerDocumentActivity.this, MerchantAccessVerification.class));
                                 UserWSBusinessInfoFile userWSBusinessInfoFile = new UserWSBusinessInfoFile(currentUser, dealername, dealerstart, dealerend, businessDeliveryService, businessFreeOrNoText, dealerdeliveryfee, dealercapacity, dealerno, dealeraddress, "active", "");
@@ -288,7 +310,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(WaterPeddlerDocumentActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
                             }
                         })
                         .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -300,7 +322,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                         });
             }
         } else {
-            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -343,11 +365,11 @@ public void setChecked()
     }
     else
     {
-        showMessages("Check it first");
+        showMessages("Check any radio button first");
     }
 }
     private void showMessages(String s)
     {
-        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
     }
 }
