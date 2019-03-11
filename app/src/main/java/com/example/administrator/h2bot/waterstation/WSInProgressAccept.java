@@ -82,7 +82,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
         waterType = view.findViewById(R.id.waterTypeINACC);
         itemQuantity = view.findViewById(R.id.itemQuantityINACC);
         pricePerGallon = view.findViewById(R.id.pricePerGallonINACC);
-       // service = view.findViewById(R.id.serviceINACC);
+        // service = view.findViewById(R.id.serviceINACC);
         address = view.findViewById(R.id.addressINACC);
         deliveryFee = view.findViewById(R.id.deliveryFeeINACC);
         totalPrice = view.findViewById(R.id.totalPriceINACC);
@@ -127,23 +127,23 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
     public void cameraDisplay()
     {
 
-            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which){
-                        case DialogInterface.BUTTON_POSITIVE:
-                            imageCapture();
-                            break;
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            //No button clicked
-                            break;
-                    }
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        imageCapture();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
                 }
-            };
+            }
+        };
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setMessage("Launch camera?").setPositiveButton("Yes", dialogClickListener)
-                    .setNegativeButton("No", dialogClickListener).show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Launch camera?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
     }
 
     public void imageCapture()
@@ -345,6 +345,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                 Intent intent = new Intent(getActivity(), WSBroadcast.class);
                 intent.putExtra("Customer", customer.getText().toString());
                 intent.putExtra("OrderNo", orderNo.getText().toString());
+                intent.putExtra("CustomerNo", customerNo);
                 startActivity(intent);
                 break;
         }
