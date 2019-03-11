@@ -117,7 +117,8 @@ public class WSInProgressFragment extends Fragment implements WSInProgressOrders
                             {
                                 if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid())
                                         && orderModel.getOrder_status().equals("In-Progress")
-                                        || orderModel.getOrder_status().equals("Dispatched"))
+                                        || orderModel.getOrder_status().equals("Dispatched")
+                                        || orderModel.getOrder_status().equals("Broadcasting"))
                                 {
                                     noOrdersLayout.setVisibility(View.INVISIBLE);
                                     recyclerView.setVisibility(View.VISIBLE);
