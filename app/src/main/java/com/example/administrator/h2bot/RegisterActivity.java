@@ -46,6 +46,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -75,6 +77,7 @@ public class RegisterActivity extends AppCompatActivity{
     FirebaseUser currentUser;
     FirebaseAuth.AuthStateListener mAuthListener;
     String device_token_id;
+    String newToken;
 
 
     private FirebaseAuth mAuth;
@@ -241,6 +244,7 @@ public class RegisterActivity extends AppCompatActivity{
                     case DialogInterface.BUTTON_POSITIVE:
                         mAuth.createUserWithEmailAndPassword(emailString, passwordString)
                                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if(task.isSuccessful())
@@ -248,6 +252,14 @@ public class RegisterActivity extends AppCompatActivity{
                                             String userType = headerTitle.getText().toString();
                                             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                                             String uidString = firebaseUser.getUid();
+                                            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( RegisterActivity.this,  new OnSuccessListener<InstanceIdResult>() {
+                                                @Override
+                                                public void onSuccess(InstanceIdResult instanceIdResult) {
+                                                    newToken = instanceIdResult.getToken();
+                                                    Log.e("newToken",newToken);
+
+                                                }
+                                            });
 
                                             firebaseUser.getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
                                                 @Override
@@ -296,7 +308,7 @@ public class RegisterActivity extends AppCompatActivity{
                                                             UserAccountFile userAccountFile = new UserAccountFile(uidString,
                                                                     emailRegister.getText().toString(),
                                                                     passwordRegister.getText().toString(),
-                                                                    device_token_id,
+                                                                    newToken,
                                                                     "active");
                                                             FirebaseDatabase.getInstance().getReference("User_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userFile)
                                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
