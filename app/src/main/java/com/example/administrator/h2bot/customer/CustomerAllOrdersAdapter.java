@@ -149,6 +149,7 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
                                             .child("order_status")
                                             .setValue("Cancelled");
                                     myDialog.dismiss();
+
                                     Toast.makeText(myContext, "You cancelled an order", Toast.LENGTH_SHORT).show();
                                 }
                             })
