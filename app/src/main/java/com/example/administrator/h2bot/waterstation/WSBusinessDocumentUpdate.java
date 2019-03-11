@@ -12,9 +12,11 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
@@ -42,6 +44,7 @@ public class WSBusinessDocumentUpdate extends Fragment implements View.OnClickLi
     private static final int PICK_IMAGE_REQUEST = 1;
     ImageView imageView1, imageView2, imageView3, imageView4, imageView5, imageView6;
     Button button1, button2, button3, button4, button5, button6, updateDocummentButton;
+    Spinner startSpinner, endSpinner;
     EditText permitString;
 
     Uri uri1,uri2,uri3,uri4,uri5,uri6;
@@ -89,6 +92,25 @@ public class WSBusinessDocumentUpdate extends Fragment implements View.OnClickLi
         button6.setOnClickListener(this);
         updateDocummentButton.setOnClickListener(this);
 
+        startSpinner= view.findViewById(R.id.startSpinner);
+        endSpinner= view.findViewById(R.id.endSpinner);
+
+        String[] arraySpinner = new String[]{
+                "AM","PM"
+        };
+        String[] arraySpinner2 = new String[]{
+                "PM","AM"
+        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, arraySpinner);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, arraySpinner2);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        startSpinner.setAdapter(adapter);
+        endSpinner.setAdapter(adapter2);
+
+
         return view;
     }
 
@@ -97,29 +119,34 @@ public class WSBusinessDocumentUpdate extends Fragment implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null)
         {
-            uri1 = data.getData(); uri2 = data.getData(); uri3 = data.getData(); uri4 = data.getData(); uri5 = data.getData(); uri6 = data.getData();
             if(isClick1)
             {
+                uri1 = data.getData();
                 Picasso.get().load(uri1).into(imageView1);
             }
             if(isClick2)
             {
+                uri2 = data.getData();
                 Picasso.get().load(uri2).into(imageView2);
             }
             if(isClick3)
             {
+                uri3 = data.getData();
                 Picasso.get().load(uri3).into(imageView3);
             }
             if(isClick4)
             {
+                uri4 = data.getData();
                 Picasso.get().load(uri4).into(imageView4);
             }
             if(isClick5)
             {
+                uri5 = data.getData();
                 Picasso.get().load(uri5).into(imageView5);
             }
             if(isClick6)
             {
+                uri6 = data.getData();
                 Picasso.get().load(uri6).into(imageView6);
             }
 

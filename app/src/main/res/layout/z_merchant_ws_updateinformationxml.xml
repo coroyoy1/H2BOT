@@ -64,32 +64,50 @@
             android:textSize="20dp" />
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <EditText
-                android:id="@+id/waterStationStartTimeUIS"
-                android:inputType="number"
-                android:hint="Start Time"
-                android:textAlignment="center"
+                android:id="@+id/stationBusinesshoursSD"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_weight="1"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="2dp"
-                android:background="@drawable/edit_text_border"
-                />
-            <EditText
-                android:id="@+id/waterStationEndTimeUIS"
-                android:inputType="number"
-                android:layout_marginLeft="2dp"
-                android:hint="End Time"
                 android:layout_weight="1"
+                android:background="@drawable/edit_text_border"
+                android:hint="Start Time"
+                android:inputType="textEmailAddress"
                 android:textAlignment="center"
+                android:textSize="18dp" />
+            <Spinner
+                android:layout_weight="1"
+                android:id="@+id/startSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </Spinner>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="untill"/>
+            <EditText
+                android:background="@drawable/edit_text_border"
+                android:layout_marginLeft="2dp"
+                android:id="@+id/stationBusinesshoursSDEnd"
+                android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/edit_text_border"
-                />
+                android:hint="End Time"
+                android:inputType="textEmailAddress"
+                android:textAlignment="center"
+                android:textSize="18dp"
+                android:layout_marginTop="10dp"/>
+            <Spinner
+                android:layout_weight="1"
+                android:id="@+id/endSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
         </LinearLayout>
         <LinearLayout
             android:orientation="horizontal"

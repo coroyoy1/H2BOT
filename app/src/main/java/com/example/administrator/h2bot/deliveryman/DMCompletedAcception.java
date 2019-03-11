@@ -108,7 +108,7 @@ public class DMCompletedAcception extends Fragment implements View.OnClickListen
                                             if(orderModel.getOrder_merchant_id().equals(getStationId)
                                                     && orderModel.getOrder_no().equals(transactionNo))
                                             {
-                                                if(orderModel.getOrder_status().equals("In-Progress") || orderModel.getOrder_status().equals("Dispatched")) {
+                                                if(orderModel.getOrder_status().equals("Completed")) {
                                                     orderNo.setText(orderModel.getOrder_no());
                                                     itemQuantity.setText(orderModel.getOrder_qty());
                                                     pricePerGallon.setText(orderModel.getOrder_price_per_gallon());
