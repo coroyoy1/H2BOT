@@ -68,7 +68,7 @@ public class CustomerChatbotActivity extends AppCompatActivity {
     private SessionsClient sessionsClient;
     private SessionName session;
     FirebaseDatabase db = FirebaseDatabase.getInstance();
-    DatabaseReference notifRef, customerFileRef;
+    DatabaseReference notifRef, merchantDeviceTokenRef;
     FirebaseAuth myAuth;
     TextView stationNameTv;
     ArrayList<UserFile> userFile;
@@ -76,7 +76,7 @@ public class CustomerChatbotActivity extends AppCompatActivity {
     ArrayList<OrderFileModel> orderFile;
     ArrayList<CustomerToMerchantNotifModel> customerNotifRef;
     String stationId;
-    String myOrderNo, orderNo;
+    String device_token_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,8 +95,8 @@ public class CustomerChatbotActivity extends AppCompatActivity {
         sendBtn = findViewById(R.id.sendBtn);
         sendBtn.setOnClickListener(this::sendMessage);
         myAuth = FirebaseAuth.getInstance();
-        notifRef = db.getReference("Notification").child("Customer_Notification");
-        customerFileRef = db.getReference("Customer_File");
+        notifRef = db.getReference("Notification");
+        merchantDeviceTokenRef = db.getReference("User_Account_File");
         userFile = new ArrayList<>();
         totalTransactionNo = new ArrayList<TransactionNoModel>();
         orderFile = new ArrayList<OrderFileModel>();
@@ -199,7 +199,12 @@ public class CustomerChatbotActivity extends AppCompatActivity {
                 queryEditText.setEnabled(false);
                 sendBtn.setEnabled(false);
             }
-            else if(botReply.equalsIgnoreCase("Your order is being processed. We will just notify you for more details.")){
+            else if(botReply.equalsIgnoreCase("Okay, see you soon.")){
+                queryEditText.setText("You can't reply on this conversation.");
+                queryEditText.setEnabled(false);
+                sendBtn.setEnabled(false);
+            }
+            else if(botReply.equalsIgnoreCase("Your order is now in validation. We will notify you for more details.")){
                 Button okayBtn;
                 dialog.setContentView(R.layout.customer_chatbot_order_info_popup);
                 dialog.setCanceledOnTouchOutside(false);
@@ -210,36 +215,17 @@ public class CustomerChatbotActivity extends AppCompatActivity {
                 okayBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String userId = myAuth.getCurrentUser().getUid();
-                        String token_id = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjkwYmVmMzI2MmVkMzI0MzZkNzhlMjdjYWJhYzg3YmIwZWUxZGYwYzIiLCJ0eXAiOiJKV1QifQ";
-                        customerFileRef.child(myAuth.getCurrentUser().getUid()).child(stationId).addValueEventListener(new ValueEventListener() {
+                        merchantDeviceTokenRef.child(stationId).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                for(DataSnapshot data: dataSnapshot.getChildren()){
-                                    OrderFileModel orderFileModel = data.getValue(OrderFileModel.class);
-                                    TransactionNoModel noOfOrders = data.getValue(TransactionNoModel.class);
-                                    totalTransactionNo.add(noOfOrders);
-                                    orderFile.add(orderFileModel);
-                                    orderFileModel.setOrderNo(data.child("order_no").getValue(String.class));
-                                    myOrderNo = orderFileModel.getOrderNo();
-                                }
-                                orderNo = String.format("%08d", totalTransactionNo.size());
-                                Toast.makeText(CustomerChatbotActivity.this, "Order no: " + myOrderNo, Toast.LENGTH_SHORT).show();
-                                myAuth.getCurrentUser().getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
-                                    @Override
-                                    public void onSuccess(GetTokenResult getTokenResult) {
-                                        String token_id = getTokenResult.getToken();
-                                    }
-                                });
-                                CustomerToMerchantNotifModel notify = new CustomerToMerchantNotifModel(
-                                        userId, stationId, myOrderNo, userId,"", stationId,
-                                        "New order received", myOrderNo, "Pending", token_id
-                                );
-                                notifRef.child(userId).child(stationId).child(myOrderNo).setValue(notify)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    device_token_id = dataSnapshot.child("user_device_token").getValue(String.class);
+                                CustomerToMerchantNotifModel customerToMerchantNotifModel;
+                                customerToMerchantNotifModel = new CustomerToMerchantNotifModel(stationId, device_token_id);
+
+                                notifRef.child(stationId).setValue(customerToMerchantNotifModel).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        Toast.makeText(CustomerChatbotActivity.this, "Order sent to the station", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(CustomerChatbotActivity.this, "Success", Toast.LENGTH_SHORT).show();
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
@@ -251,9 +237,51 @@ public class CustomerChatbotActivity extends AppCompatActivity {
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
-                                Toast.makeText(CustomerChatbotActivity.this, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CustomerChatbotActivity.this, "Database Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
+//                        customerFileRef.child(myAuth.getCurrentUser().getUid()).child(stationId).addValueEventListener(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                                for(DataSnapshot data: dataSnapshot.getChildren()){
+//                                    OrderFileModel orderFileModel = data.getValue(OrderFileModel.class);
+//                                    TransactionNoModel noOfOrders = data.getValue(TransactionNoModel.class);
+//                                    totalTransactionNo.add(noOfOrders);
+//                                    orderFile.add(orderFileModel);
+//                                    orderFileModel.setOrderNo(data.child("order_no").getValue(String.class));
+//                                    myOrderNo = orderFileModel.getOrderNo();
+//                                }
+//                                orderNo = String.format("%08d", totalTransactionNo.size());
+//                                Toast.makeText(CustomerChatbotActivity.this, "Order no: " + myOrderNo, Toast.LENGTH_SHORT).show();
+//                                myAuth.getCurrentUser().getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+//                                    @Override
+//                                    public void onSuccess(GetTokenResult getTokenResult) {
+//                                        String token_id = getTokenResult.getToken();
+//                                    }
+//                                });
+//                                CustomerToMerchantNotifModel notify = new CustomerToMerchantNotifModel(
+//                                        userId, stationId, myOrderNo, userId,"", stationId,
+//                                        "New order received", myOrderNo, "Pending", token_id
+//                                );
+//                                notifRef.child(userId).child(stationId).child(myOrderNo).setValue(notify)
+//                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                    @Override
+//                                    public void onSuccess(Void aVoid) {
+//                                        Toast.makeText(CustomerChatbotActivity.this, "Order sent to the station", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                }).addOnFailureListener(new OnFailureListener() {
+//                                    @Override
+//                                    public void onFailure(@NonNull Exception e) {
+//                                        Toast.makeText(CustomerChatbotActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                                    }
+//                                });
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                                Toast.makeText(CustomerChatbotActivity.this, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
                         dialog.dismiss();
                         startActivity(new Intent(CustomerChatbotActivity.this, CustomerMainActivity.class));
                     }
@@ -293,7 +321,6 @@ public class CustomerChatbotActivity extends AppCompatActivity {
                     }
                 }
             }
-
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

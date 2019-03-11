@@ -13,11 +13,12 @@ public class OrderFileModel {
     private String orderStatus;
     private String orderTotalAmt;
     private String orderWaterType;
+    private String orderServiceMethod;
 
     public OrderFileModel() {
     }
 
-    public OrderFileModel(String orderStationId, String orderCustomerId, String orderNo, String orderAddress, String orderDeliveryDate, String orderDeliveryFee, String orderDeliveryMethod, String orderPricePerGallon, String orderQty, String orderStatus, String orderTotalAmt, String orderWaterType) {
+    public OrderFileModel(String orderStationId, String orderCustomerId, String orderNo, String orderAddress, String orderDeliveryDate, String orderDeliveryFee, String orderDeliveryMethod, String orderPricePerGallon, String orderQty, String orderStatus, String orderTotalAmt, String orderWaterType, String orderServiceMethod) {
         this.orderStationId = orderStationId;
         this.orderCustomerId = orderCustomerId;
         this.orderNo = orderNo;
@@ -30,6 +31,7 @@ public class OrderFileModel {
         this.orderStatus = orderStatus;
         this.orderTotalAmt = orderTotalAmt;
         this.orderWaterType = orderWaterType;
+        this.orderServiceMethod = orderServiceMethod;
     }
 
     public String getOrderStationId() {
@@ -126,5 +128,13 @@ public class OrderFileModel {
 
     public void setOrderWaterType(String orderWaterType) {
         this.orderWaterType = orderWaterType;
+    }
+
+    public String getOrderServiceMethod() {
+        return orderServiceMethod;
+    }
+
+    public void setOrderServiceMethod(String orderServiceMethod) {
+        this.orderServiceMethod = orderServiceMethod;
     }
 }

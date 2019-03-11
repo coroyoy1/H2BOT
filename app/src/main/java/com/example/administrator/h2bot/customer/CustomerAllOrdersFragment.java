@@ -78,10 +78,11 @@ public class CustomerAllOrdersFragment extends Fragment {
                     order.setOrderNo(data.child("order_no").getValue(String.class));
                     order.setOrderPricePerGallon(data.child("order_price_per_gallon").getValue(String.class));
                     order.setOrderQty(data.child("order_qty").getValue(String.class));
-                    order.setOrderStationId(data.child("order_station_id").getValue(String.class));
+                    order.setOrderStationId(data.child("order_merchant_id").getValue(String.class));
                     order.setOrderStatus(data.child("order_status").getValue(String.class));
                     order.setOrderTotalAmt(data.child("order_total_amt").getValue(String.class));
                     order.setOrderWaterType(data.child("order_water_type").getValue(String.class));
+                    order.setOrderServiceMethod(data.child("order_service_method").getValue(String.class));
                 }
                 customerAllOrdersAdapter = new CustomerAllOrdersAdapter(getActivity(), transactionList, orderList);
                 recyclerView.setAdapter(customerAllOrdersAdapter);

@@ -56,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         databaseConnection = FirebaseDatabase.getInstance();
 
         progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Logging in");
         progressDialog.setMessage("Loading...");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
@@ -73,9 +74,13 @@ public class LoginActivity extends AppCompatActivity {
             progressDialog.show();
             userHERE = currentUser.getUid();
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File").child(currentUser.getUid());
-                    databaseReference.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                databaseReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.child("user_getUID").getValue().toString() == null){
+                            Toast.makeText(LoginActivity.this, "Account doesn't exist. Please create an account.", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
                             String userFile = dataSnapshot.child("user_getUID").getValue().toString();
                             if(userFile.equals(mAuth.getCurrentUser().getUid()))
                             {
@@ -92,15 +97,17 @@ public class LoginActivity extends AppCompatActivity {
                                 progressDialog.dismiss();
                             }
                         }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            showMessages("Account does not available");
-                            progressDialog.dismiss();
-                        }
-                    });
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        showMessages("Error: " + databaseError.getMessage());
+                        progressDialog.dismiss();
+                    }
+                });
         }
-
+        else{
+            showMessages("Account doesn't exist. Please create an account.");
+        }
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +117,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         loginNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,26 +155,22 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task)
                 {
-
-                    userHERE = mAuth.getCurrentUser().getUid();
-                    Log.d("EserHere",""+userHERE);
-                    if(!task.isSuccessful())
-                    {
-                        showMessages("Please check your internet connection or credentials.");
+                    if(!task.isSuccessful()){
+                        return;
                     }
                     else {
+                        userHERE = mAuth.getCurrentUser().getUid();
                         userTypeLogin();
+                    }
                 }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    showMessages("Account doesn't exist.");
+                    progressDialog.dismiss();
+                    mAuth.signOut();
                 }
-            })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            showMessages("Account is not exists or internet connection is not connected/low connection");
-                            progressDialog.dismiss();
-                            mAuth.signOut();
-                        }
-                    });
+            });
         }
     }
 

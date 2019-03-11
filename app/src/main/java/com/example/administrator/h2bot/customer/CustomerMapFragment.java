@@ -218,16 +218,23 @@ public class CustomerMapFragment extends Fragment implements
                                                         longitude = Double.parseDouble(locationFile.getUser_longtitude());
                                                         latLong = new LatLng(latitude, longitude);
 
-
                                                         String status = "Status: OPEN";
                                                         String type = "Type: " + userType;
                                                         station_id_snip = stationId;
-
-                                                        map.addMarker(new MarkerOptions()
-                                                                .position(latLong).title(stationName)
-                                                                .snippet(type + "\n" + status)
-                                                                .icon(BitmapDescriptorFactory
-                                                                        .defaultMarker(BitmapDescriptorFactory.HUE_RED))).setTag(stationId);
+                                                        if(userType.equalsIgnoreCase("Water Station")){
+                                                            map.addMarker(new MarkerOptions()
+                                                                    .position(latLong).title(stationName)
+                                                                    .snippet(type + "\n" + status)
+                                                                    .icon(BitmapDescriptorFactory
+                                                                            .defaultMarker(BitmapDescriptorFactory.HUE_RED))).setTag(stationId);
+                                                        }
+                                                        else{
+                                                            map.addMarker(new MarkerOptions()
+                                                                    .position(latLong).title(stationName)
+                                                                    .snippet(type + "\n" + status)
+                                                                    .icon(BitmapDescriptorFactory
+                                                                            .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))).setTag(stationId);
+                                                        }
                                                     }
                                                 }
                                             }

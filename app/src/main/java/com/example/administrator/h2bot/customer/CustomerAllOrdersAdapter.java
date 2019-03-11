@@ -55,7 +55,7 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
     @Override
     public void onBindViewHolder(@NonNull CustomerAllOrdersAdapter.ViewHolder viewHolder, int i) {
         myDialog = new Dialog(myContext);
-        updateOrderRef = db.getReference("Customer_Order_File");
+        updateOrderRef = db.getReference("Customer_File");
         final TransactionNoModel transactionNoModel = transactionList.get(i);
         final OrderFileModel orderModel = orderList.get(i);
         String orderNo = transactionNoModel.getTransOrderNo();
@@ -72,6 +72,7 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
         String totalAmt = orderModel.getOrderTotalAmt();
         String customerId = orderModel.getOrderCustomerId();
         String stationId = orderModel.getOrderStationId();
+        String serviceMethod = orderModel.getOrderServiceMethod();
 
         viewHolder.order_no.setText(orderNo);
         viewHolder.status.setText(status);
@@ -81,8 +82,8 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
             @Override
             public void onClick(View v) {
                 TextView order_no, water_type, price_per_gallon, qty, address, service_type, delivery_date,
-                delivery_fee, status, total_amt, qr_code;
-                Button cancelBtn, updateBtn, viewQrQodeBtn;
+                delivery_fee, status, total_amt, qr_code, order_type;
+                Button cancelBtn, viewQrQodeBtn;
                 qrCode = customerId + " " + stationId + " " + orderNo;
 
                 myDialog.setContentView(R.layout.customer_order_details_custom_dialog);
@@ -98,9 +99,10 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
                 total_amt = myDialog.findViewById(R.id.total_amt);
                 qr_code = myDialog.findViewById(R.id.qr_code);
                 cancelBtn = myDialog.findViewById(R.id.cancelBtn);
-                updateBtn = myDialog.findViewById(R.id.updateOrderBtn);
                 viewQrQodeBtn = myDialog.findViewById(R.id.viewQrQodeBtn);
+                order_type = myDialog.findViewById(R.id.order_type);
 
+                order_type.setText(serviceMethod);
                 order_no.setText(orderNo);
                 water_type.setText(waterType);
                 price_per_gallon.setText(pricePerGallon);
@@ -115,17 +117,17 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
                 if(status.getText().toString().equalsIgnoreCase("Broadcasting")
                         || status.getText().toString().equalsIgnoreCase("Dispatched")){
                     cancelBtn.setVisibility(View.GONE);
-                    updateBtn.setVisibility(View.GONE);
                 }
-                else if(status.getText().toString().equalsIgnoreCase("Cancelled")
-                    || status.getText().toString().equalsIgnoreCase("Completed")){
+                else if(status.getText().toString().equalsIgnoreCase("Cancelled")){
                     cancelBtn.setVisibility(View.GONE);
-                    updateBtn.setVisibility(View.GONE);
+                    viewQrQodeBtn.setVisibility(View.GONE);
+                }
+                else if(status.getText().toString().equalsIgnoreCase("Completed")){
+                    cancelBtn.setVisibility(View.GONE);
                     viewQrQodeBtn.setVisibility(View.GONE);
                 }
                 else{
                     cancelBtn.setVisibility(View.VISIBLE);
-                    updateBtn.setVisibility(View.VISIBLE);
                     viewQrQodeBtn.setVisibility(View.VISIBLE);
                 }
 

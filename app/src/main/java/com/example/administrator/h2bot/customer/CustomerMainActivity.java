@@ -50,7 +50,7 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerMapFragment()).commit();
             navigationView.setCheckedItem(R.id.map);
-            Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
+            Objects.requireNonNull(getSupportActionBar()).setTitle("Find Water Merchant");
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -61,7 +61,7 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
             case R.id.map:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerMapFragment()).commit();
                 Toast.makeText(this, "Map", Toast.LENGTH_SHORT).show();
-                Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Find Water Merchant");
                 break;
 
             case R.id.my_order:
