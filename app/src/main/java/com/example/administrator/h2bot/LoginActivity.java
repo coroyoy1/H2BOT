@@ -229,7 +229,13 @@ public class LoginActivity extends AppCompatActivity {
                     {
                         if(documentVerify.equals("inactive"))
                         {
+                            startActivity(new Intent(LoginActivity.this, TPADocumentActivity.class));
                             showMessages("Your registration is still on process. Please wait for the confirmation that will be sent through SMS.");
+                        }
+                        else if(documentVerify.equals("unverified"))
+                        {
+                            startActivity(new Intent(LoginActivity.this, MerchantAccessVerification.class));
+                            showMessages("Need verification");
                         }
                         else if(documentVerify.equals("active"))
                         {

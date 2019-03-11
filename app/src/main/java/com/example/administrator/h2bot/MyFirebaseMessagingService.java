@@ -30,7 +30,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         JSONObject object = new JSONObject(params);
         Log.e("JSON_OBJECT", object.toString());
 
-        String NOTIFICATION_CHANNEL_ID = "Nilesh_channel";
+        String NOTIFICATION_CHANNEL_ID = "H2BOT";
 
         long pattern[] = {0, 1000, 500, 1000};
 
