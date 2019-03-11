@@ -7,10 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +18,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserLocationAddress;
 import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
@@ -57,9 +56,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -81,10 +77,11 @@ public class TPAMapFragment extends Fragment
     private Marker mCurrentLocationMarker;
     private static final int REQUEST_USER_LOCATION_CODE = 99;
     public FirebaseAuth mAuth;
-    DatabaseReference userFileRef, businessRef, userLatLongRef;
+    DatabaseReference userFileRef, businessRef, userLatLongRef, orderModel;
     ArrayList<UserFile> arrayListUserFile;
     ArrayList<UserWSBusinessInfoFile> arrayListBusinessInfo;
     ArrayList<UserLocationAddress> arrayListMerchantLatLong;
+    ArrayList<OrderModel> ordermodel;
     String stationAddress, stationName, userType, stationId, station_id_snip;
     LatLng latLong = null;
     double latitude, longitude;
@@ -119,13 +116,13 @@ public class TPAMapFragment extends Fragment
         bottomSheetBehavior.setHideable(true);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
-        bottomSheetCustomer = view.findViewById(R.id.bottom_sheet_customer);
-        bottomSheetCustomer.setVisibility(View.GONE);
+        //bottomSheetCustomer = view.findViewById(R.id.bottom_sheet_customer);
+        //bottomSheetCustomer.setVisibility(View.GONE);
 
         arrayListUserFile = new ArrayList<UserFile>();
         arrayListBusinessInfo = new ArrayList<UserWSBusinessInfoFile>();
         arrayListMerchantLatLong = new ArrayList<UserLocationAddress>();
-
+        ordermodel = new ArrayList<>();
         mAuth = FirebaseAuth.getInstance();
 
         mapFragment.getMapAsync(this);
@@ -146,7 +143,7 @@ public class TPAMapFragment extends Fragment
         userFileRef = FirebaseDatabase.getInstance().getReference("User_File");
         businessRef = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
         userLatLongRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
-
+        orderModel = FirebaseDatabase.getInstance().getReference("Customer_File");
         userFileRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -166,29 +163,51 @@ public class TPAMapFragment extends Fragment
                                                     && businessInfo.getBusiness_id().equals(locationFile.getUser_id())) {
                                                 if (userFile.getUser_type().equals("Water Station")) {
                                                     if (userFile.getUser_status().equalsIgnoreCase("Active")) {
-                                                        arrayListUserFile.add(userFile);
-                                                        arrayListBusinessInfo.add(businessInfo);
-                                                        arrayListMerchantLatLong.add(locationFile);
+                                                        orderModel.addValueEventListener(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                for (DataSnapshot order : dataSnapshot.getChildren()) {
+                                                                    for(DataSnapshot userData2 : order.getChildren()) {
+                                                                        for (DataSnapshot userData3 : userData2.getChildren()) {
+                                                                            OrderModel userData4 = userData3.getValue(OrderModel.class);
+                                                                            String statusOrder = userData4.getOrder_status();
+                                                                            Log.d("Kaykay", "" + statusOrder);
+                                                                            if (statusOrder.equals("Broadcasting")) {
+                                                                                arrayListUserFile.add(userFile);
+                                                                                arrayListBusinessInfo.add(businessInfo);
+                                                                                arrayListMerchantLatLong.add(locationFile);
 
-                                                        stationId = businessInfo.getBusiness_id();
-                                                        stationAddress = businessInfo.getBusiness_address();
-                                                        stationName = businessInfo.getBusiness_name();
-                                                        userType = userFile.getUser_type();
+                                                                                stationId = businessInfo.getBusiness_id();
+                                                                                stationAddress = businessInfo.getBusiness_address();
+                                                                                stationName = businessInfo.getBusiness_name();
+                                                                                userType = userFile.getUser_type();
 
-                                                        latitude = Double.parseDouble(locationFile.getUser_latitude());
-                                                        longitude = Double.parseDouble(locationFile.getUser_longtitude());
-                                                        latLong = new LatLng(latitude, longitude);
+                                                                                latitude = Double.parseDouble(locationFile.getUser_latitude());
+                                                                                longitude = Double.parseDouble(locationFile.getUser_longtitude());
+                                                                                latLong = new LatLng(latitude, longitude);
 
 
-                                                        String status = "Status: OPEN";
-                                                        String type = "Type: " + userType;
-                                                        station_id_snip = stationId;
+                                                                                String status = "Status: OPEN";
+                                                                                String type = "Type: " + userType;
+                                                                                station_id_snip = stationId;
 
-                                                        map.addMarker(new MarkerOptions()
-                                                                .position(latLong).title(stationName)
-                                                                .snippet(type + "\n" + status)
-                                                                .icon(BitmapDescriptorFactory
-                                                                        .defaultMarker(BitmapDescriptorFactory.HUE_RED))).setTag(stationId);
+                                                                                map.addMarker(new MarkerOptions()
+                                                                                        .position(latLong).title(stationName)
+                                                                                        .snippet(type + "\n" + status)
+                                                                                        .icon(BitmapDescriptorFactory
+                                                                                                .defaultMarker(BitmapDescriptorFactory.HUE_RED))).setTag(stationId);
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                            }
+                                                        });
+
                                                     }
                                                 }
                                             }
@@ -221,7 +240,7 @@ public class TPAMapFragment extends Fragment
             @Override
             public boolean onMarkerClick(Marker marker) {
                 Toast.makeText(getActivity(), "" + marker.getTitle(), Toast.LENGTH_SHORT).show();
-                bottomSheetCustomer.setVisibility(View.VISIBLE);
+                //bottomSheetCustomer.setVisibility(View.VISIBLE);
                 if(!marker.getTitle().equalsIgnoreCase("You")){
                     updateBottomSheetContent(marker);
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -264,7 +283,7 @@ public class TPAMapFragment extends Fragment
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                bottomSheetCustomer.setVisibility(View.GONE);
+               // bottomSheetCustomer.setVisibility(View.GONE);
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         });
@@ -362,41 +381,41 @@ public class TPAMapFragment extends Fragment
     private void updateBottomSheetContent(Marker marker) {
         TextView stationName = bottomSheet.findViewById(R.id.stationName);
         TextView fundAmt = bottomSheet.findViewById(R.id.fundAmt);
-        Button orderBtn = bottomSheet.findViewById(R.id.orderBtn);
-        Button scanCode = bottomSheetCustomer.findViewById(R.id.scanCode);
-        Button callBtn = bottomSheetCustomer.findViewById(R.id.callBtn);
-        Button sendMsg = bottomSheetCustomer.findViewById(R.id.sendMsg);
+          Button orderBtn = bottomSheet.findViewById(R.id.orderBtn);
+//        Button scanCode = bottomSheetCustomer.findViewById(R.id.scanCode);
+//        Button callBtn = bottomSheetCustomer.findViewById(R.id.callBtn);
+//        Button sendMsg = bottomSheetCustomer.findViewById(R.id.sendMsg);
         stationName.setText(marker.getTitle());
         String amtNeeded = fundAmt.getText().toString();
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-        sendMsg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri uri = Uri.parse("smsto:09234288302");
-                Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
-                intent.putExtra("sms_body", "");
-                startActivity(intent);
-            }
-        });
-
-        callBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel: 09234288302"));
-                startActivity(intent);
-                Toast.makeText(getActivity(), "Calling....", Toast.LENGTH_LONG).show();
-            }
-        });
-
-        scanCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), TPAScanCodeActivity.class));
-            }
-        });
-
+//        sendMsg.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Uri uri = Uri.parse("smsto:09234288302");
+//                Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
+//                intent.putExtra("sms_body", "");
+//                startActivity(intent);
+//            }
+//        });
+//
+//        callBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(Intent.ACTION_DIAL);
+//                intent.setData(Uri.parse("tel: 09234288302"));
+//                startActivity(intent);
+//                Toast.makeText(getActivity(), "Calling....", Toast.LENGTH_LONG).show();
+//            }
+//        });
+//
+//        scanCode.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(getActivity(), TPAScanCodeActivity.class));
+//            }
+//        });
+//
         orderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

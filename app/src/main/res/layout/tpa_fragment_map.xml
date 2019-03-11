@@ -16,142 +16,6 @@
         android:layout_height="match_parent"
         tools:context=".tpaaffiliate.TPAAffiliateMainActivity" />
 
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/bottom_sheet_customer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:clipToPadding="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:layout_margin="15dp"
-                android:src="@drawable/profile" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Fritz Gerald Dumdum"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Nasipit, Talamban, Cebu City, Philippines"
-                    android:textSize="12sp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Payment: "
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text=" 500.00"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Tracking No: "
-                        android:textSize="13sp"
-                        android:textStyle="bold|italic" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text=" 00000001"
-                        android:textStyle="bold|italic" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="3dp"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/callBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_weight="1"
-                        android:textSize="14sp"
-                        android:background="#0097e6"
-                        android:drawableTint="#FFFFFF"
-                        android:text="Call"
-                        android:textAllCaps="false"
-                        android:paddingLeft="8dp"
-                        android:drawableLeft="@drawable/ic_call_black_24dp"
-                        android:textColor="#f5f6fa" />
-
-                    <Button
-                        android:id="@+id/sendMsg"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_weight="1"
-                        android:background="#0097e6"
-                        android:paddingLeft="8dp"
-                        android:textSize="14sp"
-                        android:text="Message"
-                        android:textAllCaps="false"
-                        android:drawableLeft="@drawable/ic_mail_black_24dp"
-                        android:drawableTint="#FFFFFF"
-                        android:textColor="#f5f6fa" />
-
-
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="3dp"
-                    android:orientation="horizontal">
-                    <Button
-                        android:id="@+id/scanCode"
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:paddingLeft="8dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_weight="1"
-                        android:background="#0097e6"
-                        android:drawableLeft="@drawable/ic_center_focus_weak_black_24dp"
-                        android:textSize="14sp"
-                        android:drawableTint="#FFFFFF"
-                        android:text="SCAN CODE"
-                        android:textColor="#f5f6fa" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
-
     <!--<RelativeLayout-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="match_parent">-->
@@ -270,6 +134,7 @@
                         android:text="No. of Gallons: " />
 
                     <TextView
+                        android:id="@+id/noOfGallons"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -288,9 +153,10 @@
                         android:layout_width="230dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Delivery Fee: " />
+                        android:text="Profit for delivery: " />
 
                     <TextView
+                        android:id="@+id/Profit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -315,6 +181,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:id="@+id/stationadd"
                         android:text="Nasipit, Talamban, Cebu City" />
                 </LinearLayout>
 

@@ -291,7 +291,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                     @Override
                                     public void onSuccess(Uri uri) {
                                         String addOne = uri.toString();
-                                        FirebaseDatabase.getInstance().getReference("User_WD_Docs_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("station_driver_license").setValue(addOne);
+                                        FirebaseDatabase.getInstance().getReference("User_WD_Docs_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("driver_license").setValue(addOne);
                                     }
                                 });
                                 DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("User_File");

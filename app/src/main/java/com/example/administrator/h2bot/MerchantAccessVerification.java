@@ -13,6 +13,8 @@ import com.example.administrator.h2bot.dealer.WaterPeddlerDocumentActivity;
 import com.example.administrator.h2bot.dealer.WaterPeddlerHomeActivity;
 import com.example.administrator.h2bot.deliveryman.DeliveryManDocumentActivity;
 import com.example.administrator.h2bot.deliveryman.DeliveryManMainActivity;
+import com.example.administrator.h2bot.tpaaffiliate.TPAAffiliateMainActivity;
+import com.example.administrator.h2bot.tpaaffiliate.TPADocumentActivity;
 import com.example.administrator.h2bot.waterstation.WaterStationMainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -93,6 +95,21 @@ public class MerchantAccessVerification extends AppCompatActivity implements Vie
                 }
                 else if(userType.equals("Third Affiliate"))
                 {
+                    String activateStat = dataSnapshot.child("user_status").getValue().toString();
+                    if(activateStat.equals("active"))
+                    {
+                        finish();
+                        startActivity(new Intent(MerchantAccessVerification.this, TPAAffiliateMainActivity.class));
+                    }
+                    else if(activateStat.equals("unverified"))
+                    {
+                        startActivity(new Intent(MerchantAccessVerification.this, TPADocumentActivity.class));
+                    }
+                    else
+                    {
+                        Log.d("Pasudlako",""+userType);
+                        showMessages("Error to pass intent");
+                    }
                     showMessages("Third Affiliate");
                 }
 
