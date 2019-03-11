@@ -407,6 +407,7 @@ public class RegisterActivity extends AppCompatActivity{
                                                     Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
                                                     result.addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                         @Override
+
                                                         public void onSuccess(Uri uri) {
                                                             String stringUri = uri.toString();
                                                             UserFile userFile;
