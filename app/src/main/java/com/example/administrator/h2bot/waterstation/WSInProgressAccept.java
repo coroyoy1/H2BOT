@@ -275,7 +275,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                             String status = merchantCustomerFile.getStatus();
                             if(status.equals("AC"))
                             {
-                                DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_Order_File");
+                                DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
                                 reference1.child(customerId).child(merchantId).child(transactionSet).child("order_status").setValue("Completed")
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override

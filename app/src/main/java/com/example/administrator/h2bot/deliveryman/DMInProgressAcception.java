@@ -142,9 +142,10 @@ public class DMInProgressAcception extends Fragment implements View.OnClickListe
         dispatchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("");
                 linearLayoutOne.setVisibility(View.VISIBLE);
                 linearLayoutTwo.setVisibility(View.VISIBLE);
+                linearLayoutRTD.setVisibility(View.GONE);
+                DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("");
             }
         });
 
@@ -341,11 +342,13 @@ public class DMInProgressAcception extends Fragment implements View.OnClickListe
         activity.getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
-                .replace(R.id.fragment_container_ws, additem)
+                .replace(R.id.fragment_container_dm, additem)
                 .addToBackStack(null)
                 .commit();
-        bundle.putString("TransactNoSeen1", transactionNo);
-        additem.setArguments(bundle);
+        Bundle bundle1 = new Bundle();
+        bundle1.putString("transactionno", transactionNo);
+        bundle1.putString("transactioncustomer", customerNo);
+        additem.setArguments(bundle1);
     }
 
     @Override

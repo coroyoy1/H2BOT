@@ -18,6 +18,7 @@ import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserWSDMFile;
 import com.example.administrator.h2bot.waterstation.WSCompletedAccept;
+import com.example.administrator.h2bot.waterstation.WSTransactionsFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -63,8 +64,8 @@ public class DMCompletedAcception extends Fragment implements View.OnClickListen
         totalPrice = view.findViewById(R.id.totalPriceCOMDMDM);
         backButton = view.findViewById(R.id.backCOMDMDM);
         imageView = view.findViewById(R.id.imageViewCOMDMDM);
-        deliveryMethod = view.findViewById(R.id.MethodINDMDM);
-        deliveryDate = view.findViewById(R.id.datedeliveredINDMDM);
+      //  deliveryMethod = view.findViewById(R.id.MethodCOMDMDM);
+        deliveryDate = view.findViewById(R.id.datedeliveredCOMDMDM);
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
@@ -80,6 +81,8 @@ public class DMCompletedAcception extends Fragment implements View.OnClickListen
             transactionNo = bundle.getString("transactionno");
         }
         displayAllData();
+
+        backButton.setOnClickListener(this);
 
         return view;
     }
@@ -115,7 +118,7 @@ public class DMCompletedAcception extends Fragment implements View.OnClickListen
                                                     totalPrice.setText(orderModel.getOrder_total_amt());
                                                     waterType.setText(orderModel.getOrder_water_type());
                                                     address.setText(orderModel.getOrder_address());
-                                                    deliveryMethod.setText(orderModel.getOrder_delivery_method());
+                                                    //deliveryMethod.setText(orderModel.getOrder_delivery_method());
                                                     //inprogressText.setText(orderModel.getOrder_status());
 
                                                     DateTime date = new DateTime(orderModel.getOrder_delivery_date());
@@ -178,7 +181,15 @@ public class DMCompletedAcception extends Fragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId())
         {
-            case R.id.backCOMACC:
+            case R.id.backCOMDMDM:
+                DMCompleteFragment additem = new DMCompleteFragment();
+                AppCompatActivity activity = (AppCompatActivity)v.getContext();
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                        .replace(R.id.fragment_container_ws, additem)
+                        .addToBackStack(null)
+                        .commit();
                 break;
         }
     }

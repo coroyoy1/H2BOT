@@ -82,7 +82,7 @@ public class DMCompleteFragment extends Fragment{
                                             if(orderModel != null)
                                             {
                                                 if (orderModel.getOrder_merchant_id().equals(merchantId)
-                                                        && orderModel.getOrder_status().equals("In-Progress"))
+                                                        && orderModel.getOrder_status().equals("Completed"))
                                                 {
                                                     noOrdersLayout.setVisibility(View.INVISIBLE);
                                                     recyclerView.setVisibility(View.VISIBLE);

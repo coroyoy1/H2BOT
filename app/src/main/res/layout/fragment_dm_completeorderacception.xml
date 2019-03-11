@@ -17,8 +17,8 @@
                 android:background="@drawable/z_linearlayoutdesign_orange"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -316,7 +316,33 @@
                         android:textSize="18dp" />
 
                 </LinearLayout>
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="horizontal">-->
 
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="20dp"-->
+                        <!--android:layout_marginTop="10dp"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:text="Method: "-->
+                        <!--android:textColor="@android:color/white"-->
+                        <!--android:textSize="18dp" />-->
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/MethodCOMDMDM"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="20dp"-->
+                        <!--android:layout_marginTop="10dp"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:text="sample edit"-->
+                        <!--android:textColor="@android:color/white"-->
+                        <!--android:textSize="18dp" />-->
+
+                <!--</LinearLayout>-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
