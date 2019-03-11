@@ -45,6 +45,8 @@ public class DMInProgressOrdersAdapter extends RecyclerView.Adapter<DMInProgress
         final OrderModel currentData = uploadHolder.get(i);
         String transactionNo = currentData.getOrder_no();
         String transactionStatus = currentData.getOrder_status();
+        String transactionCustomer = currentData.getOrder_customer_id();
+        String transactionStation = currentData.getOrder_merchant_id();
         imageViewholder.transactionNoText.setText(transactionNo);
         imageViewholder.transactionStatusText.setText(transactionStatus);
 
@@ -61,6 +63,8 @@ public class DMInProgressOrdersAdapter extends RecyclerView.Adapter<DMInProgress
                         .commit();
                 Bundle bundle = new Bundle();
                 bundle.putString("transactionno", transactionNo);
+                bundle.putString("transactioncustomer", transactionCustomer);
+                bundle.putString("transactionmerchant", transactionStation);
                 additem.setArguments(bundle);
             }
         });

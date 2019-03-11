@@ -2,6 +2,7 @@ package com.example.administrator.h2bot.waterstation;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Movie;
@@ -25,6 +26,7 @@ public class WSBroadcast extends AppCompatActivity implements View.OnClickListen
     GifImageView radioWave;
     TextView timerText;
     Button activate, cancel;
+    TextView orderNoIntent, fullnameIntent;
     boolean isClicked = false, isClickedCancel=false;
     int time=5;
 
@@ -32,6 +34,16 @@ public class WSBroadcast extends AppCompatActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wsbroadcast);
+
+        Intent intent = getIntent();
+        String fullNameText = intent.getStringExtra("Customer");
+        String orderNoText = intent.getStringExtra("OrderNo");
+
+        orderNoIntent = findViewById(R.id.idNumberBroadcast);
+        fullnameIntent = findViewById(R.id.fullNameBroadcast);
+
+        orderNoIntent.setText("Order No: "+orderNoText);
+        fullnameIntent.setText("Customer's Name: "+fullNameText);
 
         activate = findViewById(R.id.broadcastActivate);
         cancel = findViewById(R.id.broadcastCancel);
@@ -51,6 +63,7 @@ public class WSBroadcast extends AppCompatActivity implements View.OnClickListen
         ((GifDrawable)radioWave.getDrawable()).stop();
 
         cancel.setVisibility(View.GONE);
+        timerText.setVisibility(View.GONE);
     }
 
     public void activateBroadcast()

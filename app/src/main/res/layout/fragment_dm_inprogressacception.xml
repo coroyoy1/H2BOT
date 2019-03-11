@@ -357,6 +357,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:id="@+id/dispatchedText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="In-Progress"
@@ -365,6 +366,7 @@
                     android:textSize="24dp"/>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/linearQRSCAN"
                 android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -378,7 +380,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
-                    android:background="@drawable/z_greenbluebutton"
+                    android:background="@drawable/z_darkbluebutton"
                     android:text="Launch Scan"
                     android:textColor="@android:color/white" />
                 <Button
@@ -393,24 +395,25 @@
                     android:layout_weight="1" />
             </LinearLayout>
             <LinearLayout
-
+                android:id="@+id/linearSMSCall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginBottom="20dp">
+
                 <Button
                     android:id="@+id/launchSMSDMDM"
-                    android:text="send SMS"
-                    android:textColor="@android:color/white"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:layout_weight="1"
-                    android:background="@android:color/holo_orange_dark"/>
+                    android:background="@drawable/z_darkbluebutton"
+                    android:text="send SMS"
+                    android:textColor="@android:color/white" />
                 <Button
                     android:id="@+id/launchCallDMDM"
-                    android:background="@android:color/holo_purple"
+                    android:background="@drawable/z_darkbluebutton"
                     android:textColor="@android:color/white"
                     android:text="Call"
                     android:layout_marginLeft="5dp"
@@ -418,6 +421,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_weight="1" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linearReadyToDispatch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:layout_marginBottom="20dp"
+                    android:id="@+id/dispatchedButtonDMDM"
+                    android:layout_marginLeft="100dp"
+                    android:layout_marginRight="100dp"
+                    android:text="Ready to Dispatch?"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/z_darkbluebutton"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp" />
             </LinearLayout>
 
         </LinearLayout>

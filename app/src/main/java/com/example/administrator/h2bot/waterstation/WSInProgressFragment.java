@@ -115,7 +115,7 @@ public class WSInProgressFragment extends Fragment implements WSInProgressOrders
                             {
                                 if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid())
                                         && orderModel.getOrder_status().equals("In-Progress")
-                                        && orderModel.getOrder_status().equals("Dispatching"))
+                                        || orderModel.getOrder_status().equals("Dispatched"))
                                 {
                                     uploadPO.add(orderModel);
                                 }

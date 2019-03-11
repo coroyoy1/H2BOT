@@ -58,6 +58,9 @@
         <activity
             android:name=".customer.CustomerMainActivity"
             android:theme="@style/Theme.AppCompat.Light" />
+        <activity android:name=".waterstation.WSBroadcast"
+            android:theme="@style/Theme.Design.Light">
+        </activity>
         <activity
             android:name=".customer.CustomerChatbotActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" /> <!-- <activity android:name=".tpaaffiliate.TPAAffiliateMainActivity"> </activity> -->

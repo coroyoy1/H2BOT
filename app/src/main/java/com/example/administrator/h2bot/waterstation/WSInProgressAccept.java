@@ -53,12 +53,12 @@ import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class WSInProgressAccept extends Fragment implements View.OnClickListener, Switch.OnCheckedChangeListener {
+public class WSInProgressAccept extends Fragment implements View.OnClickListener {
 
 
-    TextView orderNo, customer, contactNo, waterType, itemQuantity, pricePerGallon,  service, address, deliveryFee, totalPrice, deliveryMethod, deliveryDate;
+    TextView orderNo, inprogressText, customer, contactNo, waterType, itemQuantity, pricePerGallon,  service, address, deliveryFee, totalPrice, deliveryMethod, deliveryDate;
     Button launchQR, viewLocation;
-    Switch switcBroadcast;
+    Button switcBroadcast;
     String orderNoGET, customerNoGET, merchantNOGET, transactionNo, dataIssuedGET, deliveryStatusGET
             ,transStatusGET, transTotalAmountGET, transDeliveryFeeGET, transTotalNoGallonGET,
             transDeliveryFeePerGallonDetail, transNoDetail, transNoOfGallonDetail, transPartialAmountDetail, transPricePerGallonDetail
@@ -92,6 +92,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
         switcBroadcast = view.findViewById(R.id.switchbuttonIN);
         deliveryMethod = view.findViewById(R.id.MethodINACC);
         deliveryDate = view.findViewById(R.id.datedeliveredINACC);
+        inprogressText = view.findViewById(R.id.dispatchedTextView);
 
 
 
@@ -105,7 +106,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
 
         launchQR.setOnClickListener(this);
         viewLocation.setOnClickListener(this);
-        switcBroadcast.setOnCheckedChangeListener(this);
+        switcBroadcast.setOnClickListener(this);
 
         progressDialog.show();
 
@@ -204,10 +205,9 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                         OrderModel orderModel = post.getValue(OrderModel.class);
                         if(orderModel != null)
                         {
-                            if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid())
-                                    && orderModel.getOrder_status().equals("In-Progress") && orderModel.getOrder_no().equals(transactionNo))
+                            if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid()) && orderModel.getOrder_no().equals(transactionNo))
                             {
-                                if(orderModel.getOrder_status().equals("In-Progress")) {
+                                if(orderModel.getOrder_status().equals("In-Progress") || orderModel.getOrder_status().equals("Dispatched")) {
                                     orderNo.setText(orderModel.getOrder_no());
                                     itemQuantity.setText(orderModel.getOrder_qty());
                                     pricePerGallon.setText(orderModel.getOrder_price_per_gallon());
@@ -215,6 +215,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                                     waterType.setText(orderModel.getOrder_water_type());
                                     address.setText(orderModel.getOrder_address());
                                     deliveryMethod.setText(orderModel.getOrder_delivery_method());
+                                    inprogressText.setText(orderModel.getOrder_status());
 
                                     DateTime date = new DateTime(orderModel.getOrder_delivery_date());
                                     String dateString = date.toLocalDate().toString();
@@ -340,17 +341,12 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
             case R.id.viewLocationButtonINACC:
                 viewLocationPass();
                 break;
-        }
-    }
-
-
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if(buttonView.isChecked())
-        {
-            Intent intent = new Intent(getActivity(), WSBroadcast.class);
-            startActivity(intent);
+            case R.id.switchbuttonIN:
+                Intent intent = new Intent(getActivity(), WSBroadcast.class);
+                intent.putExtra("Customer", customer.getText().toString());
+                intent.putExtra("OrderNo", orderNo.getText().toString());
+                startActivity(intent);
+                break;
         }
     }
 }
