@@ -29,6 +29,7 @@
                     android:textStyle="bold"/>
             </LinearLayout>
             <LinearLayout
+                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -50,7 +51,7 @@
                     android:layout_height="100dp"
                     android:layout_marginTop="0dp"
                     android:layout_weight="1"
-                    android:background="@drawable/ic_launcher_background" />
+                    android:src="@drawable/ic_launcher_background" />
                 <Button
                     android:layout_weight="1"
                     android:id="@+id/permitButton1"
@@ -61,6 +62,7 @@
                     android:background="@drawable/ic_photo_camera_black_24dp" />
             </LinearLayout>
             <LinearLayout
+                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -80,7 +82,7 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_marginTop="0dp"
-                    android:background="@drawable/ic_launcher_background"/>
+                    android:src="@drawable/ic_launcher_background"/>
                 <Button
                     android:layout_weight="1"
                     android:id="@+id/permitButton2"
@@ -91,6 +93,7 @@
                     android:background="@drawable/ic_photo_camera_black_24dp" />
             </LinearLayout>
             <LinearLayout
+                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -110,7 +113,7 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_marginTop="0dp"
-                    android:background="@drawable/ic_launcher_background"/>
+                    android:src="@drawable/ic_launcher_background"/>
                 <Button
                     android:layout_weight="1"
                     android:id="@+id/permitButton3"
@@ -121,6 +124,7 @@
                     android:background="@drawable/ic_photo_camera_black_24dp" />
             </LinearLayout>
             <LinearLayout
+                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -140,7 +144,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_height="100dp"
                     android:layout_marginTop="0dp"
-                    android:background="@drawable/ic_launcher_background"/>
+                    android:src="@drawable/ic_launcher_background"/>
                 <Button
                     android:layout_weight="1"
                     android:id="@+id/permitButton4"
@@ -151,6 +155,7 @@
                     android:background="@drawable/ic_photo_camera_black_24dp" />
             </LinearLayout>
             <LinearLayout
+                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -171,7 +176,7 @@
                     android:layout_height="100dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="0dp"
-                    android:background="@drawable/ic_launcher_background" />
+                    android:src="@drawable/ic_launcher_background" />
                 <Button
                     android:layout_weight="1"
                     android:id="@+id/permitButton5"
@@ -182,6 +187,7 @@
                     android:background="@drawable/ic_photo_camera_black_24dp" />
             </LinearLayout>
             <LinearLayout
+                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -201,7 +207,7 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_marginTop="0dp"
-                    android:background="@drawable/ic_launcher_background"/>
+                    android:src="@drawable/ic_launcher_background"/>
                 <Button
                     android:layout_weight="1"
                     android:id="@+id/permitButton6"
@@ -299,7 +305,7 @@
                         android:id="@+id/stationBusinesshoursSD"
                         android:layout_weight="1"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="match_parent"
                         android:hint="Start Time"
                         android:inputType="textEmailAddress"
                         android:textAlignment="center"
@@ -307,17 +313,32 @@
                         android:layout_marginTop="10dp"
 
                         android:layout_marginRight="2dp"/>
+                    <Spinner
+                        android:id="@+id/startSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+                    </Spinner>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="untill"/>
                     <EditText
                         android:layout_marginLeft="2dp"
                         android:id="@+id/stationBusinesshoursSDEnd"
                         android:layout_weight="1"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="match_parent"
                         android:hint="End Time"
                         android:inputType="textEmailAddress"
                         android:textAlignment="center"
                         android:textSize="18dp"
                         android:layout_marginTop="10dp"/>
+                    <Spinner
+                        android:id="@+id/endSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"/>
                 </LinearLayout>
 
                 <RadioGroup

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.WSCompletedOrdersInformationFragment;
+import com.example.administrator.h2bot.dealer.WPCompletedAccept;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 import com.example.administrator.h2bot.waterstation.WSCompletedAccept;
@@ -54,7 +55,7 @@ public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterd
                     AppCompatActivity activity = (AppCompatActivity)v.getContext();
                     activity.getSupportFragmentManager()
                             .beginTransaction()
-                            .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                            .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
                             .replace(R.id.fragment_container_ws, additem)
                             .addToBackStack(null)
                             .commit();

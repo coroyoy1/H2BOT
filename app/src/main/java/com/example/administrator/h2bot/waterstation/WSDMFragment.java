@@ -81,6 +81,7 @@ public class WSDMFragment extends Fragment implements View.OnClickListener{
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                uploadDM.clear();
                 for(DataSnapshot postSnapShot : dataSnapshot.getChildren())
                 {
                     UserWSDMFile getDM = postSnapShot.getValue(UserWSDMFile.class);
@@ -121,7 +122,7 @@ public class WSDMFragment extends Fragment implements View.OnClickListener{
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                showMessages("Error to have the data");
+                showMessages("Error to retrieve the data");
             }
         });
 
@@ -148,13 +149,13 @@ public class WSDMFragment extends Fragment implements View.OnClickListener{
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage("Are you sure to exit application?").setPositiveButton("Yes", dialogClickListener)
+        builder.setMessage("Are you sure to exit the application?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
     }
 
 
     private void showMessages(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -170,7 +171,6 @@ public class WSDMFragment extends Fragment implements View.OnClickListener{
                         .replace(R.id.fragment_container_ws, additem)
                         .addToBackStack(null)
                         .commit();
-                Toast.makeText(getActivity(), FirebaseAuth.getInstance().getCurrentUser().getUid(), Toast.LENGTH_LONG).show();
                 String firebaseAuth  = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 Bundle args = new Bundle();
                 args.putString("AuthenFirebase", firebaseAuth);

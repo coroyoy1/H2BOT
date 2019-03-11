@@ -107,7 +107,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
             && passwordString.isEmpty()
             && confirmPasswordString.isEmpty())
         {
-            showMessages("Please fill up the data before update!");
+            showMessages("Please fill up all the fields before you update!");
         }
         else
         {
@@ -138,7 +138,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
         }
         else
         {
-            showMessages("Empty image");
+            showMessages("Choose an image");
         }
     }
 
@@ -172,7 +172,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            showMessage("Error to get location");
+                            showMessage("Failed to get location");
                             progressDialog.dismiss();
                         }
                     });
@@ -254,7 +254,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                     .addOnFailureListener(new OnFailureListener() {
                                                                         @Override
                                                                         public void onFailure(@NonNull Exception e) {
-                                                                            showMessages("User Account does not successfully save");
+                                                                            showMessages("Failed to save User Account");
                                                                             progressDialog.dismiss();
                                                                         }
                                                                     });
@@ -264,7 +264,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                         .addOnFailureListener(new OnFailureListener() {
                                                             @Override
                                                             public void onFailure(@NonNull Exception e) {
-                                                                showMessages("Data does not saved");
+                                                                showMessages("Failed to save data");
                                                                 progressDialog.dismiss();
                                                             }
                                                         });
@@ -273,7 +273,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                 .addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
-                                                        showMessages("Image is not selected!");
+                                                        showMessages("Choose an image!");
                                                         progressDialog.dismiss();
                                                     }
                                                 });
@@ -300,14 +300,14 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
             .addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    showMessages("Fail to update the information");
+                    showMessages("Failed to update the information");
                     progressDialog.dismiss();
                 }
             });
     }
 
     private void successMessages() {
-        showMessages("Successfully Updated");
+        showMessages("Updated successfully");
         WSAccountSettingsFragment wsdmFragment = new WSAccountSettingsFragment();
         AppCompatActivity activity = (AppCompatActivity)getContext();
         activity.getSupportFragmentManager()

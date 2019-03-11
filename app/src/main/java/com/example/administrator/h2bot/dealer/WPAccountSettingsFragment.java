@@ -1,10 +1,12 @@
 package com.example.administrator.h2bot.dealer;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,13 +107,30 @@ public class WPAccountSettingsFragment extends Fragment implements View.OnClickL
                 UserWSBusinessInfoFile userBusiness = dataSnapshot.getValue(UserWSBusinessInfoFile.class);
                 if(userBusiness != null)
                 {
-                    StationNameWS.setText("Station Name: "+userBusiness.getBusiness_name());
+                    StationNameWS.setText("Water Dealer Name: "+userBusiness.getBusiness_name());
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 showMessage("Failed to connect");
+            }
+        });
+
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(event.getAction() == KeyEvent.ACTION_DOWN)
+                {
+                    if (keyCode == KeyEvent.KEYCODE_BACK)
+                    {
+                        attemptToExit();
+                        return true;
+                    }
+                }
+                return false;
             }
         });
 
@@ -127,7 +146,7 @@ public class WPAccountSettingsFragment extends Fragment implements View.OnClickL
 
     public void showMessage(String s)
     {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -135,7 +154,7 @@ public class WPAccountSettingsFragment extends Fragment implements View.OnClickL
         switch(v.getId())
         {
             case R.id.updateAccount:
-                WSUpdateAccountSettings wsdmFragment = new WSUpdateAccountSettings();
+                WPUpdateAccountSettings wsdmFragment = new WPUpdateAccountSettings();
                 AppCompatActivity activity = (AppCompatActivity)v.getContext();
                 activity.getSupportFragmentManager()
                         .beginTransaction()
@@ -145,5 +164,22 @@ public class WPAccountSettingsFragment extends Fragment implements View.OnClickL
                         .commit();
                 break;
         }
+    }
+
+    public void attemptToExit() {
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        getActivity().finish();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
     }
 }

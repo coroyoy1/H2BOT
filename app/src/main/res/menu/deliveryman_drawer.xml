@@ -21,10 +21,10 @@
                         android:icon="@drawable/ic_accountsettings"
                         android:title="Account Settings"
                         />
-                    <item android:id="@+id/nav_feedback_dm"
-                        android:icon="@drawable/ic_feedback"
-                        android:title="Feedback"
-                        />
+                    <!--<item android:id="@+id/nav_feedback_dm"-->
+                        <!--android:icon="@drawable/ic_feedback"-->
+                        <!--android:title="Feedback"-->
+                        <!--/>-->
                     <item android:id="@+id/nav_logout_dm"
                         android:icon="@drawable/ic_logout"
                         android:title="Logout"

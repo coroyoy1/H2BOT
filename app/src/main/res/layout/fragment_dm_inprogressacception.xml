@@ -17,14 +17,14 @@
                 android:background="@drawable/z_linearlayoutdesign_orange"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:orientation="vertical">
 
                 <TextView
-                    android:background="@android:color/holo_blue_dark"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@android:color/holo_blue_dark"
                     android:text="Order Details"
                     android:textAlignment="center"
                     android:textColor="@android:color/white"
@@ -32,12 +32,12 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imageViewINDMDM"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_gravity="center"
                     android:layout_width="140dp"
                     android:layout_height="120dp"
-                    android:src="@drawable/ic_account_circle_black_24dp"/>
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/ic_account_circle_black_24dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -45,24 +45,25 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_marginTop="10dp"
-                        android:textSize="18dp"
-                        android:layout_weight="1"
-                        android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Order No:" />
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Order No:"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
+
                     <TextView
                         android:id="@+id/orderNoINDMDM"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:textSize="18dp"
-                        android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="sample edit" />
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="sample edit"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
 
                 </LinearLayout>
 
@@ -73,128 +74,137 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_marginTop="10dp"
-                        android:textSize="18dp"
-                        android:layout_weight="1"
-                        android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Customer:" />
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Customer:"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
+
                     <TextView
                         android:id="@+id/customerINDMDM"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:textSize="18dp"
-                        android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="sample edit" />
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="sample edit"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_marginTop="10dp"
-                        android:textSize="18dp"
-                        android:layout_weight="1"
-                        android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Contact NO.:" />
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Contact NO.:"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
+
                     <TextView
                         android:id="@+id/contactNoINDMDM"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:textSize="18dp"
-                        android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="sample edit" />
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="sample edit"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_marginTop="10dp"
-                        android:textSize="18dp"
-                        android:layout_weight="1"
-                        android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Water Type:" />
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Water Type:"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
+
                     <TextView
                         android:id="@+id/waterTypeINDMDM"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:textSize="18dp"
-                        android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="sample edit" />
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="sample edit"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_marginTop="10dp"
-                        android:textSize="18dp"
-                        android:layout_weight="1"
-                        android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Item Quantity:" />
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Quantity:"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
+
                     <TextView
                         android:id="@+id/itemQuantityINDMDM"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:textSize="18dp"
-                        android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="sample edit" />
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="sample edit"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_marginTop="10dp"
-                        android:textSize="18dp"
-                        android:layout_weight="1"
-                        android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Price per Gallon:" />
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Price per Gallon:"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
+
                     <TextView
                         android:id="@+id/pricePerGallonINDMDM"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:textSize="18dp"
-                        android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="sample edit" />
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="sample edit"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
 
                 </LinearLayout>
                 <LinearLayout
@@ -203,24 +213,14 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_marginTop="10dp"
-                        android:textSize="18dp"
-                        android:layout_weight="1"
-                        android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Service:" />
-                    <TextView
-                        android:id="@+id/serviceINDMDM"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
-                        android:textSize="18dp"
+                        android:text="Address:"
                         android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="sample edit" />
+                        android:textSize="18dp" />
 
                 </LinearLayout>
                 <LinearLayout
@@ -229,37 +229,30 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_marginTop="10dp"
-                        android:textSize="18dp"
-                        android:layout_weight="1"
-                        android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Address:" />
-                    <TextView
+                        android:textAlignment="center"
                         android:id="@+id/addressINDMDM"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:textSize="18dp"
-                        android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="sample edit" />
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="sample edit"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <TextView
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:textSize="18dp"
                         android:layout_weight="1"
                         android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Date to Deliver:" />
@@ -269,10 +262,9 @@
                         android:layout_weight="1"
                         android:textSize="18dp"
                         android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="sample edit" />
+                        android:text="sample edit"/>
 
                 </LinearLayout>
                 <LinearLayout
@@ -281,58 +273,91 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_marginTop="10dp"
-                        android:textSize="18dp"
-                        android:layout_weight="1"
-                        android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Delivery Fee:" />
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Delivery Fee:"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
+
                     <TextView
                         android:id="@+id/deliveryFeeINDMDM"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:textSize="18dp"
-                        android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="sample edit" />
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="sample edit"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_marginTop="10dp"
-                        android:textSize="18dp"
-                        android:layout_weight="1"
-                        android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Total Price:" />
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Method:"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
+
+                    <TextView
+                        android:id="@+id/MethodINDMDM"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="sample edit"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Total Price:"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
+
                     <TextView
                         android:id="@+id/totalPriceINDMDM"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:textSize="18dp"
-                        android:textColor="@android:color/white"
-                        android:layout_marginLeft="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="sample edit" />
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="sample edit"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp" />
 
                 </LinearLayout>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:id="@+id/dispatchedText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="In-Progress"
@@ -341,21 +366,23 @@
                     android:textSize="24dp"/>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/linearQRSCAN"
                 android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginBottom="20dp">
+
                 <Button
                     android:id="@+id/launchQRINDMDM"
-                    android:text="Launch QR"
-                    android:textColor="@android:color/white"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:layout_weight="1"
-                    android:background="@drawable/z_greenbluebutton"/>
+                    android:background="@drawable/z_darkbluebutton"
+                    android:text="Launch Scan"
+                    android:textColor="@android:color/white" />
                 <Button
                     android:id="@+id/viewLocationButtonINDMDM"
                     android:background="@drawable/z_darkbluebutton"
@@ -366,6 +393,49 @@
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_weight="1" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linearSMSCall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp">
+
+                <Button
+                    android:id="@+id/launchSMSDMDM"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/z_darkbluebutton"
+                    android:text="send SMS"
+                    android:textColor="@android:color/white" />
+                <Button
+                    android:id="@+id/launchCallDMDM"
+                    android:background="@drawable/z_darkbluebutton"
+                    android:textColor="@android:color/white"
+                    android:text="Call"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linearReadyToDispatch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:layout_marginBottom="20dp"
+                    android:id="@+id/dispatchedButtonDMDM"
+                    android:layout_marginLeft="100dp"
+                    android:layout_marginRight="100dp"
+                    android:text="Ready to Dispatch?"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/z_darkbluebutton"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp" />
             </LinearLayout>
 
         </LinearLayout>

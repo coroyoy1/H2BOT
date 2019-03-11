@@ -165,7 +165,7 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
                                 }
                                 else
                                 {
-                                    showMessage("Radio button does not selected");
+                                    showMessage("Choose a radio button");
                                     return;
                                 }
 
@@ -203,7 +203,7 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                showMessage("Error to update image");
+                                showMessage("Error to update the image");
                             }
                         });
                     }
@@ -211,13 +211,13 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        showMessage("Error to update your information");
+                        showMessage("Failed to update your information");
                     }
                 });
     }
 
     private void showMessage(String wordMessage) {
-        Toast.makeText(getActivity(), wordMessage, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), wordMessage, Toast.LENGTH_SHORT).show();
     }
 
     private void getLocationSetter()
@@ -246,14 +246,14 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            showMessage("Successfully Submitted");
+                            showMessage("Submitted successfully");
                             progressDialog.dismiss();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            showMessage("Error to get location");
+                            showMessage("Failed to get location");
                             progressDialog.dismiss();
                         }
                     });
@@ -264,7 +264,7 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
             progressDialog.dismiss();
         }
         finally {
-            showMessage("Error the locate your address, please change again");
+            showMessage("Failed to locate your address");
             progressDialog.dismiss();
         }
     }
@@ -279,7 +279,7 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
             && waterStationStartTime.getText().toString().isEmpty()
             && waterStationEndTime.getText().toString().isEmpty())
             {
-                showMessage("Please kindly input the requirements!");
+                showMessage("Please fill all the fields");
             }
             else
             {
@@ -301,7 +301,7 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
 
         else
         {
-            showMessage("Image does not selected");
+            showMessage("Image is not selected");
         }
     }
 

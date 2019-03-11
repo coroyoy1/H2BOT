@@ -3,10 +3,8 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,13 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
-import com.example.administrator.h2bot.maps.MapMerchantFragment;
 import com.example.administrator.h2bot.maps.MapMerchantFragmentRenew;
 import com.example.administrator.h2bot.models.MerchantCustomerFile;
+import com.example.administrator.h2bot.models.MerchantToCustomerNotify;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.UserFile;
-import com.example.administrator.h2bot.waterstation.WSInProgressFragment;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,6 +34,9 @@ import com.squareup.picasso.Picasso;
 
 import org.joda.time.DateTime;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -112,7 +111,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
     }
 
     private void showMessages(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     public void getCustomerOrder()
@@ -199,6 +198,41 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
 
     }
 
+    public void declineData()
+    {
+        firebaseUser.getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
+            @Override
+            public void onSuccess(GetTokenResult getTokenResult) {
+                String token = getTokenResult.getToken();
+                String dateStr = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+                MerchantToCustomerNotify notificationModel = new MerchantToCustomerNotify(
+                        transactionNo,
+                        firebaseUser.getUid(),
+                        customerNo,
+                        token,
+                        dateStr,
+                        "Your Order has been cancelled",
+                        "Decline"
+                );
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Notification");
+                databaseReference.child("Merchant_Notification").child(firebaseUser.getUid()).child(customerNo).child(transactionNo).setValue(notificationModel)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                showMessages("Sent successfully");
+                                //Add remove the database
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                showMessages("Fail to send message, please check your internet connection");
+                            }
+                        });
+            }
+        });
+    }
+
     public void dialogView()
     {
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -211,14 +245,12 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
-                        //No button clicked
                         break;
                 }
             }
         };
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage("Are you sure to accept?").setPositiveButton("Yes", dialogClickListener)
+        builder.setMessage("Are you sure to accept the order?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
     }
 
@@ -259,7 +291,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                showMessages("Error to update order");
+                                                showMessages("Failed to update order");
                                                 progressDialog.dismiss();
                                             }
                                         });
@@ -360,6 +392,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                 dialogView();
                 break;
             case R.id.declinePOA:
+                declineData();
                 break;
             case R.id.viewLocationButtonPOA:
                 viewLocationPass();

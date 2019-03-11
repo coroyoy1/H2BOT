@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
@@ -39,12 +40,12 @@ public class WSPendingOrdersFragment extends Fragment implements PendingListAdap
     private PendingListAdapter POAdapter;
     private List<OrderModel> uploadPO;
     FirebaseUser firebaseUser;
-
+    RelativeLayout noOrdersLayout;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_ws_pendingorders, container, false);
-
+        noOrdersLayout = view.findViewById(R.id.noOrdersLayout);
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener(new View.OnKeyListener() {
@@ -103,6 +104,7 @@ public class WSPendingOrdersFragment extends Fragment implements PendingListAdap
         databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                uploadPO.clear();
                 for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                 {
                     for (DataSnapshot post : dataSnapshot1.child(firebaseUser.getUid()).getChildren())
@@ -113,6 +115,8 @@ public class WSPendingOrdersFragment extends Fragment implements PendingListAdap
                             if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid())
                                     && orderModel.getOrder_status().equals("Pending"))
                             {
+                                noOrdersLayout.setVisibility(View.INVISIBLE);
+                                recyclerViewPOConnect.setVisibility(View.VISIBLE);
                                 uploadPO.add(orderModel);
                             }
                         }
@@ -120,6 +124,11 @@ public class WSPendingOrdersFragment extends Fragment implements PendingListAdap
                     POAdapter = new PendingListAdapter(getActivity(), uploadPO);
                     recyclerViewPOConnect.setAdapter(POAdapter);
                     POAdapter.setOnItemClickListener(WSPendingOrdersFragment.this::onItemClick);
+                }
+                if(uploadPO.size() == 0)
+                {
+                    noOrdersLayout.setVisibility(View.VISIBLE);
+                    recyclerViewPOConnect.setVisibility(View.GONE);
                 }
             }
 

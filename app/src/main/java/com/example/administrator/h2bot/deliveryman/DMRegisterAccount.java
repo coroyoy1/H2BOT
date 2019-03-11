@@ -2,6 +2,8 @@ package com.example.administrator.h2bot.deliveryman;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.UserAccountFile;
 import com.example.administrator.h2bot.models.UserFile;
+import com.example.administrator.h2bot.models.UserLocationAddress;
 import com.example.administrator.h2bot.models.UserWSDMFile;
 import com.example.administrator.h2bot.waterstation.WSDMFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,6 +43,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -67,6 +73,7 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
     String device_token_id;
 
     String emailPass, passPass;
+    double lat, lng;
 
     StorageTask uploadTask;
 
@@ -258,6 +265,7 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
                                                                                                 @Override
                                                                                                 public void onSuccess(Void aVoid) {
                                                                                                     //showMessages("Successfully Added");
+                                                                                                    getLocationSetter();
                                                                                                     getStationParent(userd);
                                                                                                 }
                                                                                             })
@@ -330,6 +338,50 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
 
     private void showMessages(String s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+    }
+
+    private void getLocationSetter()
+    {
+        Geocoder coder = new Geocoder(getActivity());
+        List<Address> address;
+        Address LocationAddress = null;
+        String locateAddress = addressDM.getText().toString();
+
+        try {
+            address = coder.getFromLocationName(locateAddress, 5);
+
+            LocationAddress = address.get(0);
+
+            lat = LocationAddress.getLatitude();
+            lng = LocationAddress.getLongitude();
+
+            String getLocateLatitude = String.valueOf(lat);
+            String getLocateLongtitude = String.valueOf(lng);
+
+            UserLocationAddress userLocationAddress = new UserLocationAddress(FirebaseAuth.getInstance().getCurrentUser().getUid(), getLocateLatitude, getLocateLongtitude);
+            DatabaseReference locationRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
+            locationRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userLocationAddress)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            showMessages("Successfully registered");
+                            progressDialog.dismiss();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            //showMessage("Error to get location");
+                            progressDialog.dismiss();
+                        }
+                    });
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            showMessages("Error the locate your address, please change again");
+        }
     }
 
 

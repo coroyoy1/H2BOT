@@ -392,23 +392,7 @@
                     android:textColor="@android:color/holo_green_dark"
                     android:textSize="24dp"/>
             </LinearLayout>
-            <LinearLayout
-                android:layout_marginTop="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="20dp">
-                <Button
-                    android:id="@+id/backCOMACC"
-                    android:text="Back"
-                    android:textColor="@android:color/white"
-                    android:layout_marginLeft="100dp"
-                    android:layout_marginRight="100dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/z_graybuttomv"/>
-            </LinearLayout>
+            
 
         </LinearLayout>
     </ScrollView>

@@ -126,13 +126,14 @@
                 android:hint="Address" />
 
             <EditText
-                android:inputType="textEmailAddress"
+                android:inputType="number"
                 android:id="@+id/RegisterContact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edit_text_border"
                 android:padding="12dp"
                 android:layout_marginTop="5dp"
+                android:maxLength="11"
                 android:hint="@string/contact_number" />
 
             <EditText

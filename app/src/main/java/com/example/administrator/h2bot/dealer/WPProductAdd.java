@@ -1,11 +1,13 @@
 package com.example.administrator.h2bot.dealer;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class WPProductAdd extends Fragment implements View.OnClickListener {
 
     EditText waterProductName, waterProductPrice;
-    Spinner waterProductType;
+    EditText waterProductType;
     Button backProductButton, addProductButton;
 
     FirebaseAuth mAuth;
@@ -64,7 +66,7 @@ public class WPProductAdd extends Fragment implements View.OnClickListener {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_spinner_item, arraySpinner);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        waterProductType.setAdapter(adapter);
+
 
 
         progressDialog = new ProgressDialog(getActivity());
@@ -73,17 +75,52 @@ public class WPProductAdd extends Fragment implements View.OnClickListener {
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
 
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(event.getAction() == KeyEvent.ACTION_DOWN)
+                {
+                    if (keyCode == KeyEvent.KEYCODE_BACK)
+                    {
+                        attemptToExit();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(event.getAction() == KeyEvent.ACTION_DOWN)
+                {
+                    if (keyCode == KeyEvent.KEYCODE_BACK)
+                    {
+                        attemptToExit();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
+
         return view;
     }
 
     public void saveData()
     {
         String waterPriceString = waterProductPrice.getText().toString();
-        String waterTypeString = waterProductType.getSelectedItem().toString();
+        String waterTypeString = waterProductType.getText().toString();
 
         if(waterPriceString.equals("") && waterTypeString.equals(""))
         {
-            showMessages("Fill up first the requirement");
+            showMessages("Fill up all the fields");
             return;
         }
         else {
@@ -92,7 +129,7 @@ public class WPProductAdd extends Fragment implements View.OnClickListener {
     }
 
     private void showMessages(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     private void addProduct(String waterPriceString, String waterTypeString) {
@@ -106,14 +143,14 @@ public class WPProductAdd extends Fragment implements View.OnClickListener {
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    showMessages("Product Successfully Added");
+                    showMessages("Item added successfully");
                     progressDialog.dismiss();
                 }
             })
             .addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    showMessages("Product does not added or the connection is interrupted");
+                    showMessages("Failed to add the item or the connection is interrupted");
                     progressDialog.show();
                 }
             });
@@ -138,5 +175,22 @@ public class WPProductAdd extends Fragment implements View.OnClickListener {
                         .commit();
                 break;
         }
+    }
+    public void attemptToExit()
+    {
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        getActivity().finish();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
     }
 }

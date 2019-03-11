@@ -76,7 +76,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    private static final String API_KEY = "AIzaSyBC4uUz5QHs3X_TswSKUDWl4I98BqZ17ac";
+    private static final String API_KEY = "AIzaSyB1GmKORoUiiF2d6ll0AoNXHJEWe5r8XOc";
     // User Permissions
     private static GoogleMap map;
     private int routeColor;

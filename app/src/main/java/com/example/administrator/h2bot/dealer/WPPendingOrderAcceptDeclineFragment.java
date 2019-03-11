@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +53,7 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
     String customerIDUser, contactNoUser;
     String orderNoGET , customerNoGET , merchantNOGET , dataIssuedGET , deliveryStatusGET , transStatusGET , transTotalAmountGET , transDeliveryFeeGET, transTotalNoGallonGET;
     CircleImageView imageView;
-    String customerNo;
+    String customerNo, customerId, merchantId;
     Bundle args;
      public WPPendingOrderAcceptDeclineFragment() {
 
@@ -96,16 +98,34 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
         args = this.getArguments();
         if(args != null)
         {
-            transactionNo = args.getString("transactNoString");
+            transactionNo = args.getString("transactionno");
+            Log.d("transactionno",""+transactionNo);
             customerNo = args.getString("transactioncustomer");
-            showMessages(transactionNo);
         }
         getOrderData();
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(event.getAction() == KeyEvent.ACTION_DOWN)
+                {
+                    if (keyCode == KeyEvent.KEYCODE_BACK)
+                    {
+                        attemptToExit();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
+
         return view;
     }
 
     private void showMessages(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -125,6 +145,7 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
                             String status = merchantCustomerFile.getStatus();
                             if(status.equals("AC"))
                             {
+                                Log.d("CustomerID",","+customerId+","+merchantId+","+transactionNo);
                                 DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
                                 reference1.child(customerId).child(merchantId).child(transactionNo)
                                         .addValueEventListener(new ValueEventListener() {
@@ -186,7 +207,7 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                showMessages("Data does not available");
+                showMessages("Data is not available");
                 progressDialog.dismiss();
             }
         });
@@ -236,119 +257,111 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
 
     private void updateStatus()
     {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Transaction_Header_File");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnap : dataSnapshot.getChildren()) {
-                    if (postSnap.child("trans_no").getValue(String.class).equals(transactionNo)
-                            && postSnap.child("trans_status").getValue(String.class).equals("Pending")) {
-                        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Transaction_Header_File");
-                        reference1.child(transactionNo).child("trans_status").setValue("In-Progress")
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("Transaction_Detail_File");
-                                databaseReference.child(transactionNo).child("trans_status").setValue("In-Progress")
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            showMessages("Successfully updated");
-                                            WPInProgressFragment additem = new WPInProgressFragment();
-                                            AppCompatActivity activity = (AppCompatActivity)getContext();
-                                            activity.getSupportFragmentManager()
-                                                    .beginTransaction()
-                                                    .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                                                    .replace(R.id.fragment_container_wp, additem)
-                                                    .addToBackStack(null)
-                                                    .commit();
-                                            Objects.requireNonNull(((AppCompatActivity)getActivity()).getSupportActionBar()).setTitle("In-Progress");
-                                            progressDialog.dismiss();
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            showMessages("Failed to update task, please check internet connection");
-                                            progressDialog.dismiss();
-                                        }
-                                    });
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                showMessages("Failed to update data");
-                                progressDialog.dismiss();
-                            }
-                        });
-                    }
-                }
-            }
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_File");
+        reference.child(firebaseUser.getUid()).child(customerNo)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        MerchantCustomerFile merchantCustomerFile = dataSnapshot.getValue(MerchantCustomerFile.class);
+                        if(merchantCustomerFile != null)
+                        {
+                            customerId = merchantCustomerFile.getCustomer_id();
+                            String merchantId = merchantCustomerFile.getStation_id();
+                            String status = merchantCustomerFile.getStatus();
+                            if(status.equals("AC"))
+                            {
+                                DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
+                                reference1.child(customerId).child(merchantId).child(transactionNo).child("order_status").setValue("In-Progress")
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                showMessages("Updated Successfully");
+                                                WSInProgressFragment additem = new WSInProgressFragment();
+                                                AppCompatActivity activity = (AppCompatActivity)getContext();
+                                                activity.getSupportFragmentManager()
+                                                        .beginTransaction()
+                                                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                                                        .replace(R.id.fragment_container_wp, additem)
+                                                        .addToBackStack(null)
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                showMessages("Data cant be retrieve");
-            }
-        });
+                                                        .commit();
+                                                Objects.requireNonNull(((AppCompatActivity)getActivity()).getSupportActionBar()).setTitle("In-Progress");
+                                                progressDialog.dismiss();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                showMessages("Error to update order");
+                                                progressDialog.dismiss();
+                                            }
+                                        });
+
+                            }
+                        }
+                    }
+
+                    @Override
+
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        showMessages("Order does not exist");
+                        progressDialog.dismiss();
+                    }
+                });
     }
     private void updateStatusCancelled()
     {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Transaction_Header_File");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnap : dataSnapshot.getChildren()) {
-                    if (postSnap.child("trans_no").getValue(String.class).equals(transactionNo)
-                            && postSnap.child("trans_status").getValue(String.class).equals("Pending")) {
-                        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Transaction_Header_File");
-                        reference1.child(transactionNo).child("trans_status").setValue("Cancelled")
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("Transaction_Detail_File");
-                                        databaseReference.child(transactionNo).child("trans_status").setValue("Cancelled")
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        showMessages("Successfully updated");
-                                                        WPPendingOrdersFragment additem = new WPPendingOrdersFragment();
-                                                        AppCompatActivity activity = (AppCompatActivity)getContext();
-                                                        activity.getSupportFragmentManager()
-                                                                .beginTransaction()
-                                                                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                                                                .replace(R.id.fragment_container_wp, additem)
-                                                                .addToBackStack(null)
-                                                                .commit();
-                                                        Objects.requireNonNull(((AppCompatActivity)getActivity()).getSupportActionBar()).setTitle("In-Progress");
-                                                        progressDialog.dismiss();
-                                                    }
-                                                })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        showMessages("Failed to update task, please check internet connection");
-                                                        progressDialog.dismiss();
-                                                    }
-                                                });
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        showMessages("Failed to update data");
-                                        progressDialog.dismiss();
-                                    }
-                                });
-                    }
-                }
-            }
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_File");
+        reference.child(firebaseUser.getUid()).child(customerNo)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        MerchantCustomerFile merchantCustomerFile = dataSnapshot.getValue(MerchantCustomerFile.class);
+                        if(merchantCustomerFile != null)
+                        {
+                            customerId = merchantCustomerFile.getCustomer_id();
+                            String merchantId = merchantCustomerFile.getStation_id();
+                            String status = merchantCustomerFile.getStatus();
+                            if(status.equals("AC"))
+                            {
+                                DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
+                                reference1.child(customerId).child(merchantId).child(transactionNo).child("order_status").setValue("Cancelled")
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                showMessages("Updated successfully");
+                                                WSInProgressFragment additem = new WSInProgressFragment();
+                                                AppCompatActivity activity = (AppCompatActivity)getContext();
+                                                activity.getSupportFragmentManager()
+                                                        .beginTransaction()
+                                                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                                                        .replace(R.id.fragment_container_wp, additem)
+                                                        .addToBackStack(null)
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                showMessages("Data cant be retrieve");
-            }
-        });
+                                                        .commit();
+                                                Objects.requireNonNull(((AppCompatActivity)getActivity()).getSupportActionBar()).setTitle("In-Progress");
+                                                progressDialog.dismiss();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                showMessages("Failed to update order");
+                                                progressDialog.dismiss();
+                                            }
+                                        });
+
+                            }
+                        }
+                    }
+
+                    @Override
+
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        showMessages("Order does not exist");
+                        progressDialog.dismiss();
+                    }
+                });
     }
 
     public void viewLocationPass()
@@ -379,5 +392,22 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
                 viewLocationPass();
                 break;
         }
+    }
+    public void attemptToExit()
+    {
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        getActivity().finish();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
     }
 }

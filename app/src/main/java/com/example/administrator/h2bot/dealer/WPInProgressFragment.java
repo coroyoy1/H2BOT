@@ -1,14 +1,18 @@
 package com.example.administrator.h2bot.dealer;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
@@ -37,6 +41,7 @@ public class WPInProgressFragment extends Fragment implements WPInProgressAdapte
 
     private WPInProgressOrdersAdapter POAdapter;
     private List<OrderModel> uploadPO;
+    RelativeLayout noOrdersLayout;
     public WPInProgressFragment() {
         // Required empty public constructor
     }
@@ -48,7 +53,7 @@ public class WPInProgressFragment extends Fragment implements WPInProgressAdapte
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        noOrdersLayout = view.findViewById(R.id.noOrdersLayout);
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         uploadPO = new ArrayList<>();
@@ -67,8 +72,10 @@ public class WPInProgressFragment extends Fragment implements WPInProgressAdapte
                         if(orderModel != null)
                         {
                             if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid())
-                                    && orderModel.getOrder_status().equals("In-Progress"))
+                                    && orderModel.getOrder_status().equals("In-Progress") || orderModel.getOrder_status().equals("Dispatched"))
                             {
+                                noOrdersLayout.setVisibility(View.INVISIBLE);
+                                recyclerView.setVisibility(View.VISIBLE);
                                 uploadPO.add(orderModel);
                             }
                         }
@@ -77,6 +84,11 @@ public class WPInProgressFragment extends Fragment implements WPInProgressAdapte
                     recyclerView.setAdapter(POAdapter);
                     POAdapter.setOnItemClickListener(WPInProgressFragment.this::onItemClick);
                 }
+                if(uploadPO.size() == 0)
+                {
+                    noOrdersLayout.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -84,14 +96,52 @@ public class WPInProgressFragment extends Fragment implements WPInProgressAdapte
 
             }
         });
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(event.getAction() == KeyEvent.ACTION_DOWN)
+                {
+                    if (keyCode == KeyEvent.KEYCODE_BACK)
+                    {
+                        attemptToExit();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
         return view;
     }
     private void showMessage(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onItemClick(int position) {
+
+    }
+    public void attemptToExit()
+    {
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        getActivity().finish();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Are you sure to exit the application?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
 
     }
 }

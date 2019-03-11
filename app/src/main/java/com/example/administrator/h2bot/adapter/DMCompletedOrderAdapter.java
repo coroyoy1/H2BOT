@@ -14,6 +14,7 @@ import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.deliveryman.DMCompletedAcception;
 import com.example.administrator.h2bot.deliveryman.DMInProgressAcception;
 import com.example.administrator.h2bot.models.DeliveryManListAdapter;
+import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 import com.example.administrator.h2bot.waterstation.WSPendingOrderAcceptDeclineFragment;
 
@@ -22,9 +23,9 @@ import java.util.List;
 public class DMCompletedOrderAdapter extends RecyclerView.Adapter<DMCompletedOrderAdapter.ImageViewHolder> {
 
     private Context contextHolder;
-    private List<TransactionHeaderFileModel> uploadHolder;
+    private List<OrderModel> uploadHolder;
 
-    public DMCompletedOrderAdapter(Context context, List<TransactionHeaderFileModel> uploads)
+    public DMCompletedOrderAdapter(Context context, List<OrderModel> uploads)
     {
         contextHolder = context;
         uploadHolder = uploads;
@@ -39,9 +40,9 @@ public class DMCompletedOrderAdapter extends RecyclerView.Adapter<DMCompletedOrd
 
     @Override
     public void onBindViewHolder(@NonNull DMCompletedOrderAdapter.ImageViewHolder imageViewHolder, int i) {
-        final TransactionHeaderFileModel currentData = uploadHolder.get(i);
-        String transactionNo = currentData.getTrans_no();
-        String transactionStatus = currentData.getTrans_status();
+        final OrderModel currentData = uploadHolder.get(i);
+        String transactionNo = currentData.getOrder_no();
+        String transactionStatus = currentData.getOrder_status();
         imageViewHolder.transactionNoText.setText(transactionNo);
         imageViewHolder.transactionStatusText.setText(transactionStatus);
 
@@ -52,7 +53,7 @@ public class DMCompletedOrderAdapter extends RecyclerView.Adapter<DMCompletedOrd
                 AppCompatActivity activity = (AppCompatActivity)v.getContext();
                 activity.getSupportFragmentManager()
                         .beginTransaction()
-                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
                         .replace(R.id.fragment_container_dm, additem)
                         .addToBackStack(null)
                         .commit();

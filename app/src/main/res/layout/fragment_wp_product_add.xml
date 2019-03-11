@@ -17,15 +17,17 @@
             android:textStyle="bold"
             android:textColor="@android:color/black"/>
 
-        <Spinner
+        <EditText
             android:id="@+id/waterSpinner"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
+            android:hint="Water Type(eg. Purified)"
+            android:padding="10dp"
             android:layout_height="50dp"
-            android:background="@android:color/white"
+            android:background="@drawable/edit_text_border"
             android:layout_marginLeft="31dp"
             android:layout_marginRight="31dp">
-        </Spinner>
+        </EditText>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

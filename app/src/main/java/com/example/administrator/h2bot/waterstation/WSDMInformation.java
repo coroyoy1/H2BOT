@@ -1,6 +1,7 @@
 package com.example.administrator.h2bot.waterstation;
 
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,9 @@ import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.UserAccountFile;
+import com.example.administrator.h2bot.models.UserWSDMFile;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,6 +33,7 @@ public class WSDMInformation extends Fragment {
 
     String emailOf;
     TextView nameTo, addressTo, contactNoTo, statusTo, emailTo;
+    FirebaseUser firebaseUser;
     CircleImageView imageTo;
     Button backTo;
 
@@ -44,6 +49,7 @@ public class WSDMInformation extends Fragment {
         imageTo = view.findViewById(R.id.imageCircleDMDM);
         backTo = view.findViewById(R.id.backOnDMDM);
         emailTo = view.findViewById(R.id.emailAddDMDM);
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         Bundle bundle = this.getArguments();
         if(bundle != null)
@@ -53,31 +59,34 @@ public class WSDMInformation extends Fragment {
             String contactNoOf = "Contact No.: "+bundle.getString("ContactNoDM");
             String statusOf = "Status: "+bundle.getString("StatusDM");
             String imageOf = bundle.getString("ImageDM");
-            String uidOf = bundle.getString("UIDDM");
-
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_Account_File").child(uidOf);
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        UserAccountFile userAccountFileOf = dataSnapshot.getValue(UserAccountFile.class);
-                        if(userAccountFileOf != null)
+            String uidOf = bundle.getString("uidDelMan");
+            if(uidOf != null)
+            {
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_Account_File");
+                reference.child(uidOf).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        UserAccountFile userAccountFile = dataSnapshot.getValue(UserAccountFile.class);
+                        if(userAccountFile != null)
                         {
-                            emailOf = userAccountFileOf.getUser_email_address();
+                            String email = "Email Address: "+userAccountFile.getUser_email_address();
+                            emailTo.setText(email);
+                            nameTo.setText(nameOf);
+                            addressTo.setText(addressOf);
+                            contactNoTo.setText(contactNoOf);
+                            statusTo.setText(statusOf);
+
+                            Picasso.get().load(imageOf).into(imageTo);
                         }
-                }
+                    }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(getActivity(), "Error", Toast.LENGTH_LONG).show();
-                }
-            });
-            emailTo.setText(emailOf);
-            nameTo.setText(nameOf);
-            addressTo.setText(addressOf);
-            contactNoTo.setText(contactNoOf);
-            statusTo.setText(statusOf);
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            Picasso.get().load(imageOf).into(imageTo);
+                    }
+                });
+            }
+
         }
 
         backTo.setOnClickListener(new View.OnClickListener() {
