@@ -70,6 +70,7 @@ public class TPAMapFragment extends Fragment
 
 
     // User Permissions
+    TextView noOfGallons,Profit,stationadd,fundAmt;
     private GoogleMap map;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
@@ -109,6 +110,10 @@ public class TPAMapFragment extends Fragment
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
 
+        noOfGallons = view.findViewById(R.id.noOfGallons);
+        Profit = view.findViewById(R.id.Profit);
+        stationadd = view.findViewById(R.id.stationadd);
+        fundAmt = view.findViewById(R.id.fundAmt);
 
         bottomSheet = view.findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -385,10 +390,96 @@ public class TPAMapFragment extends Fragment
 //        Button scanCode = bottomSheetCustomer.findViewById(R.id.scanCode);
 //        Button callBtn = bottomSheetCustomer.findViewById(R.id.callBtn);
 //        Button sendMsg = bottomSheetCustomer.findViewById(R.id.sendMsg);
+
         stationName.setText(marker.getTitle());
         String amtNeeded = fundAmt.getText().toString();
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        userFileRef = FirebaseDatabase.getInstance().getReference("User_File");
+        businessRef = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
+        userLatLongRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
+        orderModel = FirebaseDatabase.getInstance().getReference("Customer_File");
+        userFileRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot userData : dataSnapshot.getChildren()) {
+                    UserFile userFile = userData.getValue(UserFile.class);
+                    businessRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot infoFile : dataSnapshot.getChildren()) {
+                                UserWSBusinessInfoFile businessInfo = infoFile.getValue(UserWSBusinessInfoFile.class);
+                                userLatLongRef.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot latlongFile : dataSnapshot.getChildren()) {
+                                            UserLocationAddress locationFile = latlongFile.getValue(UserLocationAddress.class);
+                                            if (userFile.getUser_getUID().equals(businessInfo.getBusiness_id())
+                                                    && businessInfo.getBusiness_id().equals(locationFile.getUser_id())) {
+                                                if (userFile.getUser_type().equals("Water Station")) {
+                                                    if (userFile.getUser_status().equalsIgnoreCase("Active")) {
+                                                        orderModel.addValueEventListener(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                for (DataSnapshot order : dataSnapshot.getChildren()) {
+                                                                    for(DataSnapshot userData2 : order.getChildren()) {
+                                                                        for (DataSnapshot userData3 : userData2.getChildren()) {
+                                                                            OrderModel userData4 = userData3.getValue(OrderModel.class);
+                                                                            String statusOrder = userData4.getOrder_status();
+                                                                            Log.d("Kaykay", "" + statusOrder);
+                                                                            if (statusOrder.equals("Broadcasting")) {
+                                                                                arrayListUserFile.add(userFile);
+                                                                                arrayListBusinessInfo.add(businessInfo);
+                                                                                arrayListMerchantLatLong.add(locationFile);
 
+                                                                                noOfGallons.setText(userData4.getOrder_qty());
+                                                                                Profit.setText(userData4.getOrder_delivery_fee());
+                                                                                stationadd.setText(userData4.getOrder_address());
+                                                                                fundAmt.setText(userData4.getOrder_total_amt());
+
+                                                                                String status = "Status: OPEN";
+                                                                                String type = "Type: " + userType;
+                                                                                station_id_snip = stationId;
+
+
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                            }
+                                                        });
+
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
+            }
+        });
 //        sendMsg.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {

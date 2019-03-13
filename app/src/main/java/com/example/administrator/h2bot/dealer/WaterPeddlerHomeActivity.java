@@ -92,17 +92,14 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
                 adapter.clear();
                 adapter2.clear();
                 nav_pending_orders_wp.setVisibility(View.VISIBLE);
-                Log.d("ambotnimo","AMBOT");
+                nav_inprogress_wp.setVisibility(View.VISIBLE);
                 for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                 {
-                    Log.d("gago","ka");
                     for (DataSnapshot post : dataSnapshot1.child(currendId).getChildren())
                     {
-                        Log.d("mas","ka");
                         OrderModel orderModel = post.getValue(OrderModel.class);
                         if(orderModel != null)
                         {
-                            Log.d("kako ","ka");
                             if(orderModel.getOrder_merchant_id().equals(currendId)
                                     && orderModel.getOrder_status().equals("Pending"))
                             {
@@ -159,10 +156,12 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
 
                                 if (countInprogress==0)
                                 {
+                                    Log.d("InProgress", ""+countInprogress);
                                     nav_inprogress_wp.setVisibility(View.INVISIBLE);
                                 }
                                 else
                                 {
+                                    Log.d("InProgress", ""+countInprogress);
                                     nav_inprogress_wp.setGravity(Gravity.CENTER_VERTICAL);
                                     nav_inprogress_wp.setTextSize(20);
                                     nav_inprogress_wp.setTypeface(null, Typeface.BOLD);
