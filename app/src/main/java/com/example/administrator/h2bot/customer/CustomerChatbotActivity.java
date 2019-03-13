@@ -204,11 +204,12 @@ public class CustomerChatbotActivity extends AppCompatActivity {
                 queryEditText.setEnabled(false);
                 sendBtn.setEnabled(false);
             }
-            else if(botReply.equalsIgnoreCase("Your order is now in validation. We will notify you for more details.")){
+            else if(botReply.equalsIgnoreCase("Your order is being processed. We will just notify you for more details.")){
                 Button okayBtn;
                 dialog.setContentView(R.layout.customer_chatbot_order_info_popup);
                 dialog.setCanceledOnTouchOutside(false);
                 okayBtn = dialog.findViewById(R.id.okayBtn);
+
 
 
 

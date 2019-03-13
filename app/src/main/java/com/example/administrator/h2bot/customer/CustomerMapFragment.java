@@ -19,6 +19,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,11 @@ import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserLocationAddress;
 import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryDataEventListener;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -64,6 +70,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import retrofit2.http.Query;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -86,9 +94,6 @@ public class CustomerMapFragment extends Fragment implements
     public static final String EXTRA_stationName = "station_name";
 
     private ChildEventListener mChilExventListener;
-    private Location mCurrentLocation;
-    Marker marker;
-    LinearLayout linearLayout;
     public FirebaseAuth mAuth;
     DatabaseReference userFileRef, businessRef, userLatLongRef;
     DatabaseReference usersLocRef;
@@ -185,6 +190,7 @@ public class CustomerMapFragment extends Fragment implements
         businessRef = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
         userLatLongRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
 
+
         userFileRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -217,10 +223,12 @@ public class CustomerMapFragment extends Fragment implements
                                                         latitude = Double.parseDouble(locationFile.getUser_latitude());
                                                         longitude = Double.parseDouble(locationFile.getUser_longtitude());
                                                         latLong = new LatLng(latitude, longitude);
+                                                        final double RADIUS = 0.0062714012;
 
                                                         String status = "Status: OPEN";
                                                         String type = "Type: " + userType;
                                                         station_id_snip = stationId;
+                                                        Log.d("TAG: ", "I was here");
                                                         if(userType.equalsIgnoreCase("Water Station")){
                                                             map.addMarker(new MarkerOptions()
                                                                     .position(latLong).title(stationName)
@@ -427,4 +435,6 @@ public class CustomerMapFragment extends Fragment implements
             }
         });
     }
+
+
 }

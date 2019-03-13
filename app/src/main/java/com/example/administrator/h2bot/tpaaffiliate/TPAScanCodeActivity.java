@@ -32,7 +32,7 @@ public class TPAScanCodeActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setTitle("QR Code Scanner");
         final Activity activity = this;
         IntentIntegrator integrator = new IntentIntegrator(activity);
-        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.PRODUCT_CODE_TYPES);
         integrator.setPrompt("Scan");
         integrator.setCameraId(0);
         integrator.setBeepEnabled(true);

@@ -6,13 +6,16 @@ import com.example.administrator.h2bot.tpaaffiliate.*;
 import com.example.administrator.h2bot.customer.*;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.inputmethodservice.Keyboard;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -111,6 +114,7 @@ public class LoginActivity extends AppCompatActivity {
         loginNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                closeKeyboard();
                 signInNow();
             }
         });
@@ -146,23 +150,20 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task)
                 {
-                    if(!task.isSuccessful())
+                    if(task.isSuccessful())
                     {
-                        showMessages("Please check your internet connection or credentials.");
-                    }
-                    else {
+
                         userTypeLogin();
+                    }
                 }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    showMessages(e.getMessage());
+                    progressDialog.dismiss();
+                    mAuth.signOut();
                 }
-            })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            showMessages("Account is not exists or internet connection is not connected/low connection");
-                            progressDialog.dismiss();
-                            mAuth.signOut();
-                        }
-                    });
+            });
         }
     }
 
@@ -261,5 +262,13 @@ public class LoginActivity extends AppCompatActivity {
     private void showMessages(String s)
     {
         Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+    }
+
+    private void closeKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }
