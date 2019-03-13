@@ -102,14 +102,28 @@
                     android:hint="@string/email_address"
                     android:inputType="textEmailAddress"
                     android:textAlignment="center" />
-
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Optional*"
+                    android:textColor="@android:color/holo_blue_bright"/>
+                <EditText
+                    android:id="@+id/oldPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/edit_text_border"
+                    android:hint="Old Password"
+                    android:inputType="textPassword"
+                    android:textAlignment="center" />
                 <EditText
                     android:id="@+id/RegisterPasswordUAS"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/edit_text_border"
-                    android:hint="Password"
+                    android:hint="New Password"
                     android:inputType="textPassword"
                     android:textAlignment="center" />
 
@@ -119,7 +133,7 @@
                     android:layout_height="40dp"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/edit_text_border"
-                    android:hint="Confirm Password"
+                    android:hint="Confirm New Password"
                     android:inputType="textPassword"
                     android:textAlignment="center" />
 
