@@ -65,6 +65,9 @@ public class RegisterActivity extends AppCompatActivity{
     double lat;
     double lng;
 
+    Geocoder coder;
+    List<Address> address;
+    Address LocationAddress;
 
     static int PReqCode = 1;
     static int REQUESTCODE = 1;
@@ -163,9 +166,8 @@ public class RegisterActivity extends AppCompatActivity{
 
     private void getLocationSetter()
     {
-        Geocoder coder = new Geocoder(this);
-        List<Address> address;
-        Address LocationAddress = null;
+        coder = new Geocoder(this);
+        LocationAddress = null;
         String locateAddress = addressRegister.getText().toString();
 
         try {
@@ -185,24 +187,19 @@ public class RegisterActivity extends AppCompatActivity{
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            showMessage("Successfully registered");
-                            progressDialog.dismiss();
                             passToNextActivity();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            //showMessage("Error to get location");
+                            showMessage("Error to get location");
                             progressDialog.dismiss();
                         }
                     });
 
         } catch (IOException ex) {
             ex.printStackTrace();
-        }
-        finally {
-            showMessage("Error the locate your address, please change again");
         }
     }
 
