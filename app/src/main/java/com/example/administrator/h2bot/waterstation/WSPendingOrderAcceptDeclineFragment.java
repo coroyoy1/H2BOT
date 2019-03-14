@@ -1,16 +1,28 @@
 package com.example.administrator.h2bot.waterstation;
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +54,7 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements View.OnClickListener {
-    Button acceptButton, declineButton, viewLocationButton;
+    Button acceptButton, declineButton, viewLocationButton,submitReason;
     private FirebaseUser firebaseUser;
     private FirebaseAuth mAuth;
    // private List<TransactionHeaderFileModel> headerPO;
@@ -57,7 +69,13 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
     String orderNoGET , customerNoGET , merchantNOGET , dataIssuedGET , deliveryStatusGET , transStatusGET , transTotalAmountGET , transDeliveryFeeGET, transTotalNoGallonGET, customerNo;
     CircleImageView imageView;
     Bundle args;
-    String customerId;
+    String customerId,name;
+    EditText reason;
+    private final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1;
+    private final String SENT = "SMS_SENT";
+    private final String DELIVERED = "SMS_DELIVERED";
+    PendingIntent sentPI, deliveredPI;
+    BroadcastReceiver smsSentReceiver, smsDeliveredReceiver;
      public WSPendingOrderAcceptDeclineFragment() {
 
     }
@@ -107,6 +125,18 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
             showMessages(transactionNo);
         }
         getCustomerOrder();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
+        reference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                name = dataSnapshot.child("business_name").getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         return view;
     }
 
@@ -392,11 +422,188 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                 dialogView();
                 break;
             case R.id.declinePOA:
-                declineData();
+                dialogView2();
                 break;
             case R.id.viewLocationButtonPOA:
                 viewLocationPass();
                 break;
         }
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(smsSentReceiver);
+        getActivity().unregisterReceiver(smsDeliveredReceiver);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        smsSentReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                switch (getResultCode())
+                {
+                    case Activity.RESULT_OK:
+                        Toast.makeText(context, "SMS sent successfully!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    //Something went wrong and there's no way to tell what, why or how.
+                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                        Toast.makeText(context, "Generic failure!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    //Your device simply has no cell reception. You're probably in the middle of
+                    //nowhere, somewhere inside, underground, or up in space.
+                    //Certainly away from any cell phone tower.
+                    case SmsManager.RESULT_ERROR_NO_SERVICE:
+                        Toast.makeText(context, "No service!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    //Something went wrong in the SMS stack, while doing something with a protocol
+                    //description unit (PDU) (most likely putting it together for transmission).
+                    case SmsManager.RESULT_ERROR_NULL_PDU:
+                        Toast.makeText(context, "Null PDU!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    //You switched your device into airplane mode, which tells your device exactly
+                    //"turn all radios off" (cell, wifi, Bluetooth, NFC, ...).
+                    case SmsManager.RESULT_ERROR_RADIO_OFF:
+                        Toast.makeText(context, "Radio off!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                }
+
+            }
+        };
+        smsDeliveredReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                switch(getResultCode())
+                {
+                    case Activity.RESULT_OK:
+                        Toast.makeText(context, "SMS delivered!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case Activity.RESULT_CANCELED:
+                        Toast.makeText(context, "SMS not delivered!", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+
+            }
+        };
+
+        getActivity().registerReceiver(smsSentReceiver, new IntentFilter(SENT));
+        getActivity().registerReceiver(smsDeliveredReceiver, new IntentFilter(DELIVERED));
+    }
+    protected void dialogView2()
+    {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        progressDialog.show();
+                        updateStatusCancelled();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Are you sure to decline the order?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+    }
+    protected void updateStatusCancelled()
+    {
+        progressDialog.dismiss();
+        showDialogReason();
+    }
+    public void showDialogReason()
+    {
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.reason_decline, null);
+
+        reason = dialogView.findViewById(R.id.reason);
+        submitReason = dialogView.findViewById(R.id.submitReason);
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.setCancelable(false);
+        final AlertDialog alertDialog = dialogBuilder.create();
+
+        submitReason.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_File");
+                reference.child(firebaseUser.getUid()).child(customerNo)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                MerchantCustomerFile merchantCustomerFile = dataSnapshot.getValue(MerchantCustomerFile.class);
+                                if(merchantCustomerFile != null)
+                                {
+                                    customerId = merchantCustomerFile.getCustomer_id();
+                                    String merchantId = merchantCustomerFile.getStation_id();
+                                    String status = merchantCustomerFile.getStatus();
+                                    if(status.equals("AC"))
+                                    {
+                                        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
+                                        reference1.child(customerId).child(merchantId).child(transactionNo).child("order_status").setValue("Cancelled")
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        String message = "Your order:"+transactionNo+" has been declined by "+name+" for the following reasons: \n"
+                                                                +reason;
+                                                        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
+                                                                != PackageManager.PERMISSION_GRANTED)
+                                                        {
+                                                            ActivityCompat.requestPermissions(getActivity(), new String [] {Manifest.permission.SEND_SMS},
+                                                                    MY_PERMISSIONS_REQUEST_SEND_SMS);
+                                                        }
+                                                        else {
+                                                            SmsManager sms = SmsManager.getDefault();
+                                                            sms.sendTextMessage(contactNo.getText().toString(), null, message, sentPI, deliveredPI);
+                                                        }
+                                                        WSInProgressFragment additem = new WSInProgressFragment();
+                                                        AppCompatActivity activity = (AppCompatActivity)getContext();
+                                                        activity.getSupportFragmentManager()
+                                                                .beginTransaction()
+                                                                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                                                                .replace(R.id.fragment_container_wp, additem)
+                                                                .addToBackStack(null)
+                                                                .commit();
+                                                        Objects.requireNonNull(((AppCompatActivity)getActivity()).getSupportActionBar()).setTitle("In-Progress");
+                                                        progressDialog.dismiss();
+                                                        alertDialog.dismiss();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        showMessages("Failed to update order");
+                                                        progressDialog.dismiss();
+                                                    }
+                                                });
+
+                                    }
+                                }
+                            }
+
+                            @Override
+
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                showMessages("Order does not exist");
+                                progressDialog.dismiss();
+                            }
+                        });
+            }
+        });
+        alertDialog.show();
+
     }
 }

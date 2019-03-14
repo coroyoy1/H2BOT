@@ -155,7 +155,11 @@ public class RegisterActivity extends AppCompatActivity{
                 else if(!isEmailValid(emailAddressString)){
                     Toast.makeText(RegisterActivity.this, "Invalid email address", Toast.LENGTH_SHORT).show();
                 }
+                else if(!isValidPhone(contactNoString)){
+                    Toast.makeText(RegisterActivity.this, "Phone number is invalid", Toast.LENGTH_LONG).show();
+                }
                 else{
+                    Toast.makeText(RegisterActivity.this, "Phone number is valid", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(RegisterActivity.this, TPADocumentActivity.class);
                     intent.putExtra("firstname", firstNameString);
                     intent.putExtra("lastname", lastNameString);
@@ -451,5 +455,19 @@ public class RegisterActivity extends AppCompatActivity{
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
+    }
+    public static boolean isValidPhone(String phone)
+    {
+        String expression = "^(09|\\+639)\\d{9}$";
+        CharSequence inputString = phone;
+        Pattern pattern = Pattern.compile(expression);
+        Matcher matcher = pattern.matcher(inputString);
+        if (matcher.matches())
+        {
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }
