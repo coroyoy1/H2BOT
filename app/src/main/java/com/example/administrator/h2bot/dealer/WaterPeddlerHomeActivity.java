@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,6 +23,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.h2bot.maps.IOBackPressed;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.waterstation.WSProductListFragment;
 import com.google.firebase.auth.FirebaseAuth;
@@ -187,7 +189,14 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            Fragment fragmentFromMap = getSupportFragmentManager().findFragmentById(R.id.fragment_container_wp);
+            if (!(fragmentFromMap instanceof IOBackPressed) || !((IOBackPressed) fragmentFromMap).onBackPressed()) {
+                super.onBackPressed();
+            }
+            else
+            {
+                super.onBackPressed();
+            }
         }
     }
 

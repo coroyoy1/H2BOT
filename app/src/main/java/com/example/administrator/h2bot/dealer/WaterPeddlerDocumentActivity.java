@@ -211,8 +211,6 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                         public void onSuccess(Void aVoid) {
                             showMessages("Submitted successfully");
                             progressDialog.dismiss();
-                            Intent passIntent = new Intent(WaterPeddlerDocumentActivity.this, WaterPeddlerHomeActivity.class);
-                            startActivity(passIntent);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -294,14 +292,13 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                     }
                                 });
                                 DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("User_File");
-                                databaseReference.child(currentUser).child("user_status").setValue("active");
+                                databaseReference.child(currentUser).child("user_status").setValue("unverified");
 
                                 DatabaseReference databaseReference2= FirebaseDatabase.getInstance().getReference("User_Account_File");
-                                databaseReference2.child(currentUser).child("user_status").setValue("active");
+                                databaseReference2.child(currentUser).child("user_status").setValue("unverified");
 
                                 Toast.makeText(WaterPeddlerDocumentActivity.this, "Uploaded successfully" + currentuser, Toast.LENGTH_SHORT).show();
                                 Log.d("capacity",""+dealerCapacity);
-                                startActivity(new Intent(WaterPeddlerDocumentActivity.this, WaterPeddlerHomeActivity.class));
                                 UserWSBusinessInfoFile userWSBusinessInfoFile = new UserWSBusinessInfoFile(currentUser, dealername, dealerstart, dealerend, businessDeliveryService, businessFreeOrNoText, dealerdeliveryfee, dealercapacity, dealerno, dealeraddress, "active", "");
                                 FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(currentUser).setValue(userWSBusinessInfoFile);
                             }
