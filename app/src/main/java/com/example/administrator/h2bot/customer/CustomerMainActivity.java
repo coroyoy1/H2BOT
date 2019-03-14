@@ -3,49 +3,71 @@ package com.example.administrator.h2bot.customer;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.LoginActivity;
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.models.OrderModel;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class CustomerMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private FirebaseAuth mAuth;
+    TextView my_order;
     Dialog dialog;
     public GoogleMap map;
-
+    int countInprogress;
+    private ArrayList<OrderModel> adapter;
+    FirebaseUser currentUser;
+    String currendId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.customer_actvity_main);
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        currendId = currentUser.getUid();
         dialog = new Dialog(this);
         drawerLayout = findViewById(R.id.customer_drawer);
         drawerLayout.closeDrawers();
+        adapter = new ArrayList<OrderModel>();
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        my_order=(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
+                findItem(R.id.my_order));
         actionBarDrawerToggle.syncState();
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CustomerMapFragment()).commit();
@@ -53,6 +75,63 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
             Objects.requireNonNull(getSupportActionBar()).setTitle("Find Water Merchant");
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        initializeCountDrawer();
+    }
+    private void initializeCountDrawer(){
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
+        databaseReference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                adapter.clear();
+                my_order.setVisibility(View.VISIBLE);
+                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                {
+                    for (DataSnapshot post : dataSnapshot1.child(currendId).getChildren())
+                    {
+                        for (DataSnapshot post1 : post.getChildren())
+                        {
+                        OrderModel orderModel = post1.getValue(OrderModel.class);
+                        if (orderModel != null) {
+                            if (orderModel.getOrder_customer_id().equals(currendId)
+                                    && orderModel.getOrder_status().equalsIgnoreCase("In-Progress") || orderModel.getOrder_status().equalsIgnoreCase("Dispatched")) {
+                                adapter.add(orderModel);
+                                adapter.size();
+                                my_order.setVisibility(View.VISIBLE);
+                                my_order.setVisibility(View.VISIBLE);
+                                countInprogress = adapter.size();
+                                Log.d("CountInprogress", "" + countInprogress);
+
+                                my_order.setGravity(Gravity.CENTER_VERTICAL);
+                                my_order.setTextSize(20);
+                                my_order.setTypeface(null, Typeface.BOLD);
+                                my_order.setTextColor(getResources().getColor(R.color.colorAccent));
+                                my_order.setText("" + countInprogress);
+
+                            } else {
+                                countInprogress = adapter.size();
+
+                                if (countInprogress == 0) {
+                                    my_order.setVisibility(View.INVISIBLE);
+                                } else {
+                                    my_order.setGravity(Gravity.CENTER_VERTICAL);
+                                    my_order.setTextSize(20);
+                                    my_order.setTypeface(null, Typeface.BOLD);
+                                    my_order.setTextColor(getResources().getColor(R.color.colorAccent));
+                                    my_order.setText("" + countInprogress);
+                                }
+                            }
+                        }
+                    }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     @Override
@@ -159,4 +238,5 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         });
         dialog.show();
     }
+
 }

@@ -202,6 +202,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                 {
                     for (DataSnapshot post : dataSnapshot1.child(firebaseUser.getUid()).getChildren())
                     {
+
                         OrderModel orderModel = post.getValue(OrderModel.class);
                         if(orderModel != null)
                         {
@@ -248,6 +249,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                                 }
                             }
                         }
+
                     }
                 }
             }
