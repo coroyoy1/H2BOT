@@ -513,6 +513,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                 }
             });
         }
+
         if(filepath2 != null){
             FirebaseUser user = mAuth.getCurrentUser();
             String userId = user.getUid();
