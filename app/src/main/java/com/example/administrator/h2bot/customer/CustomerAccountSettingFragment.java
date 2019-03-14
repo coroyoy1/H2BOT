@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +42,7 @@ public class CustomerAccountSettingFragment extends Fragment {
     Button updateBtn;
     EditText firstname, lastname, address, emailAddress, password, phoneNumber;
     TextView name;
+    ImageView user_photo;
 
 
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
@@ -77,6 +80,7 @@ public class CustomerAccountSettingFragment extends Fragment {
         emailAddress = view.findViewById(R.id.emailAddress);
         password = view.findViewById(R.id.password);
         phoneNumber = view.findViewById(R.id.phoneNumber);
+        user_photo = view.findViewById(R.id.user_photo);
 
         getPersonalInfo(mUserCurrentId);
 
@@ -138,6 +142,7 @@ public class CustomerAccountSettingFragment extends Fragment {
                 lastname.setText(dataSnapshot.child("user_lastname").getValue(String.class));
                 address.setText(dataSnapshot.child("user_address").getValue(String.class));
                 phoneNumber.setText(dataSnapshot.child("user_phone_no").getValue(String.class));
+                Picasso.get().load(dataSnapshot.child("user_uri").getValue(String.class)).into(user_photo);
             }
 
             @Override

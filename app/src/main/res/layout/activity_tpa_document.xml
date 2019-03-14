@@ -2,113 +2,81 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".dealer.WaterPeddlerDocumentActivity">
+    tools:context=".WaterStationDocumentVersion2Activity">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-    <LinearLayout
-        android:background="@android:color/white"
-        android:orientation="vertical"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent">
-
-            <TextView
-                android:id="@+id/TextView11"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:textSize="18dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
+                android:layout_height="55dp"
                 android:gravity="center"
-                android:text="Submit Document"
-                android:textColor="@android:color/holo_blue_dark" />
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-               android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:text="Pending"
-                android:textColor="@android:color/holo_orange_light"
-                android:textSize="15sp" />
-
-
-
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#32918b88">
-
-                    <TextView
-                        android:id="@+id/textView5"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/driverLicenseImageView"
-                        android:gravity="center"
-                        android:text="Driver's License"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
-
-                    <Button
-                        android:id="@+id/chooseButton1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_alignEnd="@+id/driverLicenseImageView"
-                        android:layout_alignParentEnd="true"
-                        android:background="@android:color/holo_blue_dark"
-                        android:text="Choose image"
-                        android:textColor="@android:color/background_light" />
-
-                    <ImageView
-                        android:id="@+id/driverLicenseImageView"
-                        android:layout_width="110dp"
-                        android:layout_height="97dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginStart="47dp"
-                        android:layout_marginTop="5dp"
-                        android:scaleType="fitXY"
-                        app:srcCompat="@drawable/ic_launcher_background" />
-
-
-                <TextView
-                    android:id="@+id/textView8"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/textView5"
-                    android:text="Note: Before you proceed, you must submit the necessary requirement(s) and wait for the administrator's approval. Once the submittion is approved, you may proceed." />
-            </RelativeLayout>
-            <Button
-                android:id="@+id/SubmitButtonWaterPeddlerHomeActivity"
-                android:layout_width="wrap_content"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="12dp"
                 android:background="@android:color/holo_blue_dark"
-                android:text="Submit"
-                android:textColor="@android:color/background_light" />
-            <android.support.v4.widget.ContentLoadingProgressBar
-                android:id="@+id/progress_bar"
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:text="Station Requirments"
+                    android:textColor="#FFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true" />
+                android:layout_gravity="center"
+                android:orientation="vertical">
+                <EditText
+                    android:id="@+id/driverLicenseNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:hint="Drivers License No"
+                    android:inputType="textEmailAddress"
+                    android:textAlignment="center"
+                    android:textSize="18dp" />
 
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:id="@+id/driversLicense_image"
+                    android:src="@drawable/ic_image_black_24dp"/>
 
-    </LinearLayout>
+                <Button
+                    android:id="@+id/licenseBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Add Drivers License"
+                    android:layout_margin="10dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="50dp"
+                    android:background="@android:color/holo_blue_dark"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:layout_margin="10dp">
+                <Button
+                    android:layout_weight="1"
+                    android:id="@+id/submitButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="REGISTER"
+                    android:layout_marginRight="5dp"
+                    android:textColor="@android:color/white"
+                    android:background="@android:color/holo_blue_dark"/>
+            </LinearLayout>
+        </LinearLayout>
     </ScrollView>
-
 </RelativeLayout>

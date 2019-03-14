@@ -1,38 +1,25 @@
 package com.example.administrator.h2bot;
-
-import com.example.administrator.h2bot.customer.CustomerMainActivity;
-import com.example.administrator.h2bot.deliveryman.DeliveryManDocumentActivity;
-import com.example.administrator.h2bot.deliveryman.DeliveryManMainActivity;
+import com.example.administrator.h2bot.dealer.WaterPeddlerDocumentActivity;
 import com.example.administrator.h2bot.models.*;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.administrator.h2bot.tpaaffiliate.TPAAffiliateMainActivity;
-import com.example.administrator.h2bot.waterstation.WaterStationMainActivity;
-import com.google.android.gms.maps.model.LatLng;
+import com.example.administrator.h2bot.tpaaffiliate.TPADocumentActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,12 +27,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
@@ -55,19 +38,19 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity{
 
     private static final int PICK_IMAGE_REQUEST = 1;
     Button addPhoto, signUp;
+    Button continueBtn, continueWaterDealerBtn, continueTPA;
     ImageView imageView;
 
     double lat;
     double lng;
 
-    Geocoder coder;
-    List<Address> address;
-    Address LocationAddress;
 
     static int PReqCode = 1;
     static int REQUESTCODE = 1;
@@ -92,9 +75,9 @@ public class RegisterActivity extends AppCompatActivity{
         setContentView(R.layout.activity_register);
 
         mAuth = FirebaseAuth.getInstance();
-        String s = getIntent().getStringExtra("TextValue");
+        String user_type = getIntent().getStringExtra("TextValue");
         headerTitle = findViewById(R.id.headerRegister);
-        headerTitle.setText(s);
+        headerTitle.setText(user_type);
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         firstNameRegister = findViewById(R.id.RegisterFullName);
@@ -116,6 +99,34 @@ public class RegisterActivity extends AppCompatActivity{
         imageView = findViewById(R.id.RegisterPhoto);
         addPhoto = findViewById(R.id.addPhotoRegister);
         signUp = findViewById(R.id.RegisterSignUp);
+        continueBtn = findViewById(R.id.continueBtn);
+        continueWaterDealerBtn = findViewById(R.id.continueWaterDealerBtn);
+        continueTPA = findViewById(R.id.continueTPA);
+
+        if(user_type.equalsIgnoreCase("Water Station")){
+            signUp.setVisibility(View.GONE);
+            continueWaterDealerBtn.setVisibility(View.GONE);
+            continueTPA.setVisibility(View.GONE);
+            continueBtn.setVisibility(View.VISIBLE);
+        }
+        else if(user_type.equalsIgnoreCase("Water Dealer")){
+            signUp.setVisibility(View.GONE);
+            continueBtn.setVisibility(View.GONE);
+            continueTPA.setVisibility(View.GONE);
+            continueWaterDealerBtn.setVisibility(View.VISIBLE);
+        }
+        else if(user_type.equalsIgnoreCase("Third Party Affiliate")){
+            signUp.setVisibility(View.GONE);
+            continueBtn.setVisibility(View.GONE);
+            continueWaterDealerBtn.setVisibility(View.GONE);
+            continueTPA.setVisibility(View.VISIBLE);
+        }
+        else if(user_type.equalsIgnoreCase("Customer")){
+            continueBtn.setVisibility(View.GONE);
+            continueTPA.setVisibility(View.GONE);
+            continueWaterDealerBtn.setVisibility(View.GONE);
+            signUp.setVisibility(View.VISIBLE);
+        }
 
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,6 +136,96 @@ public class RegisterActivity extends AppCompatActivity{
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+            }
+        });
+
+        continueTPA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String firstNameString = firstNameRegister.getText().toString();
+                String lastNameString = lastNameRegister.getText().toString();
+                String addressString = addressRegister.getText().toString();
+                String contactNoString = contactRegister.getText().toString();
+                String emailAddressString = emailRegister.getText().toString();
+                String passwordString = passwordRegister.getText().toString();
+                if(firstNameString.isEmpty() || lastNameString.isEmpty() || addressString.isEmpty()
+                        || contactNoString.isEmpty() || emailAddressString.isEmpty() || passwordString.isEmpty() || uri == null){
+                    Toast.makeText(RegisterActivity.this, "Some fields are missing", Toast.LENGTH_SHORT).show();
+                }
+                else if(!isEmailValid(emailAddressString)){
+                    Toast.makeText(RegisterActivity.this, "Invalid email address", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Intent intent = new Intent(RegisterActivity.this, TPADocumentActivity.class);
+                    intent.putExtra("firstname", firstNameString);
+                    intent.putExtra("lastname", lastNameString);
+                    intent.putExtra("address", addressString);
+                    intent.putExtra("contactno", contactNoString);
+                    intent.putExtra("emailaddress", emailAddressString);
+                    intent.putExtra("password", passwordString);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        continueWaterDealerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String firstNameString = firstNameRegister.getText().toString();
+                String lastNameString = lastNameRegister.getText().toString();
+                String addressString = addressRegister.getText().toString();
+                String contactNoString = contactRegister.getText().toString();
+                String emailAddressString = emailRegister.getText().toString();
+                String passwordString = passwordRegister.getText().toString();
+                if(firstNameString.isEmpty() || lastNameString.isEmpty() || addressString.isEmpty()
+                        || contactNoString.isEmpty() || emailAddressString.isEmpty() || passwordString.isEmpty() || uri == null){
+                    Toast.makeText(RegisterActivity.this, "Some fields are missing", Toast.LENGTH_SHORT).show();
+                }
+                else if(!isEmailValid(emailAddressString)){
+                    Toast.makeText(RegisterActivity.this, "Invalid email address", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Intent intent = new Intent(RegisterActivity.this, WaterPeddlerDocumentActivity.class);
+                    intent.putExtra("firstname", firstNameString);
+                    intent.putExtra("lastname", lastNameString);
+                    intent.putExtra("address", addressString);
+                    intent.putExtra("contactno", contactNoString);
+                    intent.putExtra("emailaddress", emailAddressString);
+                    intent.putExtra("password", passwordString);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        continueBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String firstNameString = firstNameRegister.getText().toString();
+                String lastNameString = lastNameRegister.getText().toString();
+                String addressString = addressRegister.getText().toString();
+                String contactNoString = contactRegister.getText().toString();
+                String emailAddressString = emailRegister.getText().toString();
+                String passwordString = passwordRegister.getText().toString();
+                String filepath = uri.toString();
+                if(firstNameString.isEmpty() || lastNameString.isEmpty() || addressString.isEmpty()
+                        || contactNoString.isEmpty() || emailAddressString.isEmpty() || passwordString.isEmpty() || uri == null){
+                    Toast.makeText(RegisterActivity.this, "Some fields are missing", Toast.LENGTH_SHORT).show();
+                }
+                else if(!isEmailValid(emailAddressString)){
+                    Toast.makeText(RegisterActivity.this, "Invalid email address", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Intent intent = new Intent(RegisterActivity.this, WaterStationDocumentVersion2Activity.class);
+                    intent.putExtra("firstname", firstNameString);
+                    intent.putExtra("lastname", lastNameString);
+                    intent.putExtra("address", addressString);
+                    intent.putExtra("contactno", contactNoString);
+                    intent.putExtra("emailaddress", emailAddressString);
+                    intent.putExtra("password", passwordString);
+                    intent.putExtra("filepath", filepath);
+                    startActivity(intent);
+//                    startActivity(new Intent(RegisterActivity.this, WaterStationDocumentVersion2Activity.class));
+                }
             }
         });
 
@@ -141,67 +242,25 @@ public class RegisterActivity extends AppCompatActivity{
                 String emailAddressString = emailRegister.getText().toString();
                 String passwordString = passwordRegister.getText().toString();
 
-                if(passwordString.isEmpty() && firstNameString.isEmpty() && lastNameString.isEmpty() && addressString.isEmpty() && contactNoString.isEmpty() && emailAddressString.isEmpty() && imageView.getDrawable() == null)
-                {
+                if(passwordString.isEmpty() && firstNameString.isEmpty() && lastNameString.isEmpty()
+                        && addressString.isEmpty() && contactNoString.isEmpty() && emailAddressString.isEmpty()
+                        && imageView.getDrawable() == null){
                     showMessage("Some fields are missing");
-                    progressDialog.dismiss();
                 }
-                else if(imageView.getDrawable() == null)
-                {
+                else if(imageView.getDrawable() == null){
                     showMessage("Photo is not yet set!");
-                    progressDialog.dismiss();
                 }
-                else if (contactNoString.length() > 11)
-                {
+                else if (contactNoString.length() > 11){
                     showMessage("Contact no. must be maximum of 11 characters");
-                    progressDialog.dismiss();
                 }
-                else
-                {
+                else{
                     CreateAccount(emailAddressString, passwordString);
                 }
             }
         });
     }
 
-    private void getLocationSetter()
-    {
-        coder = new Geocoder(this);
-        LocationAddress = null;
-        String locateAddress = addressRegister.getText().toString();
 
-        try {
-            address = coder.getFromLocationName(locateAddress, 5);
-
-            LocationAddress = address.get(0);
-
-            lat = LocationAddress.getLatitude();
-            lng = LocationAddress.getLongitude();
-
-            String getLocateLatitude = String.valueOf(lat);
-            String getLocateLongtitude = String.valueOf(lng);
-
-            UserLocationAddress userLocationAddress = new UserLocationAddress(FirebaseAuth.getInstance().getCurrentUser().getUid(), getLocateLatitude, getLocateLongtitude);
-            DatabaseReference locationRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
-            locationRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userLocationAddress)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            passToNextActivity();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            showMessage("Error to get location");
-                            progressDialog.dismiss();
-                        }
-                    });
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
 
     @Override
     protected void onDestroy() {
@@ -231,8 +290,7 @@ public class RegisterActivity extends AppCompatActivity{
 
     }
 
-    private void CreateAccount(String emailString, String passwordString)
-    {
+    private void CreateAccount(String emailString, String passwordString){
         mAuth.createUserWithEmailAndPassword(emailString, passwordString)
             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
@@ -254,12 +312,11 @@ public class RegisterActivity extends AppCompatActivity{
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(RegisterActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
 
-
-
-                        StorageReference mStorage = FirebaseStorage.getInstance().getReference("users_photos").child(uidString);
+                        StorageReference mStorage = FirebaseStorage.getInstance().getReference("station_photos").child(uidString);
                         mStorage.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -269,92 +326,130 @@ public class RegisterActivity extends AppCompatActivity{
                                     public void onSuccess(Uri uri) {
                                         String stringUri = uri.toString();
                                         UserFile userFile;
-                                        if(userType.equals("Customer"))
-                                        {
                                             userFile = new UserFile(uidString,
-                                                    stringUri,
-                                                    firstNameRegister.getText().toString(),
-                                                    lastNameRegister.getText().toString(),
-                                                    addressRegister.getText().toString(),
-                                                    contactRegister.getText().toString(),
-                                                    userType,
-                                                    "active");
-                                        }
-                                            else
-                                            {
-                                                userFile = new UserFile(uidString,
-                                                        stringUri,
-                                                        firstNameRegister.getText().toString(),
-                                                        lastNameRegister.getText().toString(),
-                                                        addressRegister.getText().toString(),
-                                                        contactRegister.getText().toString(),
-                                                        userType,
-                                                        "inactive");
-                                            }
+                                                stringUri,
+                                                firstNameRegister.getText().toString(),
+                                                lastNameRegister.getText().toString(),
+                                                addressRegister.getText().toString(),
+                                                contactRegister.getText().toString(),
+                                                "Customer",
+                                                "active");
+
                                             UserAccountFile userAccountFile = new UserAccountFile(uidString,
                                                     emailRegister.getText().toString(),
                                                     passwordRegister.getText().toString(),
                                                     newToken,
                                                     "active");
+
                                             FirebaseDatabase.getInstance().getReference("User_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userFile)
-                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                        @Override
-                                                        public void onSuccess(Void aVoid) {
-                                                            progressDialog.dismiss();
-                                                            FirebaseDatabase.getInstance().getReference("User_Account_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userAccountFile)
-                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                        @Override
-                                                                        public void onSuccess(Void aVoid) {
-                                                                            getLocationSetter();
-                                                                        }
-                                                                    })
-                                                                    .addOnFailureListener(new OnFailureListener() {
-                                                                        @Override
-                                                                        public void onFailure(@NonNull Exception e) {
-                                                                            progressDialog.dismiss();
-                                                                            showMessage("Error, Connection Error");
-                                                                            progressDialog.dismiss();
-                                                                        }
-                                                                    });
-                                                        }
-                                                    })
-                                                    .addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            progressDialog.dismiss();
-                                                            showMessage("Error, Connection Error");
-                                                        }
-                                                    });
-                                            // mAuth.signOut();
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        progressDialog.dismiss();
+                                                        FirebaseDatabase.getInstance().getReference("User_Account_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userAccountFile)
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    getLocationSetter();
+                                                                }
+                                                            })
+                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    progressDialog.dismiss();
+                                                                    showMessage("Error, Connection Error");
+                                                                    progressDialog.dismiss();
+                                                                }
+                                                            });
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        progressDialog.dismiss();
+                                                        showMessage("Error, Connection Error");
                                                     }
                                                 });
-                                            }
-                                        });
+
                                     }
-                                    else
-                                    {
-                                        showMessage("Email already used");
-                                        progressDialog.dismiss();
-                                    }
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    showMessage("Error to save");
-                                    progressDialog.dismiss();
+                                });
                                 }
                             });
+                        }
+                        else
+                        {
+                            showMessage("Error to save data");
+                            progressDialog.dismiss();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        showMessage("Error: " + e.getMessage());
+                        progressDialog.dismiss();
+                    }
+                });
+    }
+
+    private void getLocationSetter()
+    {
+        Geocoder coder = new Geocoder(this);
+        List<Address> address;
+        Address LocationAddress = null;
+        String locateAddress = addressRegister.getText().toString();
+
+        try {
+            address = coder.getFromLocationName(locateAddress, 5);
+
+            LocationAddress = address.get(0);
+
+            lat = LocationAddress.getLatitude();
+            lng = LocationAddress.getLongitude();
+
+            String getLocateLatitude = String.valueOf(lat);
+            String getLocateLongtitude = String.valueOf(lng);
+
+            UserLocationAddress userLocationAddress = new UserLocationAddress(FirebaseAuth.getInstance().getCurrentUser().getUid(), getLocateLatitude, getLocateLongtitude);
+            DatabaseReference locationRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
+            locationRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userLocationAddress)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            showMessage("Successfully registered");
+                            progressDialog.dismiss();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            //showMessage("Error to get location");
+                            progressDialog.dismiss();
+                        }
+                    });
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            showMessage("Error the locate your address, please change again");
+        }
     }
 
     private void passToNextActivity()
     {
         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intent);
-        finish();
     }
 
     private void showMessage(String s) {
         Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+    }
+
+    public static boolean isEmailValid(String email) {
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }

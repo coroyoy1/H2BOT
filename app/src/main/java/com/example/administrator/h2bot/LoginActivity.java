@@ -188,7 +188,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                         else if(documentVerify.equals("unverified") || documentVerify.equals("Unverified"))
                         {
-                            startActivity(new Intent(LoginActivity.this, MerchantAccessVerification.class));
+//                            startActivity(new Intent(LoginActivity.this, MerchantAccessVerification.class));
 
                         }
                         else if(documentVerify.equals("active") || documentVerify.equals("Active"))
@@ -221,7 +221,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                         else if(documentVerify.equals("unverified"))
                         {
-                            startActivity(new Intent(LoginActivity.this, MerchantAccessVerification.class));
+//                            startActivity(new Intent(LoginActivity.this, MerchantAccessVerification.class));
                             showMessages("Need verification");
                         }
                         showMessages("Successfully logged-in as Water Dealer");
@@ -235,7 +235,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                         else if(documentVerify.equals("unverified"))
                         {
-                            startActivity(new Intent(LoginActivity.this, MerchantAccessVerification.class));
+//                            startActivity(new Intent(LoginActivity.this, MerchantAccessVerification.class));
                             showMessages("Need verification");
                         }
                         else if(documentVerify.equals("active"))

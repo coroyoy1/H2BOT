@@ -83,6 +83,9 @@ dependencies {
 
     //Geofire
     implementation 'com.firebase:geofire-android:2.3.1'
+
+    //Cloud Vission
+    implementation 'com.google.android.gms:play-services-vision:17.0.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

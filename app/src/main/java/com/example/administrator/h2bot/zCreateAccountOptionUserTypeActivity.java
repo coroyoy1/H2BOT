@@ -53,8 +53,6 @@ public class zCreateAccountOptionUserTypeActivity extends AppCompatActivity impl
                 intent.setClass(zCreateAccountOptionUserTypeActivity.this, RegisterActivity.class);
                 startActivity(intent);
                 break;
-//            String s = getIntent().getStringExtra("TextValue");
-
         }
     }
 }

@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.LoginActivity;
-import com.example.administrator.h2bot.MerchantAccessVerification;
 import com.example.administrator.h2bot.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -148,7 +147,6 @@ public class DeliveryManDocumentActivity extends AppCompatActivity implements Vi
                                     });
                             progressDialog.dismiss();
                             showMessages("Requirements still on process for the admin");
-                            passToNextAct();
                         }
                     })
             .addOnFailureListener(new OnFailureListener() {
@@ -213,11 +211,6 @@ public class DeliveryManDocumentActivity extends AppCompatActivity implements Vi
         }
     }
 
-    public void passToNextAct()
-    {
-        Intent passIntent = new Intent(DeliveryManDocumentActivity.this, MerchantAccessVerification.class);
-        startActivity(passIntent);
-    }
 
     public void showMessages(String s)
     {

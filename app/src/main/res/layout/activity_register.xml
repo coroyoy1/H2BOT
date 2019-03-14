@@ -33,8 +33,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/RegisterPhoto"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_gravity="center"
             android:background="@drawable/ic_account_circle_black_24dp"
             android:backgroundTint="@android:color/holo_blue_dark"
@@ -174,6 +174,36 @@
                 android:layout_margin="5dp"
                 android:background="@android:color/holo_blue_dark"
                 android:text="@string/sign_up"
+                android:textColor="#FFF" />
+
+            <Button
+                android:id="@+id/continueBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_margin="5dp"
+                android:background="@android:color/holo_blue_dark"
+                android:text="Continue"
+                android:textColor="#FFF" />
+
+            <Button
+                android:id="@+id/continueWaterDealerBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_margin="5dp"
+                android:background="@android:color/holo_blue_dark"
+                android:text="Continue"
+                android:textColor="#FFF" />
+
+            <Button
+                android:id="@+id/continueTPA"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_margin="5dp"
+                android:background="@android:color/holo_blue_dark"
+                android:text="Continue"
                 android:textColor="#FFF" />
 
             <TextView

@@ -94,6 +94,9 @@
             android:name=".dealer.WaterPeddlerDocumentActivity"
             android:theme="@style/Theme.Design.Light.NoActionBar" />
         <activity
+            android:name=".tpaaffiliate.TPADocumentActivity"
+            android:theme="@style/Theme.Design.Light.NoActionBar" />
+        <activity
             android:name=".dealer.WaterPeddlerHomeActivity"
             android:theme="@style/Theme.Design.Light" />
         <activity android:name=".WaterStationHomeActivity" />
@@ -151,9 +154,6 @@
         </activity>
         <activity
             android:name=".deliveryman.DeliveryManMainActivity"
-            android:theme="@style/Theme.Design.Light" />
-        <activity
-            android:name=".MerchantAccessVerification"
             android:theme="@style/Theme.Design.Light" />
         <activity
             android:name=".models.CaptureActivityPortrait"

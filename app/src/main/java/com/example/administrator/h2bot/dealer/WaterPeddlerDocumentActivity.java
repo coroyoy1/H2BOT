@@ -27,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.MerchantAccessVerification;
@@ -39,11 +38,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -78,10 +74,8 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
     private StorageTask mUploadTask,mUploadTask2;
     private ProgressDialog progressDialog;
     Spinner startSpinner, endSpinner;
-    TextView deliveryID;
     private double lat;
     private double lng;
-    String namedealer, addressdealer, numberdealer;
     Button chooseButton1,chooseButton2,SubmitButtonWaterPeddlerHomeActivity;
 
     @Override
@@ -94,16 +88,19 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
         mAuth = FirebaseAuth.getInstance();
+        dealerName = findViewById(R.id.dealerName);
+        dealerAddress = findViewById(R.id.dealerAddress);
+        dealerNo = findViewById(R.id.dealerNo);
         dealerBusinesshoursStart = findViewById(R.id.dealerBusinesshoursStart);
         dealerBusinesshoursEnd = findViewById(R.id.dealerBusinesshoursEnd);
         dealerCapacity = findViewById(R.id.dealerCapacity);
         dealerDeliveryFee = findViewById(R.id.dealerDeliveryFee);
         currentUser = mAuth.getCurrentUser().getUid();
         radioYes = findViewById(R.id.radioYes);
+        radioNo = findViewById(R.id.radioNo);
         radioFree = findViewById(R.id.radioFree);
         startSpinner= findViewById(R.id.startSpinner);
         endSpinner= findViewById(R.id.endSpinner);
-        deliveryID=findViewById(R.id.deliveryID);
         radioYes.setChecked(true);
 
         radioPerGalSD = findViewById(R.id.radioPerGalSD);
@@ -143,7 +140,14 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
             businessDeliveryService = "inactive";
         }
 
+
         radioYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setChecked();
+            }
+        });
+        radioNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setChecked();
@@ -170,20 +174,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                 uploadDocument();
             }
         });
-        DatabaseReference getinfo = FirebaseDatabase.getInstance().getReference("User_File").child(currentUser);
-        getinfo.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                namedealer = dataSnapshot.child("user_firtname").getValue(String.class)+" "+dataSnapshot.child("user_lastname").getValue(String.class);
-                addressdealer = dataSnapshot.child("user_address").getValue(String.class);
-                numberdealer = dataSnapshot.child("user_phone_no").getValue(String.class);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     private void openGalery()
@@ -200,7 +191,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
         Geocoder coder = new Geocoder(this);
         List<Address> address;
         Address LocationAddress = null;
-        String locateAddress = addressdealer;
+        String locateAddress = dealerAddress.getText().toString();
 
         try {
             address = coder.getFromLocationName(locateAddress, 5);
@@ -260,16 +251,21 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
         }
     }
     private void uploadDocument() {
+        String dealername = dealerName.getText().toString();
+        String dealeraddress = dealerAddress.getText().toString();
+        String dealerno = dealerNo.getText().toString();
         String dealerstart = dealerBusinesshoursStart.getText().toString() + startSpinner.getSelectedItem().toString();
         String dealerend = dealerBusinesshoursEnd.getText().toString() + endSpinner.getSelectedItem().toString();
         String dealercapacity = dealerCapacity.getText().toString();
         String dealerdeliveryfee = dealerDeliveryFee.getText().toString();
         if (mImageUri != null) {
-            Log.d("pic","HhoI"+mImageUri.toString());
-            if(dealerstart.isEmpty()
+            if(dealername.isEmpty()
+                    && dealerstart.isEmpty()
                     && dealerend.isEmpty()
                     && dealerdeliveryfee.isEmpty()
-                    && dealercapacity.isEmpty())
+                    && dealercapacity.isEmpty()
+                    && dealerno.isEmpty()
+                    && dealeraddress.isEmpty())
             {
                 showMessages("Please fill up tall the fields");
                 return;
@@ -307,7 +303,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                 Toast.makeText(WaterPeddlerDocumentActivity.this, "Uploaded successfully" + currentuser, Toast.LENGTH_SHORT).show();
                                 Log.d("capacity",""+dealerCapacity);
                                 startActivity(new Intent(WaterPeddlerDocumentActivity.this, MerchantAccessVerification.class));
-                                UserWSBusinessInfoFile userWSBusinessInfoFile = new UserWSBusinessInfoFile(currentUser, namedealer, dealerstart, dealerend, businessDeliveryService, businessFreeOrNoText, dealerdeliveryfee, dealercapacity, numberdealer, addressdealer, "active", "");
+                                UserWSBusinessInfoFile userWSBusinessInfoFile = new UserWSBusinessInfoFile(currentUser, dealername, dealerstart, dealerend, businessDeliveryService, businessFreeOrNoText, dealerdeliveryfee, dealercapacity, dealerno, dealeraddress, "active", "");
                                 FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(currentUser).setValue(userWSBusinessInfoFile);
                             }
                         })
@@ -338,19 +334,29 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
 
 public void setChecked()
 {
-     if(radioYes.isChecked())
+    if (radioNo.isChecked())
     {
-        deliveryID.setVisibility(View.VISIBLE);
+        dealerCapacity.setVisibility(View.INVISIBLE);
+        dealerCapacity.setText("");
+        radioPerGalSD.setVisibility(View.INVISIBLE);
+        radioFixSD.setVisibility(View.INVISIBLE);
+        dealerDeliveryFee.setVisibility(View.INVISIBLE);
+        businessFreeOrNoText = "not";
+        businessDeliveryService = "inactive";
+    }
+    else if(radioYes.isChecked())
+    {
+        dealerCapacity.setVisibility(View.VISIBLE);
         dealerCapacity.setText("");
         radioPerGalSD.setVisibility(View.VISIBLE);
         radioFixSD.setVisibility(View.VISIBLE);
         dealerDeliveryFee.setVisibility(View.VISIBLE);
-        businessFreeOrNoText = "Not Free";
+        businessFreeOrNoText = "not";
         businessDeliveryService = "active";
     }
     else if(radioFree.isChecked())
     {
-        deliveryID.setVisibility(View.INVISIBLE);
+        dealerCapacity.setVisibility(View.INVISIBLE);
         radioPerGalSD.setVisibility(View.INVISIBLE);
         radioFixSD.setVisibility(View.INVISIBLE);
         dealerDeliveryFee.setVisibility(View.INVISIBLE);
