@@ -103,29 +103,13 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                 adapter2.clear();
                 nav_pendingorders_ws.setVisibility(View.VISIBLE);
                 nav_inprogress_ws.setVisibility(View.VISIBLE);
-                Log.d("ambotnimo","AMBOT");
                 for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                 {
-                    Log.d("gago","ka");
                     for (DataSnapshot post : dataSnapshot1.child(currendId).getChildren())
                     {
-                        Log.d("mas","ka");
                         OrderModel orderModel = post.getValue(OrderModel.class);
                         if(orderModel != null)
                         {
-                            Log.d("merchantid ",""+orderModel.getOrder_merchant_id()+"="+currendId);
-                            Log.d("customerid ",""+orderModel.getOrder_customer_id()+"="+currendId);
-                            Log.d("address ",""+orderModel.getOrder_address()+"="+currendId);
-                            Log.d("deliverydate ",""+orderModel.getOrder_delivery_date()+"="+currendId);
-                            Log.d("deliveryfee ",""+orderModel.getOrder_delivery_fee()+"="+currendId);
-                            Log.d("deliverymethod ",""+orderModel.getOrder_delivery_method()+"="+currendId);
-                            Log.d("orderno ",""+orderModel.getOrder_no()+"="+currendId);
-                            Log.d("orderpricepergallon ",""+orderModel.getOrder_price_per_gallon()+"="+currendId);
-                            Log.d("orderqty ",""+orderModel.getOrder_qty()+"="+currendId);
-                            Log.d("orderstataus ",""+orderModel.getOrder_status()+"="+currendId);
-                            Log.d("totalamount ",""+orderModel.getOrder_total_amt()+"="+currendId);
-                            Log.d("watertype ",""+orderModel.getOrder_water_type()+"="+currendId);
-
                             if(orderModel.getOrder_merchant_id().equals(currendId)
                                     && orderModel.getOrder_status().equals("Pending"))
                             {
@@ -160,7 +144,7 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                                 }
                             }
                             if(orderModel.getOrder_merchant_id().equals(currendId)
-                                    && orderModel.getOrder_status().equals("In-Progress"))
+                                    && orderModel.getOrder_status().equals("In-Progress") && orderModel.getOrder_status().equalsIgnoreCase("Dispatched"))
                             {
                                 adapter2.add(orderModel);
                                 adapter2.size();

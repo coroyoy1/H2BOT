@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -50,7 +51,7 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
 
 
     TextView orderNo, customer, contactNo, waterType, itemQuantity, pricePerGallon,  service, address, deliveryFee, totalPrice, deliveryMethod, deliveryDate;
-    Button launchQR, viewLocation;
+    Button launchQR, viewLocation, Dispatch, launchSMS, launchCall;
     String orderNoGET, customerNoGET, merchantNOGET, transactionNo, dataIssuedGET, deliveryStatusGET
             ,transStatusGET, transTotalAmountGET, transDeliveryFeeGET, transTotalNoGallonGET,
             transDeliveryFeePerGallonDetail, transNoDetail, transNoOfGallonDetail, transPartialAmountDetail, transPricePerGallonDetail
@@ -81,7 +82,9 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
         launchQR = view.findViewById(R.id.launchQRINACC);
         viewLocation = view.findViewById(R.id.viewLocationButtonINACC);
         imageView = view.findViewById(R.id.imageViewINACC);
-
+        Dispatch = view.findViewById(R.id.Dispatch);
+        launchSMS = view.findViewById(R.id.launchSMS);
+        launchCall = view.findViewById(R.id.launchCall);
         deliveryMethod = view.findViewById(R.id.MethodINACC);
         deliveryDate = view.findViewById(R.id.datedeliveredINACC);
 
@@ -109,7 +112,101 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
 
         }
         displayAllData();
+        launchSMS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse("smsto:"+contactNo.getText().toString());
+                Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
+                intent.putExtra("sms_body", "");
+                startActivity(intent);
+            }
+        });
+        launchCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:"+contactNo.getText().toString()));
+                startActivity(intent);
+                Toast.makeText(getActivity(), "Calling....", Toast.LENGTH_LONG).show();
+            }
+        });
+        Dispatch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                DatabaseReference databaseDispatch = FirebaseDatabase.getInstance().getReference("Customer_File");
+                                databaseDispatch.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                                        {
+                                            for (DataSnapshot post : dataSnapshot1.child(firebaseUser.getUid()).getChildren())
+                                            {
+                                                OrderModel orderModel = post.getValue(OrderModel.class);
+                                                if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid()) && orderModel.getOrder_no().equals(transactionNo))
+                                                {
+                                                    String customerID = orderModel.getOrder_customer_id();
+                                                    DatabaseReference databaseDispatch2 = FirebaseDatabase.getInstance().getReference("Customer_File");
+                                                    databaseDispatch2.child(customerID).child(firebaseUser.getUid()).child(transactionNo).child("order_status").setValue("Dispatched");
+                                                }
+                                            }
+                                        }
+                                    }
 
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                                break;
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //No button clicked
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage("Are you sure to dispatch this order?").setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
+
+            }
+        });
+        DatabaseReference databaseDispatch2 = FirebaseDatabase.getInstance().getReference("Customer_File");
+        databaseDispatch2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                {
+                    for (DataSnapshot post : dataSnapshot1.child(firebaseUser.getUid()).getChildren())
+                    {
+                        OrderModel orderModel = post.getValue(OrderModel.class);
+                        if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid()) && orderModel.getOrder_no().equals(transactionNo))
+                        {
+                           if(orderModel.getOrder_status().equalsIgnoreCase("Dispatched"))
+                           {
+                               Dispatch.setText("Dispatching");
+                           }
+                           else
+                           {
+                               Dispatch.setText("Dispatch");
+                           }
+                        }
+                    }
+                }
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         return view;
     }
 
@@ -197,9 +294,10 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
                         if(orderModel != null)
                         {
                             if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid())
-                                    && orderModel.getOrder_status().equals("In-Progress") && orderModel.getOrder_no().equals(transactionNo))
+                                    && orderModel.getOrder_status().equals("In-Progress") || orderModel.getOrder_status().equals("Dispatched")
+                                    && orderModel.getOrder_no().equals(transactionNo))
                             {
-                                if(orderModel.getOrder_status().equals("In-Progress")) {
+                                if(orderModel.getOrder_status().equals("In-Progress")||orderModel.getOrder_status().equals("Dispatched")) {
                                     orderNo.setText(orderModel.getOrder_no());
                                     itemQuantity.setText(orderModel.getOrder_qty());
                                     pricePerGallon.setText(orderModel.getOrder_price_per_gallon());

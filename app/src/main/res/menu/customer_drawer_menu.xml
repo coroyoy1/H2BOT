@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/map"
@@ -7,6 +8,7 @@
             android:title="Map" />
         <item
             android:id="@+id/my_order"
+            app:actionViewClass="android.widget.TextView"
             android:icon="@drawable/ic_shopping_cart_black_24dp"
             android:title="My Orders" />
     </group>

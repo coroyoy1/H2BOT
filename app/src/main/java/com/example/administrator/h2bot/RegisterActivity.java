@@ -333,7 +333,7 @@ public class RegisterActivity extends AppCompatActivity{
                                     }
                                     else
                                     {
-                                        showMessage("Error to save data");
+                                        showMessage("Email already used");
                                         progressDialog.dismiss();
                                     }
                                 }

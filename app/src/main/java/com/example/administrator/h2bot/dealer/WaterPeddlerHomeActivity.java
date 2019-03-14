@@ -103,6 +103,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
                             if(orderModel.getOrder_merchant_id().equals(currendId)
                                     && orderModel.getOrder_status().equals("Pending"))
                             {
+                                Log.d("Hiko","Hi"+orderModel.getOrder_status());
                                 adapter.add(orderModel);
                                 adapter.size();
                                 nav_pending_orders_wp.setVisibility(View.VISIBLE);
@@ -135,7 +136,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
                                 }
                             }
                             if(orderModel.getOrder_merchant_id().equals(currendId)
-                                    && orderModel.getOrder_status().equals("In-Progress"))
+                                    && orderModel.getOrder_status().equalsIgnoreCase("In-Progress")|| orderModel.getOrder_status().equalsIgnoreCase("Dispatched"))
                             {
                                 adapter2.add(orderModel);
                                 adapter2.size();
