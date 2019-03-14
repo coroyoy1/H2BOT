@@ -296,6 +296,7 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
                 linearLayout.addView(title);
                 linearLayout.addView(snippets);
                 return linearLayout;
+
             }
         });
     }
