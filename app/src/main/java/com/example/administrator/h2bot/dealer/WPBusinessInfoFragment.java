@@ -74,6 +74,18 @@ public class WPBusinessInfoFragment extends Fragment implements View.OnClickList
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
         firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference3 = firebaseDatabase.getReference("User_File").child(firebaseUser.getUid());
+        databaseReference3.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                stationName.setText("Name: "+dataSnapshot.child("user_firtname").getValue(String.class)+" "+dataSnapshot.child("user_lastname").getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         databaseReference = firebaseDatabase.getReference("User_WS_Business_Info_File").child(firebaseUser.getUid());
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -82,7 +94,6 @@ public class WPBusinessInfoFragment extends Fragment implements View.OnClickList
                 if(userWSBusinessInfoFile != null)
                 {
                     String businessTime = userWSBusinessInfoFile.getBusiness_start_time()+" - "+userWSBusinessInfoFile.getBusiness_end_time();
-                    stationName.setText("Station Name: "+userWSBusinessInfoFile.getBusiness_name());
                     stationAddress.setText("Full Address: "+userWSBusinessInfoFile.getBusiness_address());
                     stationHours.setText("Business Hours: "+businessTime);
                     stationTelNo.setText("Contact No.: "+userWSBusinessInfoFile.getBusiness_tel_no());

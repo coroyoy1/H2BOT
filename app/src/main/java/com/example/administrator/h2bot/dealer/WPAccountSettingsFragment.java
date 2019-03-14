@@ -58,7 +58,7 @@ public class WPAccountSettingsFragment extends Fragment implements View.OnClickL
 
         Button updateAcc = view.findViewById(R.id.updateAccount);
 
-
+        StationNameWS.setVisibility(View.GONE);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

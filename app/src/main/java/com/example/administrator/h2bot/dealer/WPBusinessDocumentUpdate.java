@@ -39,7 +39,7 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
     private static final int PICK_IMAGE_REQUEST = 1;
     ImageView imageView1, imageView2, imageView3, imageView4, imageView5, imageView6;
     Button button1, button2, button3, button4, button5, button6, updateDocummentButton;
-    EditText permitString;
+    EditText permitString,driverLicenseNumberTextView;
 
     Uri uri1,uri2,uri3,uri4,uri5,uri6;
 
@@ -66,24 +66,15 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
         imageView4 = view.findViewById(R.id.imageUD4);
         imageView5 = view.findViewById(R.id.imageUD5);
         imageView6 = view.findViewById(R.id.imageUD6);
-
+        driverLicenseNumberTextView = view.findViewById(R.id.driverLicenseNumberTextView);
         button1 = view.findViewById(R.id.permitButtonUD1);
-        button2 = view.findViewById(R.id.permitButtonUD2);
-        button3 = view.findViewById(R.id.permitButtonUD3);
-        button4 = view.findViewById(R.id.permitButtonUD4);
-        button5 = view.findViewById(R.id.permitButtonUD5);
-        button6 = view.findViewById(R.id.permitButtonUD6);
 
         permitString = view.findViewById(R.id.businessPermitNoUD);
 
         updateDocummentButton = view.findViewById(R.id.updateButtonUD);
 
         button1.setOnClickListener(this);
-        button2.setOnClickListener(this);
-        button3.setOnClickListener(this);
-        button4.setOnClickListener(this);
-        button5.setOnClickListener(this);
-        button6.setOnClickListener(this);
+
         updateDocummentButton.setOnClickListener(this);
 
         return view;

@@ -184,7 +184,7 @@ public class WSAccountSettingsFragment extends Fragment implements View.OnClickL
                         .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
                         .replace(R.id.fragment_container_ws, wsdmFragment)
                         .addToBackStack(null)
-                        .commit();
+                        .commitAllowingStateLoss();
                 break;
         }
     }

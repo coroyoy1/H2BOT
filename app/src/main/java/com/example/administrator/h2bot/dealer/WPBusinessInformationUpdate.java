@@ -9,14 +9,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
@@ -27,8 +30,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -44,12 +50,12 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
     private static final int PICK_IMAGE_REQUEST = 1;
     EditText waterStationName, waterStationAddress, waterStationPhone, waterStationStartTime,
     waterStationEndTime, waterStationMinimumGallon, waterStationDeliveryFee;
-
-    RadioButton deliveryServiceYes, deliveryServiceNo, deliveryServiceFree, deliveryFeePerGallon,
+    Spinner startSpinner, endSpinner;
+    RadioButton deliveryServiceYes, deliveryServiceFree, deliveryFeePerGallon,
     deliveryFeeFix;
 
-    Button addPhotoButton, updateButton;
-
+    Button updateButton;
+    String namedealer, addressdealer, numberdealer;
     ImageView imageView;
 
     FirebaseAuth mAuth;
@@ -75,11 +81,9 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
         firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-
-
-        addPhotoButton = view.findViewById(R.id.addPhotoUIWS);
         updateButton = view.findViewById(R.id.updateInfoButtonUIWS);
-
+        startSpinner= view.findViewById(R.id.startSpinner);
+        endSpinner= view.findViewById(R.id.endSpinner);
         imageView = view.findViewById(R.id.imageViewUIWS);
         linearLayout1 = view.findViewById(R.id.linearMinGal);
         linearLayout2 = view.findViewById(R.id.linearDelFee);
@@ -101,7 +105,6 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
         waterStationDeliveryFee = view.findViewById(R.id.waterStationDeliveryFeeUIS);
 
         deliveryServiceYes = view.findViewById(R.id.waterStationYesUIS);
-        deliveryServiceNo = view.findViewById(R.id.waterStationNoUIS);
         deliveryServiceFree = view.findViewById(R.id.waterStationFreeUIS);
         deliveryServiceYes.setChecked(true);
 
@@ -110,13 +113,39 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
         deliveryFeePerGallon = view.findViewById(R.id.waterStationPerGallonUIS);
         deliveryFeePerGallon.setChecked(true);
 
-        addPhotoButton.setOnClickListener(this);
         updateButton.setOnClickListener(this);
+        deliveryFeePerGallon.setOnClickListener(this);
+        deliveryFeeFix.setOnClickListener(this);
         deliveryServiceYes.setOnClickListener(this);
-        deliveryServiceNo.setOnClickListener(this);
         deliveryServiceFree.setOnClickListener(this);
+        String[] arraySpinner = new String[]{
+                "AM","PM"
+        };
+        String[] arraySpinner2 = new String[]{
+                "PM","AM"
+        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, arraySpinner);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, arraySpinner2);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        startSpinner.setAdapter(adapter);
+        endSpinner.setAdapter(adapter2);
+        DatabaseReference databaseReference3 = firebaseDatabase.getReference("User_File").child(firebaseUser.getUid());
+        databaseReference3.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                namedealer = dataSnapshot.child("user_firtname").getValue(String.class)+" "+dataSnapshot.child("user_lastname").getValue(String.class);
+                addressdealer = dataSnapshot.child("user_address").getValue(String.class);
+                numberdealer = dataSnapshot.child("user_phone_no").getValue(String.class);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
         return view;
     }
 
@@ -125,15 +154,6 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
     public void updateData()
     {
         progressDialog.show();
-        storageReference.child(firebaseUser.getUid())
-                .putFile(uri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-                        result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
                                 String deliveryStatusIf;
                                 String deliveryStatusFreeIf;
                                 String deliveryFeePerGalIf;
@@ -141,16 +161,9 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
                                 if(deliveryServiceYes.isChecked())
                                 {
                                     deliveryStatusIf = "Active";
-                                    deliveryStatusFreeIf = "Not";
+                                    deliveryStatusFreeIf = "Not Free";
                                     deliveryFeePerGalIf = waterStationDeliveryFee.getText().toString();
                                     deliveryMinNoCapaIf = waterStationMinimumGallon.getText().toString();
-                                }
-                                else if(deliveryServiceNo.isChecked())
-                                {
-                                    deliveryStatusIf = "Inactive";
-                                    deliveryStatusFreeIf = "Not";
-                                    deliveryFeePerGalIf = waterStationDeliveryFee.getText().toString();
-                                    deliveryMinNoCapaIf = "None";
                                 }
                                 else if(deliveryServiceFree.isChecked())
                                 {
@@ -165,23 +178,20 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
                                     return;
                                 }
 
-                                String uriImage = uri.toString();
                                 UserWSBusinessInfoFile userWSBusinessInfoFile = new UserWSBusinessInfoFile(
                                     firebaseUser.getUid(),
-                                        waterStationName.getText().toString(),
-                                        waterStationStartTime.getText().toString(),
-                                        waterStationEndTime.getText().toString(),
+                                        namedealer,
+                                        waterStationStartTime.getText().toString()+" "+startSpinner.getSelectedItem().toString(),
+                                        waterStationEndTime.getText().toString()+" "+endSpinner.getSelectedItem().toString(),
                                         deliveryStatusIf,
                                         deliveryStatusFreeIf,
                                         deliveryFeePerGalIf,
                                         deliveryMinNoCapaIf,
-                                        waterStationPhone.getText().toString(),
-                                        waterStationAddress.getText().toString(),
+                                        numberdealer,
+                                        addressdealer,
                                         "Active",
-                                        uriImage
+                                        ""
                                 );
-                                DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("User_File");
-                                databaseReference2.child(firebaseUser.getUid()).child("user_uri").setValue(uriImage);
                                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
                                 databaseReference.child(firebaseUser.getUid()).setValue(userWSBusinessInfoFile)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -196,22 +206,6 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
 
                                             }
                                         });
-
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                showMessage("Failed to update image");
-                            }
-                        });
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        showMessage("Failed to update your information");
-                    }
-                });
     }
 
     private void showMessage(String wordMessage) {
@@ -225,7 +219,7 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
         Geocoder coder = new Geocoder(getActivity());
         List<Address> address;
         Address LocationAddress = null;
-        String locateAddress = waterStationAddress.getText().toString();
+        String locateAddress = addressdealer;
 
         try {
             address = coder.getFromLocationName(locateAddress, 5);
@@ -245,13 +239,22 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
                         @Override
                         public void onSuccess(Void aVoid) {
                             showMessage("Successfully Submitted");
+                            WPBusinessInfoFragment additem = new WPBusinessInfoFragment();
+                            AppCompatActivity activity = (AppCompatActivity)getContext();
+                            activity.getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                                    .replace(R.id.fragment_container_wp, additem)
+                                    .addToBackStack(null)
+                                    .commit();
                             progressDialog.dismiss();
+
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            showMessage("Failed to get location");
+
                             progressDialog.dismiss();
                         }
                     });
@@ -269,12 +272,8 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
 
     public void getInput()
     {
-        if(imageView.getDrawable() != null)
-        {
-            if(waterStationName.getText().toString().isEmpty()
-            && waterStationAddress.getText().toString().isEmpty()
-            && waterStationPhone.getText().toString().isEmpty()
-            && waterStationStartTime.getText().toString().isEmpty()
+            if(
+                waterStationStartTime.getText().toString().isEmpty()
             && waterStationEndTime.getText().toString().isEmpty())
             {
                 showMessage("Please fill all the fields!");
@@ -283,7 +282,7 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
             {
                 updateData();
             }
-        }
+
     }
 
     @Override
@@ -314,9 +313,6 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
     public void onClick(View v) {
         switch (v.getId())
         {
-            case R.id.addPhotoUIWS:
-                openGallery();
-                break;
             case R.id.updateInfoButtonUIWS:
                 getInput();
                 break;
@@ -325,19 +321,15 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
                 linearLayout2.setVisibility(View.VISIBLE);
                 linearLayout3.setVisibility(View.VISIBLE);
                 break;
-            case R.id.waterStationNoUIS:
-                linearLayout1.setVisibility(View.GONE);
-                linearLayout2.setVisibility(View.GONE);
-                linearLayout3.setVisibility(View.GONE);
-                break;
             case R.id.waterStationFreeUIS:
-                linearLayout1.setVisibility(View.GONE);
                 linearLayout2.setVisibility(View.GONE);
                 linearLayout3.setVisibility(View.GONE);
                 break;
             case R.id.waterStationPerGallonUIS:
+                waterStationDeliveryFee.setHint("Delivery Fee Per Gallon");
                 break;
             case R.id.waterStationFixUIS:
+                waterStationDeliveryFee.setHint("Fixed Delivery Fee");
                 break;
         }
     }

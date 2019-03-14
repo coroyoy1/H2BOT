@@ -86,12 +86,16 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
                 my_order.setVisibility(View.VISIBLE);
                 for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                 {
-                    for (DataSnapshot post : dataSnapshot1.child(currendId).getChildren())
+                    Log.d("gugu", ""+currendId);
+                    for (DataSnapshot post : dataSnapshot1.getChildren())
                     {
+                        Log.d("gaga", ""+currendId);
                         for (DataSnapshot post1 : post.getChildren())
                         {
+                            Log.d("gago", ""+currendId);
                         OrderModel orderModel = post1.getValue(OrderModel.class);
                         if (orderModel != null) {
+                            Log.d("curr", ""+currendId);
                             if (orderModel.getOrder_customer_id().equals(currendId)
                                     && orderModel.getOrder_status().equalsIgnoreCase("In-Progress") || orderModel.getOrder_status().equalsIgnoreCase("Dispatched")) {
                                 adapter.add(orderModel);

@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -213,12 +214,14 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
             String getLocateLatitude = String.valueOf(lat);
             String getLocateLongtitude = String.valueOf(lng);
 
+            Log.d("latlng",getLocateLatitude+","+getLocateLongtitude);
             UserLocationAddress userLocationAddress = new UserLocationAddress(mAuth.getCurrentUser().getUid(), getLocateLatitude, getLocateLongtitude);
             DatabaseReference locationRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
             locationRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userLocationAddress)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            Log.d("latlng2",getLocateLatitude+","+getLocateLongtitude);
                             successMessages();
                         }
                     })
@@ -239,7 +242,6 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
     private void showMessage(String s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
     }
-
 
     private void RetrieveDataThroughEditText()
     {
@@ -275,7 +277,6 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                     }
                                 });
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         showMessage("Your account does not exists");
@@ -387,7 +388,8 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
 
                                                                                                             }
                                                                                                         });
-                                                                                                    } else {
+                                                                                                    }
+                                                                                                    else {
                                                                                                         StorageReference storageReference = FirebaseStorage.getInstance().getReference("users_photo");
                                                                                                         storageReference.putFile(uri)
                                                                                                                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -556,6 +558,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                         @Override
                                                                         public void onSuccess(Void aVoid) {
+                                                                            Log.d("Hiy","Hi");
                                                                             getLocationSetter();
                                                                         }
                                                                     })
@@ -693,7 +696,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                         {
                             String getEmail = userAccountFile.getUser_email_address();
                             String getPassword = userAccountFile.getUser_password();
-
+                            Log.d("Hoy",getEmail+","+getPassword);
                             AuthCredential credential = EmailAuthProvider.getCredential(getEmail, getPassword);
                             user.reauthenticate(credential)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -743,7 +746,10 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                                                                 reference.child(user.getUid()).setValue(userAccountFile)
                                                                                                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                                                                             @Override
+
+
                                                                                                                             public void onSuccess(Void aVoid) {
+                                                                                                                                Log.d("Hoy",""+emailAddressWU.getText().toString());
                                                                                                                                 getLocationSetter();
                                                                                                                             }
                                                                                                                         })
@@ -908,7 +914,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                 .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
                 .replace(R.id.fragment_container_ws, wsdmFragment)
                 .addToBackStack(null)
-                .commit();
+                .commitAllowingStateLoss();
         progressDialog.dismiss();
     }
 
