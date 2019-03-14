@@ -29,7 +29,6 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.administrator.h2bot.MerchantAccessVerification;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.WaterStationDocumentVersion2Activity;
 import com.example.administrator.h2bot.models.UserLocationAddress;
@@ -212,7 +211,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                         public void onSuccess(Void aVoid) {
                             showMessages("Submitted successfully");
                             progressDialog.dismiss();
-                            Intent passIntent = new Intent(WaterPeddlerDocumentActivity.this, MerchantAccessVerification.class);
+                            Intent passIntent = new Intent(WaterPeddlerDocumentActivity.this, WaterPeddlerHomeActivity.class);
                             startActivity(passIntent);
                         }
                     })
@@ -295,14 +294,14 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                     }
                                 });
                                 DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("User_File");
-                                databaseReference.child(currentUser).child("user_status").setValue("unverified");
+                                databaseReference.child(currentUser).child("user_status").setValue("active");
 
                                 DatabaseReference databaseReference2= FirebaseDatabase.getInstance().getReference("User_Account_File");
-                                databaseReference2.child(currentUser).child("user_status").setValue("unverified");
+                                databaseReference2.child(currentUser).child("user_status").setValue("active");
 
                                 Toast.makeText(WaterPeddlerDocumentActivity.this, "Uploaded successfully" + currentuser, Toast.LENGTH_SHORT).show();
                                 Log.d("capacity",""+dealerCapacity);
-                                startActivity(new Intent(WaterPeddlerDocumentActivity.this, MerchantAccessVerification.class));
+                                startActivity(new Intent(WaterPeddlerDocumentActivity.this, WaterPeddlerHomeActivity.class));
                                 UserWSBusinessInfoFile userWSBusinessInfoFile = new UserWSBusinessInfoFile(currentUser, dealername, dealerstart, dealerend, businessDeliveryService, businessFreeOrNoText, dealerdeliveryfee, dealercapacity, dealerno, dealeraddress, "active", "");
                                 FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(currentUser).setValue(userWSBusinessInfoFile);
                             }
