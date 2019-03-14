@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
@@ -74,7 +75,7 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener, IOBackPressed {
 
     private static final String API_KEY = "AIzaSyB1GmKORoUiiF2d6ll0AoNXHJEWe5r8XOc";
     // User Permissions
@@ -134,11 +135,7 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        map.clear();
-    }
+
 
     @Nullable
     @Override
@@ -301,6 +298,20 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
                 return linearLayout;
             }
         });
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        if (map != null)
+        {
+            map.clear();
+            return true;
+        }
+        else
+        {
+            map.clear();
+            return false;
+        }
     }
 
     public class TaskRequestDirections extends AsyncTask<String, Void, String>

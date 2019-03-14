@@ -29,7 +29,6 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.administrator.h2bot.MerchantAccessVerification;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.WaterStationDocumentVersion2Activity;
 import com.example.administrator.h2bot.models.UserLocationAddress;
@@ -212,8 +211,6 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                         public void onSuccess(Void aVoid) {
                             showMessages("Submitted successfully");
                             progressDialog.dismiss();
-                            Intent passIntent = new Intent(WaterPeddlerDocumentActivity.this, MerchantAccessVerification.class);
-                            startActivity(passIntent);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -302,7 +299,6 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
 
                                 Toast.makeText(WaterPeddlerDocumentActivity.this, "Uploaded successfully" + currentuser, Toast.LENGTH_SHORT).show();
                                 Log.d("capacity",""+dealerCapacity);
-                                startActivity(new Intent(WaterPeddlerDocumentActivity.this, MerchantAccessVerification.class));
                                 UserWSBusinessInfoFile userWSBusinessInfoFile = new UserWSBusinessInfoFile(currentUser, dealername, dealerstart, dealerend, businessDeliveryService, businessFreeOrNoText, dealerdeliveryfee, dealercapacity, dealerno, dealeraddress, "active", "");
                                 FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(currentUser).setValue(userWSBusinessInfoFile);
                             }
