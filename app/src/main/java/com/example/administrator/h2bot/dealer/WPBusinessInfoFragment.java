@@ -1,5 +1,6 @@
 package com.example.administrator.h2bot.dealer;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -139,23 +140,6 @@ public class WPBusinessInfoFragment extends Fragment implements View.OnClickList
         return view;
     }
 
-    public void attemptToExit()
-    {
-
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
-                        getActivity().finish();
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        //No button clicked
-                        break;
-                }
-            }
-        };
-    }
     private void showMessages(String s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
     }
@@ -192,5 +176,26 @@ public class WPBusinessInfoFragment extends Fragment implements View.OnClickList
                 linearLayoutUp.setVisibility(View.VISIBLE);
                 break;
         }
+    }
+    public void attemptToExit()
+    {
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        getActivity().finish();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Are you sure to exit the application?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+
     }
 }

@@ -294,7 +294,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                 result1.addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
-                                        String addOne = mImageUri.toString();
+                                        String addOne = uri.toString();
                                         FirebaseDatabase.getInstance().getReference("User_WD_Docs_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("driver_license").setValue(addOne);
                                     }
                                 });
