@@ -17,6 +17,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -31,14 +32,22 @@ import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.WaterStationDocumentVersion2Activity;
+import com.example.administrator.h2bot.models.UserAccountFile;
+import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserLocationAddress;
 import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.text.TextBlock;
+import com.google.android.gms.vision.text.TextRecognizer;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -55,7 +64,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final String TAG = "WaterPeddlerDocumentActivity.class";
-    String currentUser;
+    String currentUser,userId, newToken;
     ImageView driverLicenseImageView;
     ImageView driverPlateNumberImageView;
     String businessFreeOrNoText = "";
@@ -65,7 +74,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
     Uri mImageUri;
     String image1;
     Boolean check1;
-    EditText dealerName,dealerAddress,dealerNo,dealerBusinesshoursStart,dealerBusinesshoursEnd,dealerCapacity,dealerDeliveryFee;
+    EditText dealerName,dealerAddress,dealerNo,dealerBusinesshoursStart,dealerBusinesshoursEnd,dealerCapacity,dealerDeliveryFee,driverLicense;
     RadioButton radioYes,radioNo,radioFree,radioPerGalSD,radioFixSD;
     private FirebaseAuth mAuth;
     private StorageReference mStorageRef;
@@ -76,7 +85,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
     private double lat;
     private double lng;
     Button chooseButton1,chooseButton2,SubmitButtonWaterPeddlerHomeActivity;
-
+    String mFirstname, mLastname, mAddress, mContact_no, mEmail_address, mPassword, mFilepath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +106,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
         currentUser = mAuth.getCurrentUser().getUid();
         radioYes = findViewById(R.id.radioYes);
         radioNo = findViewById(R.id.radioNo);
+        driverLicense = findViewById(R.id.driverLicense);
         radioFree = findViewById(R.id.radioFree);
         startSpinner= findViewById(R.id.startSpinner);
         endSpinner= findViewById(R.id.endSpinner);
@@ -104,6 +114,27 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
 
         radioPerGalSD = findViewById(R.id.radioPerGalSD);
         radioFixSD = findViewById(R.id.radioFixSD);
+
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        userId = firebaseUser.getUid();
+
+        Bundle bundle = getIntent().getExtras();
+        String firstname = bundle.getString("firstname");
+        String lastname = bundle.getString("lastname");
+        String address = bundle.getString("address");
+        String contact_no = bundle.getString("contact_no");
+        String email_address = bundle.getString("emailaddress");
+        String password = bundle.getString("password");
+        String filepath = bundle.getString("filepath");
+
+        mFirstname = firstname;
+        mLastname = lastname;
+        mAddress = address;
+        mContact_no = contact_no;
+        mEmail_address = email_address;
+        mPassword = password;
+        mFilepath = filepath;
+
         String[] arraySpinner = new String[]{
                 "AM","PM"
         };
@@ -238,13 +269,45 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
             mImageUri = data.getData();
-                Bitmap bitmap = null;
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mImageUri);
-                    driverLicenseImageView.setImageBitmap(bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mImageUri);
+                TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+
+                if(!textRecognizer.isOperational())
+                {
+                    Toast.makeText(getApplication(), "No text detected", Toast.LENGTH_SHORT).show();
                 }
+                else
+                {
+                    Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+                    SparseArray<TextBlock> items = textRecognizer.detect(frame);
+                    StringBuilder sb= new StringBuilder();
+
+                    for(int ctr=0;ctr<items.size();ctr++)
+                    {
+                        TextBlock myItem = items.valueAt(ctr);
+                        sb.append(myItem.getValue());
+                        sb.append("\n");
+                    }
+                    Log.d("Data: ", sb.toString());
+                    Log.d("Station name: ", driverLicense.getText().toString().toLowerCase());
+                    if(sb.toString().toLowerCase().contains(driverLicense.getText().toString().toLowerCase())){
+                        Picasso.get().load(mImageUri).into(driverLicenseImageView);
+                        Toast.makeText(this, "Valid business permit", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        driverLicenseImageView.setImageResource(R.drawable.ic_image_black_24dp);
+                        Toast.makeText(this, "Invalid business permit", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            Toast.makeText(WaterPeddlerDocumentActivity.this, "You haven't picked an image",Toast.LENGTH_LONG).show();
         }
     }
     private void uploadDocument() {
@@ -287,15 +350,41 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                 result1.addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
+                                        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( WaterPeddlerDocumentActivity.this,  new OnSuccessListener<InstanceIdResult>() {
+                                            @Override
+                                            public void onSuccess(InstanceIdResult instanceIdResult) {
+                                                newToken = instanceIdResult.getToken();
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(WaterPeddlerDocumentActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                                         String addOne = uri.toString();
                                         FirebaseDatabase.getInstance().getReference("User_WD_Docs_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("driver_license").setValue(addOne);
+                                        String stringUri = uri.toString();
+                                        UserFile userFile = new UserFile(userId,
+                                                stringUri,
+                                                mFirstname,
+                                                mLastname,
+                                                mAddress,
+                                                mContact_no,
+                                                "Water Station",
+                                                "active");
+
+                                        UserAccountFile userAccountFile = new UserAccountFile(userId,
+                                                mEmail_address,
+                                                mPassword,
+                                                newToken,
+                                                "active");
                                     }
                                 });
                                 DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("User_File");
-                                databaseReference.child(currentUser).child("user_status").setValue("unverified");
+                                databaseReference.child(currentUser).child("user_status").setValue("active");
 
                                 DatabaseReference databaseReference2= FirebaseDatabase.getInstance().getReference("User_Account_File");
-                                databaseReference2.child(currentUser).child("user_status").setValue("unverified");
+                                databaseReference2.child(currentUser).child("user_status").setValue("active");
 
                                 Toast.makeText(WaterPeddlerDocumentActivity.this, "Uploaded successfully" + currentuser, Toast.LENGTH_SHORT).show();
                                 Log.d("capacity",""+dealerCapacity);

@@ -87,6 +87,15 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView5"
                     android:text="Note: Before you proceed, you must submit the necessary requirements and wait for the administrator's approval. Once the submittion is approved, you may proceed." />
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:id="@+id/driverLicense"
+                        android:layout_below="@+id/textView8"
+                        android:hint="Driver's License"
+                        android:gravity="center"
+                        />
             </RelativeLayout>
         <TextView
             android:layout_width="match_parent"
