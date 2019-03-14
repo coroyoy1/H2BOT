@@ -234,7 +234,7 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
                                                                 String address = userFile.getUser_address();
                                                                 Log.d("AddressPolyLine",""+address);
                                                                 String fullname = userFile.getUser_lastname()+", "+userFile.getUser_firtname();
-                                                                map.addMarker(new MarkerOptions().position(latLng).snippet("Station Name: "+fullname+"\n"+"Address: "+address)
+                                                                map.addMarker(new MarkerOptions().position(latLng).snippet("Customer Name: "+fullname+"\n"+"Address: "+address)
                                                                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
                                                             }
                                                         }

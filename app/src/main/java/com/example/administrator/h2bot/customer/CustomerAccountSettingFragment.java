@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.example.administrator.h2bot.LoginActivity;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.UserAccountFile;
+import com.example.administrator.h2bot.waterstation.WSInProgressFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -92,25 +94,33 @@ public class CustomerAccountSettingFragment extends Fragment {
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(updateBtn.getText().toString().equalsIgnoreCase("Save Changes")){
-                    firstname.setEnabled(false);
-                    lastname.setEnabled(false);
-                    address.setEnabled(false);
-                    emailAddress.setEnabled(false);
-                    password.setEnabled(false);
-                    phoneNumber.setEnabled(false);
-                    updateBtn.setText("Update");
-                    updateUserFileInfo(mUserCurrentId);
-                }
-                else {
-                    firstname.setEnabled(true);
-                    lastname.setEnabled(true);
-                    address.setEnabled(true);
-                    emailAddress.setEnabled(true);
-                    password.setEnabled(true);
-                    phoneNumber.setEnabled(true);
-                    updateBtn.setText("Save Changes");
-                }
+//                if(updateBtn.getText().toString().equalsIgnoreCase("Save Changes")){
+//                    firstname.setEnabled(false);
+//                    lastname.setEnabled(false);
+//                    address.setEnabled(false);
+//                    emailAddress.setEnabled(false);
+//                    password.setEnabled(false);
+//                    phoneNumber.setEnabled(false);
+//                    updateBtn.setText("Update");
+//                    updateUserFileInfo(mUserCurrentId);
+//                }
+//                else {
+//                    firstname.setEnabled(true);
+//                    lastname.setEnabled(true);
+//                    address.setEnabled(true);
+//                    emailAddress.setEnabled(true);
+//                    password.setEnabled(true);
+//                    phoneNumber.setEnabled(true);
+//                    updateBtn.setText("Save Changes");
+//                }
+                CustomerUpdateAccount additem = new CustomerUpdateAccount();
+                AppCompatActivity activity = (AppCompatActivity)getContext();
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                        .replace(R.id.fragment_container, additem)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
     }

@@ -328,7 +328,6 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
                                                         .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                                                         .replace(R.id.fragment_container_wp, additem)
                                                         .addToBackStack(null)
-
                                                         .commit();
                                                 Objects.requireNonNull(((AppCompatActivity)getActivity()).getSupportActionBar()).setTitle("In-Progress");
                                                 progressDialog.dismiss();
@@ -510,15 +509,17 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
-                                                        String message = "Your order:"+transactionNo+" has been declined by "+name+" for the following reasons: \n"
-                                                                +reason;
+                                                        String message = "Your order with an order # of "+transactionNo+" has been declined by "+name+" for the following reason(s): \n\n"
+                                                                +reason.getText().toString();
                                                         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
                                                                 != PackageManager.PERMISSION_GRANTED)
                                                         {
+                                                            Log.d("NmNakoko","Hijhosdfgh");
                                                             ActivityCompat.requestPermissions(getActivity(), new String [] {Manifest.permission.SEND_SMS},
                                                                     MY_PERMISSIONS_REQUEST_SEND_SMS);
                                                         }
                                                         else {
+                                                            Log.d("NmNako","Hi"+message);
                                                             SmsManager sms = SmsManager.getDefault();
                                                             sms.sendTextMessage(contactNo.getText().toString(), null, message, sentPI, deliveredPI);
                                                         }
