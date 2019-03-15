@@ -120,7 +120,7 @@ public class DMAccountSettingsFragment extends Fragment implements View.OnClickL
                         if(userFile != null)
                         {
                             String userTypeString = "User Type: "+userFile.getUser_type();
-                            String fullNameString = "Full Name: "+userFile.getUser_firtname()+" "+userFile.getUser_lastname();
+                            String fullNameString = "Full Name: "+userFile.getUser_firstname()+" "+userFile.getUser_lastname();
                             String addressString = "Full Address: "+userFile.getUser_address();
                             String contactNoString = "Contact No.: "+userFile.getUser_phone_no();
                             String imageUriString = userFile.getUser_uri();

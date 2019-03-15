@@ -322,7 +322,7 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
                                                         String customerPicture = userFile.getUser_uri();
                                                         Picasso.get().load(customerPicture).into(imageView);
                                                         contactNo.setText(userFile.getUser_phone_no());
-                                                        String fullname = userFile.getUser_firtname() + " " + userFile.getUser_lastname();
+                                                        String fullname = userFile.getUser_firstname() + " " + userFile.getUser_lastname();
                                                         customer.setText(fullname);
                                                         progressDialog.dismiss();
                                                     }
