@@ -13,21 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="20dp">
-
-        <ImageView
-            android:id="@+id/imageViewUIWS"
-            android:src="@drawable/ic_image_black_24dp"
-            android:layout_width="match_parent"
-            android:layout_height="230dp" />
-        <Button
-            android:inputType="textEmailAddress"
-            android:id="@+id/addPhotoUIWS"
-            android:text="Add Water Station Photo"
-            android:textColor="@android:color/white"
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@drawable/z_blueroundbutton"/>
         <EditText
             android:id="@+id/waterStationNameUIS"
             android:inputType="textEmailAddress"
@@ -76,7 +61,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/edit_text_border"
                 android:hint="Start Time"
-                android:inputType="textEmailAddress"
+                android:inputType="time"
                 android:textAlignment="center"
                 android:textSize="18dp" />
             <Spinner
@@ -99,7 +84,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="End Time"
-                android:inputType="textEmailAddress"
+                android:inputType="time"
                 android:textAlignment="center"
                 android:textSize="18dp"
                 android:layout_marginTop="10dp"/>
@@ -109,65 +94,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </LinearLayout>
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Delivery Service"/>
-            <RadioGroup
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <RadioButton
-                    android:id="@+id/waterStationYesUIS"
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Yes"/>
-                <RadioButton
-                    android:id="@+id/waterStationNoUIS"
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="No"/>
-                <RadioButton
-                    android:id="@+id/waterStationFreeUIS"
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Free"/>
-            </RadioGroup>
-        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/linearMinGal"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <EditText
                 android:id="@+id/waterStationMinimumGallonUIS"
-                android:inputType="number"
-                android:textAlignment="center"
-                android:hint="Number of minimum gallon capacity"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@drawable/edit_text_border"/>
+                android:layout_marginTop="10dp"
+                android:background="@drawable/edit_text_border"
+                android:hint="Number of minimum gallon capacity"
+                android:inputType="time"
+                android:textAlignment="center" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Delivery:"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/linearDelFee"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <TextView
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Delivery Fee"/>
+
             <RadioGroup
                 android:layout_weight="1"
                 android:orientation="horizontal"
@@ -177,14 +136,19 @@
                     android:id="@+id/waterStationPerGallonUIS"
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:text="Per Gallon"/>
                 <RadioButton
                     android:id="@+id/waterStationFixUIS"
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Fix"/>
+                    android:layout_height="match_parent"
+                    android:text="Fixed fee"/>
+                <RadioButton
+                    android:id="@+id/free"
+                    android:text="Free Delivery fee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
             </RadioGroup>
         </LinearLayout>
         <LinearLayout

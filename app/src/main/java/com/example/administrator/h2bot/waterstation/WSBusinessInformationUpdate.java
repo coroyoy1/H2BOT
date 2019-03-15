@@ -9,14 +9,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
@@ -48,11 +51,11 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
     private static final int PICK_IMAGE_REQUEST = 1;
     EditText waterStationName, waterStationAddress, waterStationPhone, waterStationStartTime,
     waterStationEndTime, waterStationMinimumGallon, waterStationDeliveryFee;
-
-    RadioButton deliveryServiceYes, deliveryServiceNo, deliveryServiceFree, deliveryFeePerGallon,
+    Spinner startSpinner,endSpinner;
+    RadioButton deliveryServiceYes, deliveryServiceNo, deliveryServiceFree, deliveryFeePerGallon, free,
     deliveryFeeFix;
 
-    Button addPhotoButton, updateButton;
+    Button updateButton;
 
     ImageView imageView;
 
@@ -79,12 +82,8 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
         firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-
-
-        addPhotoButton = view.findViewById(R.id.addPhotoUIWS);
         updateButton = view.findViewById(R.id.updateInfoButtonUIWS);
 
-        imageView = view.findViewById(R.id.imageViewUIWS);
         linearLayout1 = view.findViewById(R.id.linearMinGal);
         linearLayout2 = view.findViewById(R.id.linearDelFee);
         linearLayout3 = view.findViewById(R.id.linearDelFeeNext);
@@ -94,33 +93,54 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
-
-
+        free = view.findViewById(R.id.free);
+        startSpinner = view.findViewById(R.id.startSpinner);
+        endSpinner = view.findViewById(R.id.endSpinner);
         waterStationName = view.findViewById(R.id.waterStationNameUIS);
         waterStationAddress = view.findViewById(R.id.waterStationFullAddressUIS);
         waterStationPhone = view.findViewById(R.id.waterStationPhoneUIS);
-        waterStationStartTime = view.findViewById(R.id.waterStationStartTimeUIS);
-        waterStationEndTime = view.findViewById(R.id.waterStationEndTimeUIS);
+        waterStationStartTime = view.findViewById(R.id.stationBusinesshoursSD);
+        waterStationEndTime = view.findViewById(R.id.stationBusinesshoursSD);
         waterStationMinimumGallon  = view.findViewById(R.id.waterStationMinimumGallonUIS);
         waterStationDeliveryFee = view.findViewById(R.id.waterStationDeliveryFeeUIS);
-
-        deliveryServiceYes = view.findViewById(R.id.waterStationYesUIS);
-        deliveryServiceNo = view.findViewById(R.id.waterStationNoUIS);
-        deliveryServiceFree = view.findViewById(R.id.waterStationFreeUIS);
-        deliveryServiceYes.setChecked(true);
-
 
         deliveryFeeFix = view.findViewById(R.id.waterStationFixUIS);
         deliveryFeePerGallon = view.findViewById(R.id.waterStationPerGallonUIS);
         deliveryFeePerGallon.setChecked(true);
-
-        addPhotoButton.setOnClickListener(this);
+        String[] arraySpinner = new String[]{
+                "AM","PM"
+        };
+        String[] arraySpinner2 = new String[]{
+                "PM","AM"
+        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, arraySpinner);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, arraySpinner2);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        startSpinner.setAdapter(adapter);
+        endSpinner.setAdapter(adapter2);
         updateButton.setOnClickListener(this);
-        deliveryServiceYes.setOnClickListener(this);
-        deliveryServiceNo.setOnClickListener(this);
-        deliveryServiceFree.setOnClickListener(this);
 
+        DatabaseReference databaseReference3 = firebaseDatabase.getReference("User_WS_Business_Info_File").child(firebaseUser.getUid());
+        databaseReference3.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                waterStationMinimumGallon.setText(dataSnapshot.child("business_min_no_of_gallons").getValue(String.class));
+                waterStationName.setText(dataSnapshot.child("business_name").getValue(String.class));
+                waterStationAddress.setText(dataSnapshot.child("business_address").getValue(String.class));
+                waterStationPhone.setText(dataSnapshot.child("business_tel_no").getValue(String.class));
+                //waterStationStartTime.setText(dataSnapshot.child("business_start_time").getValue(String.class));
+                //waterStationStartTime.setText(dataSnapshot.child("business_end_time").getValue(String.class));
+                waterStationMinimumGallon.setText(dataSnapshot.child("business_min_no_of_capacity").getValue(String.class));
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         return view;
     }
 
@@ -129,39 +149,25 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
     public void updateData()
     {
         progressDialog.show();
-        storageReference.child(firebaseUser.getUid())
-                .putFile(uri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-                        result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
                                 String deliveryStatusIf;
                                 String deliveryStatusFreeIf;
                                 String deliveryFeePerGalIf;
                                 String deliveryMinNoCapaIf;
-                                if(deliveryServiceYes.isChecked())
+                                if(deliveryFeePerGallon.isChecked() || deliveryFeeFix.isChecked())
                                 {
                                     deliveryStatusIf = "Active";
                                     deliveryStatusFreeIf = "Not";
                                     deliveryFeePerGalIf = waterStationDeliveryFee.getText().toString();
                                     deliveryMinNoCapaIf = waterStationMinimumGallon.getText().toString();
+                                    waterStationDeliveryFee.setVisibility(View.VISIBLE);
                                 }
-                                else if(deliveryServiceNo.isChecked())
-                                {
-                                    deliveryStatusIf = "Inactive";
-                                    deliveryStatusFreeIf = "Not";
-                                    deliveryFeePerGalIf = waterStationDeliveryFee.getText().toString();
-                                    deliveryMinNoCapaIf = "None";
-                                }
-                                else if(deliveryServiceFree.isChecked())
+                                else if(free.isChecked())
                                 {
                                     deliveryStatusIf = "Active";
                                     deliveryStatusFreeIf = "Free";
                                     deliveryFeePerGalIf = "None";
                                     deliveryMinNoCapaIf = "None";
+                                    waterStationDeliveryFee.setVisibility(View.GONE);
                                 }
                                 else
                                 {
@@ -169,12 +175,11 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
                                     return;
                                 }
 
-                                String uriImage = uri.toString();
                                 UserWSBusinessInfoFile userWSBusinessInfoFile = new UserWSBusinessInfoFile(
                                     firebaseUser.getUid(),
                                         waterStationName.getText().toString(),
-                                        waterStationStartTime.getText().toString(),
-                                        waterStationEndTime.getText().toString(),
+                                        waterStationStartTime.getText().toString() +" "+ startSpinner.getSelectedItem().toString(),
+                                        waterStationEndTime.getText().toString()+" "+ endSpinner.getSelectedItem().toString(),
                                         deliveryStatusIf,
                                         deliveryStatusFreeIf,
                                         deliveryFeePerGalIf,
@@ -182,7 +187,7 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
                                         waterStationPhone.getText().toString(),
                                         waterStationAddress.getText().toString(),
                                         "Active",
-                                        uriImage
+                                        ""
                                 );
                                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
                                 databaseReference.child(firebaseUser.getUid()).setValue(userWSBusinessInfoFile)
@@ -197,23 +202,12 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
                                             public void onFailure(@NonNull Exception e) {
 
                                             }
-                                        });
-
-                            }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 showMessage("Error to update the image");
                             }
                         });
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        showMessage("Failed to update your information");
-                    }
-                });
     }
 
     private void showMessage(String wordMessage) {
@@ -247,6 +241,14 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
                         @Override
                         public void onSuccess(Void aVoid) {
                             showMessage("Submitted successfully");
+                            WSBusinessInfoFragment additem = new WSBusinessInfoFragment();
+                            AppCompatActivity activity = (AppCompatActivity)getContext();
+                            activity.getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                                    .replace(R.id.fragment_container_ws, additem)
+                                    .addToBackStack(null)
+                                    .commit();
                             progressDialog.dismiss();
                         }
                     })
@@ -271,13 +273,12 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
 
     public void getInput()
     {
-        if(imageView.getDrawable() != null)
-        {
             if(waterStationName.getText().toString().isEmpty()
-            && waterStationAddress.getText().toString().isEmpty()
-            && waterStationPhone.getText().toString().isEmpty()
-            && waterStationStartTime.getText().toString().isEmpty()
-            && waterStationEndTime.getText().toString().isEmpty())
+            || waterStationAddress.getText().toString().isEmpty()
+            || waterStationPhone.getText().toString().isEmpty()
+            || waterStationStartTime.getText().toString().isEmpty()
+            || waterStationEndTime.getText().toString().isEmpty()
+            || waterStationMinimumGallon.getText().toString().isEmpty())
             {
                 showMessage("Please fill all the fields");
             }
@@ -285,24 +286,12 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
             {
                 updateData();
             }
-        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-            if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null)
-            {
-                imageView.setColorFilter(null);
-                uri = data.getData();
-                Picasso.get().load(uri).into(imageView);
-            }
-
-        else
-        {
-            showMessage("Image is not selected");
-        }
     }
 
     public void openGallery()
@@ -316,9 +305,6 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
     public void onClick(View v) {
         switch (v.getId())
         {
-            case R.id.addPhotoUIWS:
-                openGallery();
-                break;
             case R.id.updateInfoButtonUIWS:
                 getInput();
                 break;
@@ -326,11 +312,6 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
                 linearLayout1.setVisibility(View.VISIBLE);
                 linearLayout2.setVisibility(View.VISIBLE);
                 linearLayout3.setVisibility(View.VISIBLE);
-                break;
-            case R.id.waterStationNoUIS:
-                linearLayout1.setVisibility(View.GONE);
-                linearLayout2.setVisibility(View.GONE);
-                linearLayout3.setVisibility(View.GONE);
                 break;
             case R.id.waterStationFreeUIS:
                 linearLayout1.setVisibility(View.GONE);
@@ -340,6 +321,11 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
             case R.id.waterStationPerGallonUIS:
                 break;
             case R.id.waterStationFixUIS:
+                break;
+            case R.id.free:
+                linearLayout1.setVisibility(View.GONE);
+                linearLayout2.setVisibility(View.GONE);
+                linearLayout3.setVisibility(View.GONE);
                 break;
         }
     }
