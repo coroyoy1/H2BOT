@@ -51,8 +51,7 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
     EditText waterStationName, waterStationAddress, waterStationPhone, waterStationStartTime,
     waterStationEndTime, waterStationMinimumGallon, waterStationDeliveryFee;
     Spinner startSpinner, endSpinner;
-    RadioButton deliveryServiceYes, deliveryServiceFree, deliveryFeePerGallon,
-    deliveryFeeFix;
+    RadioButton deliveryServiceYes, deliveryServiceFree, deliveryFeePerGallon, free, deliveryFeeFix;
 
     Button updateButton;
     String namedealer, addressdealer, numberdealer;
@@ -84,7 +83,6 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
         updateButton = view.findViewById(R.id.updateInfoButtonUIWS);
         startSpinner= view.findViewById(R.id.startSpinner);
         endSpinner= view.findViewById(R.id.endSpinner);
-        imageView = view.findViewById(R.id.imageViewUIWS);
         linearLayout1 = view.findViewById(R.id.linearMinGal);
         linearLayout2 = view.findViewById(R.id.linearDelFee);
         linearLayout3 = view.findViewById(R.id.linearDelFeeNext);
@@ -106,6 +104,7 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
 
         deliveryServiceYes = view.findViewById(R.id.waterStationYesUIS);
         deliveryServiceFree = view.findViewById(R.id.waterStationFreeUIS);
+        free = view.findViewById(R.id.free);
         deliveryServiceYes.setChecked(true);
 
 
@@ -136,6 +135,12 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
         databaseReference3.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                waterStationMinimumGallon.setText(dataSnapshot.child("business_min_no_of_gallons").getValue(String.class));
+                waterStationName.setText(dataSnapshot.child("business_name").getValue(String.class));
+                waterStationAddress.setText(dataSnapshot.child("business_address").getValue(String.class));
+                waterStationPhone.setText(dataSnapshot.child("business_tel_no").getValue(String.class));
+                //waterStationStartTime.setText(dataSnapshot.child("business_start_time").getValue(String.class));
+                //waterStationStartTime.setText(dataSnapshot.child("business_end_time").getValue(String.class));
                 waterStationMinimumGallon.setText(dataSnapshot.child("business_min_no_of_gallons").getValue(String.class));
             }
 
@@ -287,17 +292,6 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-            if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null)
-            {
-                imageView.setColorFilter(null);
-                uri = data.getData();
-                Picasso.get().load(uri).into(imageView);
-            }
-
-        else
-        {
-            showMessage("Select an image");
-        }
     }
 
     public void openGallery()
@@ -319,15 +313,19 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
                 linearLayout2.setVisibility(View.VISIBLE);
                 linearLayout3.setVisibility(View.VISIBLE);
                 break;
-            case R.id.waterStationFreeUIS:
-                linearLayout2.setVisibility(View.GONE);
-                linearLayout3.setVisibility(View.GONE);
-                break;
+//            case R.id.waterStationFreeUIS:
+//                linearLayout2.setVisibility(View.GONE);
+//                linearLayout3.setVisibility(View.GONE);
+//                break;
             case R.id.waterStationPerGallonUIS:
                 waterStationDeliveryFee.setHint("Delivery Fee Per Gallon");
                 break;
             case R.id.waterStationFixUIS:
                 waterStationDeliveryFee.setHint("Fixed Delivery Fee");
+                break;
+            case R.id.free:
+                linearLayout2.setVisibility(View.GONE);
+                linearLayout3.setVisibility(View.GONE);
                 break;
         }
     }

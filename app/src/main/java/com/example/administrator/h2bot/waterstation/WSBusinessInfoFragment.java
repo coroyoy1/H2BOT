@@ -91,8 +91,6 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
                    UserWSBusinessInfoFile userWSBusinessInfoFile = dataSnapshot.getValue(UserWSBusinessInfoFile.class);
                    if(userWSBusinessInfoFile != null)
                    {
-                       String image = userWSBusinessInfoFile.getBusiness_station_photo();
-                       Picasso.get().load(image).into(imageView);
                        String businessTime = userWSBusinessInfoFile.getBusiness_start_time()+" - "+userWSBusinessInfoFile.getBusiness_end_time();
                         stationName.setText("Station Name: "+userWSBusinessInfoFile.getBusiness_name());
                         stationAddress.setText("Full Address: "+userWSBusinessInfoFile.getBusiness_address());
