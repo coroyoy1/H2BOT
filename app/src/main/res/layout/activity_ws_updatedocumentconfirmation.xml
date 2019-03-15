@@ -33,24 +33,28 @@
             </LinearLayout>
 
             <LinearLayout
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:orientation="vertical">
 
                 <EditText
-                    android:id="@+id/stationName"
+                    android:id="@+id/stationNameUDC"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="4dp"
                     android:layout_weight="1"
+                    android:background="@drawable/edit_text_border"
                     android:hint="Water Station Name"
                     android:inputType="textEmailAddress"
                     android:textAlignment="center"
                     android:textSize="18dp" />
 
                 <EditText
-                    android:id="@+id/stationAddress"
+                    android:background="@drawable/edit_text_border"
+                    android:id="@+id/stationAddressUDC"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="4dp"
@@ -61,7 +65,9 @@
                     android:textSize="18dp" />
 
                 <EditText
-                    android:id="@+id/telNo"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/edit_text_border"
+                    android:id="@+id/telNoUDC"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_weight="1"
@@ -71,13 +77,13 @@
                     android:textSize="18dp" />
 
                 <ImageView
-                    android:id="@+id/businessPermit_image"
+                    android:id="@+id/businessPermit_imageUDC"
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
                     android:src="@drawable/ic_image_black_24dp" />
 
                 <Button
-                    android:id="@+id/businessPermitBtn"
+                    android:id="@+id/businessPermitBtnUDC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -88,13 +94,13 @@
                     android:textColor="@android:color/white" />
 
                 <ImageView
-                    android:id="@+id/sanitaryPermit_image"
+                    android:id="@+id/sanitaryPermit_imageUDC"
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
                     android:src="@drawable/ic_image_black_24dp" />
 
                 <Button
-                    android:id="@+id/sanitaryPermitBtn"
+                    android:id="@+id/sanitaryPermitBtnUDC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -103,15 +109,14 @@
                     android:background="@android:color/holo_blue_dark"
                     android:text="Add Sanitary Permit"
                     android:textColor="@android:color/white" />
-
                 <ImageView
-                    android:id="@+id/physicochemicalPermit_imageV2"
+                    android:id="@+id/physicochemicalPermit_imageUDC"
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
                     android:src="@drawable/ic_image_black_24dp" />
 
                 <Button
-                    android:id="@+id/physicochemicalBtnV2"
+                    android:id="@+id/physicochemicalBtnUDC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -121,13 +126,13 @@
                     android:text="Add Physicochemical Permit"
                     android:textColor="@android:color/white" />
                 <ImageView
-                    android:id="@+id/BIR_imageV2"
+                    android:id="@+id/BIR_imageUDC"
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
                     android:src="@drawable/ic_image_black_24dp" />
 
                 <Button
-                    android:id="@+id/BIRBtnV2"
+                    android:id="@+id/BIRBtnUDC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -136,7 +141,6 @@
                     android:background="@android:color/holo_blue_dark"
                     android:text="Add BIR Permit"
                     android:textColor="@android:color/white" />
-
 
 
                 <TextView
@@ -158,9 +162,10 @@
                         android:orientation="horizontal">
 
                         <EditText
-                            android:id="@+id/startingHour"
+                            android:background="@drawable/edit_text_border"
+                            android:id="@+id/startingHourUDC"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="50dp"
                             android:layout_marginTop="10dp"
                             android:layout_marginRight="2dp"
                             android:layout_weight="1"
@@ -184,9 +189,10 @@
                         android:orientation="horizontal">
 
                         <EditText
-                            android:id="@+id/endingHour"
+                            android:id="@+id/endingHourUDC"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="50dp"
+                            android:background="@drawable/edit_text_border"
                             android:layout_marginLeft="2dp"
                             android:layout_marginTop="10dp"
                             android:layout_weight="1"
@@ -196,12 +202,11 @@
                             android:textSize="18dp" />
 
                         <Spinner
-                            android:id="@+id/endSpinner"
+                            android:id="@+id/endSpinnerUDC"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent" />
                     </LinearLayout>
                 </LinearLayout>
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -210,20 +215,20 @@
                     android:text="Delivery Status"
                     android:textSize="18dp" />
                 <RadioGroup
-                    android:id="@+id/deliveryStatusGroupDCV2"
+                    android:id="@+id/deliveryStatusGroupUDC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <RadioButton
-                        android:id="@+id/freeDCV2"
+                        android:id="@+id/freeUDC"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="20dp"
                         android:checked="true"
-                        android:text="Free" />
+                        android:text="Free Delivery" />
 
                     <RadioButton
-                        android:id="@+id/notDCV2"
+                        android:id="@+id/notUDC"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Not" />
@@ -238,7 +243,7 @@
                     android:textSize="18dp" />
 
                 <RadioGroup
-                    android:id="@+id/deliveryFeeGroup"
+                    android:id="@+id/deliveryFeeGroupUDC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -251,14 +256,14 @@
                         android:text="Per Gallon" />
 
                     <RadioButton
-                        android:id="@+id/fixPrice"
+                        android:id="@+id/fixPriceUDC"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Fix Price" />
                 </RadioGroup>
 
                 <EditText
-                    android:id="@+id/deliveryFee"
+                    android:id="@+id/deliveryFeeUDC"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="10dp"
@@ -269,7 +274,7 @@
                     android:textSize="18dp" />
 
                 <EditText
-                    android:id="@+id/min_no_of_gallons"
+                    android:id="@+id/min_no_of_gallonsUDC"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="10dp"
@@ -288,7 +293,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/submitButton"
+                    android:id="@+id/submitButtonUDC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"

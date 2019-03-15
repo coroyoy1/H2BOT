@@ -4,6 +4,9 @@ public class WSDocFile {
     private String station_id;
     private String station_business_permit;
     private String station_sanitary_permit;
+    private String station_physicochemical_permit;
+    private String station_bir_permit;
+    private String station_delivery_status;
     private String station_status;
 
     public WSDocFile()
@@ -11,11 +14,38 @@ public class WSDocFile {
 
     }
 
-    public WSDocFile(String station_id, String station_business_permit, String station_sanitary_permit, String station_status) {
+    public WSDocFile(String station_id, String station_business_permit, String station_sanitary_permit, String station_physicochemical_permit, String station_bir_permit, String station_delivery_status ,String station_status) {
         this.station_id = station_id;
         this.station_business_permit = station_business_permit;
         this.station_sanitary_permit = station_sanitary_permit;
+        this.station_physicochemical_permit = station_physicochemical_permit;
+        this.station_bir_permit = station_bir_permit;
+        this.station_delivery_status = station_delivery_status;
         this.station_status = station_status;
+    }
+
+    public String getStation_delivery_status() {
+        return station_delivery_status;
+    }
+
+    public void setStation_delivery_status(String station_delivery_status) {
+        this.station_delivery_status = station_delivery_status;
+    }
+
+    public String getStation_physicochemical_permit() {
+        return station_physicochemical_permit;
+    }
+
+    public void setStation_physicochemical_permit(String station_physicochemical_permit) {
+        this.station_physicochemical_permit = station_physicochemical_permit;
+    }
+
+    public String getStation_bir_permit() {
+        return station_bir_permit;
+    }
+
+    public void setStation_bir_permit(String station_bir_permit) {
+        this.station_bir_permit = station_bir_permit;
     }
 
     public String getStation_id() {

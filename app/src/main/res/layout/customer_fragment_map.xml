@@ -196,7 +196,8 @@
             android:minHeight="5dp"
             android:progress="10"
             android:progressDrawable="@drawable/volume_seekbar"
-            android:thumbTint="@color/black"/>
+            android:thumbTint="@color/black"
+            android:thumb="@drawable/forward"/>
 
         <TextView
             android:id="@+id/current_radius"
