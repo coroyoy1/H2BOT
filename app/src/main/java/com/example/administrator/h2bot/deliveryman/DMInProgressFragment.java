@@ -110,49 +110,45 @@ public class DMInProgressFragment extends Fragment implements WSInProgressOrders
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                 {
-                    for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren())
-                    {
-                        UserWSDMFile userWSDMFile = dataSnapshot2.getValue(UserWSDMFile.class);
-                        if(userWSDMFile != null)
-                        {
-                            String merchantId = userWSDMFile.getStation_id();
+                    for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren()) {
+                            String merchantId = dataSnapshot2.child("station_id").getValue(String.class);
+                        if (merchantId != null) {
                             DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
                             reference1.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            uploadPO.clear();
-                                            for (DataSnapshot dataSnapshot3 : dataSnapshot.getChildren())
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot5) {
+                                    uploadPO.clear();
+                                    for (DataSnapshot dataSnapshot3 : dataSnapshot5.getChildren())
+                                    {
+                                        for (DataSnapshot dataSnapshot4 : dataSnapshot3.child(firebaseUID).getChildren())
+                                        {
+                                            OrderModel orderModel = dataSnapshot4.getValue(OrderModel.class);
+                                            if (orderModel != null)
                                             {
-                                                for (DataSnapshot dataSnapshot4 : dataSnapshot3.child(merchantId).getChildren())
-                                                {
-                                                    OrderModel orderModel = dataSnapshot4.getValue(OrderModel.class);
-                                                    if(orderModel != null)
-                                                    {
-                                                        if (orderModel.getOrder_merchant_id().equals(merchantId)
-                                                                && orderModel.getOrder_status().equals("In-Progress"))
-                                                        {
-                                                            noOrdersLayout.setVisibility(View.INVISIBLE);
-                                                            recyclerView.setVisibility(View.VISIBLE);
-                                                            uploadPO.add(orderModel);
-                                                        }
-                                                    }
+                                                if (orderModel.getOrder_merchant_id().equals(merchantId)
+                                                        && orderModel.getOrder_status().equals("In-Progress")) {
+                                                    noOrdersLayout.setVisibility(View.INVISIBLE);
+                                                    recyclerView.setVisibility(View.VISIBLE);
+                                                    uploadPO.add(orderModel);
                                                 }
-                                                POAdapter = new DMInProgressOrdersAdapter(getActivity(), uploadPO);
-                                                recyclerView.setAdapter(POAdapter);
-                                            }
-                                            if(uploadPO.size() == 0)
-                                            {
-                                                noOrdersLayout.setVisibility(View.VISIBLE);
-                                                recyclerView.setVisibility(View.GONE);
                                             }
                                         }
+                                        POAdapter = new DMInProgressOrdersAdapter(getActivity(), uploadPO);
+                                        recyclerView.setAdapter(POAdapter);
+                                    }
+                                    if (uploadPO.size() == 0) {
+                                        noOrdersLayout.setVisibility(View.VISIBLE);
+                                        recyclerView.setVisibility(View.GONE);
+                                    }
+                                }
 
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                        }
-                                    });
+                                }
+                            });
                         }
+
                     }
 
                 }

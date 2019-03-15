@@ -237,7 +237,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                 sb.append(myItem.getValue());
                                 sb.append("\n");
                             }
-                            if(sb.toString().toLowerCase().contains(mFirstname.toLowerCase()) || sb.toString().toLowerCase().contains(mLastname.toLowerCase())){
+                            if(sb.toString().toLowerCase().contains(mFirstname.toLowerCase()) && sb.toString().toLowerCase().contains(mLastname.toLowerCase())){
                                 Picasso.get().load(filepath2).into(sanitaryPermit_image);
                                 Toast.makeText(this, "Valid driver's license", Toast.LENGTH_SHORT).show();
                                 check = true;

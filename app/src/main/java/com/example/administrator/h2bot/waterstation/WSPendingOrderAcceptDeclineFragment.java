@@ -565,7 +565,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                                     if(status.equals("AC"))
                                     {
                                         DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
-                                        reference1.child(customerId).child(merchantId).child(transactionNo).child("order_status").setValue("Cancelled")
+                                        reference1.child(customerId).child(merchantId).child(transactionNo).child("order_status").setValue("Declined")
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
