@@ -1,15 +1,22 @@
 package com.example.administrator.h2bot.deliveryman;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +35,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.text.TextBlock;
+import com.google.android.gms.vision.text.TextRecognizer;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,7 +64,7 @@ import static android.app.Activity.RESULT_OK;
 public class DMRegisterAccount extends Fragment implements View.OnClickListener{
 
     private static final int PICK_IMAGE_REQUEST = 1;
-    EditText firstNameDM, lastNameDM, addressDM, contactNoDM, emailDM, passwordDM, confirmPassDM;
+    EditText firstNameDM, lastNameDM, addressDM, contactNoDM, emailDM, passwordDM, confirmPassDM, licenseIdDM;
     FirebaseAnalytics firebaseAnalytics;
     Button registerDM, addPhotoBDM, addDocumentPhoto;
     CircleImageView imageView;
@@ -97,6 +107,7 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
         addressDM = view.findViewById(R.id.RegisterAddressDM);
         addDocumentPhoto = view.findViewById(R.id.addDocumentButton);
         imageDocument = view.findViewById(R.id.documentImage);
+        licenseIdDM = view.findViewById(R.id.licenseTextDM);
 
         addPhotoBDM = view.findViewById(R.id.addPhotoDM);
         registerDM = view.findViewById(R.id.RegisterSignUpDM);
@@ -231,8 +242,8 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
-                                                    showMessages("Successfully Registered");
-                                                    storageReference.child(userd)
+                                                    StorageReference storageReference1 = FirebaseStorage.getInstance().getReference("users_documents");
+                                                    storageReference1.child(userd)
                                                             .putFile(uriv)
                                                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                                                 @Override
@@ -340,6 +351,8 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
         Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
     }
 
+
+
     private void getLocationSetter()
     {
         Geocoder coder = new Geocoder(getActivity());
@@ -379,9 +392,6 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        finally {
-            showMessages("Error the locate your address, please change again");
-        }
     }
 
 
@@ -399,15 +409,54 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK &&
             data != null && data.getData() != null)
         {
-            uri = data.getData(); uriv = data.getData();
             if(fClick)
             {
+                uri = data.getData();
                 Picasso.get().load(uri).into(imageView);
             }
             if(eClick)
             {
-                Picasso.get().load(uriv).into(imageDocument);
+                uriv = data.getData();
+                Bitmap bitmap = null;
+                try
+                {
+
+                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uriv);
+                    TextRecognizer textRecognizer = new TextRecognizer.Builder(getActivity().getApplicationContext()).build();
+
+                    Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+                    SparseArray<TextBlock> items = textRecognizer.detect(frame);
+                    StringBuilder sb= new StringBuilder();
+
+                    for(int ctr=0;ctr<items.size();ctr++)
+                    {
+                        TextBlock myItem = items.valueAt(ctr);
+                        sb.append(myItem.getValue());
+                        sb.append("\n");
+                    }
+                    if (!licenseIdDM.getText().toString().isEmpty() || !licenseIdDM.getText().toString().equals(""))
+                    {
+                        String license = licenseIdDM.getText().toString();
+                        if(sb.toString().toLowerCase().contains(license)){
+                            Picasso.get().load(uriv).into(imageDocument);
+                            Toast.makeText(getActivity(), "Valid business permit", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            imageDocument.setImageResource(R.drawable.ic_image_black_24dp);
+                            Toast.makeText(getActivity(), "Invalid driver's license", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    else
+                    {
+                        showMessages("License number does not set");
+                    }
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
             }
+
         }
     }
 
