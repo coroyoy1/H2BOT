@@ -68,6 +68,7 @@ public class WPPendingOrdersFragment extends Fragment implements WPPendingListAd
                             if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid())
                                     && orderModel.getOrder_status().equals("Pending"))
                             {
+
                                 noOrdersLayout.setVisibility(View.INVISIBLE);
                                 recyclerViewPOConnect.setVisibility(View.VISIBLE);
                                 uploadPO.add(orderModel);

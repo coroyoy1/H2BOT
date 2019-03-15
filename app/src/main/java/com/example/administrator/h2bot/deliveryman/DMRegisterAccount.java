@@ -437,7 +437,7 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
                     if (!licenseIdDM.getText().toString().isEmpty() || !licenseIdDM.getText().toString().equals(""))
                     {
                         String license = licenseIdDM.getText().toString();
-                        if(sb.toString().toLowerCase().contains(license)){
+                        if(sb.toString().trim().toLowerCase().contains(license.trim().toLowerCase())){
                             Picasso.get().load(uriv).into(imageDocument);
                             Toast.makeText(getActivity(), "Valid business permit", Toast.LENGTH_SHORT).show();
                         }

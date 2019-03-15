@@ -2,12 +2,16 @@ package com.example.administrator.h2bot.dealer;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +25,9 @@ import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.text.TextBlock;
+import com.google.android.gms.vision.text.TextRecognizer;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -33,19 +40,21 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+
 import static android.app.Activity.RESULT_OK;
 
 public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickListener{
 
     FirebaseAuth mAuth;
     FirebaseUser currentUser;
-
+    String firstname, lastname;
     private static final int PICK_IMAGE_REQUEST = 1;
-    ImageView imageView1, imageView2, imageView3, imageView4, imageView5, imageView6;
+    ImageView imageView1;
     Button button1, button2, button3, button4, button5, button6, updateDocummentButton;
-    EditText permitString,driverLicenseNumberTextView;
-
-    Uri uri1,uri2,uri3,uri4,uri5,uri6;
+    EditText permitString;
+    Boolean check;
+    Uri uri1;
 
     boolean isClick1=false, isClick2=false, isClick3=false, isClick4=false, isClick5=false, isClick6=false;
     private ProgressDialog progressDialog;
@@ -65,12 +74,6 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
         progressDialog.setProgress(0);
 
         imageView1 = view.findViewById(R.id.imageUD1);
-        imageView2 = view.findViewById(R.id.imageUD2);
-        imageView3 = view.findViewById(R.id.imageUD3);
-        imageView4 = view.findViewById(R.id.imageUD4);
-        imageView5 = view.findViewById(R.id.imageUD5);
-        imageView6 = view.findViewById(R.id.imageUD6);
-        driverLicenseNumberTextView = view.findViewById(R.id.driverLicenseNumberTextView);
         button1 = view.findViewById(R.id.permitButtonUD1);
 
         permitString = view.findViewById(R.id.businessPermitNoUD);
@@ -84,8 +87,20 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
         reference2.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("Hay",""+dataSnapshot.child("driver_license").getValue(String.class));
                 Picasso.get().load(dataSnapshot.child("driver_license").getValue(String.class)).into(imageView1);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        DatabaseReference reference3 = FirebaseDatabase.getInstance().getReference("User_File");
+        reference3.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                firstname = dataSnapshot.child("user_firstname").getValue(String.class);
+                lastname = dataSnapshot.child("user_lastname").getValue(String.class);
             }
 
             @Override
@@ -101,10 +116,42 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null)
         {
-            uri1 = data.getData(); uri2 = data.getData(); uri3 = data.getData(); uri4 = data.getData(); uri5 = data.getData(); uri6 = data.getData();
-            if(isClick1)
-            {
-                Picasso.get().load(uri1).into(imageView1);
+            uri1 = data.getData();
+            Bitmap bitmap = null;
+            Picasso.get().load(uri1).into(imageView1);
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri1);
+                TextRecognizer textRecognizer = new TextRecognizer.Builder(getActivity().getApplicationContext()).build();
+
+                if(!textRecognizer.isOperational())
+                {
+                    Toast.makeText(getActivity(), "No text detected", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+                    SparseArray<TextBlock> items = textRecognizer.detect(frame);
+                    StringBuilder sb= new StringBuilder();
+
+                    for(int ctr=0;ctr<items.size();ctr++)
+                    {
+                        TextBlock myItem = items.valueAt(ctr);
+                        sb.append(myItem.getValue());
+                        sb.append("\n");
+                    }
+                    if(sb.toString().toLowerCase().contains(firstname.toLowerCase()) || sb.toString().toLowerCase().contains(lastname.toLowerCase())){
+                        Picasso.get().load(uri1).into(imageView1);
+                        Toast.makeText(getActivity(), "Valid driver's license", Toast.LENGTH_SHORT).show();
+                        check = true;
+                    }
+                    else{
+                        imageView1.setImageResource(R.drawable.ic_image_black_24dp);
+                        Toast.makeText(getActivity(), "Invalid driver's license. Please capture the license clearly", Toast.LENGTH_SHORT).show();
+                        check = false;
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
         }
@@ -134,7 +181,14 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
         }
         else
         {
-            updatePhoto();
+            if(check==true) {
+                updatePhoto();
+                showMessage("Updated successfully");
+            }
+            else
+            {
+                showMessage("Invalid driver's license. Please capture the license clearly!");
+            }
         }
     }
 
@@ -159,7 +213,16 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
                                     FirebaseDatabase.getInstance()
                                             .getReference("User_WD_Docs_File")
                                             .child(currentUser.getUid())
-                                            .child("station_driver_license").setValue(uriString);
+                                            .child("driver_license").setValue(uriString);
+                                    FirebaseDatabase.getInstance().getReference("User_WD_Docs_File").child(currentUser.getUid()).child("driverLicense").setValue(uriString);
+                                    WPBusinessInfoFragment additem = new WPBusinessInfoFragment();
+                                    AppCompatActivity activity = (AppCompatActivity)getContext();
+                                    activity.getSupportFragmentManager()
+                                            .beginTransaction()
+                                            .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                                            .replace(R.id.fragment_container_wp, additem)
+                                            .addToBackStack(null)
+                                            .commit();
                                 }
                             });
                         }

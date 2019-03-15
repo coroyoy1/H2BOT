@@ -444,7 +444,6 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
     }
 
     public void uploadAllImage(){
-
         if(filepath2 != null){
             FirebaseUser user = mAuth.getCurrentUser();
             userId = user.getUid();
@@ -458,8 +457,8 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                         public void onSuccess(Uri uri) {
                             String stringUri = uri.toString();
                             WDDocFile wsDocFile = new WDDocFile(userId,
-                                    stringUri,
-                                "active");
+                                "active",
+                                    stringUri);
 
                             FirebaseDatabase.getInstance().getReference("User_WD_Docs_File").child(userId).setValue(wsDocFile)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {

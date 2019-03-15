@@ -304,6 +304,18 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
+                                                String message = "Your order:"+transactionNo+" has been accepted by "+name+". We will notify you for further details. Thank You!";
+                                                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
+                                                        != PackageManager.PERMISSION_GRANTED)
+                                                {
+                                                    ActivityCompat.requestPermissions(getActivity(), new String [] {Manifest.permission.SEND_SMS},
+                                                            MY_PERMISSIONS_REQUEST_SEND_SMS);
+                                                }
+                                                else {
+                                                    Log.d("NumberNako",""+transactionNo);
+                                                    SmsManager sms = SmsManager.getDefault();
+                                                    sms.sendTextMessage(contactNo.getText().toString(), null, message, sentPI, deliveredPI);
+                                                }
                                                 showMessages("Successfully updated");
                                             WSInProgressFragment additem = new WSInProgressFragment();
                                             AppCompatActivity activity = (AppCompatActivity)getContext();
@@ -558,7 +570,7 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
                                                         String message = "Your order:"+transactionNo+" has been declined by "+name+" for the following reasons: \n"
-                                                                +reason;
+                                                                +reason.getText().toString();
                                                         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
                                                                 != PackageManager.PERMISSION_GRANTED)
                                                         {
