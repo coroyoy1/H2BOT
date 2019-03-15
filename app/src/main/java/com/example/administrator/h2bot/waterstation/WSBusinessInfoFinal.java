@@ -111,7 +111,7 @@ public class WSBusinessInfoFinal extends Fragment {
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
-        progressDialog.setTitle("Creating account...");
+        progressDialog.setTitle("Updating information");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
@@ -248,7 +248,6 @@ public class WSBusinessInfoFinal extends Fragment {
             @Override
             public void onClick(View v) {
                 checkDocuments();
-//                uploadAllImage();
             }
         });
 
@@ -256,20 +255,21 @@ public class WSBusinessInfoFinal extends Fragment {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId){
-                    case R.id.perGallon:
+                    case R.id.perGallonDU:
                         deliveryMethod = "Per Gallon";
                         deliveryFee.setVisibility(View.VISIBLE);
                         deliveryFee.setHint("Delivery fee per gallon");
                         break;
 
-                    case R.id.fixPrice:
+                    case R.id.fixPriceDU:
                         deliveryMethod = "Fix Price";
                         deliveryFee.setVisibility(View.VISIBLE);
                         deliveryFee.setHint("Fixed delivery fee");
                         break;
 
-                    case R.id.free:
+                    case R.id.freeDU:
                         deliveryMethod = "Free";
+                        deliveryFee.setText("0");
                         deliveryFee.setVisibility(View.GONE);
                         break;
                 }
@@ -507,8 +507,7 @@ public class WSBusinessInfoFinal extends Fragment {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            showMessages("Successfully Submitted");
-                            progressDialog.dismiss();
+                            uploadImage();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -522,10 +521,6 @@ public class WSBusinessInfoFinal extends Fragment {
         } catch (IOException ex) {
 
             ex.printStackTrace();
-            progressDialog.dismiss();
-        }
-        finally {
-            showMessages("Error to locate your address, please change again");
             progressDialog.dismiss();
         }
     }
@@ -542,21 +537,128 @@ public class WSBusinessInfoFinal extends Fragment {
             Toast.makeText(getActivity(), "Please fill all the requirments", Toast.LENGTH_SHORT).show();
             return;
         }
+        else
+        {
+            updateInformation();
+        }
     }
 
 
-//    public void updateInformation()
-//    {
-//
-//        WSBusinessInfoFile wsBusinessInfoFile = new WSBusinessInfoFile(
-//                mAuth.getCurrentUser().getUid(),
-//                stationAddress.getText().toString(),
-//                telNo.getText().toString(),
-//
-//        )
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
-//        databaseReference.child(mAuth.getCurrentUser().getUid())
-//    }
+    public void updateInformation()
+    {
+        WSBusinessInfoFile wsBusinessInfoFile = new WSBusinessInfoFile(
+                mAuth.getCurrentUser().getUid(),
+                stationName.getText().toString(),
+                stationAddress.getText().toString(),
+                telNo.getText().toString(),
+                startingHour.getText().toString() + " "+ startSpinner.getSelectedItem(),
+                endingHour.getText().toString() + " " + endSpinner.getSelectedItem(),
+                deliveryMethod,
+                deliveryFee.getText().toString(),
+                min_no_of_gallons.getText().toString(),
+                "active"
+        );
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
+        databaseReference.child(mAuth.getCurrentUser().getUid()).setValue(wsBusinessInfoFile)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        getLocationSetter();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        showMessages("Update information fail to send");
+                    }
+                });
+    }
+
+    public void uploadImage()
+    {
+        if (filepath != null)
+        {
+            StorageReference mStorageRef = storageReference.child("station_documents").child(mAuth.getCurrentUser().getUid() +"/"+"businessPermitDocument");
+            mStorageRef.putFile(filepath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            business = uri.toString();
+
+                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_Docs_File");
+                                reference.child(mAuth.getCurrentUser().getUid()).child("station_business_permit").setValue(business);
+
+                        }
+                    });
+                }
+            });
+        }
+        if (filepath2 != null)
+        {
+            StorageReference mStorageRef = storageReference.child("station_documents").child(mAuth.getCurrentUser().getUid() +"/"+"sanitaryPermitDocument");
+            mStorageRef.putFile(filepath2).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            sanitary = uri.toString();
+
+                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_Docs_File");
+                                reference.child(mAuth.getCurrentUser().getUid()).child("station_sanitary_permit").setValue(sanitary);
+
+                        }
+                    });
+                }
+            });
+        }
+        if (filepath3 != null)
+        {
+            StorageReference mStorageRef = storageReference.child("station_documents").child(mAuth.getCurrentUser().getUid() +"/"+"physicochemicalPermitDocument");
+            mStorageRef.putFile(filepath3).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            physicochemical = uri.toString();
+
+                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_Docs_File");
+                                reference.child(mAuth.getCurrentUser().getUid()).child("station_physicochemical_permit:").setValue(physicochemical);
+
+                        }
+                    });
+                }
+            });
+        }
+        if (filepath4 != null)
+        {
+            StorageReference mStorageRef = storageReference.child("station_documents").child(mAuth.getCurrentUser().getUid() +"/"+"birPermitDocument");
+            mStorageRef.putFile(filepath4).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            bir = uri.toString();
+
+                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_Docs_File");
+                                reference.child(mAuth.getCurrentUser().getUid()).child("station_bir_permit").setValue(bir);
+
+                        }
+                    });
+                }
+            });
+        }
+
+        progressDialog.dismiss();
+    }
 
 //            this.business_id = business_id;
 //        this.business_name = business_name;
@@ -706,12 +808,13 @@ public class WSBusinessInfoFinal extends Fragment {
                                 deliveryFeeGroup.check(R.id.perGallonDU);
                                 deliveryFee.setText(wsBusinessInfoFile.getBusiness_delivery_fee());
                             }
-                            else if ("Free Delivery Fee".equals(wsBusinessInfoFile.getBusiness_delivery_fee_method()))
+                            else if ("Free".equals(wsBusinessInfoFile.getBusiness_delivery_fee_method()))
                             {
                                 deliveryFeeGroup.check(R.id.freeDU);
                             }
                             telNo.setText(wsBusinessInfoFile.getBusiness_tel_no());
                             min_no_of_gallons.setText(wsBusinessInfoFile.getBusiness_min_no_of_gallons());
+                            deliveryFee.setText(wsBusinessInfoFile.getBusiness_delivery_fee());
 
                             DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("User_WS_Docs_File");
                             databaseReference1.child(mAuth.getCurrentUser().getUid())
@@ -721,7 +824,7 @@ public class WSBusinessInfoFinal extends Fragment {
                                             WSDocFile wsDocFile = dataSnapshot.getValue(WSDocFile.class);
                                             if (wsDocFile != null)
                                             {
-                                                Picasso.get().load(wsDocFile.getStation_bir_permit()).centerCrop().fit().into(businessPermit_image);
+                                                Picasso.get().load(wsDocFile.getStation_business_permit()).centerCrop().fit().into(businessPermit_image);
                                                 Picasso.get().load(wsDocFile.getStation_sanitary_permit()).fit().centerCrop().into(sanitaryPermit_image);
                                                 Picasso.get().load(wsDocFile.getStation_physicochemical_permit()).fit().centerCrop().into(physicochemicalPermit_Image);
                                                 Picasso.get().load(wsDocFile.getStation_bir_permit()).fit().centerCrop().into(birPermit_Image);
