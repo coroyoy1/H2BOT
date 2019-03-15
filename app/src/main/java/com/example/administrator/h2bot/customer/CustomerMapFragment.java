@@ -491,6 +491,7 @@ public class CustomerMapFragment extends Fragment implements
         stationName.setText(marker.getTitle());
         station_id.setText(marker.getTag().toString());
 //        marker.getSnippet();
+
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
         orderBtn.setOnClickListener(v -> {
