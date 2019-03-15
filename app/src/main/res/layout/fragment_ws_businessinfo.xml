@@ -22,28 +22,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    android:textAlignment="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Water Station"
-                    android:background="@android:color/holo_blue_dark"
-                    android:textSize="20dp"
-                    android:textColor="@android:color/white"/>
-
-                <ImageView
-                    android:id="@+id/imageWaterStation"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:src="@drawable/ic_person_black_24dp"
-                    android:layout_marginBottom="5dp"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/white"
                     android:background="@android:color/holo_blue_dark"
-                    android:text="Details"
+                    android:text="Water Station's Information"
                     android:textAlignment="center"
                     android:textSize="20dp"
                     android:layout_marginBottom="20dp"/>
@@ -112,11 +97,11 @@
                 android:layout_height="wrap_content">
                 <Button
                     android:id="@+id/updateButtonWSBI"
-                    android:layout_width="150dp"
+                    android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/z_darkbluebutton"
                     android:textColor="@android:color/white"
-                    android:text="Update" />
+                    android:text="Update Information" />
                 </LinearLayout>
             <LinearLayout
                 android:id="@+id/linearForUpdateNext"

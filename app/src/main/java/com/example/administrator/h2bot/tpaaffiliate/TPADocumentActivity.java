@@ -64,6 +64,7 @@ public class TPADocumentActivity extends AppCompatActivity{
     TextView driverLicenseNo;
     ImageView driversLicense_image;
     Uri filepath;
+    Button register;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,20 +82,28 @@ public class TPADocumentActivity extends AppCompatActivity{
         licenseBtn = findViewById(R.id.licenseBtn);
         driverLicenseNo = findViewById(R.id.driverLicenseNo);
         driversLicense_image = findViewById(R.id.driversLicense_image);
+        register = findViewById(R.id.submitButton);
 
-        licenseBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(TextUtils.isEmpty(driverLicenseNo.getText().toString())){
-                    Toast.makeText(TPADocumentActivity.this, "Please fill the information needed", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    isPicked = true;
-                    Intent intent = new Intent();
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-                }
+        register.setOnClickListener(v -> {
+            if(TextUtils.isEmpty(driverLicenseNo.getText().toString())){
+                Toast.makeText(TPADocumentActivity.this, "Please fill the information needed", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                uploadDocument();
+            }
+        });
+
+        licenseBtn.setOnClickListener(v -> {
+            if(TextUtils.isEmpty(driverLicenseNo.getText().toString())){
+                Toast.makeText(TPADocumentActivity.this, "Please fill the information needed", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                isPicked = true;
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
             }
         });
     }
@@ -112,7 +121,7 @@ public class TPADocumentActivity extends AppCompatActivity{
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK)
         {
-            if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            if (requestCode == PICK_IMAGE_REQUEST && data != null && data.getData() != null) {
 
                 filepath = data.getData();
                 if(isPicked) {
@@ -137,9 +146,7 @@ public class TPADocumentActivity extends AppCompatActivity{
                                 sb.append(myItem.getValue());
                                 sb.append("\n");
                             }
-                            Log.d("Data: ", sb.toString());
-                            Log.d("License No: ", driverLicenseNo.getText().toString().toLowerCase());
-                            if(sb.toString().toLowerCase().contains(driverLicenseNo.getText().toString().toLowerCase())
+                            if(sb.toString().trim().toLowerCase().contains(driverLicenseNo.getText().toString().trim().toLowerCase())
                                     && sb.toString().toUpperCase().contains("NON-PROFESSIONAL DRIVER'S LICENSE")){
                                 Picasso.get().load(filepath).into(driversLicense_image);
                                 Toast.makeText(this, "Valid Driver's License", Toast.LENGTH_SHORT).show();
@@ -161,62 +168,41 @@ public class TPADocumentActivity extends AppCompatActivity{
         }
     }
     private void uploadDocument() {
-        if (mImageUri != null) {
-                StorageReference fileReference = mStorageRef.child(currentuser + "/" + "Driver License"
-                        + "." + getFileExtension(mImageUri));
+        if (filepath != null) {
+                StorageReference fileReference = mStorageRef.child(currentuser + "/" + "Driver License");
                 mUploadTask = fileReference.putFile(mImageUri)
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Handler handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        //mProgressBar.setProgress(0);
-                                        progressDialog.dismiss();
-                                    }
-                                }, 500);
-                                Task<Uri> result1 = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-                                result1.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        String addOne = uri.toString();
-                                        FirebaseDatabase.getInstance().getReference("User_TPA_Docs_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("driver_license").setValue(addOne);
-                                    }
-                                });
-                                DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("User_File");
-                                databaseReference.child(currentUser).child("user_status").setValue("unverified");
+                        .addOnSuccessListener(taskSnapshot -> {
+                            Handler handler = new Handler();
+                            handler.postDelayed(() -> {
+                                //mProgressBar.setProgress(0);
+                                progressDialog.dismiss();
+                            }, 500);
+                            Task<Uri> result1 = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                            result1.addOnSuccessListener(uri -> {
+                                String addOne = uri.toString();
+                                FirebaseDatabase.getInstance().getReference("User_TPA_Docs_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("driver_license").setValue(addOne);
+                            });
+                            DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("User_File");
+                            databaseReference.child(currentUser).child("user_status").setValue("unverified");
 
-                                DatabaseReference databaseReference2= FirebaseDatabase.getInstance().getReference("User_Account_File");
-                                databaseReference2.child(currentUser).child("user_status").setValue("unverified");
+                            DatabaseReference databaseReference2= FirebaseDatabase.getInstance().getReference("User_Account_File");
+                            databaseReference2.child(currentUser).child("user_status").setValue("unverified");
 
-                                Toast.makeText(TPADocumentActivity.this, "Uploaded successfully" + currentuser, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(TPADocumentActivity.this, "Uploaded successfully" + currentuser, Toast.LENGTH_SHORT).show();
 //                                startActivity(new Intent(TPADocumentActivity.this, MerchantAccessVerification.class));
-                            }
                         })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
+                        .addOnFailureListener(e -> {
 
-                            }
                         })
-                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                                progressDialog.setProgress((int) progress);
-                            }
+                        .addOnProgressListener(taskSnapshot -> {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                            progressDialog.setProgress((int) progress);
                         });
 
         } else {
             Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
         }
 
-    }
-    private String getFileExtension(Uri uri) {
-        ContentResolver cR = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
     private void showMessages(String s)

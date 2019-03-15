@@ -96,8 +96,7 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
                         stationAddress.setText("Full Address: "+userWSBusinessInfoFile.getBusiness_address());
                         stationHours.setText("Business Hours: "+businessTime);
                         stationTelNo.setText("Contact No.: "+userWSBusinessInfoFile.getBusiness_tel_no());
-                        stationFeePerGal.setText("Fee per Gallon: "+userWSBusinessInfoFile.getBusiness_delivery_fee_per_gal());
-                        stationDelivery.setText("Delivery Status: "+userWSBusinessInfoFile.getBusiness_delivery_service_status());
+                        stationFeePerGal.setText("Delivery Fee: "+dataSnapshot.child("business_delivery_fee").getValue(String.class));
                         stationStatus.setText("Station Status: "+userWSBusinessInfoFile.getBusiness_status());
                    }
                    else
