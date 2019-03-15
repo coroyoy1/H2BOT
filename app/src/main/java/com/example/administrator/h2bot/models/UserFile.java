@@ -2,7 +2,7 @@ package com.example.administrator.h2bot.models;
 
 public class UserFile {
     private String user_getUID;
-    private String user_firtname;
+    private String user_firstname;
     private String user_lastname;
     private String user_phone_no;
     private String user_address;
@@ -19,7 +19,7 @@ public class UserFile {
     {
         this.user_getUID = user_getUID;
         this.user_uri = user_uri;
-        this.user_firtname = user_firstname;
+        this.user_firstname = user_firstname;
         this.user_lastname = user_lastname;
         this.user_phone_no = user_phone_no;
         this.user_address = user_address;
@@ -43,12 +43,12 @@ public class UserFile {
         this.user_getUID = user_getUID;
     }
 
-    public String getUser_firtname() {
-        return user_firtname;
+    public String getUser_firstname() {
+        return user_firstname;
     }
 
-    public void setUser_firtname(String user_firtname) {
-        this.user_firtname = user_firtname;
+    public void setUser_firstname(String user_firtname) {
+        this.user_firstname = user_firtname;
     }
 
     public String getUser_lastname() {

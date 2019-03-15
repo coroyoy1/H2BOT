@@ -253,7 +253,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                         UserFile userFile = dataSnapshot.getValue(UserFile.class);
                         if(userFile !=  null)
                         {
-                            firstNameWU.setText(userFile.getUser_firtname());
+                            firstNameWU.setText(userFile.getUser_firstname());
                             lastNameWU.setText(userFile.getUser_lastname());
                             addressWU.setText(userFile.getUser_address());
                             contactNoWU.setText(userFile.getUser_phone_no());

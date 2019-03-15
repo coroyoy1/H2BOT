@@ -178,7 +178,7 @@ public class MapMerchantFragment extends Fragment implements
                                                 Address location = myListAddresses.get(0);
                                                 latLong = new LatLng(location.getLatitude(), location.getLongitude());
                                                 String address = info.getUser_address();
-                                                String fullname = info.getUser_lastname() + ", " + info.getUser_firtname();
+                                                String fullname = info.getUser_lastname() + ", " + info.getUser_firstname();
                                                 map.addMarker(new MarkerOptions().position(latLong).snippet("Customer Name: " + fullname + "\n" + "Address: " + address));
                                                 map.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
                                             }
