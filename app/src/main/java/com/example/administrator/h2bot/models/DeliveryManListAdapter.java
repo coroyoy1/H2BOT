@@ -40,7 +40,7 @@ public class DeliveryManListAdapter extends RecyclerView.Adapter<DeliveryManList
     @Override
     public void onBindViewHolder(@NonNull DeliveryManListAdapter.ImageViewHolder imageViewHolder, int i) {
         final UserFile currentData = uploadHolder.get(i);
-        String fullName = currentData.getUser_firtname() +" "+ currentData.getUser_lastname();
+        String fullName = currentData.getUser_firstname() +" "+ currentData.getUser_lastname();
         imageViewHolder.DeliveryName.setText(fullName);
         String dmImage = currentData.getUser_uri();
         Picasso.get().load(dmImage).fit().centerCrop().into(imageViewHolder.DeliveryImage);
@@ -57,7 +57,7 @@ public class DeliveryManListAdapter extends RecyclerView.Adapter<DeliveryManList
                         .addToBackStack(null)
                         .commit();
 
-                String fullNameString = currentData.getUser_firtname() +" "+ currentData.getUser_lastname();
+                String fullNameString = currentData.getUser_firstname() +" "+ currentData.getUser_lastname();
                 Bundle args = new Bundle();
                 args.putString("NameDM", fullNameString);
                 args.putString("AddressDM", currentData.getUser_address());

@@ -226,25 +226,25 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
 
                                     DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_File");
                                     reference2.child(orderModel.getOrder_customer_id())
-                                            .addValueEventListener(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    UserFile userFile = dataSnapshot.getValue(UserFile.class);
-                                                    if (userFile != null) {
-                                                        String customerPicture = userFile.getUser_uri();
-                                                        Picasso.get().load(customerPicture).into(imageView);
-                                                        contactNo.setText(userFile.getUser_phone_no());
-                                                        String fullname = userFile.getUser_firtname() + " " + userFile.getUser_lastname();
-                                                        customer.setText(fullname);
-                                                        progressDialog.dismiss();
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        .addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                UserFile userFile = dataSnapshot.getValue(UserFile.class);
+                                                if (userFile != null) {
+                                                    String customerPicture = userFile.getUser_uri();
+                                                    Picasso.get().load(customerPicture).into(imageView);
+                                                    contactNo.setText(userFile.getUser_phone_no());
+                                                    String fullname = userFile.getUser_firstname() + " " + userFile.getUser_lastname();
+                                                    customer.setText(fullname);
                                                     progressDialog.dismiss();
                                                 }
-                                            });
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                progressDialog.dismiss();
+                                            }
+                                        });
 
                                 }
                             }

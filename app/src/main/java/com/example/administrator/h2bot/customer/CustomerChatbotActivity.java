@@ -315,8 +315,8 @@ public class CustomerChatbotActivity extends AppCompatActivity {
                     if(user.getUser_getUID().equals(get_id)){
                         userFile.add(user);
                         String customerId = user.getUser_getUID();
-                        Toast.makeText(CustomerChatbotActivity.this, "Station ID: " + stationId, Toast.LENGTH_SHORT).show();
                         String msg = stationId + " " + customerId;
+                        Toast.makeText(CustomerChatbotActivity.this, "ID's: " + msg, Toast.LENGTH_SHORT).show();
                         QueryInput queryInput = QueryInput.newBuilder().setText(TextInput.newBuilder().setText(msg).setLanguageCode("en-US")).build();
                         new RequestJavaV2Task(CustomerChatbotActivity.this, session, sessionsClient, queryInput).execute();
                     }

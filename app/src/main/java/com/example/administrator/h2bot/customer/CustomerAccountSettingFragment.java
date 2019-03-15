@@ -145,10 +145,10 @@ public class CustomerAccountSettingFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String mName;
-                mName = dataSnapshot.child("user_firtname").getValue(String.class)
+                mName = dataSnapshot.child("user_firstname").getValue(String.class)
                         + " " + dataSnapshot.child("user_lastname").getValue(String.class);
                 name.setText(mName);
-                firstname.setText(dataSnapshot.child("user_firtname").getValue(String.class));
+                firstname.setText(dataSnapshot.child("user_firstname").getValue(String.class));
                 lastname.setText(dataSnapshot.child("user_lastname").getValue(String.class));
                 address.setText(dataSnapshot.child("user_address").getValue(String.class));
                 phoneNumber.setText(dataSnapshot.child("user_phone_no").getValue(String.class));

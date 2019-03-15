@@ -51,21 +51,19 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="230dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Service: " />
+                        android:text="Business Time:" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="With delivery"
-                        android:textStyle="italic" />
+                        android:text="8:30 AM - 6:30 PM"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -73,8 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="230dp"
@@ -86,8 +83,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Mineral, Alkaline, Purfied, Distilled"
-                        android:textStyle="italic" />
+                        android:text="Mineral, Alkaline, Purfied, Distilled" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -95,8 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="230dp"
@@ -175,8 +170,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:max="10"
-            android:maxHeight="3dp"
-            android:minHeight="3dp"
+            android:maxHeight="5dp"
+            android:minHeight="5dp"
             android:progress="10"
             android:progressDrawable="@drawable/volume_seekbar"
             android:thumbTint="@color/black"/>
@@ -184,6 +179,7 @@
         <TextView
             android:id="@+id/current_radius"
             android:layout_width="wrap_content"
+            android:textStyle="bold"
             android:layout_height="wrap_content"
             android:text="10 km" />
 

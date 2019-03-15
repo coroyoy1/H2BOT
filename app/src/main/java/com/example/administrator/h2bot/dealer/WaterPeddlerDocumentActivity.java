@@ -62,7 +62,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
     ImageView businessPermit_image, sanitaryPermit_image;
     Button sanitaryPermitBtn, submitButton;
     RadioGroup deliveryFeeGroup;
-
+    boolean check;
     EditText stationName, stationAddress, endingHour, startingHour, businessDeliveryFeePerGal, businessMinNoCapacity, telNo, deliveryFee, min_no_of_gallons;
     Spinner startSpinner, endSpinner;
     String deliveryMethod, mUri;
@@ -75,6 +75,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
     private double lng;
     RadioButton free,fixPrice,perGallon;
     String newToken;
+
     Uri filepath, filepath2;
     Boolean isPicked = false;
     Boolean isPicked2 = false;
@@ -170,9 +171,15 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CreateAccount(mEmail_address, mPassword);
-                checkDocuments();
+                if(check==true) {
+                    CreateAccount(mEmail_address, mPassword);
+                    checkDocuments();
 //                uploadAllImage();
+                }
+                else
+                {
+                    Toast.makeText(WaterPeddlerDocumentActivity.this, "Invalid driver's license. Please capture the license clearly", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -230,14 +237,16 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                 sb.append(myItem.getValue());
                                 sb.append("\n");
                             }
-//                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
+                            if(sb.toString().toLowerCase().contains(mFirstname.toLowerCase()) || sb.toString().toLowerCase().contains(mLastname.toLowerCase())){
                                 Picasso.get().load(filepath2).into(sanitaryPermit_image);
                                 Toast.makeText(this, "Valid driver's license", Toast.LENGTH_SHORT).show();
-//                            }
-//                            else{
-//                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
-//                                Toast.makeText(this, "Invalid sanitary permit", Toast.LENGTH_SHORT).show();
-//                            }
+                                check = true;
+                            }
+                            else{
+                                sanitaryPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
+                                Toast.makeText(WaterPeddlerDocumentActivity.this, "Invalid driver's license. Please capture the license clearly", Toast.LENGTH_SHORT).show();
+                                check = false;
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -281,9 +290,10 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                             result.addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
+
                                     String stringUri = uri.toString();
                                     UserFile userFile = new UserFile(userId,
-                                            stringUri,
+                                            mFilepath,
                                             mFirstname,
                                             mLastname,
                                             mAddress,
@@ -335,6 +345,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                                                 @Override
                                                                 public void onFailure(@NonNull Exception e) {
                                                                     Toast.makeText(WaterPeddlerDocumentActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                                    return;
                                                                 }
                                                             });
                                                         }
@@ -343,6 +354,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                                         @Override
                                                         public void onFailure(@NonNull Exception e) {
                                                             Toast.makeText(WaterPeddlerDocumentActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                            return;
                                                         }
                                                     });
                                             }
@@ -351,6 +363,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
                                                 Toast.makeText(WaterPeddlerDocumentActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                return;
                                             }
                                         });
 
@@ -365,6 +378,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(WaterPeddlerDocumentActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                return;
             }
         });
     }
@@ -413,7 +427,6 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
             progressDialog.dismiss();
         }
         finally {
-            showMessages("Error to locate your address, please change again");
             progressDialog.dismiss();
         }
     }
