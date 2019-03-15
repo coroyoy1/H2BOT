@@ -132,13 +132,11 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         startSpinner.setAdapter(adapter);
         endSpinner.setAdapter(adapter2);
-        DatabaseReference databaseReference3 = firebaseDatabase.getReference("User_File").child(firebaseUser.getUid());
+        DatabaseReference databaseReference3 = firebaseDatabase.getReference("User_WS_Business_Info_File").child(firebaseUser.getUid());
         databaseReference3.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                namedealer = dataSnapshot.child("user_firtname").getValue(String.class)+" "+dataSnapshot.child("user_lastname").getValue(String.class);
-                addressdealer = dataSnapshot.child("user_address").getValue(String.class);
-                numberdealer = dataSnapshot.child("user_phone_no").getValue(String.class);
+                waterStationMinimumGallon.setText(dataSnapshot.child("business_min_no_of_gallons").getValue(String.class));
             }
 
             @Override

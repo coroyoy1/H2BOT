@@ -87,6 +87,7 @@ public class WPBusinessInfoFragment extends Fragment implements View.OnClickList
 
             }
         });
+
         databaseReference = firebaseDatabase.getReference("User_WS_Business_Info_File").child(firebaseUser.getUid());
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override

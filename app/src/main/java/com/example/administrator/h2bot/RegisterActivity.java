@@ -210,7 +210,7 @@ public class RegisterActivity extends AppCompatActivity{
                 String contactNoString = contactRegister.getText().toString();
                 String emailAddressString = emailRegister.getText().toString();
                 String passwordString = passwordRegister.getText().toString();
-                String filepath = uri.toString();
+                String filepath = "";
                 if(firstNameString.isEmpty() || lastNameString.isEmpty() || addressString.isEmpty()
                         || contactNoString.isEmpty() || emailAddressString.isEmpty() || passwordString.isEmpty() || uri == null){
                     Toast.makeText(RegisterActivity.this, "Some fields are missing", Toast.LENGTH_SHORT).show();
@@ -218,7 +218,12 @@ public class RegisterActivity extends AppCompatActivity{
                 else if(!isEmailValid(emailAddressString)){
                     Toast.makeText(RegisterActivity.this, "Invalid email address", Toast.LENGTH_SHORT).show();
                 }
+                else if (uri == null)
+                {
+                    showMessage("Profile picture does not set");
+                }
                 else{
+                    filepath = uri.toString();
                     Intent intent = new Intent(RegisterActivity.this, WaterStationDocumentVersion2Activity.class);
                     intent.putExtra("firstname", firstNameString);
                     intent.putExtra("lastname", lastNameString);
@@ -434,9 +439,6 @@ public class RegisterActivity extends AppCompatActivity{
 
         } catch (IOException ex) {
             ex.printStackTrace();
-        }
-        finally {
-            showMessage("Error the locate your address, please change again");
         }
     }
 
