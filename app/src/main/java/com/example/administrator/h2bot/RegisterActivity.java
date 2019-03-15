@@ -64,6 +64,8 @@ public class RegisterActivity extends AppCompatActivity{
     FirebaseAuth.AuthStateListener mAuthListener;
     String device_token_id;
     String newToken;
+    Boolean isAddressExist = false;
+    String mLat, mLong;
 
 
     private FirebaseAuth mAuth;
@@ -266,7 +268,13 @@ public class RegisterActivity extends AppCompatActivity{
                     showMessage("Contact no. must be maximum of 11 characters");
                 }
                 else{
-                    CreateAccount(emailAddressString, passwordString);
+                    getLocationSetter();
+                    if(isAddressExist){
+                        CreateAccount(emailAddressString, passwordString);
+                    }
+                    else{
+                        Toast.makeText(RegisterActivity.this, "Please enter a valid address", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -362,7 +370,7 @@ public class RegisterActivity extends AppCompatActivity{
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override
                                                                 public void onSuccess(Void aVoid) {
-                                                                    getLocationSetter();
+                                                                    insertLatLong(mLat, mLong);
                                                                 }
                                                             })
                                                             .addOnFailureListener(new OnFailureListener() {
@@ -415,34 +423,43 @@ public class RegisterActivity extends AppCompatActivity{
             address = coder.getFromLocationName(locateAddress, 5);
 
             LocationAddress = address.get(0);
+            if(address.size() == 0){
+                isAddressExist = false;
+            }
+            else{
+                isAddressExist = true;
 
-            lat = LocationAddress.getLatitude();
-            lng = LocationAddress.getLongitude();
+                lat = LocationAddress.getLatitude();
+                lng = LocationAddress.getLongitude();
 
-            String getLocateLatitude = String.valueOf(lat);
-            String getLocateLongtitude = String.valueOf(lng);
+                mLat = String.valueOf(lat);
+                mLong = String.valueOf(lng);
+            }
 
-            UserLocationAddress userLocationAddress = new UserLocationAddress(FirebaseAuth.getInstance().getCurrentUser().getUid(), getLocateLatitude, getLocateLongtitude);
-            DatabaseReference locationRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
-            locationRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userLocationAddress)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            showMessage("Successfully registered");
-                            progressDialog.dismiss();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            //showMessage("Error to get location");
-                            progressDialog.dismiss();
-                        }
-                    });
 
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    private void insertLatLong(String latitude, String longitude){
+        UserLocationAddress userLocationAddress = new UserLocationAddress(FirebaseAuth.getInstance().getCurrentUser().getUid(), latitude, longitude);
+        DatabaseReference locationRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
+        locationRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userLocationAddress)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        showMessage("Successfully registered");
+                        progressDialog.dismiss();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //showMessage("Error to get location");
+                        progressDialog.dismiss();
+                    }
+                });
     }
 
     private void passToNextActivity()
