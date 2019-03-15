@@ -60,6 +60,7 @@
                         android:text="Business Time:" />
 
                     <TextView
+                        android:id="@+id/businessHours"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -67,6 +68,27 @@
                 </LinearLayout>
 
                 <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="230dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Water Type/s: " />
+
+                <TextView
+                    android:id="@+id/waterTypes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Mineral, Alkaline, Purfied, Distilled" />
+            </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -77,13 +99,14 @@
                         android:layout_width="230dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Water Type[s]: " />
+                        android:text="Prices" />
 
                     <TextView
+                        android:id="@+id/prices"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Mineral, Alkaline, Purfied, Distilled" />
+                        android:text="100.00, 25.00" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -97,15 +120,14 @@
                         android:layout_width="230dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Status: " />
+                        android:text="Address: " />
 
                     <TextView
+                        android:id="@+id/address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textColor="#228B22"
-                        android:text="AVAILABLE"
-                        android:textStyle="bold|italic" />
+                        android:text="Nasipit, Talamban, Cebu City" />
 
                     <!--<TextView-->
                         <!--android:visibility="gone"-->

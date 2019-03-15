@@ -37,6 +37,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -150,6 +151,8 @@ public class RegisterActivity extends AppCompatActivity{
                 String contactNoString = contactRegister.getText().toString();
                 String emailAddressString = emailRegister.getText().toString();
                 String passwordString = passwordRegister.getText().toString();
+                String filepath = "";
+
                 if(firstNameString.isEmpty() || lastNameString.isEmpty() || addressString.isEmpty()
                         || contactNoString.isEmpty() || emailAddressString.isEmpty() || passwordString.isEmpty() || uri == null){
                     Toast.makeText(RegisterActivity.this, "Some fields are missing", Toast.LENGTH_SHORT).show();
@@ -161,6 +164,7 @@ public class RegisterActivity extends AppCompatActivity{
                     Toast.makeText(RegisterActivity.this, "Phone number is invalid", Toast.LENGTH_LONG).show();
                 }
                 else{
+                    filepath = uri.toString();
                     Toast.makeText(RegisterActivity.this, "Phone number is valid", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(RegisterActivity.this, TPADocumentActivity.class);
                     intent.putExtra("firstname", firstNameString);
@@ -169,6 +173,7 @@ public class RegisterActivity extends AppCompatActivity{
                     intent.putExtra("contactno", contactNoString);
                     intent.putExtra("emailaddress", emailAddressString);
                     intent.putExtra("password", passwordString);
+                    intent.putExtra("uri", filepath);
                     startActivity(intent);
                 }
             }
@@ -260,12 +265,15 @@ public class RegisterActivity extends AppCompatActivity{
                         && addressString.isEmpty() && contactNoString.isEmpty() && emailAddressString.isEmpty()
                         && imageView.getDrawable() == null){
                     showMessage("Some fields are missing");
+                    progressDialog.dismiss();
                 }
                 else if(imageView.getDrawable() == null){
                     showMessage("Photo is not yet set!");
+                    progressDialog.dismiss();
                 }
                 else if (contactNoString.length() > 11){
                     showMessage("Contact no. must be maximum of 11 characters");
+                    progressDialog.dismiss();
                 }
                 else{
                     getLocationSetter();
@@ -274,6 +282,7 @@ public class RegisterActivity extends AppCompatActivity{
                     }
                     else{
                         Toast.makeText(RegisterActivity.this, "Please enter a valid address", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
                     }
                 }
             }
@@ -370,15 +379,14 @@ public class RegisterActivity extends AppCompatActivity{
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override
                                                                 public void onSuccess(Void aVoid) {
-                                                                    insertLatLong(mLat, mLong);
+                                                                    insertLatLong(FirebaseAuth.getInstance().getCurrentUser().getUid(), mLat, mLong);
                                                                 }
                                                             })
                                                             .addOnFailureListener(new OnFailureListener() {
                                                                 @Override
                                                                 public void onFailure(@NonNull Exception e) {
                                                                     progressDialog.dismiss();
-                                                                    showMessage("Error, Connection Error");
-                                                                    progressDialog.dismiss();
+                                                                    showMessage("Error: " + e.getMessage());
                                                                 }
                                                             });
                                                     }
@@ -387,7 +395,7 @@ public class RegisterActivity extends AppCompatActivity{
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
                                                         progressDialog.dismiss();
-                                                        showMessage("Error, Connection Error");
+                                                        showMessage("Error: " + e.getMessage());
                                                     }
                                                 });
 
@@ -413,11 +421,12 @@ public class RegisterActivity extends AppCompatActivity{
     }
 
     private void getLocationSetter()
-    {
+        {
         Geocoder coder = new Geocoder(this);
         List<Address> address;
         Address LocationAddress = null;
         String locateAddress = addressRegister.getText().toString();
+        Toast.makeText(this, "locateAddress = " + locateAddress, Toast.LENGTH_SHORT).show();
 
         try {
             address = coder.getFromLocationName(locateAddress, 5);
@@ -442,8 +451,8 @@ public class RegisterActivity extends AppCompatActivity{
         }
     }
 
-    private void insertLatLong(String latitude, String longitude){
-        UserLocationAddress userLocationAddress = new UserLocationAddress(FirebaseAuth.getInstance().getCurrentUser().getUid(), latitude, longitude);
+    private void insertLatLong(String id, String latitude, String longitude){
+        UserLocationAddress userLocationAddress = new UserLocationAddress(id, latitude, longitude);
         DatabaseReference locationRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
         locationRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userLocationAddress)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

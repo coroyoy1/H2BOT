@@ -79,7 +79,7 @@ public class WPBusinessInfoFragment extends Fragment implements View.OnClickList
         databaseReference3.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                stationName.setText("Name: "+dataSnapshot.child("user_firtname").getValue(String.class)+" "+dataSnapshot.child("user_lastname").getValue(String.class));
+                stationName.setText("Name: "+dataSnapshot.child("user_firstname").getValue(String.class)+" "+dataSnapshot.child("user_lastname").getValue(String.class));
             }
 
             @Override
