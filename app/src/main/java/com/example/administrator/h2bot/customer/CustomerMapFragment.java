@@ -490,6 +490,8 @@ public class CustomerMapFragment extends Fragment implements
         Button orderBtn = bottomSheet.findViewById(R.id.orderBtn);
         stationName.setText(marker.getTitle());
         station_id.setText(marker.getTag().toString());
+        
+
 //        marker.getSnippet();
 
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);

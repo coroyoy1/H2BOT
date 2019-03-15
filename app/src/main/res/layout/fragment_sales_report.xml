@@ -114,7 +114,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_below="@+id/textView22"
                 android:layout_alignStart="@+id/textviewA"
-                android:text="Filtered Water"
+                android:text="Mineral Water"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
@@ -152,7 +152,7 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/textView28"
+                android:id="@+id/itemSoldMineral"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/textviewB"
@@ -163,7 +163,7 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/textView18"
+                android:id="@+id/incomePurifiedWater"
                 android:paddingTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -191,7 +191,7 @@
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
             <TextView
-                android:id="@+id/textView26"
+                android:id="@+id/incomeMineral"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/textviewC"
