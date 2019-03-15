@@ -155,11 +155,7 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
         switch (v.getId())
         {
             case R.id.updateButtonWSBI:
-                linearLayoutUpNext.setVisibility(View.VISIBLE);
-                linearLayoutUp.setVisibility(View.GONE);
-                break;
-            case R.id.updateInfoWSBI:
-                WSBusinessInformationUpdate additem = new WSBusinessInformationUpdate();
+                WSBusinessInfoFinal additem = new WSBusinessInfoFinal();
                 AppCompatActivity activity = (AppCompatActivity)v.getContext();
                 activity.getSupportFragmentManager()
                         .beginTransaction()
@@ -167,6 +163,8 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
                         .replace(R.id.fragment_container_ws, additem)
                         .addToBackStack(null)
                         .commit();
+                break;
+            case R.id.updateInfoWSBI:
                 break;
             case R.id.updateDocumentWSBI:
                 WSBusinessDocumentUpdate updateitem = new WSBusinessDocumentUpdate();
