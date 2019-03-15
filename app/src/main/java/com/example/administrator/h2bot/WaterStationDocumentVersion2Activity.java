@@ -95,7 +95,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         mAuth = FirebaseAuth.getInstance();
-
+        RadioButton free,fixPrice,perGallon;
         startSpinner= findViewById(R.id.startSpinner);
         endSpinner= findViewById(R.id.endSpinner);
 
@@ -103,7 +103,9 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
         businessPermitBtn = findViewById(R.id.businessPermitBtn);
         sanitaryPermitBtn = findViewById(R.id.sanitaryPermitBtn);
         submitButton = findViewById(R.id.submitButton);
-
+        free = findViewById(R.id.free);
+        fixPrice = findViewById(R.id.fixPrice);
+        perGallon = findViewById(R.id.perGallon);
         //Imageview
         businessPermit_image = findViewById(R.id.businessPermit_image);
         sanitaryPermit_image = findViewById(R.id.sanitaryPermit_image);
@@ -124,7 +126,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
         String firstname = bundle.getString("firstname");
         String lastname = bundle.getString("lastname");
         String address = bundle.getString("address");
-        String contact_no = bundle.getString("contact_no");
+        String contact_no = bundle.getString("contactno");
         String email_address = bundle.getString("emailaddress");
         String password = bundle.getString("password");
         String filepath = bundle.getString("filepath");
@@ -206,10 +208,19 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                 switch (checkedId){
                     case R.id.perGallon:
                         deliveryMethod = "Per Gallon";
+                        deliveryFee.setVisibility(View.VISIBLE);
+                        deliveryFee.setHint("Delivery fee per gallon");
                         break;
 
                     case R.id.fixPrice:
                         deliveryMethod = "Fix Price";
+                        deliveryFee.setVisibility(View.VISIBLE);
+                        deliveryFee.setHint("Fixed delivery fee");
+                        break;
+
+                    case R.id.free:
+                        deliveryMethod = "Free";
+                        deliveryFee.setVisibility(View.GONE);
                         break;
                 }
             }

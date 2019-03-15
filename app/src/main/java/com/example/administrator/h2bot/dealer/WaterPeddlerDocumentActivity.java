@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -57,6 +58,7 @@ import java.util.List;
 public class WaterPeddlerDocumentActivity extends AppCompatActivity{
 
     private static final int PICK_IMAGE_REQUEST = 1;
+    String userId;
     ImageView businessPermit_image, sanitaryPermit_image;
     Button sanitaryPermitBtn, submitButton;
     RadioGroup deliveryFeeGroup;
@@ -71,7 +73,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
     private ProgressDialog progressDialog;
     private double lat;
     private double lng;
-
+    RadioButton free,fixPrice,perGallon;
     String newToken;
     Uri filepath, filepath2;
     Boolean isPicked = false;
@@ -100,6 +102,11 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
         sanitaryPermitBtn = findViewById(R.id.sanitaryPermitBtn);
         submitButton = findViewById(R.id.submitButton);
 
+        //Radiobutton
+        free = findViewById(R.id.free);
+        fixPrice = findViewById(R.id.fixPrice);
+        perGallon = findViewById(R.id.perGallon);
+
         //Imageview
         sanitaryPermit_image = findViewById(R.id.sanitaryPermit_image);
 
@@ -119,7 +126,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
         String firstname = bundle.getString("firstname");
         String lastname = bundle.getString("lastname");
         String address = bundle.getString("address");
-        String contact_no = bundle.getString("contact_no");
+        String contact_no = bundle.getString("contactno");
         String email_address = bundle.getString("emailaddress");
         String password = bundle.getString("password");
         String filepath = bundle.getString("filepath");
@@ -175,10 +182,19 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                 switch (checkedId){
                     case R.id.perGallon:
                         deliveryMethod = "Per Gallon";
+                        deliveryFee.setVisibility(View.VISIBLE);
+                        deliveryFee.setHint("Delivery fee per gallon");
                         break;
 
                     case R.id.fixPrice:
                         deliveryMethod = "Fix Price";
+                        deliveryFee.setVisibility(View.VISIBLE);
+                        deliveryFee.setHint("Fixed delivery fee");
+                        break;
+
+                    case R.id.free:
+                        deliveryMethod = "Free";
+                        deliveryFee.setVisibility(View.GONE);
                         break;
                 }
             }
@@ -216,7 +232,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                             }
 //                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
                                 Picasso.get().load(filepath2).into(sanitaryPermit_image);
-                                Toast.makeText(this, "Valid sanitary permit", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, "Valid driver's license", Toast.LENGTH_SHORT).show();
 //                            }
 //                            else{
 //                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
@@ -261,6 +277,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                            String name = mFirstname+" "+mLastname;
                             result.addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
@@ -285,7 +302,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
 
                                     WSBusinessInfoFile businessInfoFile = new WSBusinessInfoFile(
                                             userId,
-                                            mFirstname+" "+mLastname,
+                                            name,
                                             mAddress,
                                             mContact_no,
                                             startHour,
@@ -295,18 +312,20 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                             min_no_of_gallons.getText().toString(),
                                             "active");
 
-                                    FirebaseDatabase.getInstance().getReference("User_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userFile)
+                                    FirebaseDatabase.getInstance().getReference("User_File").child(userId).setValue(userFile)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                FirebaseDatabase.getInstance().getReference("User_Account_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userAccountFile)
+                                                FirebaseDatabase.getInstance().getReference("User_Account_File").child(userId).setValue(userAccountFile)
                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
-                                                            FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(businessInfoFile)
+                                                            Log.d("Hohohoho","Ho");
+                                                            FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(userId).setValue(businessInfoFile)
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override
                                                                 public void onSuccess(Void aVoid) {
+                                                                    Log.d("Hihihihi","Hi");
                                                                     progressDialog.dismiss();
                                                                     getLocationSetter();
                                                                     Toast.makeText(WaterPeddlerDocumentActivity.this, "Successfully registered", Toast.LENGTH_SHORT).show();
@@ -357,7 +376,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
         Geocoder coder = new Geocoder(this);
         List<Address> address;
         Address LocationAddress = null;
-        String locateAddress = stationAddress.getText().toString();
+        String locateAddress = mAddress;
 
         try {
             address = coder.getFromLocationName(locateAddress, 5);
@@ -370,9 +389,9 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
             String getLocateLatitude = String.valueOf(lat);
             String getLocateLongtitude = String.valueOf(lng);
 
-            UserLocationAddress userLocationAddress = new UserLocationAddress(FirebaseAuth.getInstance().getCurrentUser().getUid(), getLocateLatitude, getLocateLongtitude);
+            UserLocationAddress userLocationAddress = new UserLocationAddress(userId, getLocateLatitude, getLocateLongtitude);
             DatabaseReference locationRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
-            locationRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userLocationAddress)
+            locationRef.child(userId).setValue(userLocationAddress)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
@@ -415,7 +434,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
 
         if(filepath2 != null){
             FirebaseUser user = mAuth.getCurrentUser();
-            String userId = user.getUid();
+            userId = user.getUid();
             StorageReference mStorageRef = storageReference.child("station_documents").child(userId +"/"+"sanitaryPermitDocument");
             mStorageRef.putFile(filepath2).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -435,6 +454,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                     public void onSuccess(Void aVoid) {
                                         startActivity(new Intent(WaterPeddlerDocumentActivity.this, LoginActivity.class));
                                         mAuth.signOut();
+                                        finish();
                                         Toast.makeText(WaterPeddlerDocumentActivity.this, "Successfully registered", Toast.LENGTH_SHORT).show();
                                     }
                                 })
