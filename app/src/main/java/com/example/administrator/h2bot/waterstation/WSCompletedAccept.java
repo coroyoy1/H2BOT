@@ -114,13 +114,14 @@ public class WSCompletedAccept extends Fragment implements View.OnClickListener 
                                                 OrderModel orderModel = dataSnapshot.getValue(OrderModel.class);
                                                 if (orderModel != null) {
                                                     if (orderModel.getOrder_status().equals("Completed")) {
-                                                        orderNo.setText(orderModel.getOrder_no());
+                                                        orderNo.setText(orderModel.getOrder_no());;
                                                         itemQuantity.setText(orderModel.getOrder_qty());
                                                         pricePerGallon.setText(orderModel.getOrder_price_per_gallon());
                                                         totalPrice.setText(orderModel.getOrder_total_amt());
                                                         waterType.setText(orderModel.getOrder_water_type());
                                                         address.setText(orderModel.getOrder_address());
                                                         deliveryMethod.setText(orderModel.getOrder_delivery_method());
+                                                        service.setText(orderModel.getOrder_service_method());
 
                                                         DateTime date = new DateTime(orderModel.getOrder_delivery_date());
                                                         String dateString = date.toLocalDate().toString();

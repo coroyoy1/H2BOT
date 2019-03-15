@@ -13,6 +13,15 @@ public class OrderModel {
     String order_status;
     String order_total_amt;
     String order_water_type;
+    String order_service_method;
+
+    public String getOrder_service_method() {
+        return order_service_method;
+    }
+
+    public void setOrder_service_method(String order_service_method) {
+        this.order_service_method = order_service_method;
+    }
 
     public String getOrder_address() {
         return order_address;
@@ -116,8 +125,9 @@ public class OrderModel {
     }
 
     public OrderModel(String order_address, String order_customer_id,String order_delivery_date,String order_delivery_fee,String order_delivery_method, String order_no,
-                      String order_price_per_gallon,String order_qty,String order_merchant_id, String order_status, String order_total_amt, String order_water_type)
+                      String order_price_per_gallon,String order_qty,String order_merchant_id, String order_status, String order_total_amt, String order_water_type, String order_service_method)
     {
+        this.order_service_method = order_service_method;
         this.order_address = order_address;
         this.order_customer_id = order_customer_id;
         this.order_delivery_date = order_delivery_date;

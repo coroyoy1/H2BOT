@@ -466,6 +466,7 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
         getActivity().unregisterReceiver(smsDeliveredReceiver);
     }
 
+
     @Override
     public void onResume() {
         super.onResume();

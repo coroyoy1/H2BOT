@@ -60,13 +60,14 @@ import io.grpc.Context;
 public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
 
     private static final int PICK_IMAGE_REQUEST = 1;
-    ImageView businessPermit_image, sanitaryPermit_image;
-    Button businessPermitBtn, sanitaryPermitBtn, submitButton;
+    ImageView businessPermit_image, sanitaryPermit_image, physicochemicalPermit_Image, birPermit_Image;
+    Button businessPermitBtn, sanitaryPermitBtn,
+            physicochemicalbutton, birbutton, submitButton;
     RadioGroup deliveryFeeGroup;
 
     EditText stationName, stationAddress, endingHour, startingHour, businessDeliveryFeePerGal, businessMinNoCapacity, telNo, deliveryFee, min_no_of_gallons;
     Spinner startSpinner, endSpinner;
-    String deliveryMethod, mUri;
+    String deliveryMethod, business, sanitary, physicochemical, bir;
 
     FirebaseStorage storage;
     StorageReference storageReference;
@@ -76,9 +77,12 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
     private double lng;
 
     String newToken;
-    Uri filepath, filepath2;
+    Uri filepath, filepath2, filepath3, filepath4;
     Boolean isPicked = false;
     Boolean isPicked2 = false;
+    Boolean isPicked3 = false;
+    Boolean isPicked4 = false;
+
     String mFirstname, mLastname, mAddress, mContact_no, mEmail_address, mPassword, mFilepath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +106,8 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
         // Button
         businessPermitBtn = findViewById(R.id.businessPermitBtn);
         sanitaryPermitBtn = findViewById(R.id.sanitaryPermitBtn);
+        physicochemicalbutton = findViewById(R.id.physicochemicalPermitBtn);
+        birbutton = findViewById(R.id.birPermitBtn);
         submitButton = findViewById(R.id.submitButton);
         free = findViewById(R.id.free);
         fixPrice = findViewById(R.id.fixPrice);
@@ -109,6 +115,8 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
         //Imageview
         businessPermit_image = findViewById(R.id.businessPermit_image);
         sanitaryPermit_image = findViewById(R.id.sanitaryPermit_image);
+        physicochemicalPermit_Image = findViewById(R.id.physicochemicalPermit_image);
+        birPermit_Image = findViewById(R.id.birPermit_image);
 
         //EditText
         stationName = findViewById(R.id.stationName);
@@ -168,6 +176,8 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                 else{
                     isPicked = true;
                     isPicked2 = false;
+                    isPicked3 = false;
+                    isPicked4 = false;
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -185,6 +195,46 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                 else{
                     isPicked = false;
                     isPicked2 = true;
+                    isPicked3 = false;
+                    isPicked4 = false;
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+                }
+            }
+        });
+
+        physicochemicalbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(TextUtils.isEmpty(stationName.getText().toString()) || TextUtils.isEmpty(stationAddress.getText().toString())){
+                    Toast.makeText(WaterStationDocumentVersion2Activity.this, "Plesae fill the needed information above", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    isPicked = false;
+                    isPicked2 = false;
+                    isPicked3 = true;
+                    isPicked4 = false;
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+                }
+            }
+        });
+
+        birbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(TextUtils.isEmpty(stationName.getText().toString()) || TextUtils.isEmpty(stationAddress.getText().toString())){
+                    Toast.makeText(WaterStationDocumentVersion2Activity.this, "Plesae fill the needed information above", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    isPicked = false;
+                    isPicked2 = false;
+                    isPicked3 = false;
+                    isPicked4 = true;
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -233,8 +283,8 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
         if(resultCode == RESULT_OK)
         {
             if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-                filepath = data.getData();
                 if(isPicked) {
+                    filepath = data.getData();
                     Bitmap bitmap = null;
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
@@ -271,8 +321,8 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                         e.printStackTrace();
                     }
                 }
-                filepath2 = data.getData();
                 if(isPicked2) {
+                    filepath2 = data.getData();
                     Bitmap bitmap = null;
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath2);
@@ -297,6 +347,80 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
 //                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
                                 Picasso.get().load(filepath2).into(sanitaryPermit_image);
                                 Toast.makeText(this, "Valid sanitary permit", Toast.LENGTH_SHORT).show();
+//                            }
+//                            else{
+//                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
+//                                Toast.makeText(this, "Invalid sanitary permit", Toast.LENGTH_SHORT).show();
+//                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (isPicked3)
+                {
+                    filepath3 = data.getData();
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath3);
+                        TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+
+                        if(!textRecognizer.isOperational())
+                        {
+                            Toast.makeText(getApplication(), "No text detected", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+                            SparseArray<TextBlock> items = textRecognizer.detect(frame);
+                            StringBuilder sb= new StringBuilder();
+
+                            for(int ctr=0;ctr<items.size();ctr++)
+                            {
+                                TextBlock myItem = items.valueAt(ctr);
+                                sb.append(myItem.getValue());
+                                sb.append("\n");
+                            }
+//                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
+                            Picasso.get().load(filepath3).into(physicochemicalPermit_Image);
+                            Toast.makeText(this, "Valid sanitary permit", Toast.LENGTH_SHORT).show();
+//                            }
+//                            else{
+//                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
+//                                Toast.makeText(this, "Invalid sanitary permit", Toast.LENGTH_SHORT).show();
+//                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (isPicked4)
+                {
+                    filepath4 = data.getData();
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath4);
+                        TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+
+                        if(!textRecognizer.isOperational())
+                        {
+                            Toast.makeText(getApplication(), "No text detected", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+                            SparseArray<TextBlock> items = textRecognizer.detect(frame);
+                            StringBuilder sb= new StringBuilder();
+
+                            for(int ctr=0;ctr<items.size();ctr++)
+                            {
+                                TextBlock myItem = items.valueAt(ctr);
+                                sb.append(myItem.getValue());
+                                sb.append("\n");
+                            }
+//                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
+                            Picasso.get().load(filepath4).into(birPermit_Image);
+                            Toast.makeText(this, "Valid sanitary permit", Toast.LENGTH_SHORT).show();
 //                            }
 //                            else{
 //                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
@@ -505,22 +629,47 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                     result.addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            mUri = uri.toString();
+                            business = uri.toString();
                         }
                     });
-                    progressDialog.dismiss();
                 }
-            }).addOnFailureListener(new OnFailureListener() {
+            });
+        }
+
+        if(filepath3 != null){
+            FirebaseUser user = mAuth.getCurrentUser();
+            String userId = user.getUid();
+            Log.d("auth", userId);
+            StorageReference mStorageRef = storageReference.child("station_documents").child(userId +"/"+"physicochemicalDocument");
+            mStorageRef.putFile(filepath3).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
-                public void onFailure(@NonNull Exception e) {
-                    progressDialog.dismiss();
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            physicochemical = uri.toString();
+                        }
+                    });
                 }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            });
+        }
+
+        if(filepath4 != null){
+            FirebaseUser user = mAuth.getCurrentUser();
+            String userId = user.getUid();
+            Log.d("auth", userId);
+            StorageReference mStorageRef = storageReference.child("station_documents").child(userId +"/"+"birDocument");
+            mStorageRef.putFile(filepath4).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                    progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
-                    progressDialog.show();
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            bir = uri.toString();
+                        }
+                    });
                 }
             });
         }
@@ -538,8 +687,10 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                         public void onSuccess(Uri uri) {
                             String stringUri = uri.toString();
                             WSDocFile wsDocFile = new WSDocFile(userId,
-                                stringUri,
-                                mUri,
+                                business,
+                                    stringUri,
+                                physicochemical,
+                                bir,
                                 "active");
 
                             FirebaseDatabase.getInstance().getReference("User_WS_Docs_File").child(userId).setValue(wsDocFile)
@@ -559,7 +710,6 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                                 });
                         }
                     });
-                    progressDialog.dismiss();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
