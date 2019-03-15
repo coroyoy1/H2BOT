@@ -26,14 +26,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.maps.GetDistance;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserLocationAddress;
 import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
+import com.example.administrator.h2bot.objects.WaterStationOrDealer;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -56,6 +59,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -79,15 +83,21 @@ public class TPAMapFragment extends Fragment
     private static final int REQUEST_USER_LOCATION_CODE = 99;
     public FirebaseAuth mAuth;
     DatabaseReference userFileRef, businessRef, userLatLongRef, orderModel;
-    ArrayList<UserFile> arrayListUserFile;
-    ArrayList<UserWSBusinessInfoFile> arrayListBusinessInfo;
-    ArrayList<UserLocationAddress> arrayListMerchantLatLong;
-    ArrayList<OrderModel> ordermodel;
     String stationAddress, stationName, userType, stationId, station_id_snip;
     LatLng latLong = null;
     double latitude, longitude;
     private BottomSheetBehavior sheetBehavior, bottomSheetBehavior;
     private View bottomSheet, bottomSheetCustomer;
+    private List<UserFile> userFileList;
+    private List<UserWSBusinessInfoFile> businessInfoFileListis;
+    private List<UserLocationAddress> userLocationAddressList;
+    private List<OrderModel> orderModelList;
+    private List<WaterStationOrDealer> affiliateModel;
+    private LatLng currentLocation;
+    private GetDistance getDistance = null;
+    public String API_KEY = "";
+    private SeekBar radius;
+    private TextView currentRadius;
 
     public TPAMapFragment() {
         // Required empty public constructor
@@ -98,6 +108,17 @@ public class TPAMapFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tpa_fragment_map, container, false);
+
+        userFileList = new ArrayList<>();
+        businessInfoFileListis = new ArrayList<>();
+        userLocationAddressList = new ArrayList<>();
+        orderModelList = new ArrayList<>();
+
+        getUserFile();
+        getBusiness();
+        getUserLatLng();
+        getOrderModel();
+
         return view;
     }
 
@@ -120,19 +141,37 @@ public class TPAMapFragment extends Fragment
         bottomSheetBehavior.setPeekHeight(bottomSheetBehavior.getPeekHeight());
         bottomSheetBehavior.setHideable(true);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        API_KEY = getResources().getString(R.string.google_maps_key);
+        radius = getActivity().findViewById(R.id.seekBar);
+        currentRadius = getActivity().findViewById(R.id.current_radius);
+        radius.setOnSeekBarChangeListener(seekBarChangeListener);
 
         //bottomSheetCustomer = view.findViewById(R.id.bottom_sheet_customer);
         //bottomSheetCustomer.setVisibility(View.GONE);
 
-        arrayListUserFile = new ArrayList<UserFile>();
-        arrayListBusinessInfo = new ArrayList<UserWSBusinessInfoFile>();
-        arrayListMerchantLatLong = new ArrayList<UserLocationAddress>();
-        ordermodel = new ArrayList<>();
         mAuth = FirebaseAuth.getInstance();
 
         mapFragment.getMapAsync(this);
         ChildEventListener mChildEventListener;
     }
+
+    private SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            currentRadius.setText(progress + " km");
+            showNearest();
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
+        }
+    };
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -145,101 +184,6 @@ public class TPAMapFragment extends Fragment
         float zoomLevel = 16.0f;
         map.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
 
-        userFileRef = FirebaseDatabase.getInstance().getReference("User_File");
-        businessRef = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
-        userLatLongRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
-        orderModel = FirebaseDatabase.getInstance().getReference("Customer_File");
-        userFileRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot userData : dataSnapshot.getChildren()) {
-                    UserFile userFile = userData.getValue(UserFile.class);
-                    businessRef.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot infoFile : dataSnapshot.getChildren()) {
-                                UserWSBusinessInfoFile businessInfo = infoFile.getValue(UserWSBusinessInfoFile.class);
-                                userLatLongRef.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        for (DataSnapshot latlongFile : dataSnapshot.getChildren()) {
-                                            UserLocationAddress locationFile = latlongFile.getValue(UserLocationAddress.class);
-                                            if (userFile.getUser_getUID().equals(businessInfo.getBusiness_id())
-                                                    && businessInfo.getBusiness_id().equals(locationFile.getUser_id())) {
-                                                if (userFile.getUser_type().equals("Water Station")) {
-                                                    if (userFile.getUser_status().equalsIgnoreCase("Active")) {
-                                                        orderModel.addValueEventListener(new ValueEventListener() {
-                                                            @Override
-                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                for (DataSnapshot order : dataSnapshot.getChildren()) {
-                                                                    for(DataSnapshot userData2 : order.getChildren()) {
-                                                                        for (DataSnapshot userData3 : userData2.getChildren()) {
-                                                                            OrderModel userData4 = userData3.getValue(OrderModel.class);
-                                                                            String statusOrder = userData4.getOrder_status();
-                                                                            Log.d("Kaykay", "" + statusOrder);
-                                                                            if (statusOrder.equals("Broadcasting")) {
-                                                                                arrayListUserFile.add(userFile);
-                                                                                arrayListBusinessInfo.add(businessInfo);
-                                                                                arrayListMerchantLatLong.add(locationFile);
-
-                                                                                stationId = businessInfo.getBusiness_id();
-                                                                                stationAddress = businessInfo.getBusiness_address();
-                                                                                stationName = businessInfo.getBusiness_name();
-                                                                                userType = userFile.getUser_type();
-
-                                                                                latitude = Double.parseDouble(locationFile.getUser_latitude());
-                                                                                longitude = Double.parseDouble(locationFile.getUser_longtitude());
-                                                                                latLong = new LatLng(latitude, longitude);
-
-
-                                                                                String status = "Status: OPEN";
-                                                                                String type = "Type: " + userType;
-                                                                                station_id_snip = stationId;
-
-                                                                                map.addMarker(new MarkerOptions()
-                                                                                        .position(latLong).title(stationName)
-                                                                                        .snippet(type + "\n" + status)
-                                                                                        .icon(BitmapDescriptorFactory
-                                                                                                .defaultMarker(BitmapDescriptorFactory.HUE_RED))).setTag(stationId);
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-
-                                                            @Override
-                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                            }
-                                                        });
-
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                                        Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -294,6 +238,153 @@ public class TPAMapFragment extends Fragment
         });
     }
 
+    private void getUserFile(){
+        userFileRef = FirebaseDatabase.getInstance().getReference("User_File");
+        userFileRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot userData : dataSnapshot.getChildren()) {
+                    UserFile userFile = userData.getValue(UserFile.class);
+                    userFileList.add(userFile);
+                }
+                getList();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getBusiness(){
+        businessRef = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
+        businessRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot infoFile : dataSnapshot.getChildren()) {
+                    UserWSBusinessInfoFile businessInfo = infoFile.getValue(UserWSBusinessInfoFile.class);
+                    businessInfoFileListis.add(businessInfo);
+                }
+                getList();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getUserLatLng(){
+        userLatLongRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
+        userLatLongRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot latlongFile : dataSnapshot.getChildren()) {
+                    UserLocationAddress locationFile = latlongFile.getValue(UserLocationAddress.class);
+                    userLocationAddressList.add(locationFile);
+                }
+                getList();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), "Failed to read data.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getOrderModel(){
+        orderModel = FirebaseDatabase.getInstance().getReference("Customer_File");
+        orderModel.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot order : dataSnapshot.getChildren()) {
+                    for(DataSnapshot userData2 : order.getChildren()) {
+                        for (DataSnapshot userData3 : userData2.getChildren()) {
+                            OrderModel userData4 = userData3.getValue(OrderModel.class);
+                            orderModelList.add(userData4);
+                        }
+                        getList();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void getList(){
+        if(userFileList.size() == 0 || businessInfoFileListis.size() == 0
+                || userLocationAddressList.size() == 0 || orderModelList.size() == 0){
+            return;
+        }
+
+        affiliateModel = new ArrayList<>();
+
+        for(UserFile userFile: userFileList){
+            for(UserWSBusinessInfoFile businessInfo: businessInfoFileListis){
+                for(UserLocationAddress locationFile: userLocationAddressList){
+                    for(OrderModel orderModel: orderModelList){
+                        if (userFile.getUser_getUID().equals(businessInfo.getBusiness_id())
+                                && businessInfo.getBusiness_id().equals(locationFile.getUser_id())) {
+                            if (userFile.getUser_type().equals("Water Station")) {
+                                if (userFile.getUser_status().equalsIgnoreCase("Active")) {
+                                    String statusOrder = orderModel.getOrder_status();
+                                    Log.d("Kaykay", "" + statusOrder);
+                                    if (statusOrder.equals("Broadcasting")) {
+
+
+                                        stationId = businessInfo.getBusiness_id();
+                                        stationName = businessInfo.getBusiness_name();
+                                        userType = userFile.getUser_type();
+                                        latitude = Double.parseDouble(locationFile.getUser_latitude());
+                                        longitude = Double.parseDouble(locationFile.getUser_longtitude());
+                                        String status = "Status: OPEN";
+                                        String type = "Type: " + userType;
+
+                                        WaterStationOrDealer affiliate = new WaterStationOrDealer();
+                                        affiliate.setStation_dealer_name(stationName);
+                                        affiliate.setUserType(userType);
+                                        affiliate.setLat(latitude);
+                                        affiliate.setLng(longitude);
+                                        affiliate.setStatus(status);
+                                        affiliate.setType(type);
+                                        affiliate.setStationID(stationId);
+                                        affiliateModel.add(affiliate);
+
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void showNearest(){
+        if(userFileList.size() != 0 && businessInfoFileListis.size() != 0 && userLocationAddressList.size() != 0){
+            Object[] transferData = new Object[5];
+            transferData[0] = affiliateModel;
+            transferData[1] = currentLocation;
+            transferData[2] = map;
+            transferData[3] = API_KEY;
+            transferData[4] = currentRadius;
+            if(getDistance == null) {
+                getDistance = new GetDistance();
+                getDistance.execute(transferData);
+            }
+            else
+                getDistance.Display();
+        }
+    }
+
     public boolean checkUserLocationPermission(){
         if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)){
@@ -346,19 +437,15 @@ public class TPAMapFragment extends Fragment
             mCurrentLocationMarker.remove();
         }
         LatLng mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions mMarkerOption = new MarkerOptions();
-        mMarkerOption.position(mLatLng);
-        mMarkerOption.title("You");
-        mMarkerOption.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        currentLocation = mLatLng;
 
-        mCurrentLocationMarker = map.addMarker(mMarkerOption);
-        map.addMarker(mMarkerOption).showInfoWindow();
         float zoomLevel = 16.0f;
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, zoomLevel));
 
         if(mGoogleApiClient != null){
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
+        showNearest();
     }
 
     @Override
@@ -427,9 +514,6 @@ public class TPAMapFragment extends Fragment
                                                                             String statusOrder = userData4.getOrder_status();
                                                                             Log.d("Kaykay", "" + statusOrder);
                                                                             if (statusOrder.equals("Broadcasting")) {
-                                                                                arrayListUserFile.add(userFile);
-                                                                                arrayListBusinessInfo.add(businessInfo);
-                                                                                arrayListMerchantLatLong.add(locationFile);
 
                                                                                 noOfGallons.setText(userData4.getOrder_qty());
                                                                                 Profit.setText(userData4.getOrder_delivery_fee());
