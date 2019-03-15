@@ -1,15 +1,26 @@
 package com.example.administrator.h2bot.dealer;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +73,11 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
     private static GoogleMap googleMap;
     Bundle bundle;
     FirebaseUser firebaseUser;
-
+    private final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1;
+    private final String SENT = "SMS_SENT";
+    private final String DELIVERED = "SMS_DELIVERED";
+    PendingIntent sentPI, deliveredPI;
+    BroadcastReceiver smsSentReceiver, smsDeliveredReceiver;
 
     @Nullable
     @Override
@@ -152,6 +167,18 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
                                                     String customerID = orderModel.getOrder_customer_id();
                                                     DatabaseReference databaseDispatch2 = FirebaseDatabase.getInstance().getReference("Customer_File");
                                                     databaseDispatch2.child(customerID).child(firebaseUser.getUid()).child(transactionNo).child("order_status").setValue("Dispatched");
+                                                    String message = "Your order:"+transactionNo+" is on dispatch. Please be ready with your payment!";
+                                                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
+                                                            != PackageManager.PERMISSION_GRANTED)
+                                                    {
+                                                        ActivityCompat.requestPermissions(getActivity(), new String [] {Manifest.permission.SEND_SMS},
+                                                                MY_PERMISSIONS_REQUEST_SEND_SMS);
+                                                    }
+                                                    else {
+                                                        Log.d("NumberNako",""+transactionNo);
+                                                        SmsManager sms = SmsManager.getDefault();
+                                                        sms.sendTextMessage(contactNo.getText().toString(), null, message, sentPI, deliveredPI);
+                                                    }
                                                 }
                                             }
                                         }
@@ -432,7 +459,76 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
                 break;
         }
     }
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(smsSentReceiver);
+        getActivity().unregisterReceiver(smsDeliveredReceiver);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        smsSentReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                switch (getResultCode())
+                {
+                    case Activity.RESULT_OK:
+                        Toast.makeText(context, "SMS sent successfully!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    //Something went wrong and there's no way to tell what, why or how.
+                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                        Toast.makeText(context, "Generic failure!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    //Your device simply has no cell reception. You're probably in the middle of
+                    //nowhere, somewhere inside, underground, or up in space.
+                    //Certainly away from any cell phone tower.
+                    case SmsManager.RESULT_ERROR_NO_SERVICE:
+                        Toast.makeText(context, "No service!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    //Something went wrong in the SMS stack, while doing something with a protocol
+                    //description unit (PDU) (most likely putting it together for transmission).
+                    case SmsManager.RESULT_ERROR_NULL_PDU:
+                        Toast.makeText(context, "Null PDU!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    //You switched your device into airplane mode, which tells your device exactly
+                    //"turn all radios off" (cell, wifi, Bluetooth, NFC, ...).
+                    case SmsManager.RESULT_ERROR_RADIO_OFF:
+                        Toast.makeText(context, "Radio off!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                }
+
+            }
+        };
+        smsDeliveredReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                switch(getResultCode())
+                {
+                    case Activity.RESULT_OK:
+                        Toast.makeText(context, "SMS delivered!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case Activity.RESULT_CANCELED:
+                        Toast.makeText(context, "SMS not delivered!", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+
+            }
+        };
+
+        getActivity().registerReceiver(smsSentReceiver, new IntentFilter(SENT));
+        getActivity().registerReceiver(smsDeliveredReceiver, new IntentFilter(DELIVERED));
+    }
 
 
 //    @Override

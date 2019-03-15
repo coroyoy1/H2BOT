@@ -116,8 +116,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
-                android:layout_weight="1"
-                android:layout_width="match_parent"
+
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Delivery Fee"/>
             <RadioGroup
@@ -132,11 +132,17 @@
                     android:layout_height="wrap_content"
                     android:text="Per Gallon"/>
                 <RadioButton
-                    android:id="@+id/waterStationFixUIS"
+                android:id="@+id/waterStationFixUIS"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fix"/>
+                <RadioButton
+                    android:id="@+id/free"
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Fix"/>
+                    android:text="Free Delivery"/>
             </RadioGroup>
         </LinearLayout>
         <LinearLayout
@@ -144,15 +150,16 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <EditText
                 android:id="@+id/waterStationDeliveryFeeUIS"
-                android:textAlignment="center"
-                android:hint="Delivery Fee Per Gallon"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
-                android:inputType="number"
                 android:layout_height="50dp"
-                android:background="@drawable/edit_text_border"/>
+                android:layout_marginTop="10dp"
+                android:background="@drawable/edit_text_border"
+                android:hint="Delivery Fee Per Gallon"
+                android:inputType="number"
+                android:textAlignment="center" />
         </LinearLayout>
         <LinearLayout
             android:orientation="vertical"

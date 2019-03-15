@@ -181,6 +181,7 @@ public class RegisterActivity extends AppCompatActivity{
                 String contactNoString = contactRegister.getText().toString();
                 String emailAddressString = emailRegister.getText().toString();
                 String passwordString = passwordRegister.getText().toString();
+                String filepath = "";
                 if(firstNameString.isEmpty() || lastNameString.isEmpty() || addressString.isEmpty()
                         || contactNoString.isEmpty() || emailAddressString.isEmpty() || passwordString.isEmpty() || uri == null){
                     Toast.makeText(RegisterActivity.this, "Some fields are missing", Toast.LENGTH_SHORT).show();
@@ -189,6 +190,7 @@ public class RegisterActivity extends AppCompatActivity{
                     Toast.makeText(RegisterActivity.this, "Invalid email address", Toast.LENGTH_SHORT).show();
                 }
                 else{
+                    filepath = uri.toString();
                     Intent intent = new Intent(RegisterActivity.this, WaterPeddlerDocumentActivity.class);
                     intent.putExtra("firstname", firstNameString);
                     intent.putExtra("lastname", lastNameString);
@@ -196,6 +198,7 @@ public class RegisterActivity extends AppCompatActivity{
                     intent.putExtra("contactno", contactNoString);
                     intent.putExtra("emailaddress", emailAddressString);
                     intent.putExtra("password", passwordString);
+                    intent.putExtra("filepath", filepath);
                     startActivity(intent);
                 }
             }

@@ -48,15 +48,15 @@ import static android.app.Activity.RESULT_OK;
 public class WPBusinessInformationUpdate extends Fragment implements View.OnClickListener{
 
     private static final int PICK_IMAGE_REQUEST = 1;
-    EditText waterStationName, waterStationAddress, waterStationPhone, waterStationStartTime,
+    EditText waterStationStartTime,
     waterStationEndTime, waterStationMinimumGallon, waterStationDeliveryFee;
     Spinner startSpinner, endSpinner;
     RadioButton deliveryServiceYes, deliveryServiceFree, deliveryFeePerGallon, free, deliveryFeeFix;
-
+    LinearLayout linearDelFeeNext;
     Button updateButton;
     String namedealer, addressdealer, numberdealer;
     ImageView imageView;
-
+    String name, address, contact;
     FirebaseAuth mAuth;
     FirebaseDatabase firebaseDatabase;
     StorageReference storageReference;
@@ -94,9 +94,6 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
         progressDialog.setProgress(0);
 
 
-        waterStationName = view.findViewById(R.id.waterStationNameUIS);
-        waterStationAddress = view.findViewById(R.id.waterStationFullAddressUIS);
-        waterStationPhone = view.findViewById(R.id.waterStationPhoneUIS);
         waterStationStartTime = view.findViewById(R.id.waterStationStartTimeUIS);
         waterStationEndTime = view.findViewById(R.id.waterStationEndTimeUIS);
         waterStationMinimumGallon  = view.findViewById(R.id.waterStationMinimumGallonUIS);
@@ -136,9 +133,9 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 waterStationMinimumGallon.setText(dataSnapshot.child("business_min_no_of_gallons").getValue(String.class));
-                waterStationName.setText(dataSnapshot.child("business_name").getValue(String.class));
-                waterStationAddress.setText(dataSnapshot.child("business_address").getValue(String.class));
-                waterStationPhone.setText(dataSnapshot.child("business_tel_no").getValue(String.class));
+                namedealer = (dataSnapshot.child("business_name").getValue(String.class));
+                addressdealer = (dataSnapshot.child("business_address").getValue(String.class));
+                numberdealer = (dataSnapshot.child("business_tel_no").getValue(String.class));
                 //waterStationStartTime.setText(dataSnapshot.child("business_start_time").getValue(String.class));
                 //waterStationStartTime.setText(dataSnapshot.child("business_end_time").getValue(String.class));
                 waterStationMinimumGallon.setText(dataSnapshot.child("business_min_no_of_gallons").getValue(String.class));
@@ -168,12 +165,13 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
                                     deliveryFeePerGalIf = waterStationDeliveryFee.getText().toString();
                                     deliveryMinNoCapaIf = waterStationMinimumGallon.getText().toString();
                                 }
-                                else if(deliveryServiceFree.isChecked())
+                                else if(free.isChecked())
                                 {
                                     deliveryStatusIf = "Active";
                                     deliveryStatusFreeIf = "Free";
                                     deliveryFeePerGalIf = "None";
                                     deliveryMinNoCapaIf = "None";
+                                    waterStationDeliveryFee.setVisibility(View.GONE);
                                 }
                                 else
                                 {
@@ -326,6 +324,7 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
             case R.id.free:
                 linearLayout2.setVisibility(View.GONE);
                 linearLayout3.setVisibility(View.GONE);
+                waterStationDeliveryFee.setVisibility(View.GONE);
                 break;
         }
     }
