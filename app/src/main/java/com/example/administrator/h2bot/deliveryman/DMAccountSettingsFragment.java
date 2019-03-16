@@ -5,6 +5,7 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.example.administrator.h2bot.models.UserAccountFile;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
 import com.example.administrator.h2bot.models.UserWSDMFile;
+import com.example.administrator.h2bot.waterstation.WSAccountSettingsFragment;
 import com.google.android.gms.maps.model.Circle;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -69,99 +71,108 @@ public class DMAccountSettingsFragment extends Fragment implements View.OnClickL
 
     private void dataRetrieve()
     {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_DM_File");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
-                {
-                    for (DataSnapshot dataSnapshot2 : dataSnapshot1.child(firebaseUser.getUid()).getChildren())
-                    {
-                        UserWSDMFile userWSDMFile = dataSnapshot2.getValue(UserWSDMFile.class);
-                        if (userWSDMFile != null)
-                        {
-                            String userId = userWSDMFile.getStation_id();
-                            String customerId = userWSDMFile.getDelivery_man_id();
-                            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
-                            reference1.child(userId)
-                                    .addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            UserWSBusinessInfoFile userWSBusinessInfoFile = dataSnapshot.getValue(UserWSBusinessInfoFile.class);
-                                            if (userWSBusinessInfoFile != null)
-                                            {
-                                                String stationNameString = userWSBusinessInfoFile.getBusiness_name();
-                                                stationName.setText(stationNameString);
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    });
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        databaseReference = FirebaseDatabase.getInstance().getReference("User_File");
-        databaseReference.child(firebaseUser.getUid())
+        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("User_File");
+        reference1.child(firebaseUser.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        UserFile userFile = dataSnapshot.getValue(UserFile.class);
-                        if(userFile != null)
-                        {
-                            String userTypeString = "User Type: "+userFile.getUser_type();
-                            String fullNameString = "Full Name: "+userFile.getUser_firstname()+" "+userFile.getUser_lastname();
-                            String addressString = "Full Address: "+userFile.getUser_address();
-                            String contactNoString = "Contact No.: "+userFile.getUser_phone_no();
-                            String imageUriString = userFile.getUser_uri();
+                        String getParentKey = dataSnapshot.child("station_parent").getValue(String.class);
 
-                            DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("User_Account_File");
-                            databaseReference1.child(firebaseUser.getUid())
-                                    .addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            UserAccountFile userAccountFile = dataSnapshot.getValue(UserAccountFile.class);
-                                            if(userAccountFile != null)
-                                            {
-                                                String emailString = "Email Address: "+userAccountFile.getUser_email_address();
-                                                userType.setText(userTypeString);
-                                                stationFullName.setText(fullNameString);
-                                                stationAddress.setText(addressString);
-                                                stationContactNo.setText(contactNoString);
-                                                stationEmail.setText(emailString);
-                                                Picasso.get().load(imageUriString).into(imageView);
-                                            }
-                                            else
-                                            {
-                                                showMessages("Data does not exists");
-                                            }
-                                        }
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_DM_File");
+                        reference.child(getParentKey).child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                UserWSDMFile userWSDMFile = dataSnapshot.getValue(UserWSDMFile.class);
+                                if (userWSDMFile != null) {
+                                    if (userWSDMFile.getDelivery_man_id().equals(firebaseUser.getUid())) {
+                                        String userId = userWSDMFile.getStation_id();
+                                        String customerId = userWSDMFile.getDelivery_man_id();
+                                        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
+                                        reference1.child(userId)
+                                                .addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                        UserWSBusinessInfoFile userWSBusinessInfoFile = dataSnapshot.getValue(UserWSBusinessInfoFile.class);
+                                                        if (userWSBusinessInfoFile != null) {
+                                                            String stationNameString = userWSBusinessInfoFile.getBusiness_name();
+                                                            stationName.setText("Station Name: "+stationNameString);
 
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                                            showMessages("Data does not available");
-                                        }
-                                    });
-                        }
-                        else
-                        {
-                            showMessages("Data is not available");
-                        }
+                                                            databaseReference = FirebaseDatabase.getInstance().getReference("User_File");
+                                                            databaseReference.child(firebaseUser.getUid())
+                                                                    .addValueEventListener(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                            UserFile userFile = dataSnapshot.getValue(UserFile.class);
+                                                                            if(userFile != null)
+                                                                            {
+                                                                                String userTypeString = "User Type: "+userFile.getUser_type();
+                                                                                String fullNameString = "Full Name: "+userFile.getUser_firstname()+" "+userFile.getUser_lastname();
+                                                                                String addressString = "Full Address: "+userFile.getUser_address();
+                                                                                String contactNoString = "Contact No.: "+userFile.getUser_phone_no();
+                                                                                String imageUriString = userFile.getUser_uri();
+
+                                                                                DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("User_Account_File");
+                                                                                databaseReference1.child(firebaseUser.getUid())
+                                                                                        .addValueEventListener(new ValueEventListener() {
+                                                                                            @Override
+                                                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                                UserAccountFile userAccountFile = dataSnapshot.getValue(UserAccountFile.class);
+                                                                                                if(userAccountFile != null)
+                                                                                                {
+                                                                                                    String emailString = "Email Address: "+userAccountFile.getUser_email_address();
+                                                                                                    userType.setText(userTypeString);
+                                                                                                    stationFullName.setText(fullNameString);
+                                                                                                    stationAddress.setText(addressString);
+                                                                                                    stationContactNo.setText(contactNoString);
+                                                                                                    stationEmail.setText(emailString);
+                                                                                                    Picasso.get().load(imageUriString).into(imageView);
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    showMessages("Data does not exists");
+                                                                                                }
+                                                                                            }
+
+                                                                                            @Override
+                                                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                                                showMessages("Data does not available");
+                                                                                            }
+                                                                                        });
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                showMessages("Data is not available");
+                                                                            }
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                            showMessages("Data does not available");
+                                                                        }
+                                                                    });
+
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                    }
+                                                });
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        showMessages("Data does not available");
+
                     }
                 });
     }
@@ -175,6 +186,14 @@ public class DMAccountSettingsFragment extends Fragment implements View.OnClickL
         switch(v.getId())
         {
             case R.id.updateAccountDMYP:
+                DMUpdateAccountSettings wsdmFragment = new DMUpdateAccountSettings();
+                AppCompatActivity activity = (AppCompatActivity)v.getContext();
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                        .replace(R.id.fragment_container_dm, wsdmFragment)
+                        .addToBackStack(null)
+                        .commit();
                 break;
         }
     }

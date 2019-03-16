@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ScrollView
+        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Update Account Settings"
+                android:textColor="@android:color/white"
+                android:textSize="24dp"
+                android:background="@android:color/holo_blue_dark"/>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageUASDM"
+                android:layout_width="150dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@android:color/darker_gray"
+                android:src="@drawable/ic_account_circle_black_24dp" />
+
+            <Button
+                android:id="@+id/addPhotoUASDM"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/z_graybuttomv"
+                android:text="Add Photo"
+                android:textColor="@android:color/white" />
+
+
+            <LinearLayout
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/RegisterFullNameUASDM"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="2dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/edit_text_border"
+                        android:hint="First Name"
+                        android:inputType="textEmailAddress"
+                        android:textAlignment="center" />
+
+                    <EditText
+                        android:id="@+id/RegisterLastNameUASDM"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/edit_text_border"
+                        android:hint="Last Name"
+                        android:inputType="textEmailAddress"
+                        android:textAlignment="center" />
+                </LinearLayout>
+
+                <EditText
+                    android:inputType="textEmailAddress"
+                    android:id="@+id/RegisterAddressUASDM"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/edit_text_border"
+                    android:hint="Address"
+                    android:textAlignment="center" />
+
+                <EditText
+                    android:inputType="textEmailAddress"
+                    android:id="@+id/RegisterContactUASDM"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/edit_text_border"
+                    android:hint="@string/contact_number"
+                    android:textAlignment="center" />
+
+                <EditText
+                    android:id="@+id/RegisterEmailAddressUASDM"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/edit_text_border"
+                    android:hint="@string/email_address"
+                    android:inputType="textEmailAddress"
+                    android:textAlignment="center" />
+
+                <ImageView
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:id="@+id/driverlicense_imageUASDM"
+                    android:src="@drawable/ic_drive_eta_black_24dp" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:id="@+id/addPhotoUASDMDM"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:text="Update driver's license"/>
+
+                <LinearLayout
+                    android:id="@+id/linearPasswordCurrentUASDM"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:clickable="true"
+                        android:text="Type your password to confirm your changes."
+                        android:textColor="@android:color/holo_blue_dark" />
+
+                    <EditText
+                        android:id="@+id/RegisterPasswordRetypeUASDM"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/edit_text_border"
+                        android:hint="Password"
+                        android:inputType="textPassword"
+                        android:textAlignment="center" />
+                </LinearLayout>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Change password"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:clickable="true"
+                    android:id="@+id/changePasswordButtonUASDM"
+                    android:layout_marginTop="10dp"/>
+
+                <LinearLayout
+                    android:id="@+id/linearPasswordUpdateUASDM"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Optional*"
+                        android:textColor="@android:color/holo_blue_bright" />
+
+                    <EditText
+                        android:id="@+id/oldPasswordUASDM"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/edit_text_border"
+                        android:hint="Old Password"
+                        android:inputType="textPassword"
+                        android:textAlignment="center" />
+
+                    <EditText
+                        android:id="@+id/RegisterPasswordUASDM"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/edit_text_border"
+                        android:hint="New Password"
+                        android:inputType="textPassword"
+                        android:textAlignment="center" />
+
+                    <EditText
+                        android:id="@+id/ConfirmPasswordUASDM"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/edit_text_border"
+                        android:hint="Confirm New Password"
+                        android:inputType="textPassword"
+                        android:textAlignment="center" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/RegisterSignUpUASDM"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/z_darkbluebutton"
+                    android:text="Update"
+                    android:textColor="#FFF" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Please use a valid phone number**"
+                    android:textColor="#FF0000"
+                    android:textStyle="italic"
+                    android:layout_marginBottom="30dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>
