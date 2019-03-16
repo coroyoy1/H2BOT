@@ -57,8 +57,9 @@ public class RegisterActivity extends AppCompatActivity{
     static int REQUESTCODE = 1;
     Uri uri;
     Boolean clickable=false;
+    Boolean boolState = false;
 
-    EditText firstNameRegister, lastNameRegister, addressRegister, contactRegister, emailRegister, passwordRegister;
+    EditText firstNameRegister, lastNameRegister, addressRegister, contactRegister, emailRegister, passwordRegister,confirmPassword;
     ProgressDialog progressDialog;
     TextView headerTitle;
     FirebaseUser currentUser;
@@ -89,7 +90,7 @@ public class RegisterActivity extends AppCompatActivity{
         contactRegister = findViewById(R.id.RegisterContact);
         emailRegister = (EditText) findViewById(R.id.RegisterEmailAddress);
         passwordRegister = findViewById(R.id.RegisterPassword);
-
+        confirmPassword = findViewById(R.id.ConfirmPassword);
 
         progressDialog = new ProgressDialog(RegisterActivity.this);
         progressDialog.setMessage("Loading...");
@@ -145,6 +146,7 @@ public class RegisterActivity extends AppCompatActivity{
         continueTPA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                checkAllInput(boolState);
                 String firstNameString = firstNameRegister.getText().toString();
                 String lastNameString = lastNameRegister.getText().toString();
                 String addressString = addressRegister.getText().toString();
@@ -162,6 +164,10 @@ public class RegisterActivity extends AppCompatActivity{
                 }
                 else if(!isValidPhone(contactNoString)){
                     Toast.makeText(RegisterActivity.this, "Phone number is invalid", Toast.LENGTH_LONG).show();
+                }
+                else if (contactNoString.length() > 11){
+                    showMessage("Contact no. must be maximum of 11 characters");
+                    progressDialog.dismiss();
                 }
                 else{
                     filepath = uri.toString();
@@ -182,6 +188,7 @@ public class RegisterActivity extends AppCompatActivity{
         continueWaterDealerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                checkAllInput(boolState);
                 String firstNameString = firstNameRegister.getText().toString();
                 String lastNameString = lastNameRegister.getText().toString();
                 String addressString = addressRegister.getText().toString();
@@ -195,6 +202,13 @@ public class RegisterActivity extends AppCompatActivity{
                 }
                 else if(!isEmailValid(emailAddressString)){
                     Toast.makeText(RegisterActivity.this, "Invalid email address", Toast.LENGTH_SHORT).show();
+                }
+                else if(!isValidPhone(contactNoString)){
+                    Toast.makeText(RegisterActivity.this, "Phone number is invalid", Toast.LENGTH_LONG).show();
+                }
+                else if (contactNoString.length() > 11){
+                    showMessage("Contact no. must be maximum of 11 characters");
+                    progressDialog.dismiss();
                 }
                 else{
                     filepath = uri.toString();
@@ -214,6 +228,7 @@ public class RegisterActivity extends AppCompatActivity{
         continueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                checkAllInput(boolState);
                 String firstNameString = firstNameRegister.getText().toString();
                 String lastNameString = lastNameRegister.getText().toString();
                 String addressString = addressRegister.getText().toString();
@@ -231,6 +246,13 @@ public class RegisterActivity extends AppCompatActivity{
                 else if (uri == null)
                 {
                     showMessage("Profile picture does not set");
+                }
+                else if (contactNoString.length() > 11){
+                    showMessage("Contact no. must be maximum of 11 characters");
+                    progressDialog.dismiss();
+                }
+                else if(!isValidPhone(contactNoString)){
+                    Toast.makeText(RegisterActivity.this, "Phone number is invalid", Toast.LENGTH_LONG).show();
                 }
                 else{
                     filepath = uri.toString();
@@ -251,6 +273,7 @@ public class RegisterActivity extends AppCompatActivity{
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                checkAllInput(boolState);
                 if(!(RegisterActivity.this).isFinishing()) {
                     progressDialog.show();
                 }
@@ -275,6 +298,9 @@ public class RegisterActivity extends AppCompatActivity{
                     showMessage("Contact no. must be maximum of 11 characters");
                     progressDialog.dismiss();
                 }
+                else if(!isValidPhone(contactNoString)){
+                    Toast.makeText(RegisterActivity.this, "Phone number is invalid", Toast.LENGTH_LONG).show();
+                }
                 else{
                     getLocationSetter();
                     if(isAddressExist){
@@ -290,6 +316,21 @@ public class RegisterActivity extends AppCompatActivity{
     }
 
 
+    public Boolean checkAllInput(boolean state)
+    {
+        if (firstNameRegister.getText().toString().equals("") || firstNameRegister.getText().toString().isEmpty()
+            && lastNameRegister.getText().toString().equals("") || lastNameRegister.getText().toString().isEmpty()
+            && contactRegister.getText().toString().equals("") || contactRegister.getText().toString().isEmpty()
+            && emailRegister.getText().toString().equals("") || emailRegister.getText().toString().isEmpty()
+            && passwordRegister.getText().toString().equals("") || passwordRegister.getText().toString().isEmpty()
+            && confirmPassword.getText().toString().equals("") || confirmPassword.getText().toString().isEmpty()
+            && imageView.getDrawable() == null)
+        {
+            showMessage("Some fields is empty!");
+            return true;
+        }
+        return false;
+    }
 
     @Override
     protected void onDestroy() {

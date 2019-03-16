@@ -30,11 +30,12 @@ import com.squareup.picasso.Picasso;
 
 public class WSAccountSettingsFragment extends Fragment implements View.OnClickListener {
 
-    TextView UserTypeWS, StationNameWS,FullNameWS, AddressWS, ContactNoWS, EmailAddressWS;
+    TextView UserTypeWS, StationNameWS,FullNameWS, AddressWS, ContactNoWS, EmailAddressWS, pointsView;
     ImageView imageView;
     DatabaseReference databaseReference;
     DatabaseReference databaseReference1;
     DatabaseReference databaseReference2;
+    DatabaseReference databaseReference3;
     FirebaseUser firebaseUser;
     FirebaseAuth mAuth;
 
@@ -73,6 +74,7 @@ public class WSAccountSettingsFragment extends Fragment implements View.OnClickL
         ContactNoWS = view.findViewById(R.id.contactAS);
         EmailAddressWS = view.findViewById(R.id.emailAS);
         imageView = view.findViewById(R.id.profileImageAS);
+        pointsView = view.findViewById(R.id.pointsWAS);
 
         Button updateAcc = view.findViewById(R.id.updateAccount);
 
@@ -134,6 +136,27 @@ public class WSAccountSettingsFragment extends Fragment implements View.OnClickL
                 showMessage("Failed to connect");
             }
         });
+
+        databaseReference3 = FirebaseDatabase.getInstance().getReference("User_Wallet");
+        databaseReference3.child(firebaseUser.getUid())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        UserWallet userWallet = dataSnapshot.getValue(UserWallet.class);
+                        if (userWallet != null)
+                        {
+                            if (userWallet.getUser_status().equals("active"))
+                            {
+                                pointsView.setText(userWallet.getUser_points());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        showMessage("Failed to get load or wallet");
+                    }
+                });
 
         updateAcc.setOnClickListener(this);
         return view;

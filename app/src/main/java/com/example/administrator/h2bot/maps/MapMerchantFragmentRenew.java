@@ -77,7 +77,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         LocationListener, IOBackPressed {
 
-    private static final String API_KEY = "AIzaSyB1GmKORoUiiF2d6ll0AoNXHJEWe5r8XOc";
+    private static final String API_KEY = "AIzaSyCIGlVnlwv-hL9fIjqfYSjnX5DlFIbB5bc";
     // User Permissions
     private static GoogleMap map;
     private int routeColor;
@@ -129,10 +129,6 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
     @Override
     public void onStart() {
         super.onStart();
-        if(map != null)
-        {
-            map.clear();
-        }
     }
 
 
@@ -232,7 +228,7 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
                                                                 Log.d("AddressPolyLine",""+address);
                                                                 String fullname = userFile.getUser_lastname()+", "+userFile.getUser_firstname();
                                                                 map.addMarker(new MarkerOptions().position(latLng).snippet("Customer Name: "+fullname+"\n"+"Address: "+address)
-                                                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                                                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                                                             }
                                                         }
 
@@ -363,20 +359,16 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
         protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
             ArrayList points;
             PolylineOptions polylineOptions = null;
-            Log.d("GRABEGRABE","HI");
             for (List<HashMap<String, String>> path : lists) {
                 points = new ArrayList();
                 polylineOptions = new PolylineOptions();
-                Log.d("MAU",""+points);
                 for (HashMap<String, String> point : path) {
                     double lat = Double.parseDouble(point.get("lat"));
                     double lon = Double.parseDouble(point.get("lon"));
-                    Log.d("LATLAT",""+lat);
-                    Log.d("LONLON",""+lon);
                     points.add(new LatLng(lat,lon));
                 }
                 polylineOptions.addAll(points);
-                polylineOptions.width(15);
+                polylineOptions.width(10);
                 polylineOptions.color(Color.BLUE);
                 polylineOptions.geodesic(true);
             }
@@ -499,52 +491,6 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
                 return;
         }
     }
-
-//    private void getLocationSetter()
-//    {
-//        Geocoder coder = new Geocoder(this);
-//        List<Address> address;
-//        Address LocationAddress = null;
-//        String locateAddress = addressRegister.getText().toString();
-//
-//        try {
-//            address = coder.getFromLocationName(locateAddress, 5);
-//
-//            LocationAddress = address.get(0);
-//
-//            lat = LocationAddress.getLatitude();
-//            lng = LocationAddress.getLongitude();
-//
-//            String getLocateLatitude = String.valueOf(lat);
-//            String getLocateLongtitude = String.valueOf(lng);
-//
-//            UserLocationAddress userLocationAddress = new UserLocationAddress(FirebaseAuth.getInstance().getCurrentUser().getUid(), getLocateLatitude, getLocateLongtitude);
-//            DatabaseReference locationRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
-//            locationRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userLocationAddress)
-//                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                        @Override
-//                        public void onSuccess(Void aVoid) {
-//                            showMessage("Successfully Registered");
-//                            progressDialog.dismiss();
-//                            passToNextActivity();
-//                        }
-//                    })
-//                    .addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            showMessage("Error to get location");
-//                            progressDialog.dismiss();
-//                        }
-//                    });
-//
-//        } catch (IOException ex) {
-//
-//            ex.printStackTrace();
-//        }
-//        finally {
-//            showMessage("Error the locate your address, please change again");
-//        }
-//    }
 
     public boolean checkUserLocationPermission()
     {

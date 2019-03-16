@@ -5,6 +5,7 @@ import com.example.administrator.h2bot.models.*;
 
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -28,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -51,6 +53,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -75,6 +78,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
     private ProgressDialog progressDialog;
     private double lat;
     private double lng;
+    Uri filePathUri;
 
     String newToken;
     Uri filepath, filepath2, filepath3, filepath4;
@@ -138,6 +142,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
         String email_address = bundle.getString("emailaddress");
         String password = bundle.getString("password");
         String filepath = bundle.getString("filepath");
+        filePathUri = Uri.parse(filepath);
 
         mFirstname = firstname;
         mLastname = lastname;
@@ -164,6 +169,45 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
 
 
 
+        startingHour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Calendar mcurrentTime = Calendar.getInstance();
+                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int minute = mcurrentTime.get(Calendar.MINUTE);
+
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(getApplicationContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        startingHour.setText( selectedHour + ":" + selectedMinute);
+                    }
+                }, hour, minute, true);
+                mTimePicker.setTitle("Select Time");
+                mTimePicker.show();
+            }
+        });
+
+        endingHour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Calendar mcurrentTime = Calendar.getInstance();
+                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int minute = mcurrentTime.get(Calendar.MINUTE);
+
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(getApplicationContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        endingHour.setText( selectedHour + ":" + selectedMinute);
+                    }
+                }, hour, minute, true);
+                mTimePicker.setTitle("Select Time");
+                mTimePicker.show();
+            }
+        });
 
 
         businessPermitBtn.setOnClickListener(new View.OnClickListener() {
@@ -461,7 +505,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                     });
 
                     StorageReference mStorage = FirebaseStorage.getInstance().getReference("station_photos").child(userId);
-                    mStorage.putFile(filepath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    mStorage.putFile(filePathUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
@@ -499,21 +543,48 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                                             min_no_of_gallons.getText().toString(),
                                             "active");
 
-                                    FirebaseDatabase.getInstance().getReference("User_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userFile)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                FirebaseDatabase.getInstance().getReference("User_Account_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userAccountFile)
-                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                        @Override
-                                                        public void onSuccess(Void aVoid) {
-                                                            FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(businessInfoFile)
+                                    UserWallet userWallet = new UserWallet(
+                                            firebaseUser.getUid(),
+                                            "0",
+                                            "active"
+                                    );
+
+                                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_Wallet");
+                                    databaseReference.child(firebaseUser.getUid()).setValue(userWallet)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    FirebaseDatabase.getInstance().getReference("User_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userFile)
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override
                                                                 public void onSuccess(Void aVoid) {
-                                                                    progressDialog.dismiss();
-                                                                    getLocationSetter();
-                                                                    Toast.makeText(WaterStationDocumentVersion2Activity.this, "Successfully registered", Toast.LENGTH_SHORT).show();
+                                                                    FirebaseDatabase.getInstance().getReference("User_Account_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userAccountFile)
+                                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                @Override
+                                                                                public void onSuccess(Void aVoid) {
+                                                                                    FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(businessInfoFile)
+                                                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                                @Override
+                                                                                                public void onSuccess(Void aVoid) {
+                                                                                                    progressDialog.dismiss();
+                                                                                                    getLocationSetter();
+                                                                                                    Toast.makeText(WaterStationDocumentVersion2Activity.this, "Successfully registered", Toast.LENGTH_SHORT).show();
+                                                                                                }
+                                                                                            })
+                                                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                                                @Override
+                                                                                                public void onFailure(@NonNull Exception e) {
+                                                                                                    Toast.makeText(WaterStationDocumentVersion2Activity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                                                                }
+                                                                                            });
+                                                                                }
+                                                                            })
+                                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                                @Override
+                                                                                public void onFailure(@NonNull Exception e) {
+                                                                                    Toast.makeText(WaterStationDocumentVersion2Activity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                                                }
+                                                                            });
                                                                 }
                                                             })
                                                             .addOnFailureListener(new OnFailureListener() {
@@ -522,22 +593,14 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                                                                     Toast.makeText(WaterStationDocumentVersion2Activity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                                                 }
                                                             });
-                                                        }
-                                                    })
-                                                    .addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            Toast.makeText(WaterStationDocumentVersion2Activity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    });
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(WaterStationDocumentVersion2Activity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    showMessages("Load cannot be store");
+                                                }
+                                            });
 
                                 }
                             });

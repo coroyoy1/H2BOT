@@ -312,7 +312,6 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                                                             MY_PERMISSIONS_REQUEST_SEND_SMS);
                                                 }
                                                 else {
-                                                    Log.d("NumberNako",""+transactionNo);
                                                     SmsManager sms = SmsManager.getDefault();
                                                     sms.sendTextMessage(contactNo.getText().toString(), null, message, sentPI, deliveredPI);
                                                 }
@@ -350,65 +349,6 @@ public class WSPendingOrderAcceptDeclineFragment  extends Fragment implements Vi
                     }
                 });
     }
-
-//    private void updateStatus()
-//    {
-//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Transaction_Header_File");
-//        reference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot postSnap : dataSnapshot.getChildren()) {
-//                    if (postSnap.child("trans_no").getValue(String.class).equals(transactionNo)
-//                            && postSnap.child("trans_status").getValue(String.class).equals("Pending")) {
-//                        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Transaction_Header_File");
-//                        reference1.child(transactionNo).child("trans_status").setValue("In-Progress")
-//                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                            @Override
-//                            public void onSuccess(Void aVoid) {
-//                                DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("Transaction_Detail_File");
-//                                databaseReference.child(transactionNo).child("trans_status").setValue("In-Progress")
-//                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                        @Override
-//                                        public void onSuccess(Void aVoid) {
-//                                            showMessages("Successfully updated");
-//                                            WSInProgressFragment additem = new WSInProgressFragment();
-//                                            AppCompatActivity activity = (AppCompatActivity)getContext();
-//                                            activity.getSupportFragmentManager()
-//                                                    .beginTransaction()
-//                                                    .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-//                                                    .replace(R.id.fragment_container_ws, additem)
-//                                                    .addToBackStack(null)
-//                                                    .commit();
-//                                            Objects.requireNonNull(((AppCompatActivity)getActivity()).getSupportActionBar()).setTitle("In-Progress");
-//                                            progressDialog.dismiss();
-//                                        }
-//                                    })
-//                                    .addOnFailureListener(new OnFailureListener() {
-//                                        @Override
-//                                        public void onFailure(@NonNull Exception e) {
-//                                            showMessages("Failed to update task, please check internet connection");
-//                                            progressDialog.dismiss();
-//                                        }
-//                                    });
-//                            }
-//                        })
-//                        .addOnFailureListener(new OnFailureListener() {
-//                            @Override
-//                            public void onFailure(@NonNull Exception e) {
-//                                showMessages("Failed to update data");
-//                                progressDialog.dismiss();
-//                            }
-//                        });
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                showMessages("Data cant be retrieve");
-//            }
-//        });
-//    }
 
     public void viewLocationPass()
     {

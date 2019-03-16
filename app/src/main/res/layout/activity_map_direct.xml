@@ -7,10 +7,6 @@
     android:orientation="vertical"
     tools:context=".RegisterActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:map="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
@@ -19,21 +15,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".maps.MapDirectActivity" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_marginBottom="10dp"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
-
-        <Button
-            android:id="@+id/getRouteButton"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:text="Get Route"
-            android:textColor="@android:color/white"
-            android:background="@drawable/z_darkbluebutton" />
-    </LinearLayout>
 
 </RelativeLayout>

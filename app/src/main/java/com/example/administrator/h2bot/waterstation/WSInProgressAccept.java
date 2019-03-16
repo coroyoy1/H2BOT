@@ -32,6 +32,8 @@ import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.MerchantCustomerFile;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.UserFile;
+import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
+import com.example.administrator.h2bot.models.WSBusinessInfoFile;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -88,7 +90,7 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
         totalPrice = view.findViewById(R.id.totalPriceINACC);
         launchQR = view.findViewById(R.id.launchQRINACC);
         viewLocation = view.findViewById(R.id.viewLocationButtonINACC);
-        imageView = view.findViewById(R.id.imageViewINACC);
+        imageView = view.findViewById(R.id.imageViewINACCC);
         switcBroadcast = view.findViewById(R.id.switchbuttonIN);
         deliveryMethod = view.findViewById(R.id.MethodINACC);
         deliveryDate = view.findViewById(R.id.datedeliveredINACC);
@@ -237,6 +239,32 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                                                     String fullname = userFile.getUser_firstname() + " " + userFile.getUser_lastname();
                                                     customer.setText(fullname);
                                                     progressDialog.dismiss();
+
+                                                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
+                                                    databaseReference.child(firebaseUser.getUid())
+                                                            .addValueEventListener(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                    WSBusinessInfoFile wsBusinessInfoFile = dataSnapshot.getValue(WSBusinessInfoFile.class);
+                                                                    if (wsBusinessInfoFile != null)
+                                                                    {
+                                                                        if ("Free".toLowerCase().equals(wsBusinessInfoFile.getBusiness_delivery_fee_method().toLowerCase()))
+                                                                        {
+                                                                            switcBroadcast.setVisibility(View.GONE);
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            switcBroadcast.setVisibility(View.VISIBLE);
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                }
+                                                            });
+
                                                 }
                                             }
 

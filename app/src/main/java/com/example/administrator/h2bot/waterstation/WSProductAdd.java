@@ -29,7 +29,7 @@ import java.util.Objects;
 public class WSProductAdd extends Fragment implements View.OnClickListener {
 
     EditText waterProductName, waterProductPrice;
-    EditText waterProductType;
+    Spinner waterProductType;
     Button backProductButton, addProductButton;
 
     FirebaseAuth mAuth;
@@ -62,6 +62,12 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
                 "Mineral", "Distilled", "Purified", "Alkaline"
         };
 
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, arraySpinner);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        waterProductType.setAdapter(adapter);
+
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
@@ -75,7 +81,7 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
     public void saveData()
     {
         String waterPriceString = waterProductPrice.getText().toString();
-        String waterTypeString = waterProductType.getText().toString();
+        String waterTypeString = waterProductType.getSelectedItem().toString();
 
         if(waterPriceString.equals("") && waterTypeString.equals(""))
         {

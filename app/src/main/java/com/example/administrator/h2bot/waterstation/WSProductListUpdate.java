@@ -27,8 +27,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class WSProductListUpdate extends Fragment implements View.OnClickListener {
 
-    EditText productUpdateName,productUpdateType, productUpdatePrice;
-    Spinner productUpdateStatus;
+    EditText productUpdateName, productUpdatePrice;
+    Spinner productUpdateStatus,productUpdateType;
     Button backUpItem, updateUpItem;
     RadioButton valid, invalid;
 
@@ -60,6 +60,16 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
 
         productUpdatePrice = view.findViewById(R.id.waterUpdatePrice);
         productUpdateType = view.findViewById(R.id.waterUpdateSpinner);
+
+        String[] arraySpinner = new String[]{
+                "Mineral", "Distilled", "Purified", "Alkaline"
+        };
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, arraySpinner);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        productUpdateType.setAdapter(adapter);
 
         valid = view.findViewById(R.id.avaiableRadio);
         invalid = view.findViewById(R.id.unavailableRadio);
@@ -107,7 +117,7 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
         {
             statY = "inactive";
         }
-        String prodType = productUpdateType.getText().toString();
+        String prodType = productUpdateType.getSelectedItem().toString();
         String prodPrice = productUpdatePrice.getText().toString();
 
         if(prodType.isEmpty() && prodPrice.isEmpty())

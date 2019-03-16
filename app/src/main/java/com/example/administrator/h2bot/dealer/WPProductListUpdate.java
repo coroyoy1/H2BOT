@@ -31,7 +31,8 @@ import com.google.firebase.database.FirebaseDatabase;
 public class WPProductListUpdate extends Fragment implements View.OnClickListener {
 
     EditText productUpdateName, productUpdatePrice;
-    EditText productUpdateStatus, productUpdateType;
+    EditText productUpdateStatus;
+    Spinner productUpdateType;
     Button backUpItem, updateUpItem;
     RadioButton valid, invalid;
 
@@ -39,6 +40,7 @@ public class WPProductListUpdate extends Fragment implements View.OnClickListene
     FirebaseAuth mAuth;
     FirebaseUser firebaseUser;
     DatabaseReference databaseReference;
+
 
     String statusGet;
     String keyGet;
@@ -77,6 +79,12 @@ public class WPProductListUpdate extends Fragment implements View.OnClickListene
                 "Mineral", "Distilled", "Purified", "Alkaline"
         };
 
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, arraySpinner);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        productUpdateType.setAdapter(adapter);
+
 
 
         Bundle bundle = this.getArguments();
@@ -86,7 +94,15 @@ public class WPProductListUpdate extends Fragment implements View.OnClickListene
             String itemUi = bundle.getString("ItemUidPLI");
             String itemSt = bundle.getString("ItemStatusPLI");
 
-            productUpdateType.setText(itemTy); productUpdatePrice.setText(itemPr);
+
+            for (int counter = 0; counter < productUpdateType.getAdapter().getCount(); counter++)
+            {
+                if(productUpdateType.getAdapter().getItem(counter).toString().contains(itemTy))
+                {
+                    productUpdateType.setSelection(counter);
+                }
+            }
+            productUpdatePrice.setText(itemPr);
             if(itemSt.equals("active"))
             {
                 valid.setChecked(true);
@@ -131,7 +147,7 @@ public class WPProductListUpdate extends Fragment implements View.OnClickListene
         {
             statY = "inactive";
         }
-        String prodType = productUpdateType.getText().toString();
+        String prodType = productUpdateType.getSelectedItem().toString();
         String prodPrice = productUpdatePrice.getText().toString();
 
         if(prodType.isEmpty() && prodPrice.isEmpty())
