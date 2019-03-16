@@ -162,12 +162,13 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
                                             for (DataSnapshot post : dataSnapshot1.child(firebaseUser.getUid()).getChildren())
                                             {
                                                 OrderModel orderModel = post.getValue(OrderModel.class);
+                                                Log.d("hi1",""+transactionNo);
                                                 if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid()) && orderModel.getOrder_no().equals(transactionNo))
                                                 {
                                                     String customerID = orderModel.getOrder_customer_id();
                                                     DatabaseReference databaseDispatch2 = FirebaseDatabase.getInstance().getReference("Customer_File");
                                                     databaseDispatch2.child(customerID).child(firebaseUser.getUid()).child(transactionNo).child("order_status").setValue("Dispatched");
-                                                    String message = "Your order:"+transactionNo+" is on dispatch. Please be ready with your payment!";
+                                                    String message = "Your order with an order#:"+transactionNo+" is now dispatched. Please be ready with your payment!";
                                                     if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
                                                             != PackageManager.PERMISSION_GRANTED)
                                                     {
@@ -212,6 +213,7 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
                 {
                     for (DataSnapshot post : dataSnapshot1.child(firebaseUser.getUid()).getChildren())
                     {
+                        Log.d("hi2",""+transactionNo);
                         OrderModel orderModel = post.getValue(OrderModel.class);
                         if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid()) && orderModel.getOrder_no().equals(transactionNo))
                         {

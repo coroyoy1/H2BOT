@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.maps.GetDistance;
+import com.example.administrator.h2bot.models.MerchantCustomerFile;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserLocationAddress;
@@ -60,6 +61,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PrimitiveIterator;
 
 
 /**
@@ -82,16 +84,17 @@ public class TPAMapFragment extends Fragment
     private Marker mCurrentLocationMarker;
     private static final int REQUEST_USER_LOCATION_CODE = 99;
     public FirebaseAuth mAuth;
-    DatabaseReference userFileRef, businessRef, userLatLongRef, orderModel;
+    DatabaseReference userFileRef, merchantRef, userLatLongRef, orderModel, businessRef;
     String stationAddress, stationName, userType, stationId, station_id_snip;
     LatLng latLong = null;
     double latitude, longitude;
     private BottomSheetBehavior sheetBehavior, bottomSheetBehavior;
     private View bottomSheet, bottomSheetCustomer;
-    private List<UserFile> userFileList;
-    private List<UserWSBusinessInfoFile> businessInfoFileListis;
+    private List<MerchantCustomerFile> merchantCustomerFileList;
     private List<UserLocationAddress> userLocationAddressList;
     private List<OrderModel> orderModelList;
+    private List<UserWSBusinessInfoFile> businessInfoFileList;
+    private List<UserFile> userFileList;
     private List<WaterStationOrDealer> affiliateModel;
     private LatLng currentLocation;
     private GetDistance getDistance = null;
@@ -109,15 +112,17 @@ public class TPAMapFragment extends Fragment
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tpa_fragment_map, container, false);
 
-        userFileList = new ArrayList<>();
-        businessInfoFileListis = new ArrayList<>();
+        merchantCustomerFileList = new ArrayList<>();
         userLocationAddressList = new ArrayList<>();
         orderModelList = new ArrayList<>();
+        businessInfoFileList = new ArrayList<>();
+        userFileList = new ArrayList<>();
 
-        getUserFile();
         getBusiness();
         getUserLatLng();
         getOrderModel();
+        getBusinessFile();
+        getUserFile();
 
         return view;
     }
@@ -238,14 +243,16 @@ public class TPAMapFragment extends Fragment
         });
     }
 
-    private void getUserFile(){
-        userFileRef = FirebaseDatabase.getInstance().getReference("User_File");
-        userFileRef.addValueEventListener(new ValueEventListener() {
+    private void getBusiness(){
+        merchantRef = FirebaseDatabase.getInstance().getReference("Merchant_File");
+        merchantRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot userData : dataSnapshot.getChildren()) {
-                    UserFile userFile = userData.getValue(UserFile.class);
-                    userFileList.add(userFile);
+                for (DataSnapshot infoFile : dataSnapshot.getChildren()) {
+                    for(DataSnapshot infoFile2 : infoFile.getChildren()){
+                        MerchantCustomerFile merchantCustomerFile = infoFile2.getValue(MerchantCustomerFile.class);
+                        merchantCustomerFileList.add(merchantCustomerFile);
+                    }
                 }
                 getList();
             }
@@ -257,14 +264,14 @@ public class TPAMapFragment extends Fragment
         });
     }
 
-    private void getBusiness(){
-        businessRef = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
-        businessRef.addValueEventListener(new ValueEventListener() {
+    private void getUserFile(){
+        userFileRef = FirebaseDatabase.getInstance().getReference("User_File");
+        userFileRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot infoFile : dataSnapshot.getChildren()) {
-                    UserWSBusinessInfoFile businessInfo = infoFile.getValue(UserWSBusinessInfoFile.class);
-                    businessInfoFileListis.add(businessInfo);
+                    UserFile userFile = infoFile.getValue(UserFile.class);
+                    userFileList.add(userFile);
                 }
                 getList();
             }
@@ -295,6 +302,25 @@ public class TPAMapFragment extends Fragment
         });
     }
 
+    private void getBusinessFile(){
+        businessRef = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
+        businessRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot userData3 : dataSnapshot.getChildren()) {
+                    UserWSBusinessInfoFile userData4 = userData3.getValue(UserWSBusinessInfoFile.class);
+                    businessInfoFileList.add(userData4);
+                }
+                getList();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void getOrderModel(){
         orderModel = FirebaseDatabase.getInstance().getReference("Customer_File");
         orderModel.addValueEventListener(new ValueEventListener() {
@@ -306,9 +332,10 @@ public class TPAMapFragment extends Fragment
                             OrderModel userData4 = userData3.getValue(OrderModel.class);
                             orderModelList.add(userData4);
                         }
-                        getList();
                     }
                 }
+
+                getList();
             }
 
             @Override
@@ -319,57 +346,66 @@ public class TPAMapFragment extends Fragment
     }
 
     private void getList(){
-        if(userFileList.size() == 0 || businessInfoFileListis.size() == 0
-                || userLocationAddressList.size() == 0 || orderModelList.size() == 0){
+        if(orderModelList.size() == 0 || merchantCustomerFileList.size() == 0 || businessInfoFileList.size() == 0
+                || userLocationAddressList.size() == 0 || userFileList.size() == 0){
             return;
         }
 
         affiliateModel = new ArrayList<>();
 
-        for(UserFile userFile: userFileList){
-            for(UserWSBusinessInfoFile businessInfo: businessInfoFileListis){
-                for(UserLocationAddress locationFile: userLocationAddressList){
-                    for(OrderModel orderModel: orderModelList){
-                        if (userFile.getUser_getUID().equals(businessInfo.getBusiness_id())
-                                && businessInfo.getBusiness_id().equals(locationFile.getUser_id())) {
-                            if (userFile.getUser_type().equals("Water Station")) {
-                                if (userFile.getUser_status().equalsIgnoreCase("Active")) {
-                                    String statusOrder = orderModel.getOrder_status();
-                                    Log.d("Kaykay", "" + statusOrder);
-                                    if (statusOrder.equals("Broadcasting")) {
+        for(MerchantCustomerFile merchantCustomerFile: merchantCustomerFileList){
+            for(OrderModel orderModel: orderModelList){
+                String merchantID = merchantCustomerFile.getCustomer_id();
+                String customer_id = orderModel.getOrder_customer_id();
+                String orderStatus = orderModel.getOrder_status();
+                if(merchantCustomerFile.getCustomer_id().equalsIgnoreCase(orderModel.getOrder_customer_id())
+                        && orderModel.getOrder_status().equalsIgnoreCase("Broadcasting")
+                        && merchantCustomerFile.getStation_id().equalsIgnoreCase(orderModel.getOrder_merchant_id())){
 
+                    stationId = orderModel.getOrder_merchant_id();
 
-                                        stationId = businessInfo.getBusiness_id();
-                                        stationName = businessInfo.getBusiness_name();
-                                        userType = userFile.getUser_type();
-                                        latitude = Double.parseDouble(locationFile.getUser_latitude());
-                                        longitude = Double.parseDouble(locationFile.getUser_longtitude());
-                                        String status = "Status: OPEN";
-                                        String type = "Type: " + userType;
-
-                                        WaterStationOrDealer affiliate = new WaterStationOrDealer();
-                                        affiliate.setStation_dealer_name(stationName);
-                                        affiliate.setUserType(userType);
-                                        affiliate.setLat(latitude);
-                                        affiliate.setLng(longitude);
-                                        affiliate.setStatus(status);
-                                        affiliate.setType(type);
-                                        affiliate.setStationID(stationId);
-                                        affiliateModel.add(affiliate);
-
-                                    }
-
-                                }
-                            }
+                    for(UserLocationAddress userLocationAddress: userLocationAddressList){
+                        if(userLocationAddress.getUser_id().equalsIgnoreCase(merchantCustomerFile.getStation_id())){
+                            latitude = Double.parseDouble(userLocationAddress.getUser_latitude());
+                            longitude = Double.parseDouble(userLocationAddress.getUser_longtitude());
+                            break;
                         }
                     }
+
+                    for(UserFile list: userFileList){
+                        if(merchantCustomerFile.getStation_id().equalsIgnoreCase(list.getUser_getUID())
+                                && list.getUser_type().equalsIgnoreCase("Water Station")){
+                            userType = list.getUser_type();
+                            break;
+                        }
+                    }
+
+                    for(UserWSBusinessInfoFile infoFile: businessInfoFileList){
+                        if(infoFile.getBusiness_id().equalsIgnoreCase(stationId)){
+                            stationName = infoFile.getBusiness_name();
+                            break;
+                        }
+                    }
+
+                    String status = "Status: OPEN";
+                    String type = "Type: " + userType;
+
+                    WaterStationOrDealer affiliate = new WaterStationOrDealer();
+                    affiliate.setStation_dealer_name(stationName);
+                    affiliate.setUserType(userType);
+                    affiliate.setLat(latitude);
+                    affiliate.setLng(longitude);
+                    affiliate.setStatus(status);
+                    affiliate.setType(type);
+                    affiliate.setStationID(stationId);
+                    affiliateModel.add(affiliate);
                 }
             }
         }
     }
 
     public void showNearest(){
-        if(userFileList.size() != 0 && businessInfoFileListis.size() != 0 && userLocationAddressList.size() != 0){
+        if(affiliateModel.size() != 0){
             Object[] transferData = new Object[5];
             transferData[0] = affiliateModel;
             transferData[1] = currentLocation;

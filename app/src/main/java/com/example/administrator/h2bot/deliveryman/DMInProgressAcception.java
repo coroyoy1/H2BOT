@@ -1,15 +1,26 @@
 package com.example.administrator.h2bot.deliveryman;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +60,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DMInProgressAcception extends Fragment implements View.OnClickListener{
 
-
     TextView inprogressText, orderNo, customer, contactNo, waterType, itemQuantity, pricePerGallon,  service, address, deliveryFee, totalPrice, deliveryMethod, deliveryDate;
     Button launchQR, viewLocation, launchSMS, launchCall;
     String orderNoGET, customerNoGET, merchantNOGET, transactionNo, dataIssuedGET, deliveryStatusGET
@@ -62,7 +72,11 @@ public class DMInProgressAcception extends Fragment implements View.OnClickListe
     private static GoogleMap googleMap;
     Bundle bundle;
     FirebaseUser firebaseUser;
-
+    private final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1;
+    private final String SENT = "SMS_SENT";
+    private final String DELIVERED = "SMS_DELIVERED";
+    PendingIntent sentPI, deliveredPI;
+    BroadcastReceiver smsSentReceiver, smsDeliveredReceiver;
     LinearLayout linearLayoutOne, linearLayoutTwo, linearLayoutRTD;
     Button dispatchButton;
 
@@ -139,17 +153,142 @@ public class DMInProgressAcception extends Fragment implements View.OnClickListe
                 Toast.makeText(getActivity(), "Calling....", Toast.LENGTH_LONG).show();
             }
         });
+        displayAllData();
+
         dispatchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                linearLayoutOne.setVisibility(View.VISIBLE);
-                linearLayoutTwo.setVisibility(View.VISIBLE);
-                linearLayoutRTD.setVisibility(View.GONE);
+
                 DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("");
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+
+                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_DM_File");
+                                reference.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                            UserWSDMFile userWSDMFile = dataSnapshot1.child(firebaseUser.getUid()).getValue(UserWSDMFile.class);
+                                            if (userWSDMFile != null) {
+                                                String getStationId = userWSDMFile.getStation_id();
+                                                Log.d("stationid1",""+getStationId);
+                                                DatabaseReference databaseDispatch2 = FirebaseDatabase.getInstance().getReference("Customer_File");
+                                                databaseDispatch2.addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                        for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                                                        {
+                                                            for (DataSnapshot post : dataSnapshot1.child(getStationId).getChildren())
+                                                            {
+                                                                Log.d("NumberNako1",""+transactionNo);
+                                                                OrderModel orderModel = post.getValue(OrderModel.class);
+                                                                if(orderModel.getOrder_merchant_id().equals(getStationId) && orderModel.getOrder_no().equals(transactionNo))
+                                                                {
+                                                                    String customerID = orderModel.getOrder_customer_id();
+                                                                    Log.d("customerid",""+customerID);
+                                                                    DatabaseReference databaseDispatch2 = FirebaseDatabase.getInstance().getReference("Customer_File");
+                                                                    databaseDispatch2.child(customerID).child(getStationId).child(transactionNo).child("order_status").setValue("Dispatched");
+                                                                    String message = "Your order with an order#:"+transactionNo+" is now dispatched. Please be ready with your payment!";
+                                                                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
+                                                                            != PackageManager.PERMISSION_GRANTED)
+                                                                    {
+                                                                        ActivityCompat.requestPermissions(getActivity(), new String [] {Manifest.permission.SEND_SMS},
+                                                                                MY_PERMISSIONS_REQUEST_SEND_SMS);
+                                                                    }
+                                                                    else {
+                                                                        Log.d("NumberNako",""+transactionNo);
+                                                                        SmsManager sms = SmsManager.getDefault();
+                                                                        sms.sendTextMessage(contactNo.getText().toString(), null, message, sentPI, deliveredPI);
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                                break;
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //No button clicked
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage("Are you sure to dispatch this order?").setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
+
             }
         });
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_DM_File");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    UserWSDMFile userWSDMFile = dataSnapshot1.child(firebaseUser.getUid()).getValue(UserWSDMFile.class);
+                    if (userWSDMFile != null) {
+                        String getStationId = userWSDMFile.getStation_id();
+                        DatabaseReference databaseDispatch2 = FirebaseDatabase.getInstance().getReference("Customer_File");
+                        databaseDispatch2.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                                {
+                                    for (DataSnapshot post : dataSnapshot1.child(getStationId).getChildren())
+                                    {
+                                        Log.d("NumberNako2",""+transactionNo);
+                                        OrderModel orderModel = post.getValue(OrderModel.class);
+                                        if(orderModel.getOrder_merchant_id().equals(getStationId) && orderModel.getOrder_no().equals(transactionNo))
+                                        {
+                                            if(orderModel.getOrder_status().equalsIgnoreCase("Dispatched"))
+                                            {
+                                                linearLayoutOne.setVisibility(View.VISIBLE);
+                                                linearLayoutTwo.setVisibility(View.VISIBLE);
+                                                linearLayoutRTD.setVisibility(View.GONE);
+                                            }
+                                            else
+                                            {
+                                                linearLayoutOne.setVisibility(View.GONE);
+                                                linearLayoutTwo.setVisibility(View.GONE);
+                                                linearLayoutRTD.setVisibility(View.VISIBLE);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
 
-        displayAllData();
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         return view;
     }
@@ -364,5 +503,76 @@ public class DMInProgressAcception extends Fragment implements View.OnClickListe
                 viewLocationPass();
                 break;
         }
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(smsSentReceiver);
+        getActivity().unregisterReceiver(smsDeliveredReceiver);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        smsSentReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                switch (getResultCode())
+                {
+                    case Activity.RESULT_OK:
+                        Toast.makeText(context, "SMS sent successfully!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    //Something went wrong and there's no way to tell what, why or how.
+                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                        Toast.makeText(context, "Generic failure!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    //Your device simply has no cell reception. You're probably in the middle of
+                    //nowhere, somewhere inside, underground, or up in space.
+                    //Certainly away from any cell phone tower.
+                    case SmsManager.RESULT_ERROR_NO_SERVICE:
+                        Toast.makeText(context, "No service!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    //Something went wrong in the SMS stack, while doing something with a protocol
+                    //description unit (PDU) (most likely putting it together for transmission).
+                    case SmsManager.RESULT_ERROR_NULL_PDU:
+                        Toast.makeText(context, "Null PDU!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    //You switched your device into airplane mode, which tells your device exactly
+                    //"turn all radios off" (cell, wifi, Bluetooth, NFC, ...).
+                    case SmsManager.RESULT_ERROR_RADIO_OFF:
+                        Toast.makeText(context, "Radio off!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                }
+
+            }
+        };
+        smsDeliveredReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                switch(getResultCode())
+                {
+                    case Activity.RESULT_OK:
+                        Toast.makeText(context, "SMS delivered!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case Activity.RESULT_CANCELED:
+                        Toast.makeText(context, "SMS not delivered!", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+
+            }
+        };
+
+        getActivity().registerReceiver(smsSentReceiver, new IntentFilter(SENT));
+        getActivity().registerReceiver(smsDeliveredReceiver, new IntentFilter(DELIVERED));
     }
 }
