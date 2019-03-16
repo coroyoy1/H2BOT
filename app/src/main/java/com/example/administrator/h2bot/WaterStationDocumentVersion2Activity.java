@@ -178,7 +178,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                 int minute = mcurrentTime.get(Calendar.MINUTE);
 
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(getApplicationContext(), new TimePickerDialog.OnTimeSetListener() {
+                mTimePicker = new TimePickerDialog(WaterStationDocumentVersion2Activity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         startingHour.setText( selectedHour + ":" + selectedMinute);
@@ -198,7 +198,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                 int minute = mcurrentTime.get(Calendar.MINUTE);
 
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(getApplicationContext(), new TimePickerDialog.OnTimeSetListener() {
+                mTimePicker = new TimePickerDialog(WaterStationDocumentVersion2Activity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         endingHour.setText( selectedHour + ":" + selectedMinute);

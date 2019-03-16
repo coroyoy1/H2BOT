@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".WaterStationDocumentVersion2Activity">
+    android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -28,11 +27,13 @@
                     android:textSize="20sp"
                     android:textStyle="bold"/>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:orientation="vertical">
+
                 <EditText
                     android:id="@+id/stationNameDU"
                     android:layout_width="match_parent"
@@ -43,6 +44,7 @@
                     android:inputType="textEmailAddress"
                     android:textAlignment="center"
                     android:textSize="18dp" />
+
                 <EditText
                     android:id="@+id/stationAddressDU"
                     android:layout_width="match_parent"
@@ -63,152 +65,171 @@
                     android:inputType="number"
                     android:textAlignment="center"
                     android:textSize="18dp" />
+
                 <ImageView
+                    android:id="@+id/businessPermit_imageDU"
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
-                    android:id="@+id/businessPermit_imageDU"
-                    android:src="@drawable/ic_image_black_24dp"/>
+                    android:src="@drawable/ic_image_black_24dp" />
+
                 <Button
                     android:id="@+id/businessPermitBtnDU"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Add Business Permit"
                     android:layout_margin="10dp"
                     android:layout_marginLeft="50dp"
                     android:layout_marginRight="50dp"
                     android:background="@android:color/holo_blue_dark"
-                    android:textColor="@android:color/white"/>
+                    android:text="Add Business Permit"
+                    android:textColor="@android:color/white" />
+
                 <ImageView
+                    android:id="@+id/sanitaryPermit_imageDU"
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
-                    android:id="@+id/sanitaryPermit_imageDU"
-                    android:src="@drawable/ic_image_black_24dp"/>
+                    android:src="@drawable/ic_image_black_24dp" />
+
                 <Button
                     android:id="@+id/sanitaryPermitBtnDU"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Add Sanitary Permit"
+                    android:layout_margin="10dp"
                     android:layout_marginLeft="50dp"
                     android:layout_marginRight="50dp"
-                    android:layout_margin="10dp"
                     android:background="@android:color/holo_blue_dark"
-                    android:textColor="@android:color/white"/>
+                    android:text="Add Sanitary Permit"
+                    android:textColor="@android:color/white" />
 
                 <ImageView
+                    android:id="@+id/physicochemicalPermit_imageDU"
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
-                    android:id="@+id/physicochemicalPermit_imageDU"
-                    android:src="@drawable/ic_image_black_24dp"/>
+                    android:src="@drawable/ic_image_black_24dp" />
+
                 <Button
                     android:id="@+id/physicochemicalPermitBtnDU"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Add PhysicoChemical Permit"
+                    android:layout_margin="10dp"
                     android:layout_marginLeft="50dp"
                     android:layout_marginRight="50dp"
-                    android:layout_margin="10dp"
                     android:background="@android:color/holo_blue_dark"
-                    android:textColor="@android:color/white"/>
+                    android:text="Add PhysicoChemical Permit"
+                    android:textColor="@android:color/white" />
 
                 <ImageView
                     android:id="@+id/birPermit_imageDU"
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
                     android:src="@drawable/ic_image_black_24dp" />
+
                 <Button
                     android:id="@+id/birPermitBtnDU"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Add BIR Permit"
+                    android:layout_margin="10dp"
                     android:layout_marginLeft="50dp"
                     android:layout_marginRight="50dp"
-                    android:layout_margin="10dp"
                     android:background="@android:color/holo_blue_dark"
-                    android:textColor="@android:color/white"/>
+                    android:text="Add BIR Permit"
+                    android:textColor="@android:color/white" />
 
                 <TextView
-                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Business Hours"
+                    android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
+                    android:text="Business Hours"
                     android:textSize="18dp" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <EditText
-                            android:id="@+id/startingHourDU"
-                            android:layout_weight="1"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:hint="Start Time"
-                            android:inputType="none"
-                            android:textAlignment="center"
-                            android:textSize="18dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginRight="2dp"/>
-                        <Spinner
-                            android:id="@+id/startSpinnerDU"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent">
-                        </Spinner>
-                    </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
                         <EditText
-                            android:layout_marginLeft="2dp"
-                            android:id="@+id/endingHourDU"
+                            android:id="@+id/startingHourDU"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="2dp"
                             android:layout_weight="1"
+                            android:hint="Start Time"
+                            android:inputType="none"
+                            android:textAlignment="center"
+                            android:textSize="18dp" />
+
+                        <Spinner
+                            android:id="@+id/startSpinnerDU"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent">
+
+                        </Spinner>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/endingHourDU"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
                             android:hint="End Time"
                             android:inputType="none"
                             android:textAlignment="center"
-                            android:textSize="18dp"
-                            android:layout_marginTop="10dp"/>
+                            android:textSize="18dp" />
+
                         <Spinner
                             android:id="@+id/endSpinnerDU"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"/>
+                            android:layout_height="match_parent" />
                     </LinearLayout>
                 </LinearLayout>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Delivery fee method"
                     android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
-                    android:textSize="18dp"/>
+                    android:text="Delivery fee method"
+                    android:textSize="18dp" />
+
                 <RadioGroup
                     android:id="@+id/deliveryFeeGroupDU"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <RadioButton
                         android:id="@+id/perGallonDU"
-                        android:text="Per Gallon"
                         android:layout_width="wrap_content"
-                        android:checked="true"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"/>
+                        android:layout_marginRight="20dp"
+                        android:checked="true"
+                        android:text="Per Gallon" />
+
                     <RadioButton
                         android:id="@+id/fixPriceDU"
-                        android:text="Fix Price"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:text="Fix Price" />
+
                     <RadioButton
                         android:id="@+id/freeDU"
-                        android:text="Free Delivery fee"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:text="Free Delivery fee" />
                 </RadioGroup>
+
                 <EditText
                     android:id="@+id/deliveryFeeDU"
                     android:layout_width="match_parent"
@@ -219,16 +240,17 @@
                     android:inputType="number"
                     android:textAlignment="center"
                     android:textSize="18dp" />
+
                 <EditText
                     android:id="@+id/min_no_of_gallonsDU"
-                    android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
                     android:hint="Minimum no. of gallons"
-                    android:textAlignment="center"
                     android:inputType="number"
-                    android:textSize="18dp"
-                    android:layout_marginTop="10dp"/>
+                    android:textAlignment="center"
+                    android:textSize="18dp" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

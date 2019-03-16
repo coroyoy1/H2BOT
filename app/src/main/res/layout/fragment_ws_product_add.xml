@@ -19,7 +19,7 @@
         android:orientation="vertical">
 
         <Spinner
-            android:dropDownSelector=""
+
             android:textAlignment="center"
             android:id="@+id/waterSpinner"
             android:hint="Water Type (e.g Purified)"
@@ -28,8 +28,8 @@
             android:layout_height="50dp"
             android:background="@color/colorPrimary"
             android:layout_marginLeft="31dp"
-            android:layout_marginRight="31dp">
-        </>
+            android:layout_marginRight="31dp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
