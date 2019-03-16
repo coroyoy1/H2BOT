@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -110,9 +111,12 @@ public class DMInProgressFragment extends Fragment implements WSInProgressOrders
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                 {
+                    Log.d("statatus1",""+dataSnapshot.child("getOrder_status").getValue(String.class));
                     for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren()) {
+                        Log.d("statatus2",""+dataSnapshot.child("getOrder_status").getValue(String.class));
                             String merchantId = dataSnapshot2.child("station_id").getValue(String.class);
                         if (merchantId != null) {
+                            Log.d("statatus3",""+dataSnapshot.child("getOrder_status").getValue(String.class));
                             DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
                             reference1.addValueEventListener(new ValueEventListener() {
                                 @Override
@@ -120,13 +124,17 @@ public class DMInProgressFragment extends Fragment implements WSInProgressOrders
                                     uploadPO.clear();
                                     for (DataSnapshot dataSnapshot3 : dataSnapshot5.getChildren())
                                     {
+                                        Log.d("statatus4",""+dataSnapshot.child("getOrder_status").getValue(String.class));
                                         for (DataSnapshot dataSnapshot4 : dataSnapshot3.child(firebaseUID).getChildren())
                                         {
                                             OrderModel orderModel = dataSnapshot4.getValue(OrderModel.class);
+                                            Log.d("statatus5",""+orderModel.getOrder_status());
                                             if (orderModel != null)
                                             {
+                                                Log.d("statatus6",""+orderModel.getOrder_status());
                                                 if (orderModel.getOrder_merchant_id().equals(merchantId)
-                                                        && orderModel.getOrder_status().equals("In-Progress")) {
+                                                        && orderModel.getOrder_status().equals("In-Progress") || orderModel.getOrder_status().equalsIgnoreCase("Broadcasting")) {
+                                                    Log.d("statatus7",""+orderModel.getOrder_status());
                                                     noOrdersLayout.setVisibility(View.INVISIBLE);
                                                     recyclerView.setVisibility(View.VISIBLE);
                                                     uploadPO.add(orderModel);
@@ -152,7 +160,6 @@ public class DMInProgressFragment extends Fragment implements WSInProgressOrders
                     }
 
                 }
-
             }
 
             @Override
