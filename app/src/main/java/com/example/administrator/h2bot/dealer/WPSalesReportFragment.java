@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Gravity;
@@ -23,10 +25,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.customer.CustomerWaterTypeAdapter;
 import com.example.administrator.h2bot.models.DateModel;
 import com.example.administrator.h2bot.models.OrderFileModel;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
+import com.example.administrator.h2bot.models.WaterTypeModel;
+import com.example.administrator.h2bot.objects.ReportsDealerObject;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -55,14 +64,14 @@ public class WPSalesReportFragment extends Fragment {
     FirebaseUser currentUser;
     String currendId;
     private ArrayList<OrderModel> reportsList;
+    private List<WaterTypeModel> waterTypeModelList;
+    private TextView totalIncome;
+    private TextView totalItemSold;
+    private BarChart barChart;
 
-    TextView itemSoldMineral,incomeMineral;
-    TextView purifiedWaterItemSoldTextView,incomePurifiedWater;
-    TextView distilledSold,distilledIncome;
-    TextView alkalineSold,alkalineIncome;
-    TextView totalItemSold, totalIncome;
-    int purifiedSoldCtr, alkalineSoldCtr, distilledSoldCtr, mineralSoldCtr, totalItemCtr;
-    double purifiedIncomeCtr, alkalineIncomeCtr, distilledIncomeCtr, mineralIncomeCtr, totalIncomeCtr;
+    private RecyclerView reportsRecycler;
+    int totalItemCtr;
+    double totalIncomeCtr;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,11 +90,13 @@ public class WPSalesReportFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         reportsList = new ArrayList<OrderModel>();
+        waterTypeModelList = new ArrayList<>();
 
         view.setFocusableInTouchMode(true);
         view.requestFocus();
 
         getOrderFile();
+        getWaterType();
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -115,6 +126,26 @@ public class WPSalesReportFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    private void getWaterType(){
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File").child(currentUser.getUid());
+        databaseReference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                waterTypeModelList.clear();
+                for (DataSnapshot post1 : dataSnapshot.getChildren()){
+                        WaterTypeModel waterTypeModel = post1.getValue(WaterTypeModel.class);
+                        waterTypeModelList.add(waterTypeModel);
+                }
+                getList();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void getOrderFile(){
@@ -161,7 +192,7 @@ public class WPSalesReportFragment extends Fragment {
                 date = postFormater.format(convertedDate);
             }
         } catch (ParseException e) {
-            String DATE_FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ";
+            String DATE_FORMAT_PATTERN = "yyyy-MM-dd";
             try {
                 convertedDate = new SimpleDateFormat(DATE_FORMAT_PATTERN).parse(dateString);
                 if(filter.equalsIgnoreCase("Monthly")) {
@@ -185,65 +216,79 @@ public class WPSalesReportFragment extends Fragment {
     }
 
     private void getList(){
-        if(reportsList.size() == 0){
+        if(reportsList.size() == 0 || waterTypeModelList.size() == 0){
             return;
         }
 
-        purifiedSoldCtr = alkalineSoldCtr = distilledSoldCtr = mineralSoldCtr = totalItemCtr = 0;
-        purifiedIncomeCtr = alkalineIncomeCtr = distilledIncomeCtr = mineralIncomeCtr = totalIncomeCtr = 0;
+        List<ReportsDealerObject> reportsObject = new ArrayList<>();
+        for(WaterTypeModel water: waterTypeModelList){
+            ReportsDealerObject content = new ReportsDealerObject(water.getWater_type(), 0, 0);
+            reportsObject.add(content);
+        }
+
+        totalItemCtr = 0;
+        totalIncomeCtr = 0;
 
         for(OrderModel list: reportsList){
-            String deliveryDate = convertDate(list.getOrder_delivery_date());
+            String deliveryDate = convertDate(list.getOrder_date_issued());
             String thisDate = convertDate(Calendar.getInstance().getTime().toString());
 
             if(currentUser.getUid().equalsIgnoreCase(list.getOrder_merchant_id())) {
                 if (deliveryDate.equalsIgnoreCase(thisDate)) {
                     if (list.getOrder_status().equalsIgnoreCase("Completed")) {
 
-                        if (list.getOrder_water_type().equalsIgnoreCase("Purified")) {
-                            purifiedIncomeCtr += Double.parseDouble(list.getOrder_total_amt());
-                            purifiedSoldCtr += Integer.parseInt(list.getOrder_qty());
-                            totalItemCtr += purifiedSoldCtr;
-                            totalIncomeCtr += purifiedIncomeCtr;
-                        } else if (list.getOrder_water_type().equalsIgnoreCase("Distilled")) {
-                            distilledIncomeCtr += Double.parseDouble(list.getOrder_total_amt());
-                            distilledSoldCtr += Integer.parseInt(list.getOrder_qty());
-                            totalItemCtr += distilledSoldCtr;
-                            totalIncomeCtr += distilledIncomeCtr;
-                        } else if (list.getOrder_water_type().equalsIgnoreCase("Mineral")) {
-                            mineralIncomeCtr += Double.parseDouble(list.getOrder_total_amt());
-                            mineralSoldCtr += Integer.parseInt(list.getOrder_qty());
-                            totalItemCtr += mineralSoldCtr;
-                            totalIncomeCtr += mineralIncomeCtr;
-                        } else if (list.getOrder_water_type().equalsIgnoreCase("Alkaline")) {
-                            alkalineIncomeCtr += Double.parseDouble(list.getOrder_total_amt());
-                            alkalineSoldCtr += Integer.parseInt(list.getOrder_qty());
-                            totalItemCtr += alkalineSoldCtr;
-                            totalIncomeCtr += alkalineIncomeCtr;
+                        for(ReportsDealerObject waterTypeModel: reportsObject){
+                            String water = list.getOrder_water_type();
+                            String type = waterTypeModel.getWaterType();
+                            if (list.getOrder_water_type().equalsIgnoreCase(waterTypeModel.getWaterType())) {
+                                double income = waterTypeModel.getIncome() + Double.parseDouble(list.getOrder_total_amt());
+                                int qty = waterTypeModel.getItemSold() + Integer.parseInt(list.getOrder_qty());
+                                waterTypeModel.setIncome(income);
+                                waterTypeModel.setItemSold(qty);
+                                totalItemCtr += Integer.parseInt(list.getOrder_qty());
+                                totalIncomeCtr += Double.parseDouble(list.getOrder_total_amt());
+                                break;
+                            }
                         }
                     }
                 }
             }
         }
-        Display();
+        Display(reportsObject);
     }
 
-    private void Display(){
+    private void getChartValue(List<ReportsDealerObject> reportsObject){
+        barChart.invalidate();
+        List<BarEntry> barEntries = new ArrayList<>();
+        List<String> products = new ArrayList<>();
+        int ctr = 0;
+        for(ReportsDealerObject list: reportsObject){
+            barEntries.add(new BarEntry(list.getItemSold(), ctr));
+            products.add(list.getWaterType());
+            ctr++;
+        }
 
-        itemSoldMineral.setText(mineralSoldCtr + "");
-        incomeMineral.setText(mineralIncomeCtr + "");
+        BarDataSet barDataSet = new BarDataSet(barEntries, "Products");
 
-        purifiedWaterItemSoldTextView.setText(purifiedSoldCtr + "");
-        incomePurifiedWater.setText(purifiedIncomeCtr + "");
+        BarData barData = new BarData(products, barDataSet);
+        barChart.setData(barData);
+        barChart.setTouchEnabled(true);
+        barChart.setDragEnabled(true);
+        barChart.setScaleEnabled(true);
+    }
 
-        distilledSold.setText(distilledSoldCtr + "");
-        distilledIncome.setText(distilledIncomeCtr + "");
+    private void Display(List<ReportsDealerObject> reportsObject){
+        getChartValue(reportsObject);
+        Object[] transferObject = new Object[2];
+        transferObject[0] = this.getContext();
+        transferObject[1] = reportsObject;
+        WaterDealerReportsAdapter adapter = new WaterDealerReportsAdapter(transferObject);
+        RecyclerView.LayoutManager recycle = new GridLayoutManager(this.getContext(), 1);
+        reportsRecycler.setLayoutManager(recycle);
+        reportsRecycler.setAdapter(adapter);
 
-        alkalineSold.setText(alkalineSoldCtr + "");
-        alkalineIncome.setText(alkalineIncomeCtr + "");
-
-        totalItemSold.setText(totalItemCtr + "");
         totalIncome.setText(totalIncomeCtr + "");
+        totalItemSold.setText(totalItemCtr + "");
     }
 
     public void attemptToExit()
@@ -268,18 +313,11 @@ public class WPSalesReportFragment extends Fragment {
     }
 
     private void refIDs(View view){
-        itemSoldMineral = view.findViewById(R.id.itemSoldMineral);
-        incomeMineral = view.findViewById(R.id.incomeMineral);
-        purifiedWaterItemSoldTextView = view.findViewById(R.id.purifiedWaterItemSoldTextView);
-        incomePurifiedWater = view.findViewById(R.id.incomePurifiedWater);
-        distilledSold = view.findViewById(R.id.distilledSoldTextView);
-        distilledIncome = view.findViewById(R.id.distilledIncomeTextView);
-        alkalineSold = view.findViewById(R.id.alkalineWaterItemSoldTextView);
-        alkalineIncome = view.findViewById(R.id.alkalineIncomeTextView);
-        totalItemSold = view.findViewById(R.id.totalItemSold);
         totalIncome = view.findViewById(R.id.totalIncome);
-
-        purifiedSoldCtr = alkalineSoldCtr = distilledSoldCtr = mineralSoldCtr = totalItemCtr = 0;
-        purifiedIncomeCtr = alkalineIncomeCtr = distilledIncomeCtr = mineralIncomeCtr = totalIncomeCtr = 0;
+        totalItemSold = view.findViewById(R.id.totalItemSold);
+        reportsRecycler = view.findViewById(R.id.reports_recycler);
+        barChart = view.findViewById(R.id.barGraph);
+        totalItemCtr = 0;
+        totalIncomeCtr = 0;
     }
 }

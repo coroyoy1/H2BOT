@@ -1,19 +1,28 @@
 package com.example.administrator.h2bot.models;
 
 public class OrderModel {
-    String order_address;
-    String order_customer_id;
-    String order_delivery_date;
-    String order_delivery_fee;
-    String order_delivery_method;
-    String order_no;
-    String order_price_per_gallon;
-    String order_qty;
-    String order_merchant_id;
-    String order_status;
-    String order_total_amt;
-    String order_water_type;
-    String order_service_method;
+    private String order_address;
+    private String order_customer_id;
+    private String order_delivery_date;
+    private String order_delivery_fee;
+    private String order_delivery_method;
+    private String order_no;
+    private String order_price_per_gallon;
+    private String order_qty;
+    private String order_merchant_id;
+    private String order_status;
+    private String order_total_amt;
+    private String order_water_type;
+    private String order_service_method;
+    private String order_date_issued;
+
+    public String getOrder_date_issued() {
+        return order_date_issued;
+    }
+
+    public void setOrder_date_issued(String order_date_issued) {
+        this.order_date_issued = order_date_issued;
+    }
 
     public String getOrder_service_method() {
         return order_service_method;
