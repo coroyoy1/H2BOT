@@ -9,73 +9,76 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:gravity="center"
+                android:layout_gravity="center"
                 android:background="@android:color/holo_blue_dark"
-                android:layout_gravity="center">
+                android:gravity="center">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Water Affiliate Requirments"
                     android:textAlignment="center"
-                    android:text="Station Requirments"
                     android:textColor="#FFF"
                     android:textSize="20sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:orientation="vertical">
-                <EditText
-                    android:id="@+id/driverLicenseNo"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_weight="1"
-                    android:hint="Drivers License No"
-                    android:inputType="textEmailAddress"
-                    android:textAlignment="center"
-                    android:textSize="18dp" />
 
                 <ImageView
+                    android:id="@+id/driversLicense_image"
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
-                    android:id="@+id/driversLicense_image"
-                    android:src="@drawable/ic_image_black_24dp"/>
+                    android:src="@drawable/ic_image_black_24dp" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Driver's License"
+                    android:gravity="center"
+                    android:textSize="15dp"
+                    />
                 <Button
                     android:id="@+id/licenseBtn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Add Drivers License"
                     android:layout_margin="10dp"
                     android:layout_marginLeft="50dp"
                     android:layout_marginRight="50dp"
                     android:background="@android:color/holo_blue_dark"
-                    android:textColor="@android:color/white"/>
+                    android:text="Choose Image"
+                    android:textColor="@android:color/white" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:orientation="horizontal"
-                android:layout_margin="10dp">
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
                 <Button
-                    android:layout_weight="1"
                     android:id="@+id/submitButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="REGISTER"
                     android:layout_marginRight="5dp"
-                    android:textColor="@android:color/white"
-                    android:background="@android:color/holo_blue_dark"/>
+                    android:layout_weight="1"
+                    android:background="@android:color/holo_blue_dark"
+                    android:text="REGISTER"
+                    android:textColor="@android:color/white" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

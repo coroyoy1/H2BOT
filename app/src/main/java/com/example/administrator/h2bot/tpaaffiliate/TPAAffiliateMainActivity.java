@@ -58,6 +58,12 @@ public class TPAAffiliateMainActivity extends AppCompatActivity implements Navig
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
                 drawerLayout.closeDrawer(GravityCompat.START);
                 break;
+            case R.id.accepted_orders:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TPADeliveredOrdersFragment()).commit();
+                Toast.makeText(this, "Accepted Orders", Toast.LENGTH_SHORT).show();
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Accepted Orders");
+                drawerLayout.closeDrawer(GravityCompat.START);
+                break;
 
             case R.id.delivered_orders:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TPADeliveredOrdersFragment()).commit();

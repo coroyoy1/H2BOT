@@ -2,9 +2,14 @@ package com.example.administrator.h2bot.tpaaffiliate;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -18,8 +23,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.dealer.WPInProgressAccept;
 import com.example.administrator.h2bot.maps.GetDistance;
 import com.example.administrator.h2bot.models.MerchantCustomerFile;
 import com.example.administrator.h2bot.models.OrderModel;
@@ -51,7 +60,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -73,8 +84,9 @@ public class TPAMapFragment extends Fragment
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
-
-
+    FirebaseUser firebaseUser;
+    String affiliatename, merchantno;
+    String affiliateNo;
     // User Permissions
     TextView noOfGallons,Profit,stationadd,fundAmt;
     private GoogleMap map;
@@ -85,7 +97,7 @@ public class TPAMapFragment extends Fragment
     private static final int REQUEST_USER_LOCATION_CODE = 99;
     public FirebaseAuth mAuth;
     DatabaseReference userFileRef, merchantRef, userLatLongRef, orderModel, businessRef;
-    String stationAddress, stationName, userType, stationId, station_id_snip;
+    String stationAddress, stationName, userType, stationId, station_id_snip,orderno,customer_id;
     LatLng latLong = null;
     double latitude, longitude;
     private BottomSheetBehavior sheetBehavior, bottomSheetBehavior;
@@ -101,7 +113,11 @@ public class TPAMapFragment extends Fragment
     public String API_KEY = "";
     private SeekBar radius;
     private TextView currentRadius;
-
+    private final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1;
+    private final String SENT = "SMS_SENT";
+    private final String DELIVERED = "SMS_DELIVERED";
+    PendingIntent sentPI, deliveredPI;
+    BroadcastReceiver smsSentReceiver, smsDeliveredReceiver;
     public TPAMapFragment() {
         // Required empty public constructor
     }
@@ -117,13 +133,29 @@ public class TPAMapFragment extends Fragment
         orderModelList = new ArrayList<>();
         businessInfoFileList = new ArrayList<>();
         userFileList = new ArrayList<>();
-
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         getBusiness();
         getUserLatLng();
         getOrderModel();
         getBusinessFile();
         getUserFile();
 
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(event.getAction() == KeyEvent.ACTION_DOWN)
+                {
+                    if (keyCode == KeyEvent.KEYCODE_BACK)
+                    {
+                        attemptToExit();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
         return view;
     }
 
@@ -355,13 +387,12 @@ public class TPAMapFragment extends Fragment
 
         for(MerchantCustomerFile merchantCustomerFile: merchantCustomerFileList){
             for(OrderModel orderModel: orderModelList){
-                String merchantID = merchantCustomerFile.getCustomer_id();
-                String customer_id = orderModel.getOrder_customer_id();
                 String orderStatus = orderModel.getOrder_status();
                 if(merchantCustomerFile.getCustomer_id().equalsIgnoreCase(orderModel.getOrder_customer_id())
                         && orderModel.getOrder_status().equalsIgnoreCase("Broadcasting")
                         && merchantCustomerFile.getStation_id().equalsIgnoreCase(orderModel.getOrder_merchant_id())){
-
+                    orderno = orderModel.getOrder_no();
+                    customer_id = orderModel.getOrder_customer_id();
                     stationId = orderModel.getOrder_merchant_id();
 
                     for(UserLocationAddress userLocationAddress: userLocationAddressList){
@@ -387,7 +418,6 @@ public class TPAMapFragment extends Fragment
                         }
                     }
 
-                    String status = "Status: OPEN";
                     String type = "Type: " + userType;
 
                     WaterStationOrDealer affiliate = new WaterStationOrDealer();
@@ -395,7 +425,6 @@ public class TPAMapFragment extends Fragment
                     affiliate.setUserType(userType);
                     affiliate.setLat(latitude);
                     affiliate.setLng(longitude);
-                    affiliate.setStatus(status);
                     affiliate.setType(type);
                     affiliate.setStationID(stationId);
                     affiliateModel.add(affiliate);
@@ -555,8 +584,6 @@ public class TPAMapFragment extends Fragment
                                                                                 Profit.setText(userData4.getOrder_delivery_fee());
                                                                                 stationadd.setText(userData4.getOrder_address());
                                                                                 fundAmt.setText(userData4.getOrder_total_amt());
-
-                                                                                String status = "Status: OPEN";
                                                                                 String type = "Type: " + userType;
                                                                                 station_id_snip = stationId;
 
@@ -630,6 +657,7 @@ public class TPAMapFragment extends Fragment
         orderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
                 dialog.setCancelable(false);
                 dialog.setTitle("CONFIRMATION");
@@ -637,6 +665,70 @@ public class TPAMapFragment extends Fragment
                 dialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
+
+                        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("User_File");
+                        reference1.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                affiliatename = dataSnapshot.child("user_firstname").getValue(String.class)+" "+dataSnapshot.child("user_lastname").getValue(String.class);
+                                affiliateNo = dataSnapshot.child("user_phone_no").getValue(String.class);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                        DatabaseReference reference3 = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
+                        reference3.child(stationId).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                merchantno = dataSnapshot.child("business_tel_no").getValue(String.class);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                        Log.d("Hello",stationId+","+customer_id+","+orderno);
+                        DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("Customer_File");
+                        reference2.child(customer_id).child(stationId).child(orderno).child("order_status").setValue("Accepted by affiliate")
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                String message = "Your broadcasted order#:"+orderno+" has  been accepted by an affiliate named :"+affiliatename+". For further information about "+affiliatename;
+                                String message2 = "Contact # of "+affiliatename+":"+affiliateNo;
+                                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
+                                        != PackageManager.PERMISSION_GRANTED)
+                                {
+                                    Log.d("NmNakoko","Hijhosdfgh");
+                                    ActivityCompat.requestPermissions(getActivity(), new String [] {Manifest.permission.SEND_SMS},
+                                            MY_PERMISSIONS_REQUEST_SEND_SMS);
+                                }
+                                else {
+                                    Log.d("NmNako","Hi"+message);
+                                    SmsManager sms = SmsManager.getDefault();
+                                    Log.d("Log.d",""+merchantno);
+                                    sms.sendTextMessage(merchantno, null, message, sentPI, deliveredPI);
+                                    sms.sendTextMessage(merchantno, null, message2, sentPI, deliveredPI);
+                                }
+                                TPAAcceptedFragment additem = new TPAAcceptedFragment();
+                                AppCompatActivity activity = (AppCompatActivity)v.getContext();
+                                activity.getSupportFragmentManager()
+                                        .beginTransaction()
+                                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                                        .replace(R.id.fragment_container, additem)
+                                        .addToBackStack(null)
+                                        .commit();
+                                Bundle args = new Bundle();
+                                args.putString("transactionno", orderno);
+                                args.putString("transactioncustomerid", customer_id);
+                                args.putString("stationid", stationId);
+                                additem.setArguments(args);
+                            }
+                        });
+
                         Toast.makeText(getActivity(), "Accepted", Toast.LENGTH_SHORT).show();
                         snackBar();
                     }
@@ -670,5 +762,96 @@ public class TPAMapFragment extends Fragment
             }
         }).setActionTextColor(getResources().getColor(android.R.color.white ));
         snackbar.show();
+    }
+    public void attemptToExit()
+    {
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        getActivity().finish();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Are you sure to exit the application?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(smsSentReceiver);
+        getActivity().unregisterReceiver(smsDeliveredReceiver);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        smsSentReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                switch (getResultCode())
+                {
+                    case Activity.RESULT_OK:
+                        Toast.makeText(context, "SMS sent successfully!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    //Something went wrong and there's no way to tell what, why or how.
+                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                        Toast.makeText(context, "Generic failure!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    //Your device simply has no cell reception. You're probably in the middle of
+                    //nowhere, somewhere inside, underground, or up in space.
+                    //Certainly away from any cell phone tower.
+                    case SmsManager.RESULT_ERROR_NO_SERVICE:
+                        Toast.makeText(context, "No service!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    //Something went wrong in the SMS stack, while doing something with a protocol
+                    //description unit (PDU) (most likely putting it together for transmission).
+                    case SmsManager.RESULT_ERROR_NULL_PDU:
+                        Toast.makeText(context, "Null PDU!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    //You switched your device into airplane mode, which tells your device exactly
+                    //"turn all radios off" (cell, wifi, Bluetooth, NFC, ...).
+                    case SmsManager.RESULT_ERROR_RADIO_OFF:
+                        Toast.makeText(context, "Radio off!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                }
+
+            }
+        };
+        smsDeliveredReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                switch(getResultCode())
+                {
+                    case Activity.RESULT_OK:
+                        Toast.makeText(context, "SMS delivered!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case Activity.RESULT_CANCELED:
+                        Toast.makeText(context, "SMS not delivered!", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+
+            }
+        };
+
+        getActivity().registerReceiver(smsSentReceiver, new IntentFilter(SENT));
+        getActivity().registerReceiver(smsDeliveredReceiver, new IntentFilter(DELIVERED));
     }
 }

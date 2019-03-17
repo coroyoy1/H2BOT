@@ -100,7 +100,6 @@ public class TPADocumentActivity extends AppCompatActivity{
         mStorageRef = FirebaseStorage.getInstance().getReference("Water Dealer Documents");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("Water Dealer Documents");
         licenseBtn = findViewById(R.id.licenseBtn);
-        driverLicenseNo = findViewById(R.id.driverLicenseNo);
         driversLicense_image = findViewById(R.id.driversLicense_image);
         register = findViewById(R.id.submitButton);
 
@@ -122,27 +121,16 @@ public class TPADocumentActivity extends AppCompatActivity{
         mFilepath = filepath;
 
         register.setOnClickListener(v -> {
-            if(TextUtils.isEmpty(driverLicenseNo.getText().toString())){
-                Toast.makeText(TPADocumentActivity.this, "Please fill the information needed", Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
                 CreateAccount(mEmail_address, mPassword);
-            }
         });
 
         licenseBtn.setOnClickListener(v -> {
-            if(TextUtils.isEmpty(driverLicenseNo.getText().toString())){
-                Toast.makeText(TPADocumentActivity.this, "Please fill the information needed", Toast.LENGTH_SHORT).show();
-            }
-            else{
                 isPicked = true;
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-            }
-        });
+              });
     }
 
     private void getLocationSetter()
@@ -229,9 +217,15 @@ public class TPADocumentActivity extends AppCompatActivity{
                                 sb.append("\n");
                             }
                             Log.d("Data: ", sb.toString());
-                            if(sb.toString().trim().toLowerCase().contains(driverLicenseNo.getText().toString().trim().toLowerCase())
-                                    && sb.toString().toUpperCase().contains("NON-PROFESSIONAL DRIVERS LICENSE")
-                                    || sb.toString().toUpperCase().contains("NON-PROFESSIONAL DRIVER'S LICENSE")){
+                            Log.d("Data: ", mFirstname+""+mLastname);
+                            if(sb.toString().trim().toLowerCase().contains(mFirstname.toLowerCase())
+                                    && sb.toString().trim().toLowerCase().contains(mLastname.toLowerCase())
+                                    && sb.toString().toUpperCase().contains("DRIVERS LICENSE")
+                                    || sb.toString().toUpperCase().contains("DRIVER'S LICENSE")
+                                    || sb.toString().toUpperCase().contains("LAND")
+                                    || sb.toString().toUpperCase().contains("TRANSPORTATION")
+                                    || sb.toString().toUpperCase().contains("OFFICE")
+                            ){
                                 Picasso.get().load(filepath).into(driversLicense_image);
                                 Toast.makeText(this, "Valid Driver's License", Toast.LENGTH_SHORT).show();
                             }

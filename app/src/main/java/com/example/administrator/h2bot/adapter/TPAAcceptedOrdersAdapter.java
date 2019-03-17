@@ -13,37 +13,36 @@ import android.widget.TextView;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.dealer.WPInProgressAccept;
 import com.example.administrator.h2bot.models.OrderModel;
-import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
-import com.example.administrator.h2bot.waterstation.WSInProgressAccept;
+import com.example.administrator.h2bot.tpaaffiliate.TPAAcceptedFragment;
+import com.example.administrator.h2bot.tpaaffiliate.TPAAcceptedOrdersInfo;
 
 import java.util.List;
 
-public class WPInProgressOrdersAdapter extends RecyclerView.Adapter<WPInProgressOrdersAdapter.ViewHolder>{
+public class TPAAcceptedOrdersAdapter extends RecyclerView.Adapter<TPAAcceptedOrdersAdapter.ViewHolder>{
     private Context mContext;
     private List<OrderModel> mUploads;
-    private OnItemClickListener mListener;
+    private TPAAcceptedOrdersAdapter.OnItemClickListener mListener;
 
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    public void setOnItemClickListener(TPAAcceptedOrdersAdapter.OnItemClickListener listener) {
         mListener = listener;
     }
 
-    public WPInProgressOrdersAdapter(Context context, List<OrderModel> uploads) {
+    public TPAAcceptedOrdersAdapter(Context context, List<OrderModel> uploads) {
         mContext = context;
         mUploads = uploads;
 
-}
+    }
     @NonNull
-    @Override
-    public WPInProgressOrdersAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.x_merchant_transaction_inprogressorder, viewGroup, false);
-        return new ViewHolder(v);
+        return new TPAAcceptedOrdersAdapter.ViewHolder(v);
     }
     @Override
-    public void onBindViewHolder(@NonNull WPInProgressOrdersAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull TPAAcceptedOrdersAdapter.ViewHolder viewHolder, int i) {
         final OrderModel currentData = mUploads.get(i);
         viewHolder.transactionNo.setText(currentData.getOrder_no());
         viewHolder.status.setText(currentData.getOrder_status());
@@ -52,12 +51,12 @@ public class WPInProgressOrdersAdapter extends RecyclerView.Adapter<WPInProgress
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WPInProgressAccept additem = new WPInProgressAccept();
+                TPAAcceptedOrdersInfo additem = new TPAAcceptedOrdersInfo();
                 AppCompatActivity activity = (AppCompatActivity)v.getContext();
                 activity.getSupportFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                        .replace(R.id.fragment_container_wp, additem)
+                        .replace(R.id.fragment_container, additem)
                         .addToBackStack(null)
                         .commit();
                 Bundle args = new Bundle();

@@ -273,7 +273,7 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
                                         {
                                             emailAddressWU.setText(userAccountFile.getUser_email_address());
 
-                                            DatabaseReference reference3 = FirebaseDatabase.getInstance().getReference("USer_File");
+                                            DatabaseReference reference3 = FirebaseDatabase.getInstance().getReference("User_File");
                                             reference3.child(firebaseUser.getUid())
                                                     .addValueEventListener(new ValueEventListener() {
                                                         @Override
