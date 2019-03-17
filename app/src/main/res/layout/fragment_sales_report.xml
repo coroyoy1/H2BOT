@@ -141,7 +141,7 @@
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
             <TextView
-                android:id="@+id/textView30"
+                android:id="@+id/distilledSoldTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/textviewB"
@@ -173,7 +173,7 @@
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
             <TextView
-                android:id="@+id/textView33"
+                android:id="@+id/alkalineIncomeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/textviewC"
@@ -182,7 +182,7 @@
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
             <TextView
-                android:id="@+id/textView25"
+                android:id="@+id/distilledIncomeTextView"
                 android:layout_width="81dp"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/textviewC"
@@ -204,14 +204,9 @@
     <RelativeLayout
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
     </RelativeLayout>
-
-
-
-
 
 
 
@@ -224,7 +219,7 @@
         android:background="#32918b88">
 
         <TextView
-            android:id="@+id/textView34"
+            android:id="@+id/totalIncome"
             android:layout_width="wrap_content"
             android:paddingTop="40dp"
             android:layout_alignRight="@+id/textView32"
@@ -236,7 +231,7 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/textView36"
+            android:id="@+id/totalItemSold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/textView35"

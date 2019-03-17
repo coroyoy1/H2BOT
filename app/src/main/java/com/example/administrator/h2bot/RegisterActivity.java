@@ -367,7 +367,6 @@ public class RegisterActivity extends AppCompatActivity{
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful())
                     {
-                        String userType = headerTitle.getText().toString();
                         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                         String uidString = firebaseUser.getUid();
 
