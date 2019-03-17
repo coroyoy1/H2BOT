@@ -386,14 +386,14 @@ public class WSBusinessInfoFinal extends Fragment {
                                 sb.append(myItem.getValue());
                                 sb.append("\n");
                             }
-//                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
+                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
                             Picasso.get().load(filepath2).into(sanitaryPermit_image);
                             Toast.makeText(getActivity(), "Valid sanitary permit", Toast.LENGTH_SHORT).show();
-//                            }
-//                            else{
-//                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
-//                                Toast.makeText(this, "Invalid sanitary permit", Toast.LENGTH_SHORT).show();
-//                            }
+                            }
+                            else{
+                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
+                                Toast.makeText(getActivity(), "Invalid sanitary permit", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -423,14 +423,14 @@ public class WSBusinessInfoFinal extends Fragment {
                                 sb.append(myItem.getValue());
                                 sb.append("\n");
                             }
-//                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
+                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
                             Picasso.get().load(filepath3).into(physicochemicalPermit_Image);
                             Toast.makeText(getActivity(), "Valid sanitary permit", Toast.LENGTH_SHORT).show();
-//                            }
-//                            else{
-//                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
-//                                Toast.makeText(this, "Invalid sanitary permit", Toast.LENGTH_SHORT).show();
-//                            }
+                            }
+                            else{
+                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
+                                Toast.makeText(getActivity(), "Invalid sanitary permit", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -460,14 +460,14 @@ public class WSBusinessInfoFinal extends Fragment {
                                 sb.append(myItem.getValue());
                                 sb.append("\n");
                             }
-//                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
+                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
                             Picasso.get().load(filepath4).into(birPermit_Image);
                             Toast.makeText(getActivity(), "Valid sanitary permit", Toast.LENGTH_SHORT).show();
-//                            }
-//                            else{
-//                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
-//                                Toast.makeText(this, "Invalid sanitary permit", Toast.LENGTH_SHORT).show();
-//                            }
+                            }
+                            else{
+                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
+                                Toast.makeText(getActivity(), "Invalid sanitary permit", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
