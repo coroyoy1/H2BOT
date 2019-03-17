@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.text.TextBlock;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -193,6 +196,27 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
         {
             uri = data.getData();
             Picasso.get().load(uri).into(imageView);
+//            if (isClick)
+//            {
+//                Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+//                SparseArray<TextBlock> items = textRecognizer.detect(frame);
+//                StringBuilder sb= new StringBuilder();
+//
+//                for(int ctr=0;ctr<items.size();ctr++)
+//                {
+//                    TextBlock myItem = items.valueAt(ctr);
+//                    sb.append(myItem.getValue());
+//                    sb.append("\n");
+//                }
+//                if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
+//                    Picasso.get().load(filepath4).into(birPermit_Image);
+//                    Toast.makeText(getActivity(), "Valid sanitary permit", Toast.LENGTH_SHORT).show();
+//                }
+//                else{
+//                    businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
+//                    Toast.makeText(getActivity(), "Invalid sanitary permit", Toast.LENGTH_SHORT).show();
+//                }
+//            }
         }
         else
         {
