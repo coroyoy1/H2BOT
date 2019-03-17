@@ -2,6 +2,7 @@ package com.example.administrator.h2bot.maps;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Geocoder;
@@ -47,13 +48,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class MapMerchantActivity extends FragmentActivity implements OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
     private static final String API_KEY = "AIzaSyBC4uUz5QHs3X_TswSKUDWl4I98BqZ17ac";
-    private GoogleMap mMap;
+    private static GoogleMap mMap;
     private static final int LOCATION_REQUEST = 500;
+    private static Context context = MapMerchantActivity.context;;
     ArrayList<LatLng> listPoints;
     SupportMapFragment mapFragment;
     private Geocoder mGeocoder;
@@ -154,7 +157,7 @@ public class MapMerchantActivity extends FragmentActivity implements OnMapReadyC
         return "https://maps.googleapis.com/maps/api/directions/"+output+"?"+param;
     }
 
-    private String requestDirection(String reqUrl) throws IOException {
+    private static String requestDirection(String reqUrl) throws IOException {
         String responseString = "";
         InputStream inputStream = null;
         HttpURLConnection httpURLConnection = null;
@@ -217,7 +220,7 @@ public class MapMerchantActivity extends FragmentActivity implements OnMapReadyC
     }
 
 
-    public class TaskRequestDirections extends AsyncTask<String, Void, String> {
+    public static class TaskRequestDirections extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... strings) {
@@ -239,55 +242,6 @@ public class MapMerchantActivity extends FragmentActivity implements OnMapReadyC
         }
     }
 
-    public class TaskParser extends AsyncTask<String, Void, List<List<HashMap<String, String>>> > {
-
-        @Override
-        protected List<List<HashMap<String, String>>> doInBackground(String... strings) {
-            JSONObject jsonObject = null;
-            List<List<HashMap<String, String>>> routes = null;
-            try {
-                jsonObject = new JSONObject(strings[0]);
-                DirectionsParser directionsParser = new DirectionsParser();
-                routes = directionsParser.parse(jsonObject);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return routes;
-        }
-
-        @Override
-        protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
-            //Get list route and display it into the map
-
-            ArrayList points = null;
-
-            PolylineOptions polylineOptions = null;
-
-            for (List<HashMap<String, String>> path : lists) {
-                points = new ArrayList();
-                polylineOptions = new PolylineOptions();
-
-                for (HashMap<String, String> point : path) {
-                    double lat = Double.parseDouble(point.get("lat"));
-                    double lon = Double.parseDouble(point.get("lon"));
-
-                    points.add(new LatLng(lat,lon));
-                }
-
-                polylineOptions.addAll(points);
-                polylineOptions.width(15);
-                polylineOptions.color(Color.BLUE);
-                polylineOptions.geodesic(true);
-            }
-
-            if (polylineOptions!=null) {
-                mMap.addPolyline(polylineOptions);
-            } else {
-                Toast.makeText(getApplicationContext(), "Direction not found!", Toast.LENGTH_SHORT).show();
-            }
-
-        }
-    }
     private synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(MapMerchantActivity.this)
                 .addConnectionCallbacks((GoogleApiClient.ConnectionCallbacks) this)
@@ -315,5 +269,56 @@ public class MapMerchantActivity extends FragmentActivity implements OnMapReadyC
                 }
                 return;
         }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public static class TaskParser extends AsyncTask<String, Void, List<List<HashMap<String, String>>> >{
+
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(String... strings) {
+            JSONObject jsonObject;
+            List<List<HashMap<String, String>>> routes = null;
+            try{
+                jsonObject = new JSONObject(strings[0]);
+                DirectionsParser directionsParser = new DirectionsParser();
+                routes = directionsParser.parse(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return routes;
+        }
+
+        @Override
+        protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
+            ArrayList<LatLng> points;
+            PolylineOptions polylineOptions = null;
+
+            for(List<HashMap<String, String>> path: lists){
+                points = new ArrayList<>();
+                polylineOptions = new PolylineOptions();
+
+                for(HashMap<String, String> point : path){
+                    double lat = Double.parseDouble(Objects.requireNonNull(point.get("lat")));
+                    double lon = Double.parseDouble(Objects.requireNonNull(point.get("lon")));
+
+                    points.add(new LatLng(lat, lon));
+                }
+
+                polylineOptions.addAll(points);
+                polylineOptions.width(15);
+                polylineOptions.color(Color.BLUE);
+                polylineOptions.geodesic(true);
+            }
+
+            if(polylineOptions != null){
+                mMap.addPolyline(polylineOptions);
+            }else{
+                Toast.makeText(context, "Direction not found!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public void setMap(GoogleMap map){
+        mMap = map;
     }
 }

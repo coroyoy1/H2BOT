@@ -32,6 +32,7 @@ public class GetDistance extends AsyncTask<Object, String, String> {
     private GoogleMap mMap;
     private TextView currentRadius;
     private Marker mCurrentLocationMarker;
+    private CustomerMapFragment customerMapFragment;
 
     @Override
     protected String doInBackground(Object... objects) {
@@ -41,6 +42,7 @@ public class GetDistance extends AsyncTask<Object, String, String> {
         mMap = (GoogleMap) objects[2];
         API_KEY = (String) objects[3];
         currentRadius = (TextView) objects[4];
+        customerMapFragment = (CustomerMapFragment) objects[5];
 
 
         name = new String[list.size()];
@@ -143,5 +145,7 @@ public class GetDistance extends AsyncTask<Object, String, String> {
                 }
             }
         }
+
+        customerMapFragment.setList(thisList);
     }
 }

@@ -3,6 +3,7 @@ package com.example.administrator.h2bot.tpaaffiliate;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.adapter.TPAAcceptedOrdersAdapter;
 import com.example.administrator.h2bot.adapter.WPInProgressOrdersAdapter;
 import com.example.administrator.h2bot.dealer.WPInProgressFragment;
+import com.example.administrator.h2bot.models.AffiliateStationOrderModel;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,26 +39,16 @@ public class TPAAcceptedFragment extends Fragment {
     RecyclerView recyclerView;
 
     private TPAAcceptedOrdersAdapter POAdapter;
-    private List<OrderModel> uploadPO;
+    private List<AffiliateStationOrderModel> uploadPO;
     RelativeLayout noOrdersLayout;
-    Bundle bundle;
     String transactionNo, customerId, stationId;
-    String StationID;
-
+    Bundle bundle;
     public TPAAcceptedFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tpaaccepted, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -66,40 +58,28 @@ public class TPAAcceptedFragment extends Fragment {
 
         uploadPO = new ArrayList<>();
 
-        bundle = this.getArguments();
-        if (bundle != null)
-        {
-            transactionNo = bundle.getString("transactionno");
-            customerId = bundle.getString("transactioncustomerid");
-            stationId= bundle.getString("stationid");
-        }
-        StationID = stationId;
-        Log.d("StationID","HAL"+StationID);
-        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Affiliate_WaterStation_Order_File").child(firebaseUser.getUid());
         databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 uploadPO.clear();
-                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
-                {
-                    for (DataSnapshot post : dataSnapshot1.child(stationId).getChildren())
+                    for (DataSnapshot post : dataSnapshot.getChildren())
                     {
-                        OrderModel orderModel = post.getValue(OrderModel.class);
-                        if(orderModel != null)
-                        {
-                            if(orderModel.getOrder_merchant_id().equals(stationId)
-                                    && orderModel.getOrder_status().equals("Accepted by affiliate"))
-                            {
-                                noOrdersLayout.setVisibility(View.INVISIBLE);
-                                recyclerView.setVisibility(View.VISIBLE);
-                                uploadPO.add(orderModel);
+                        for (DataSnapshot post2 : post.getChildren()) {
+                            AffiliateStationOrderModel orderModel = post2.getValue(AffiliateStationOrderModel.class);
+                            if (orderModel != null) {
+                                Log.d("Hi", "Hi");
+                                if (orderModel.getStatus().equals("Accepted")) {
+                                    noOrdersLayout.setVisibility(View.INVISIBLE);
+                                    recyclerView.setVisibility(View.VISIBLE);
+                                    uploadPO.add(orderModel);
+                                }
                             }
                         }
                     }
                     POAdapter = new TPAAcceptedOrdersAdapter(getActivity(), uploadPO);
                     recyclerView.setAdapter(POAdapter);
                     POAdapter.setOnItemClickListener(TPAAcceptedFragment.this::onItemClick);
-                }
                 if(uploadPO.size() == 0)
                 {
                     noOrdersLayout.setVisibility(View.VISIBLE);

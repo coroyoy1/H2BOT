@@ -1,16 +1,16 @@
 package com.example.administrator.h2bot.models;
 
 public class UserWSBusinessInfoFile {
+    private String business_address;
+    private String business_delivery_fee_per_gal;
+    private String business_delivery_free_or_not;
+    private String business_end_time;
     private String business_id;
+    private String business_min_no_of_capacity;
     private String business_name;
     private String business_start_time;
-    private String business_end_time;
     private String business_delivery_service_status;
-    private String business_delivery_free_or_not;
-    private String business_delivery_fee_per_gal;
-    private String business_min_no_of_capacity;
     private String business_tel_no;
-    private String business_address;
     private String business_status;
     private String business_station_photo;
 

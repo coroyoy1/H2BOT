@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.dealer.WPInProgressAccept;
+import com.example.administrator.h2bot.models.AffiliateStationOrderModel;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.tpaaffiliate.TPAAcceptedFragment;
 import com.example.administrator.h2bot.tpaaffiliate.TPAAcceptedOrdersInfo;
@@ -20,7 +21,7 @@ import java.util.List;
 
 public class TPAAcceptedOrdersAdapter extends RecyclerView.Adapter<TPAAcceptedOrdersAdapter.ViewHolder>{
     private Context mContext;
-    private List<OrderModel> mUploads;
+    private List<AffiliateStationOrderModel> mUploads;
     private TPAAcceptedOrdersAdapter.OnItemClickListener mListener;
 
     public interface OnItemClickListener {
@@ -31,7 +32,7 @@ public class TPAAcceptedOrdersAdapter extends RecyclerView.Adapter<TPAAcceptedOr
         mListener = listener;
     }
 
-    public TPAAcceptedOrdersAdapter(Context context, List<OrderModel> uploads) {
+    public TPAAcceptedOrdersAdapter(Context context, List<AffiliateStationOrderModel> uploads) {
         mContext = context;
         mUploads = uploads;
 
@@ -43,9 +44,9 @@ public class TPAAcceptedOrdersAdapter extends RecyclerView.Adapter<TPAAcceptedOr
     }
     @Override
     public void onBindViewHolder(@NonNull TPAAcceptedOrdersAdapter.ViewHolder viewHolder, int i) {
-        final OrderModel currentData = mUploads.get(i);
-        viewHolder.transactionNo.setText(currentData.getOrder_no());
-        viewHolder.status.setText(currentData.getOrder_status());
+        final AffiliateStationOrderModel currentData = mUploads.get(i);
+        viewHolder.transactionNo.setText(currentData.getOrderNo());
+        viewHolder.status.setText(currentData.getStatus());
 
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -60,16 +61,16 @@ public class TPAAcceptedOrdersAdapter extends RecyclerView.Adapter<TPAAcceptedOr
                         .addToBackStack(null)
                         .commit();
                 Bundle args = new Bundle();
-                args.putString("transactionno", currentData.getOrder_no());
-                args.putString("transactioncustomer", currentData.getOrder_customer_id());
-                args.putString("status", currentData.getOrder_status());
+                args.putString("transactionno", currentData.getOrderNo());
+                args.putString("transactioncustomer", currentData.getCustomerId());
+                args.putString("status", currentData.getStatus());
                 additem.setArguments(args);
             }
         });
 
-        OrderModel uploadCurrent = mUploads.get(i);
-        viewHolder.transactionNo.setText(uploadCurrent.getOrder_no());
-        viewHolder.status.setText(uploadCurrent.getOrder_status());
+        AffiliateStationOrderModel uploadCurrent = mUploads.get(i);
+        viewHolder.transactionNo.setText(uploadCurrent.getOrderNo());
+        viewHolder.status.setText(uploadCurrent.getStatus());
     }
 
     @Override
