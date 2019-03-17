@@ -124,7 +124,6 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
         {
             transactionNo = bundle.getString("transactionno");
             customerNo = bundle.getString("transactioncustomer");
-
         }
         displayAllData();
         launchSMS.setOnClickListener(new View.OnClickListener() {

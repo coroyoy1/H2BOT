@@ -41,6 +41,7 @@ import android.widget.Toast;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.dealer.WPInProgressAccept;
 import com.example.administrator.h2bot.maps.GetDistance;
+import com.example.administrator.h2bot.models.AffiliateStationOrderModel;
 import com.example.administrator.h2bot.models.MerchantCustomerFile;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.UserFile;
@@ -97,7 +98,9 @@ public class TPAMapFragment extends Fragment
     private static final int REQUEST_USER_LOCATION_CODE = 99;
     public FirebaseAuth mAuth;
     DatabaseReference userFileRef, merchantRef, userLatLongRef, orderModel, businessRef;
-    String stationAddress, stationName, userType, stationId, station_id_snip,orderno,customer_id;
+    String stationName, userType, stationId, station_id_snip,orderno,customer_id;
+    String customerAddress, orderDeliveryDate, orderDeliveryFee, orderPricePerGallon, orderQty, orderTotalAmount, orderWaterType;
+    String stationAddress, stationBussinessName, businessTelNo;
     LatLng latLong = null;
     double latitude, longitude;
     private BottomSheetBehavior sheetBehavior, bottomSheetBehavior;
@@ -693,10 +696,11 @@ public class TPAMapFragment extends Fragment
                         });
                         Log.d("Hello",stationId+","+customer_id+","+orderno);
                         DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("Customer_File");
-                        reference2.child(customer_id).child(stationId).child(orderno).child("order_status").setValue("Accepted by affiliate")
+                        reference2.child(customer_id).child(stationId).child(orderno).child("order_status").setValue("Accepted")
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
+
                                 String message = "Your broadcasted order#:"+orderno+" has  been accepted by an affiliate named :"+affiliatename+". For further information about "+affiliatename;
                                 String message2 = "Contact # of "+affiliatename+":"+affiliateNo;
                                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
@@ -713,6 +717,7 @@ public class TPAMapFragment extends Fragment
                                     sms.sendTextMessage(merchantno, null, message, sentPI, deliveredPI);
                                     sms.sendTextMessage(merchantno, null, message2, sentPI, deliveredPI);
                                 }
+                                addStationAffiliate();
                                 TPAAcceptedFragment detail = new TPAAcceptedFragment();
                                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, detail).addToBackStack(null).commit();
@@ -737,7 +742,7 @@ public class TPAMapFragment extends Fragment
 //                                additem.setArguments(args1);
                             }
                         });
-                        Log.d("stations","hahastation"+stationId);
+                        Log.d("stations","hahastation"+stationId+orderno+customer_id);
                         Toast.makeText(getActivity(), "Accepted", Toast.LENGTH_SHORT).show();
                         snackBar();
                     }
@@ -862,5 +867,48 @@ public class TPAMapFragment extends Fragment
 
         getActivity().registerReceiver(smsSentReceiver, new IntentFilter(SENT));
         getActivity().registerReceiver(smsDeliveredReceiver, new IntentFilter(DELIVERED));
+    }
+    public void addStationAffiliate()
+    {
+        Log.d("Hi",""+orderno);
+        DatabaseReference databaseReference3 = FirebaseDatabase.getInstance().getReference("Customer_File");
+        databaseReference3.child(customer_id).child(stationId).child(orderno).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d("HiHi",""+orderno);
+                customerAddress = dataSnapshot.child("order_address").getValue(String.class);
+                orderDeliveryDate = dataSnapshot.child("order_delivery_date").getValue(String.class);
+                orderDeliveryFee = dataSnapshot.child("order_delivery_fee").getValue(String.class);
+                orderPricePerGallon = dataSnapshot.child("order_address").getValue(String.class);
+                orderQty = dataSnapshot.child("order_address").getValue(String.class);
+                orderTotalAmount = dataSnapshot.child("order_address").getValue(String.class);
+                orderWaterType = dataSnapshot.child("order_address").getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        DatabaseReference databaseReference4 = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
+        databaseReference4.child(stationId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                stationAddress = dataSnapshot.child("order_address").getValue(String.class);
+                stationBussinessName = dataSnapshot.child("order_address").getValue(String.class);
+                businessTelNo = dataSnapshot.child("order_address").getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        AffiliateStationOrderModel ASmodel = new AffiliateStationOrderModel(firebaseUser.getUid(),
+                stationId,
+                customer_id,
+                orderno,
+                "Accepted");
+        FirebaseDatabase.getInstance().getReference("Affiliate_WaterStation_Order_File").child(firebaseUser.getUid()).child(stationId).child(orderno).setValue(ASmodel);
     }
 }
