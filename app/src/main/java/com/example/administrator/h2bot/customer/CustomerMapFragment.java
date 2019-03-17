@@ -294,21 +294,13 @@ public class CustomerMapFragment extends Fragment implements
             }
         });
 
-        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                map.clear();
-                showNearest();
-            }
+        map.setOnMapClickListener(latLng -> {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            map.clear();
+            showNearest();
         });
 
-        map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-            @Override
-            public void onMapLoaded() {
-                progressDialog.dismiss();
-            }
-        });
+        map.setOnMapLoadedCallback(() -> progressDialog.dismiss());
     }
 
     private void nav(LatLng dest){
