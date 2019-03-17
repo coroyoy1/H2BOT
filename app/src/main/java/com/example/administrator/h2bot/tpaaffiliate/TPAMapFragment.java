@@ -728,7 +728,7 @@ public class TPAMapFragment extends Fragment
                                 additem.setArguments(args);
                             }
                         });
-
+                        Log.d("stations","hahastation"+stationId);
                         Toast.makeText(getActivity(), "Accepted", Toast.LENGTH_SHORT).show();
                         snackBar();
                     }

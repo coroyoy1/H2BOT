@@ -59,7 +59,7 @@ public class TPAAffiliateMainActivity extends AppCompatActivity implements Navig
                 drawerLayout.closeDrawer(GravityCompat.START);
                 break;
             case R.id.accepted_orders:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TPADeliveredOrdersFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TPAAcceptedFragment()).commit();
                 Toast.makeText(this, "Accepted Orders", Toast.LENGTH_SHORT).show();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Accepted Orders");
                 drawerLayout.closeDrawer(GravityCompat.START);
