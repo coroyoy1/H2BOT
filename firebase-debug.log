@@ -1,0 +1,26 @@
+[debug] [2019-03-08T23:18:45.729Z] ----------------------------------------------------------------------
+[debug] [2019-03-08T23:18:45.732Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\MSI Laptop\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js login
+[debug] [2019-03-08T23:18:45.733Z] CLI Version:   6.4.0
+[debug] [2019-03-08T23:18:45.733Z] Platform:      win32
+[debug] [2019-03-08T23:18:45.733Z] Node Version:  v11.11.0
+[debug] [2019-03-08T23:18:45.734Z] Time:          Sat Mar 09 2019 07:18:45 GMT+0800 (China Standard Time)
+[debug] [2019-03-08T23:18:45.734Z] ----------------------------------------------------------------------
+[debug] 
+[info] 
+[info] Visit this URL on any device to log in:
+[info] https://accounts.google.com/o/oauth2/auth?client_id=563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com&scope=email%20openid%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloudplatformprojects.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Ffirebase%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform&response_type=code&state=790540768&redirect_uri=http%3A%2F%2Flocalhost%3A9005
+[info] 
+[info] Waiting for authentication...
+[debug] [2019-03-08T23:18:55.990Z] >>> HTTP REQUEST POST https://accounts.google.com/o/oauth2/token  
+
+[debug] [2019-03-08T23:19:06.104Z] Token Fetch Error: Error
+    at new FirebaseError (C:\Users\MSI Laptop\AppData\Roaming\npm\node_modules\firebase-tools\lib\error.js:9:18)
+    at Request._callback (C:\Users\MSI Laptop\AppData\Roaming\npm\node_modules\firebase-tools\lib\api.js:30:31)
+    at self.callback (C:\Users\MSI Laptop\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\request\request.js:185:22)
+    at Request.emit (events.js:197:13)
+    at Request.EventEmitter.emit (domain.js:446:20)
+    at Request.onRequestError (C:\Users\MSI Laptop\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\request\request.js:881:8)
+    at ClientRequest.emit (events.js:197:13)
+    at ClientRequest.EventEmitter.emit (domain.js:446:20)
+    at TLSSocket.socketErrorListener (_http_client.js:397:9)
+    at TLSSocket.emit (events.js:197:13)
