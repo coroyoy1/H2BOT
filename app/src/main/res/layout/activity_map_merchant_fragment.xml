@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".mapmerchant.MapMerchantFragment" />
+
+
+
+    <LinearLayout
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="140dp">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:id="@+id/linearOrderDetails"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+
+            <Button
+                android:text="Orders"
+                android:textColor="@android:color/white"
+                android:id="@+id/orderDetails"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/z_darkbluebutton"/>
+
+            <Button
+                android:text="Launch QR Scanner"
+                android:textColor="@android:color/white"
+                android:id="@+id/orderLaunchScan"
+                android:background="@drawable/z_darkbluebutton"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_height="50dp" />
+
+            <Button
+                android:id="@+id/orderDispatched"
+                android:text="Dispatch"
+                android:textColor="@android:color/white"
+                android:background="@drawable/z_darkbluebutton"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_height="50dp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:id="@+id/linearSMSDetails"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+
+            <Button
+                android:text="Send SMS"
+                android:textColor="@android:color/white"
+                android:id="@+id/orderSMS"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/z_darkbluebutton"/>
+
+            <Button
+                android:text="Call"
+                android:textColor="@android:color/white"
+                android:id="@+id/orderCall"
+                android:background="@drawable/z_darkbluebutton"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_height="45dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    </RelativeLayout>

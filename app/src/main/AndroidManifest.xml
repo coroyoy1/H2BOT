@@ -22,7 +22,7 @@
     <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
     <uses-permission android:name="com.huawei.android.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="com.huawei.android.launcher.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
@@ -38,13 +38,6 @@
         android:supportsRtl="true"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".stationtoaffiliate.StationToAffiliateMainActivity" />
-        <activity
-            android:name=".tpaaffiliate.TPAScanCodeActivity"
-            android:theme="@style/Theme.AppCompat.Light" />
-        <activity
-            android:name=".tpaaffiliate.CaptureActivityPortrait"
-            android:theme="@style/Theme.AppCompat.Light" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -58,6 +51,16 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:name=".mapmerchant.MapMerchantFragment"
+            android:label="@string/title_activity_map_merchant_fragment"></activity>
+        <activity android:name=".stationtoaffiliate.StationToAffiliateMainActivity" />
+        <activity
+            android:name=".tpaaffiliate.TPAScanCodeActivity"
+            android:theme="@style/Theme.AppCompat.Light" />
+        <activity
+            android:name=".tpaaffiliate.CaptureActivityPortrait"
+            android:theme="@style/Theme.AppCompat.Light" />
+        <activity
             android:name=".maps.MapDirectActivity"
             android:label="@string/title_activity_map_direct" /> <!-- Customer Activities -->
         <activity
@@ -65,7 +68,7 @@
             android:theme="@style/Theme.AppCompat.Light" />
         <activity
             android:name=".waterstation.WSBroadcast"
-            android:theme="@style/Theme.Design.Light"></activity>
+            android:theme="@style/Theme.Design.Light" />
         <activity
             android:name=".customer.CustomerChatbotActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" /> <!-- <activity android:name=".tpaaffiliate.TPAAffiliateMainActivity"> </activity> -->
@@ -164,7 +167,6 @@
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
-
     </application>
 
 </manifest>

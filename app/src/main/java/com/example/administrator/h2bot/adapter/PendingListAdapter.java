@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.mapmerchant.MapMerchantFragment;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 import com.example.administrator.h2bot.waterstation.WSPendingOrderAcceptDeclineFragment;
@@ -56,7 +57,7 @@ public class PendingListAdapter extends RecyclerView.Adapter<PendingListAdapter.
         imageViewholder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WSPendingOrderAcceptDeclineFragment additem = new WSPendingOrderAcceptDeclineFragment();
+                MapMerchantFragment additem = new MapMerchantFragment();
                 AppCompatActivity activity = (AppCompatActivity)v.getContext();
                 activity.getSupportFragmentManager()
                         .beginTransaction()

@@ -111,13 +111,10 @@ public class DMInProgressFragment extends Fragment implements WSInProgressOrders
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                 {
-                    Log.d("fireuid",""+firebaseUID);
                     for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren()) {
-                        Log.d("del",""+dataSnapshot2.child("delivery_man_id").getValue(String.class));
                         if(dataSnapshot2.child("delivery_man_id").getValue(String.class).equals(firebaseUID))
                         {
                             String merchantId = dataSnapshot2.child("station_id").getValue(String.class);
-                            Log.d("statatus4",""+merchantId);
                             if (merchantId != null) {
                                 DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
                                 reference1.addValueEventListener(new ValueEventListener() {
@@ -128,16 +125,11 @@ public class DMInProgressFragment extends Fragment implements WSInProgressOrders
                                         {
                                             for (DataSnapshot dataSnapshot4 : dataSnapshot3.child(merchantId).getChildren())
                                             {
-                                                Log.d("statatus3",""+dataSnapshot4.child("order_status").getValue(String.class));
                                                 OrderModel orderModel = dataSnapshot4.getValue(OrderModel.class);
-                                                Log.d("statatus5",""+orderModel.getOrder_status());
                                                 if (orderModel != null)
                                                 {
-                                                    Log.d("statatus6",merchantId+"="+orderModel.getOrder_merchant_id());
                                                     if (orderModel.getOrder_merchant_id().equals(merchantId)
                                                             && orderModel.getOrder_status().equals("In-Progress") || orderModel.getOrder_status().equalsIgnoreCase("Broadcasting") || orderModel.getOrder_status().equalsIgnoreCase("Dispatched")) {
-                                                        Log.d("statatus7",""+orderModel.getOrder_status());
-                                                        Log.d("id",merchantId+"="+orderModel.getOrder_merchant_id());
                                                         noOrdersLayout.setVisibility(View.INVISIBLE);
                                                         recyclerView.setVisibility(View.VISIBLE);
                                                         uploadPO.add(orderModel);
