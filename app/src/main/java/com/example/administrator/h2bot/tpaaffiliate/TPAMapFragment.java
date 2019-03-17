@@ -101,6 +101,7 @@ public class TPAMapFragment extends Fragment
     String stationName, userType, stationId, station_id_snip,orderno,customer_id;
     String customerAddress, orderDeliveryDate, orderDeliveryFee, orderPricePerGallon, orderQty, orderTotalAmount, orderWaterType;
     String stationAddress, stationBussinessName, businessTelNo;
+    double points,pointsNeeded;
     LatLng latLong = null;
     double latitude, longitude;
     private BottomSheetBehavior sheetBehavior, bottomSheetBehavior;
@@ -541,6 +542,7 @@ public class TPAMapFragment extends Fragment
     private void updateBottomSheetContent(Marker marker) {
         TextView stationName = bottomSheet.findViewById(R.id.stationName);
         TextView fundAmt = bottomSheet.findViewById(R.id.fundAmt);
+        pointsNeeded = Double.parseDouble(fundAmt.getText().toString());
           Button orderBtn = bottomSheet.findViewById(R.id.orderBtn);
 //        Button scanCode = bottomSheetCustomer.findViewById(R.id.scanCode);
 //        Button callBtn = bottomSheetCustomer.findViewById(R.id.callBtn);
@@ -668,12 +670,26 @@ public class TPAMapFragment extends Fragment
                 dialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
+                        DatabaseReference wallet = FirebaseDatabase.getInstance().getReference("User_Wallet").child(firebaseUser.getUid());
+                        wallet.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                points = Double.parseDouble(dataSnapshot.child("user_points").getValue(String.class));
+                            }
 
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                        if(points>=pointsNeeded)
+                        {
                         DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("User_File");
                         reference1.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                affiliatename = dataSnapshot.child("user_firstname").getValue(String.class)+" "+dataSnapshot.child("user_lastname").getValue(String.class);
+                                affiliatename = dataSnapshot.child("user_firstname").getValue(String.class) + " " + dataSnapshot.child("user_lastname").getValue(String.class);
                                 affiliateNo = dataSnapshot.child("user_phone_no").getValue(String.class);
                             }
 
@@ -694,38 +710,36 @@ public class TPAMapFragment extends Fragment
 
                             }
                         });
-                        Log.d("Hello",stationId+","+customer_id+","+orderno);
+                        Log.d("Hello", stationId + "," + customer_id + "," + orderno);
                         DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("Customer_File");
                         reference2.child(customer_id).child(stationId).child(orderno).child("order_status").setValue("Accepted")
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
 
-                                String message = "Your broadcasted order#:"+orderno+" has  been accepted by an affiliate named :"+affiliatename+". For further information about "+affiliatename;
-                                String message2 = "Contact # of "+affiliatename+":"+affiliateNo;
-                                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
-                                        != PackageManager.PERMISSION_GRANTED)
-                                {
-                                    Log.d("NmNakoko","Hijhosdfgh");
-                                    ActivityCompat.requestPermissions(getActivity(), new String [] {Manifest.permission.SEND_SMS},
-                                            MY_PERMISSIONS_REQUEST_SEND_SMS);
-                                }
-                                else {
-                                    Log.d("NmNako","Hi"+message);
-                                    SmsManager sms = SmsManager.getDefault();
-                                    Log.d("Log.d",""+merchantno);
-                                    sms.sendTextMessage(merchantno, null, message, sentPI, deliveredPI);
-                                    sms.sendTextMessage(merchantno, null, message2, sentPI, deliveredPI);
-                                }
-                                addStationAffiliate();
-                                TPAAcceptedFragment detail = new TPAAcceptedFragment();
-                                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, detail).addToBackStack(null).commit();
-                                Bundle args1 = new Bundle();
-                                args1.putString("transactionno", orderno);
-                                args1.putString("transactioncustomerid", customer_id);
-                                args1.putString("stationid", stationId);
-                                detail.setArguments(args1);
+                                        String message = "Your broadcasted order#:" + orderno + " has  been accepted by an affiliate named :" + affiliatename + ". For further information about " + affiliatename;
+                                        String message2 = "Contact # of " + affiliatename + ":" + affiliateNo;
+                                        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
+                                                != PackageManager.PERMISSION_GRANTED) {
+                                            Log.d("NmNakoko", "Hijhosdfgh");
+                                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SEND_SMS},
+                                                    MY_PERMISSIONS_REQUEST_SEND_SMS);
+                                        } else {
+                                            Log.d("NmNako", "Hi" + message);
+                                            SmsManager sms = SmsManager.getDefault();
+                                            Log.d("Log.d", "" + merchantno);
+                                            sms.sendTextMessage(merchantno, null, message, sentPI, deliveredPI);
+                                            sms.sendTextMessage(merchantno, null, message2, sentPI, deliveredPI);
+                                        }
+                                        addStationAffiliate();
+                                        TPAAcceptedFragment detail = new TPAAcceptedFragment();
+                                        AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, detail).addToBackStack(null).commit();
+                                        Bundle args1 = new Bundle();
+                                        args1.putString("transactionno", orderno);
+                                        args1.putString("transactioncustomerid", customer_id);
+                                        args1.putString("stationid", stationId);
+                                        detail.setArguments(args1);
 
 //                                TPAAcceptedFragment additem = new TPAAcceptedFragment();
 //                                AppCompatActivity activity = (AppCompatActivity)v.getContext();
@@ -740,13 +754,19 @@ public class TPAMapFragment extends Fragment
 //                                args1.putString("transactioncustomerid", customer_id);
 //                                args1.putString("stationid", stationId);
 //                                additem.setArguments(args1);
-                            }
-                        });
-                        Log.d("stations","hahastation"+stationId+orderno+customer_id);
+                                    }
+                                });
+                        Log.d("stations", "hahastation" + stationId + orderno + customer_id);
                         Toast.makeText(getActivity(), "Accepted", Toast.LENGTH_SHORT).show();
                         snackBar();
                     }
+                    else
+                        {
+                            snackBar2();
+                        }
+                }
                 })
+
                         .setNegativeButton("Cancel ", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -767,7 +787,22 @@ public class TPAMapFragment extends Fragment
                 , Snackbar.LENGTH_LONG);
         View view = snackbar.getView();
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
-        params.gravity = Gravity.TOP;
+        params.gravity = Gravity.BOTTOM;
+        view.setLayoutParams(params);
+        snackbar.setAction("Okay", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        }).setActionTextColor(getResources().getColor(android.R.color.white ));
+        snackbar.show();
+    }
+    public void snackBar2(){
+        View parentLayout = getActivity().findViewById(android.R.id.content);
+        Snackbar snackbar = Snackbar.make(parentLayout, "Insufficient points, please reload.", Snackbar.LENGTH_LONG);
+        View view = snackbar.getView();
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+        params.gravity = Gravity.BOTTOM;
         view.setLayoutParams(params);
         snackbar.setAction("Okay", new View.OnClickListener() {
             @Override
