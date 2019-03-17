@@ -112,6 +112,7 @@ public class CustomerMapFragment extends Fragment implements
     public static final String EXTRA_stationName = "station_name";
     public String API_KEY = "";
     public static Boolean isExist = false;
+    private Circle circle;
 
     private ChildEventListener mChilExventListener;
     public FirebaseAuth mAuth;
@@ -230,6 +231,7 @@ public class CustomerMapFragment extends Fragment implements
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             currentRadius.setText(progress + " km");
+
             showNearest();
         }
 

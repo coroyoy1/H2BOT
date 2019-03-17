@@ -50,7 +50,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import static  com.example.administrator.h2bot.customer.CustomerMapFragment.EXTRA_stationID;
+import static com.example.administrator.h2bot.customer.CustomerMapFragment.EXTRA_stationID;
 import static com.example.administrator.h2bot.customer.CustomerMapFragment.EXTRA_stationName;
 
 public class CustomerChatbotActivity extends AppCompatActivity {
@@ -77,6 +77,7 @@ public class CustomerChatbotActivity extends AppCompatActivity {
     ArrayList<CustomerToMerchantNotifModel> customerNotifRef;
     String stationId;
     String device_token_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,7 +128,7 @@ public class CustomerChatbotActivity extends AppCompatActivity {
         try {
             InputStream stream = getResources().openRawResource(R.raw.credentials);
             GoogleCredentials credentials = GoogleCredentials.fromStream(stream);
-            String projectId = ((ServiceAccountCredentials)credentials).getProjectId();
+            String projectId = ((ServiceAccountCredentials) credentials).getProjectId();
 
 
             SessionsSettings.Builder settingsBuilder = SessionsSettings.newBuilder();
@@ -189,28 +190,23 @@ public class CustomerChatbotActivity extends AppCompatActivity {
             // process aiResponse here
             String botReply = detectIntentResponse.getQueryResult().getFulfillmentText();
             Log.d(TAG, "V2 Bot Reply: " + botReply);
-            if(botReply.equalsIgnoreCase("Sorry, the products of this station has not been setup. Please order again later. Have a nice day ahead!")){
+            if (botReply.equalsIgnoreCase("Sorry, the products of this station has not been setup. Please order again later. Have a nice day ahead!")) {
                 queryEditText.setText("You can't reply on this conversation.");
                 queryEditText.setEnabled(false);
                 sendBtn.setEnabled(false);
-            }
-            else if(botReply.equalsIgnoreCase("Communication error or check your internet connection.")){
+            } else if (botReply.equalsIgnoreCase("Communication error or check your internet connection.")) {
                 queryEditText.setText("You can't reply on this conversation.");
                 queryEditText.setEnabled(false);
                 sendBtn.setEnabled(false);
-            }
-            else if(botReply.equalsIgnoreCase("Okay, see you soon.")){
+            } else if (botReply.equalsIgnoreCase("Okay, see you soon.")) {
                 queryEditText.setText("You can't reply on this conversation.");
                 queryEditText.setEnabled(false);
                 sendBtn.setEnabled(false);
-            }
-            else if(botReply.equalsIgnoreCase("Your order is now on validation. We will notify you for more details.")){
+            } else if (botReply.equalsIgnoreCase("Your order is now on validation. We will notify you for more details.")) {
                 Button okayBtn;
                 dialog.setContentView(R.layout.customer_chatbot_order_info_popup);
                 dialog.setCanceledOnTouchOutside(false);
                 okayBtn = dialog.findViewById(R.id.okayBtn);
-
-
 
 
                 okayBtn.setOnClickListener(new View.OnClickListener() {
@@ -219,7 +215,7 @@ public class CustomerChatbotActivity extends AppCompatActivity {
                         merchantDeviceTokenRef.child(stationId).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    device_token_id = dataSnapshot.child("user_device_token").getValue(String.class);
+                                device_token_id = dataSnapshot.child("user_device_token").getValue(String.class);
                                 CustomerToMerchantNotifModel customerToMerchantNotifModel;
                                 customerToMerchantNotifModel = new CustomerToMerchantNotifModel(stationId, device_token_id);
 
@@ -290,7 +286,7 @@ public class CustomerChatbotActivity extends AppCompatActivity {
                 this.dialog.show();
             }
 
-            if(botReply.equalsIgnoreCase("Okay. See you soon!")){
+            if (botReply.equalsIgnoreCase("Okay. See you soon!")) {
                 startActivity(new Intent(this, CustomerMainActivity.class));
             }
             showTextView(botReply, BOT);
@@ -310,9 +306,9 @@ public class CustomerChatbotActivity extends AppCompatActivity {
         userFileRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot data: dataSnapshot.getChildren()){
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
                     UserFile user = data.getValue(UserFile.class);
-                    if(user.getUser_getUID().equals(get_id)){
+                    if (user.getUser_getUID().equals(get_id)) {
                         userFile.add(user);
                         String customerId = user.getUser_getUID();
                         String msg = stationId + " " + customerId;

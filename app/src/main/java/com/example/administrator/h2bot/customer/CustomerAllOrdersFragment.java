@@ -72,17 +72,27 @@ public class CustomerAllOrdersFragment extends Fragment {
                     transNo.setTransOrderNo(data.getKey());
                     order.setOrderAddress(data.child("order_address").getValue(String.class));
                     order.setOrderCustomerId(data.child("order_customer_id").getValue(String.class));
-                    order.setOrderDeliveryDate(data.child("order_delivery_date").getValue(String.class));
+                    order.setOrderDateIssued(data.child("order_date_issued").getValue(String.class));
+//                    order.setOrderDeliveryDate(data.child("order_delivery_date").getValue(String.class));
                     order.setOrderDeliveryFee(data.child("order_delivery_fee").getValue(String.class));
+                    order.setOrderDeliveryFeePerGallon(data.child("order_delivery_fee_per_gallon").getValue(String.class));
                     order.setOrderDeliveryMethod(data.child("order_delivery_method").getValue(String.class));
+                    order.setOrderStationId(data.child("order_merchant_id").getValue(String.class));
                     order.setOrderNo(data.child("order_no").getValue(String.class));
+                    order.setOrderPartialAmt(data.child("order_partial_amt").getValue(String.class));
                     order.setOrderPricePerGallon(data.child("order_price_per_gallon").getValue(String.class));
                     order.setOrderQty(data.child("order_qty").getValue(String.class));
-                    order.setOrderStationId(data.child("order_merchant_id").getValue(String.class));
+                    order.setOrderServiceMethod(data.child("order_service_method").getValue(String.class));
                     order.setOrderStatus(data.child("order_status").getValue(String.class));
                     order.setOrderTotalAmt(data.child("order_total_amt").getValue(String.class));
                     order.setOrderWaterType(data.child("order_water_type").getValue(String.class));
-                    order.setOrderServiceMethod(data.child("order_service_method").getValue(String.class));
+
+                    if(data.child("order_service_method").getValue(String.class).equalsIgnoreCase("Delivery")){
+                        order.setOrderDeliveryDate(data.child("order_delivery_date").getValue(String.class));
+                    }
+                    else{
+                        order.setOrderDeliveryDate(data.child("order_pickup_date").getValue(String.class));
+                    }
                 }
                 customerAllOrdersAdapter = new CustomerAllOrdersAdapter(getActivity(), transactionList, orderList);
                 recyclerView.setAdapter(customerAllOrdersAdapter);
@@ -90,7 +100,7 @@ public class CustomerAllOrdersFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getActivity(), "Failed reading data.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Database Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
