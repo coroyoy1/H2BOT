@@ -713,19 +713,28 @@ public class TPAMapFragment extends Fragment
                                     sms.sendTextMessage(merchantno, null, message, sentPI, deliveredPI);
                                     sms.sendTextMessage(merchantno, null, message2, sentPI, deliveredPI);
                                 }
-                                TPAAcceptedFragment additem = new TPAAcceptedFragment();
-                                AppCompatActivity activity = (AppCompatActivity)v.getContext();
-                                activity.getSupportFragmentManager()
-                                        .beginTransaction()
-                                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                                        .replace(R.id.fragment_container, additem)
-                                        .addToBackStack(null)
-                                        .commit();
-                                Bundle args = new Bundle();
-                                args.putString("transactionno", orderno);
-                                args.putString("transactioncustomerid", customer_id);
-                                args.putString("stationid", stationId);
-                                additem.setArguments(args);
+                                TPAAcceptedFragment detail = new TPAAcceptedFragment();
+                                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                                activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, detail).addToBackStack(null).commit();
+                                Bundle args1 = new Bundle();
+                                args1.putString("transactionno", orderno);
+                                args1.putString("transactioncustomerid", customer_id);
+                                args1.putString("stationid", stationId);
+                                detail.setArguments(args1);
+
+//                                TPAAcceptedFragment additem = new TPAAcceptedFragment();
+//                                AppCompatActivity activity = (AppCompatActivity)v.getContext();
+//                                activity.getSupportFragmentManager()
+//                                        .beginTransaction()
+//                                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+//                                        .replace(R.id.fragment_container, additem)
+//                                        .addToBackStack(null)
+//                                        .commit();
+//                                Bundle args1 = new Bundle();
+//                                args1.putString("transactionno", orderno);
+//                                args1.putString("transactioncustomerid", customer_id);
+//                                args1.putString("stationid", stationId);
+//                                additem.setArguments(args1);
                             }
                         });
                         Log.d("stations","hahastation"+stationId);
