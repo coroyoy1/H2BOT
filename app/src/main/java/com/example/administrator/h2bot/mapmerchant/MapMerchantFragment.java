@@ -151,7 +151,6 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
 
     public MapMerchantFragment()
     {
-
     }
     @Nullable
     @Override
