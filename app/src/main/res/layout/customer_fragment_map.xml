@@ -76,38 +76,19 @@
 
                 <TextView
                     android:layout_width="230dp"
+                    android:layout_gravity="top"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Water Type/s: " />
 
-                <TextView
-                    android:id="@+id/waterTypes"
+                <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/recyclerView"
                     android:layout_weight="1"
-                    android:text="Mineral, Alkaline, Purfied, Distilled" />
+                    android:layout_height="wrap_content">
+
+                </android.support.v7.widget.RecyclerView>
             </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="230dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Prices" />
-
-                    <TextView
-                        android:id="@+id/prices"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="100.00, 25.00" />
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -128,17 +109,76 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Nasipit, Talamban, Cebu City" />
-
-                    <!--<TextView-->
-                        <!--android:visibility="gone"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_weight="1"-->
-                        <!--android:textColor="#228B22"-->
-                        <!--android:text="AVAILABLE"-->
-                        <!--android:id="@+id/stationID"-->
-                        <!--android:textStyle="bold|italic" />-->
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="230dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Delivery Method: " />
+
+                    <TextView
+                        android:id="@+id/deliveryMethod"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Per Gallon - 5.00" />
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="230dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Contact #: " />
+
+                    <TextView
+                        android:id="@+id/contactNo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="09234288302" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="230dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/distance"
+                        android:textStyle="bold"
+                        android:text="Distance: " />
+
+                    <TextView
+                        android:id="@+id/duration"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:text="Duration" />
+                </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
