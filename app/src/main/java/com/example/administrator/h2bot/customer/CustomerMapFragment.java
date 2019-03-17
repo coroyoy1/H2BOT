@@ -48,6 +48,7 @@ import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
 //import com.firebase.geofire.GeoQueryDataEventListener;
 //import com.firebase.geofire.GeoQueryEventListener;
 import com.example.administrator.h2bot.models.UserWSWDWaterTypeFile;
+import com.example.administrator.h2bot.models.WSBusinessInfoFile;
 import com.example.administrator.h2bot.objects.WaterStationOrDealer;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -119,7 +120,7 @@ public class CustomerMapFragment extends Fragment implements
     LocationManager locationManager;
 
     ArrayList<UserFile> arrayListUserFile;
-    ArrayList<UserWSBusinessInfoFile> arrayListBusinessInfo;
+    ArrayList<WSBusinessInfoFile> arrayListBusinessInfo;
     ArrayList<UserLocationAddress> arrayListMerchantLatLong;
     List<WaterStationOrDealer> waterStationOrDealers;
 
@@ -140,7 +141,7 @@ public class CustomerMapFragment extends Fragment implements
     private GetDistance getDistance = null;
     private LatLng currentLocation;
     private List<UserFile> userFileList;
-    private List<UserWSBusinessInfoFile> businessInfoFileListis;
+    private List<WSBusinessInfoFile> businessInfoFileListis;
     private List<UserLocationAddress> userLocationAddressList;
     private ArrayList<WaterStationOrDealer> thisList;
 
@@ -200,7 +201,7 @@ public class CustomerMapFragment extends Fragment implements
         radius.setOnSeekBarChangeListener(seekBarChangeListener);
 
         arrayListUserFile = new ArrayList<UserFile>();
-        arrayListBusinessInfo = new ArrayList<UserWSBusinessInfoFile>();
+        arrayListBusinessInfo = new ArrayList<WSBusinessInfoFile>();
         arrayListMerchantLatLong = new ArrayList<UserLocationAddress>();
 
         mAuth = FirebaseAuth.getInstance();
@@ -297,6 +298,8 @@ public class CustomerMapFragment extends Fragment implements
             @Override
             public void onMapClick(LatLng latLng) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                map.clear();
+                showNearest();
             }
         });
 
@@ -352,7 +355,7 @@ public class CustomerMapFragment extends Fragment implements
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot infoFile : dataSnapshot.getChildren()) {
-                    UserWSBusinessInfoFile businessInfo = infoFile.getValue(UserWSBusinessInfoFile.class);
+                    WSBusinessInfoFile businessInfo = infoFile.getValue(WSBusinessInfoFile.class);
                     businessInfoFileListis.add(businessInfo);
                 }
                 getList();
@@ -534,20 +537,7 @@ public class CustomerMapFragment extends Fragment implements
         Toast.makeText(getActivity(), "Connection failed. . .", Toast.LENGTH_SHORT).show();
     }
 
-    private void updateBottomSheetContent(Marker marker) {
-        TextView stationName = bottomSheet.findViewById(R.id.stationName);
-        TextView station_id = bottomSheet.findViewById(R.id.station_id);
-        TextView business_hours = bottomSheet.findViewById(R.id.businessHours);
-        TextView address = bottomSheet.findViewById(R.id.address);
-        TextView distance = bottomSheet.findViewById(R.id.distance);
-        TextView duration = bottomSheet.findViewById(R.id.duration);
-        TextView deliveryMethod = bottomSheet.findViewById(R.id.deliveryMethod);
-        Button orderBtn = bottomSheet.findViewById(R.id.orderBtn);
-
-        stationName.setText(marker.getTitle());
-        station_id.setText(marker.getTag().toString());
-        waterTypeList.clear();
-
+    public void getUser_WS_WD_Water_Type_File(Marker marker){
         FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File").child(marker.getTag().toString())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -569,39 +559,53 @@ public class CustomerMapFragment extends Fragment implements
                         Toast.makeText(getActivity(), "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
 
-        FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(marker.getTag().toString())
-                .addValueEventListener(new ValueEventListener() {
-                    @SuppressLint("DefaultLocale")
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String startTime = dataSnapshot.child("business_start_time").getValue(String.class);
-                        String endTime = dataSnapshot.child("business_end_time").getValue(String.class);
-                        String delivery_method = dataSnapshot.child("business_delivery_fee_method").getValue(String.class);
-                        String deliveryPrice = dataSnapshot.child("business_delivery_fee").getValue(String.class);
-                        business_hours.setText(startTime + " - " + endTime);
-                        address.setText(dataSnapshot.child("business_address").getValue(String.class));
-//                        deliveryMethod.setText(String.format(delivery_method + " - %.2f", deliveryPrice));
-                        for(WaterStationOrDealer list: thisList){
-                            if(list.getStationID().equalsIgnoreCase(marker.getTag().toString())){
-                                distance.setText(list.getDistance());
-                                duration.setText(list.getDuration());
-                                break;
-                            }
-                        }
-                        for(WaterStationOrDealer list: thisList){
-                            if(list.getStationID().equalsIgnoreCase(marker.getTag().toString())){
-                                nav(new LatLng(list.getLat(), list.getLng()));
-                                break;
-                            }
-                        }
+    private void updateBottomSheetContent(Marker marker) {
+        TextView stationName = bottomSheet.findViewById(R.id.stationName);
+        TextView station_id = bottomSheet.findViewById(R.id.station_id);
+        TextView business_hours = bottomSheet.findViewById(R.id.businessHours);
+        TextView address = bottomSheet.findViewById(R.id.address);
+        TextView distance = bottomSheet.findViewById(R.id.distance);
+        TextView duration = bottomSheet.findViewById(R.id.duration);
+        TextView deliveryMethod = bottomSheet.findViewById(R.id.deliveryMethod);
+        Button orderBtn = bottomSheet.findViewById(R.id.orderBtn);
+
+        stationName.setText(marker.getTitle());
+        station_id.setText(marker.getTag().toString());
+        waterTypeList.clear();
+
+        getUser_WS_WD_Water_Type_File(marker);
+
+        for(WSBusinessInfoFile list: businessInfoFileListis){
+            String id1 = list.getBusiness_id();
+            String id2 = marker.getTag().toString();
+            if(list.getBusiness_id().equalsIgnoreCase(marker.getTag().toString())){
+                String startTime = list.getBusiness_start_time();
+                String endTime = list.getBusiness_end_time();
+                String delivery_method = list.getBusiness_delivery_fee_method();
+                String deliveryPrice = list.getBusiness_delivery_fee();
+                business_hours.setText(startTime + " - " + endTime);
+                address.setText(list.getBusiness_address());
+                //                        deliveryMethod.setText(String.format(delivery_method + " - %.2f", deliveryPrice));
+                for(WaterStationOrDealer list2: thisList){
+                    if(list2.getStationID().equalsIgnoreCase(marker.getTag().toString())){
+                        distance.setText(list2.getDistance());
+                        duration.setText(list2.getDuration());
+                        break;
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                }
+                for(WaterStationOrDealer list2: thisList){
+                    if(list2.getStationID().equalsIgnoreCase(marker.getTag().toString())){
+                        map.clear();
+                        showNearest();
+                        nav(new LatLng(list2.getLat(), list2.getLng()));
+                        break;
                     }
-                });
+                }
+                break;
+            }
+        }
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
         orderBtn.setOnClickListener(v -> {
