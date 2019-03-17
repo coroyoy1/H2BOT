@@ -39,7 +39,7 @@ public class TPAAcceptedFragment extends Fragment {
     private TPAAcceptedOrdersAdapter POAdapter;
     private List<OrderModel> uploadPO;
     RelativeLayout noOrdersLayout;
-    private Bundle bundle;
+    Bundle bundle;
     String transactionNo, customerId, stationId;
     String StationID;
 
