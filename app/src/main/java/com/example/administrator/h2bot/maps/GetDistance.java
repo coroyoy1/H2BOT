@@ -59,6 +59,7 @@ public class GetDistance extends AsyncTask<Object, String, String> {
         status = new String[list.size()];
         stationId = new String[list.size()];
 
+
         int ctr = 0;
         for (WaterStationOrDealer myList:list) {
             DownloadUrl downloadUrl = new DownloadUrl();
