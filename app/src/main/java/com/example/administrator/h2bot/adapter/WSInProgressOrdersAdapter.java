@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.mapmerchant.MapMerchantFragment;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 import com.example.administrator.h2bot.waterstation.WSCompletedAccept;
@@ -53,7 +54,7 @@ public class WSInProgressOrdersAdapter extends RecyclerView.Adapter<WSInProgress
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WSInProgressAccept additem = new WSInProgressAccept();
+                MapMerchantFragment additem = new MapMerchantFragment();
                 AppCompatActivity activity = (AppCompatActivity)v.getContext();
                 activity.getSupportFragmentManager()
                         .beginTransaction()
@@ -65,7 +66,9 @@ public class WSInProgressOrdersAdapter extends RecyclerView.Adapter<WSInProgress
                 args.putString("transactionno", currentData.getOrder_no());
                 args.putString("transactioncustomer", currentData.getOrder_customer_id());
                 args.putString("status", currentData.getOrder_status());
-                  additem.setArguments(args);
+                args.putString("transactionusertype", currentData.getOrder_status());
+                args.putString("transactionmerchant", currentData.getOrder_merchant_id());
+                additem.setArguments(args);
             }
         });
 

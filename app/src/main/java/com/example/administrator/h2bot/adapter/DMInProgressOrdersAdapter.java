@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.deliveryman.DMInProgressAcception;
+import com.example.administrator.h2bot.mapmerchant.MapMerchantFragment;
 import com.example.administrator.h2bot.models.OrderFileModel;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
@@ -53,19 +54,21 @@ public class DMInProgressOrdersAdapter extends RecyclerView.Adapter<DMInProgress
         imageViewholder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DMInProgressAcception additem = new DMInProgressAcception();
+                MapMerchantFragment additem = new MapMerchantFragment();
                 AppCompatActivity activity = (AppCompatActivity)v.getContext();
                 activity.getSupportFragmentManager()
                         .beginTransaction()
-                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                         .replace(R.id.fragment_container_dm, additem)
                         .addToBackStack(null)
                         .commit();
-                Bundle bundle = new Bundle();
-                bundle.putString("transactionno", transactionNo);
-                bundle.putString("transactioncustomer", transactionCustomer);
-                bundle.putString("transactionmerchant", transactionStation);
-                additem.setArguments(bundle);
+                Bundle args = new Bundle();
+                args.putString("transactionno", currentData.getOrder_no());
+                args.putString("transactioncustomer", currentData.getOrder_customer_id());
+                args.putString("status", currentData.getOrder_status());
+                args.putString("transactionusertype", currentData.getOrder_status());
+                args.putString("transactionmerchant", currentData.getOrder_merchant_id());
+                additem.setArguments(args);
             }
         });
     }
