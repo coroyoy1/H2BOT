@@ -1,270 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
+    android:orientation="vertical"
     tools:context=".dealer.WPSalesReportFragment">
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp">
-         <Spinner
+
+
+     <Spinner
         android:id="@+id/spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-             android:layout_marginBottom="15dp"
-        />
-    </LinearLayout>
+        android:layout_marginBottom="15dp" />
 
-
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-
-
-        <RelativeLayout
-            android:id="@+id/relative1"
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/holo_blue_dark">
-
-            <TextView
-                android:id="@+id/textviewA"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/textviewB"
-                android:layout_marginStart="20dp"
-                android:text="Water Type"
-                android:textColor="@android:color/white"
-                android:textSize="18dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textviewB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="Item Sold"
-                android:textColor="@android:color/white"
-                android:textSize="18dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:paddingRight="20dp"
-                android:id="@+id/textviewC"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/textviewB"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="20dp"
-                android:gravity="center"
-                android:text="Income"
-                android:textColor="@android:color/white"
-                android:textSize="18dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textView19"
-                android:paddingTop="10dp"
-                android:layout_below="@+id/textviewA"
-                android:layout_alignStart="@+id/textviewA"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Purified Water"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/textView17"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_below="@+id/textView19"
-                android:layout_alignStart="@+id/textviewA"
-                android:text="Alkaline Water"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/textView22"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_below="@+id/textView17"
-                android:layout_alignStart="@+id/textviewA"
-                android:text="Distilled Water"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/textView23"
-                android:layout_width="wrap_content"
-                android:paddingBottom="10dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_below="@+id/textView22"
-                android:layout_alignStart="@+id/textviewA"
-                android:text="Mineral Water"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/purifiedWaterItemSoldTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:paddingTop="10dp"
-                android:layout_alignTop="@+id/textView19"
-                android:layout_alignStart="@+id/textviewB"
-                android:text="0"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/alkalineWaterItemSoldTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/textView17"
-                android:layout_alignStart="@+id/textviewB"
-                android:text="0"
-                android:layout_centerHorizontal="true"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-            <TextView
-                android:id="@+id/distilledSoldTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/textviewB"
-                android:layout_alignTop="@+id/textView22"
-                android:text="0"
-                android:layout_centerHorizontal="true"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/itemSoldMineral"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/textviewB"
-                android:layout_alignTop="@+id/textView23"
-                android:text="0"
-                android:layout_centerHorizontal="true"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/incomePurifiedWater"
-                android:paddingTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/textviewC"
-                android:layout_alignTop="@+id/textView19"
-                android:text="0"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-            <TextView
-                android:id="@+id/alkalineIncomeTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/textviewC"
-                android:layout_alignTop="@+id/textView17"
-                android:text="0"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-            <TextView
-                android:id="@+id/distilledIncomeTextView"
-                android:layout_width="81dp"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/textviewC"
-                android:layout_alignTop="@+id/textView22"
-                android:text="0"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-            <TextView
-                android:id="@+id/incomeMineral"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/textviewC"
-                android:layout_alignTop="@+id/textView23"
-                android:text="0"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-        </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_marginTop="10dp"
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/barGraph"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </RelativeLayout>
-
-
-
-    </LinearLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_below="@+id/relative1"
+        android:layout_height="200dp"
         android:background="#32918b88">
 
-        <TextView
-            android:id="@+id/totalIncome"
-            android:layout_width="wrap_content"
-            android:paddingTop="40dp"
-            android:layout_alignRight="@+id/textView32"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/textView32"
-            android:layout_marginBottom="57dp"
-            android:text="0"
-            android:textColor="@android:color/black"
-            android:textSize="18sp" />
+    </com.github.mikephil.charting.charts.BarChart>
 
-        <TextView
-            android:id="@+id/totalItemSold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/textView35"
-            android:layout_alignRight="@+id/textView35"
-            android:layout_marginTop="0dp"
 
-            android:text="0"
-            android:textColor="@android:color/black"
-            android:textSize="18sp" />
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@android:color/holo_blue_dark">
 
-        <TextView
-            android:id="@+id/textView32"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="40dp"
-            android:layout_alignStart="@+id/textView35"
-            android:layout_below="@+id/textView35"
-            android:text="Total Income:     "
-            android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/textView35"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
-            android:text="Total Item Sold:       "
-            android:textColor="@android:color/black"
-            android:textSize="18sp" />
-    </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Water Type"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:text="Item Sold"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:text="Income"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/reports_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </LinearLayout>
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:gravity="center"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical"
+        android:background="#32918b88">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView35"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total Item Sold:"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/totalItemSold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:text="0"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView32"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total Income:     "
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/totalIncome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:text="0"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
