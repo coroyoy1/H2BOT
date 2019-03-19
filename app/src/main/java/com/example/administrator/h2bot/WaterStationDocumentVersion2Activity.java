@@ -24,6 +24,8 @@ import android.util.SparseArray;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -53,6 +55,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
@@ -60,15 +63,17 @@ import java.util.UUID;
 
 import io.grpc.Context;
 
-public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
+public class WaterStationDocumentVersion2Activity extends AppCompatActivity implements CheckBox.OnClickListener {
 
     private static final int PICK_IMAGE_REQUEST = 1;
     ImageView businessPermit_image, sanitaryPermit_image, physicochemicalPermit_Image, birPermit_Image;
     Button businessPermitBtn, sanitaryPermitBtn,
             physicochemicalbutton, birbutton, submitButton;
-    RadioGroup deliveryFeeGroup;
+    RadioGroup deliveryFeeGroup, haveGallonGroup;
 
-    EditText stationName, stationAddress, endingHour, startingHour, businessDeliveryFeePerGal, businessMinNoCapacity, telNo, deliveryFee, min_no_of_gallons;
+    EditText stationName, stationAddress, endingHour, startingHour,
+            businessDeliveryFeePerGal, businessMinNoCapacity,
+            telNo, deliveryFee, min_no_of_gallons, priceOfGallonEdit, currentNoGallonEdit;
     Spinner startSpinner, endSpinner;
     String deliveryMethod, business, sanitary, physicochemical, bir;
 
@@ -87,11 +92,16 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
     Boolean isPicked3 = false;
     Boolean isPicked4 = false;
 
+    CheckBox mon, tue, wed, thurs, fri, sat, sun;
+
+    List<String> week;
+
     String mFirstname, mLastname, mAddress, mContact_no, mEmail_address, mPassword, mFilepath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_water_station_document_version2);
+        week = new ArrayList<String>();
 
         progressDialog = new ProgressDialog(WaterStationDocumentVersion2Activity.this);
         progressDialog.setMessage("Loading...");
@@ -130,9 +140,21 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
         startingHour = findViewById(R.id.startingHour);
         deliveryFee = findViewById(R.id.deliveryFee);
         min_no_of_gallons = findViewById(R.id.min_no_of_gallons);
+        priceOfGallonEdit = findViewById(R.id.priceOfGallon);
+        currentNoGallonEdit = findViewById(R.id.noOfGallons);
 
         //Radiogroup
         deliveryFeeGroup = findViewById(R.id.deliveryFeeGroup);
+        haveGallonGroup = findViewById(R.id.doYouHaveGallonGroup);
+
+        //CheckBox
+        mon = findViewById(R.id.monBox);
+        tue = findViewById(R.id.tueBox);
+        wed = findViewById(R.id.wedBox);
+        thurs = findViewById(R.id.thursBox);
+        fri = findViewById(R.id.friBox);
+        sat = findViewById(R.id.satBox);
+        sun = findViewById(R.id.sunBox);
 
         Bundle bundle = getIntent().getExtras();
         String firstname = bundle.getString("firstname");
@@ -152,6 +174,8 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
         mPassword = password;
         mFilepath = filepath;
 
+
+
         String[] arraySpinner = new String[]{
                 "AM", "PM"
         };
@@ -167,8 +191,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
         startSpinner.setAdapter(adapter);
         endSpinner.setAdapter(adapter2);
 
-
-
+        //EditText Listener
         startingHour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -188,7 +211,6 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                 mTimePicker.show();
             }
         });
-
         endingHour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,7 +231,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
             }
         });
 
-
+        //Button Listener
         businessPermitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -229,7 +251,6 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                 }
             }
         });
-
         sanitaryPermitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -248,7 +269,6 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                 }
             }
         });
-
         physicochemicalbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -267,7 +287,6 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                 }
             }
         });
-
         birbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -286,16 +305,26 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                 }
             }
         });
-
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showMessages(week.toString());
                 CreateAccount(mEmail_address, mPassword);
                 checkDocuments();
-//                uploadAllImage();
             }
         });
 
+        //Checkboxes Listner
+        mon.setOnClickListener(this);
+        tue.setOnClickListener(this);
+        wed.setOnClickListener(this);
+        thurs.setOnClickListener(this);
+        fri.setOnClickListener(this);
+        sat.setOnClickListener(this);
+        sun.setOnClickListener(this);
+
+
+        //RadioGroup
         deliveryFeeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -315,6 +344,22 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                     case R.id.free:
                         deliveryMethod = "Free";
                         deliveryFee.setVisibility(View.GONE);
+                        break;
+                }
+            }
+        });
+        haveGallonGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId)
+                {
+                    case R.id.no:
+                        currentNoGallonEdit.setVisibility(View.GONE);
+                        priceOfGallonEdit.setVisibility(View.GONE);
+                        break;
+                    case R.id.yes:
+                        currentNoGallonEdit.setVisibility(View.VISIBLE);
+                        priceOfGallonEdit.setVisibility(View.VISIBLE);
                         break;
                 }
             }
@@ -482,7 +527,6 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
             Toast.makeText(WaterStationDocumentVersion2Activity.this, "You haven't picked an image",Toast.LENGTH_LONG).show();
         }
     }
-
     private void CreateAccount(String emailAddress, String password){
         mAuth.createUserWithEmailAndPassword(emailAddress, password)
         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -531,17 +575,33 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                                     String startHour = startingHour.getText().toString() + " " + startSpinner.getSelectedItem();
                                     String endHour = endingHour.getText().toString() + " " + endSpinner.getSelectedItem();
 
-                                    WSBusinessInfoFile businessInfoFile = new WSBusinessInfoFile(
-                                            userId,
-                                            stationName.getText().toString(),
+                                    StationBusinessInfo stationBusinessInfo = new StationBusinessInfo(
                                             stationAddress.getText().toString(),
-                                            telNo.getText().toString(),
-                                            startHour,
-                                            endHour,
-                                            deliveryMethod,
+                                            week.toString(),
                                             deliveryFee.getText().toString(),
+                                            deliveryMethod,
+                                            endHour,
+                                            firebaseUser.getUid(),
                                             min_no_of_gallons.getText().toString(),
-                                            "active");
+                                            stationName.getText().toString(),
+                                            priceOfGallonEdit.getText().toString(),
+                                            startHour,
+                                            "active",
+                                            telNo.getText().toString(),
+                                            currentNoGallonEdit.getText().toString()
+                                    );
+
+//                                    WSBusinessInfoFile businessInfoFile = new WSBusinessInfoFile(
+//                                            userId,
+//                                            stationName.getText().toString(),
+//                                            stationAddress.getText().toString(),
+//                                            telNo.getText().toString(),
+//                                            startHour,
+//                                            endHour,
+//                                            deliveryMethod,
+//                                            deliveryFee.getText().toString(),
+//                                            min_no_of_gallons.getText().toString(),
+//                                            "active");
 
                                     UserWallet userWallet = new UserWallet(
                                             firebaseUser.getUid(),
@@ -562,7 +622,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                                 @Override
                                                                                 public void onSuccess(Void aVoid) {
-                                                                                    FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(businessInfoFile)
+                                                                                    FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(stationBusinessInfo)
                                                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                                                 @Override
                                                                                                 public void onSuccess(Void aVoid) {
@@ -616,7 +676,6 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
             }
         });
     }
-
     private void getLocationSetter()
     {
         progressDialog.show();
@@ -665,12 +724,10 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
             progressDialog.dismiss();
         }
     }
-
     private void showMessages(String s)
     {
         Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
     }
-
     public void checkDocuments(){
         if(businessPermit_image.getDrawable() == null
                 || sanitaryPermit_image.getDrawable() == null){
@@ -678,7 +735,6 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
             return;
         }
     }
-
     public void uploadAllImage(){
         if(filepath != null){
             FirebaseUser user = mAuth.getCurrentUser();
@@ -788,6 +844,84 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity{
                     progressDialog.show();
                 }
             });
+        }
+    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId())
+        {
+            case R.id.monBox:
+                String monday = "Monday";
+                String monSplit = String.join(",", monday);
+                if (mon.isChecked()) {
+                    week.add(monSplit);
+                }
+                else {
+                    week.remove(monSplit);
+                }
+                break;
+            case R.id.tueBox:
+                String tuesday = "Tuesday";
+                String tuesdaySplit = String.join(",", tuesday);
+                if (tue.isChecked()) {
+                    week.add(tuesdaySplit);
+                }
+                else {
+                    week.remove(tuesdaySplit);
+                }
+                break;
+            case R.id.wedBox:
+                String wednesday = "Wednesday";
+                String wednesdaySplit = String.join(",", wednesday);
+                if (wed.isChecked()) {
+                    week.add(wednesdaySplit);
+                }
+                else {
+                    week.remove(wednesdaySplit);
+                }
+                break;
+            case R.id.thursBox:
+                String thursday = "Thursday";
+                String thursdaySplit = String.join(",", thursday);
+                if (thurs.isChecked()) {
+                    week.add(thursdaySplit);
+                }
+                else {
+                    week.remove(thursdaySplit);
+                }
+                break;
+            case R.id.friBox:
+                String friday = "Friday";
+                String fridaySplit = String.join(",", friday);
+                if (fri.isChecked()) {
+                    week.add(fridaySplit);
+                }
+                else {
+                    week.remove(fridaySplit);
+                }
+                break;
+            case R.id.satBox:
+                String saturday = "Saturday";
+                String saturdaySplit = String.join(",", saturday);
+                if (sat.isChecked()) {
+                    week.add(saturdaySplit);
+                }
+                else {
+                    week.remove(saturdaySplit);
+                }
+                break;
+            case R.id.sunBox:
+                String sunday = "Sunday";
+                String sundaySplit = String.join(",", sunday);
+                if (sun.isChecked()) {
+                    week.add(sundaySplit);
+                    showMessages(week.toString());
+                }
+                else {
+                    week.remove(sundaySplit);
+                    showMessages(week.toString());
+                }
+                break;
         }
     }
 }

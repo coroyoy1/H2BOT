@@ -264,9 +264,8 @@ public class CustomerMapFragment extends Fragment implements
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 marker.showInfoWindow();
             } else {
-                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                marker.showInfoWindow();
             }
             return false;
         });

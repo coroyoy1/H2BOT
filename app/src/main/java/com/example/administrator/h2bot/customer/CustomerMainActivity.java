@@ -75,7 +75,7 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
             Objects.requireNonNull(getSupportActionBar()).setTitle("Find Water Merchant");
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        initializeCountDrawer();
+//        initializeCountDrawer();
     }
     private void initializeCountDrawer(){
         DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
