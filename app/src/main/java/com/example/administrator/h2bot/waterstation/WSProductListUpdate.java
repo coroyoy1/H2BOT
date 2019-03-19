@@ -22,13 +22,20 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class WSProductListUpdate extends Fragment implements View.OnClickListener {
 
     EditText productUpdateName, productUpdatePrice;
-    Spinner productUpdateStatus,productUpdateType;
+    Spinner productUpdateStatus, productUpdateType;
     Button backUpItem, updateUpItem;
     RadioButton valid, invalid;
 
@@ -36,16 +43,22 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
     FirebaseAuth mAuth;
     FirebaseUser firebaseUser;
     DatabaseReference databaseReference;
+    List<String> list;
 
     String statusGet;
     String keyGet;
 
     ProgressDialog progressDialog;
+    String[] arraySpinner;
+    ArrayAdapter<String> adapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ws_productlistintentupdate, container, false);
+
+        list = new ArrayList<String>();
+        arraySpinner = new String[]{};
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
@@ -61,14 +74,6 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
         productUpdatePrice = view.findViewById(R.id.waterUpdatePrice);
         productUpdateType = view.findViewById(R.id.waterUpdateSpinner);
 
-        String[] arraySpinner = new String[]{
-                "Mineral", "Distilled", "Purified", "Alkaline"
-        };
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, arraySpinner);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         productUpdateType.setAdapter(adapter);
 
         valid = view.findViewById(R.id.avaiableRadio);
@@ -80,9 +85,6 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
         backUpItem.setOnClickListener(this);
         updateUpItem.setOnClickListener(this);
 
-        DatabaseReference product = FirebaseDatabase.getInstance().getReference("User_LatLong");
-
-
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             String itemPr = bundle.getString("ItemPricePLI");
@@ -90,47 +92,103 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
             String itemUi = bundle.getString("ItemUidPLI");
             String itemSt = bundle.getString("ItemStatusPLI");
 
-            if(itemSt.equals("active"))
-            {
+            if (itemSt.equals("active")) {
                 valid.setChecked(true);
                 invalid.setChecked(false);
                 statusGet = "active";
-            }
-            else
-            {
+            } else {
                 valid.setChecked(false);
                 invalid.setChecked(true);
                 statusGet = "inactive";
             }
         }
+
+        retrieveData();
+
         return view;
     }
 
-    public void updateData()
-    {
+    public void updateData() {
         String statY = "";
-        if(valid.isChecked())
-        {
+        if (valid.isChecked()) {
             statY = "active";
-        }
-        else if(invalid.isChecked())
-        {
+        } else if (invalid.isChecked()) {
             statY = "inactive";
         }
         String prodType = productUpdateType.getSelectedItem().toString();
         String prodPrice = productUpdatePrice.getText().toString();
 
-        if(prodType.isEmpty() && prodPrice.isEmpty())
-        {
+        if (prodType.isEmpty() && prodPrice.isEmpty()) {
             showMessage("Please fill up all the fields");
             return;
-        }
-        else
-        {
+        } else {
             dataConnection(prodType, prodPrice, statY);
         }
 
     }
+
+    //Display Data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    private void retrieveData() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Water_Type_File");
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    String waterTypes = dataSnapshot1.getValue(String.class);
+                    list.add(waterTypes);
+                }
+                adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, list);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                productUpdateType.setAdapter(adapter);
+                if (list != null)
+                {
+                    retrieveDataBasedOnUser();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                showMessage("No data available");
+            }
+        });
+    }
+
+    //Close Display Data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    //Retrieving Data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    private void retrieveDataBasedOnUser()
+    {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File");
+        reference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                {
+                    UserWSWDWaterTypeFile userWS = dataSnapshot1.getValue(UserWSWDWaterTypeFile.class);
+                    if (userWS != null)
+                    {
+                        String waterType = userWS.getWater_type();
+                        for (int counter = 0; counter < adapter.getCount(); counter++)
+                        {
+                            if (adapter.getItem(counter).equalsIgnoreCase(waterType))
+                            {
+                                productUpdateType.setSelection(counter);
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                showMessage("No data available");
+            }
+        });
+    }
+
+    //CloseRetrieving Data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
     private void dataConnection(String prodType, String prodPrice, String prodStat) {
         progressDialog.show();

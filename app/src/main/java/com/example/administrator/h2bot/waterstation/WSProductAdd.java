@@ -21,9 +21,14 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class WSProductAdd extends Fragment implements View.OnClickListener {
@@ -36,6 +41,9 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
     FirebaseUser firebaseUser;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+    List<String> list;
+
+    ArrayAdapter<String> adapter;
 
     ProgressDialog progressDialog;
 
@@ -43,6 +51,8 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ws_product_add, container, false);
+
+        list = new ArrayList<String>();
 
         waterProductPrice = view.findViewById(R.id.waterPrice);
         waterProductType = view.findViewById(R.id.waterSpinner);
@@ -58,16 +68,6 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("User_WS_WD_Water_Type_File");
 
-        String[] arraySpinner = new String[]{
-                "Mineral", "Distilled", "Purified", "Alkaline"
-        };
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, arraySpinner);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        waterProductType.setAdapter(adapter);
-
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
@@ -75,7 +75,33 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
 
+        retrieveData();
+
         return view;
+    }
+
+    public void retrieveData()
+    {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Water_Type_File");
+        databaseReference.child(firebaseUser.getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                        {
+                            String userTypes = dataSnapshot1.getValue(String.class);
+                            list.add(userTypes);
+                        }
+                        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, list);
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        waterProductType.setAdapter(adapter);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     public void saveData()
