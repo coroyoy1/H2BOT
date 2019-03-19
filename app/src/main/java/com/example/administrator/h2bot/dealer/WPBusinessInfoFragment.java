@@ -102,21 +102,7 @@ public class WPBusinessInfoFragment extends Fragment implements View.OnClickList
                     stationFeePerGal.setText("Fee per Gallon: "+userWSBusinessInfoFile.getBusiness_delivery_fee_per_gal());
                     stationDelivery.setText("Delivery Status: "+userWSBusinessInfoFile.getBusiness_delivery_service_status());
                     stationStatus.setText("Station Status: "+userWSBusinessInfoFile.getBusiness_status());
-                    databaseReference2 = firebaseDatabase.getReference("User_File").child(firebaseUser.getUid());
-                    databaseReference2.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            UserFile user = dataSnapshot.getValue(UserFile.class);
-                            String image = user.getUser_uri();
-                            Picasso.get().load(image).into(imageView);
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-                }
+                    }
                 else
                 {
                     showMessages("Data does not exist");
@@ -128,7 +114,20 @@ public class WPBusinessInfoFragment extends Fragment implements View.OnClickList
                 showMessages("Data does not exist!");
             }
         });
+        databaseReference2 = firebaseDatabase.getReference("User_File").child(firebaseUser.getUid());
+        databaseReference2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                UserFile user = dataSnapshot.getValue(UserFile.class);
+                String image = user.getUser_uri();
+                Picasso.get().load(image).into(imageView);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         updateBI = view.findViewById(R.id.updateButtonWSBI);
         updateDocBI = view.findViewById(R.id.updateDocumentWSBI);
         updateInfo = view.findViewById(R.id.updateInfoWSBI);
@@ -197,6 +196,5 @@ public class WPBusinessInfoFragment extends Fragment implements View.OnClickList
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setMessage("Are you sure to exit the application?").setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
-
     }
 }

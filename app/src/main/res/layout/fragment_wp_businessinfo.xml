@@ -38,73 +38,79 @@
                     android:src="@drawable/ic_person_black_24dp"
                     android:layout_marginBottom="5dp"/>
 
-                <TextView
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
-                    android:background="@android:color/holo_blue_dark"
-                    android:text="Details"
-                    android:textAlignment="center"
-                    android:textSize="20dp"
-                    android:layout_marginBottom="20dp"/>
-                <TextView
-                    android:id="@+id/stationaNameBI"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:padding="10dp">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:background="@android:color/holo_blue_dark"
+                        android:text="Details"
+                        android:textAlignment="center"
+                        android:textSize="20dp"
+                        android:layout_marginBottom="20dp"/>
+                    <TextView
+                        android:id="@+id/stationaNameBI"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:textSize="18dp"
+                        android:text="Name"/>
+                    <TextView
+                        android:id="@+id/stationAddressBI"
+                        android:layout_marginTop="10dp"
+                        android:textSize="18dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:text="Address"/>
+                    <TextView
+                        android:id="@+id/stationHoursBI"
+                        android:layout_marginTop="10dp"
+                        android:textSize="18dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:text="Hours"/>
+                    <TextView
+                        android:id="@+id/stationTelNoBI"
+                        android:layout_marginTop="10dp"
+                        android:textSize="18dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:text="Cellphone No"/>
+                    <TextView
+                        android:id="@+id/stationFeePerGalBI"
+                        android:layout_marginTop="10dp"
+                        android:textSize="18dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:text="Fee per gal"/>
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/stationDeliveryBI"
+                        android:layout_marginTop="10dp"
+                        android:textSize="18dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:text="Station Delivery status"/>
+                    <TextView
+                        android:id="@+id/stationStatusBI"
+                        android:layout_marginTop="10dp"
+                        android:textSize="18dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:text="Status"/>
+                </LinearLayout>
 
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp"
-                    android:text="Name"/>
-                <TextView
-                    android:id="@+id/stationAddressBI"
-                    android:layout_marginTop="10dp"
-                    android:textSize="18dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
-                    android:text="Address"/>
-                <TextView
-                    android:id="@+id/stationHoursBI"
-                    android:layout_marginTop="10dp"
-                    android:textSize="18dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
-                    android:text="Hours"/>
-                <TextView
-                    android:id="@+id/stationTelNoBI"
-                    android:layout_marginTop="10dp"
-                    android:textSize="18dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
-                    android:text="Cellphone No"/>
-                <TextView
-                    android:id="@+id/stationFeePerGalBI"
-                    android:layout_marginTop="10dp"
-                    android:textSize="18dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
-                    android:text="Fee per gal"/>
-                <TextView
-                    android:visibility="gone"
-                    android:id="@+id/stationDeliveryBI"
-                    android:layout_marginTop="10dp"
-                    android:textSize="18dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
-                    android:text="Station Delivery status"/>
-                <TextView
-                    android:id="@+id/stationStatusBI"
-                    android:layout_marginTop="10dp"
-                    android:textSize="18dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
-                    android:text="Status"/>
             </LinearLayout>
 
             <LinearLayout

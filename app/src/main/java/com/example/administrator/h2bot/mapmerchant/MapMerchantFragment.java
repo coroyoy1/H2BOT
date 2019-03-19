@@ -771,7 +771,6 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                             }
                         }
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -780,9 +779,9 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
     }
     public void updateOrder(String transactionSet)
     {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Customer_File");
-        reference.child(merchantCheckId).child(customerNo).child(transactionSet)
-                .child("order_status").setValue("Completed")
+        DatabaseReference referencedata = FirebaseDatabase.getInstance().getReference("Customer_File");
+        referencedata.child("OVpusHfpxNciCVz4LEAt2XxE3nA2").child("bihh6BewukOfurlAzotIJwuIsmp2").child(transactionSet);
+                referencedata.child("order_status").setValue("Completed")
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

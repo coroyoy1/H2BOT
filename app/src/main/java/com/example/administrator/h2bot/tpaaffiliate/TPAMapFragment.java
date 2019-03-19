@@ -110,6 +110,7 @@ public class TPAMapFragment extends Fragment
     private List<UserLocationAddress> userLocationAddressList;
     private List<OrderModel> orderModelList;
     private List<UserWSBusinessInfoFile> businessInfoFileList;
+    private ArrayList<WaterStationOrDealer> thisList;
     private List<UserFile> userFileList;
     private List<WaterStationOrDealer> affiliateModel;
     private LatLng currentLocation;
@@ -137,6 +138,7 @@ public class TPAMapFragment extends Fragment
         orderModelList = new ArrayList<>();
         businessInfoFileList = new ArrayList<>();
         userFileList = new ArrayList<>();
+        affiliateModel = new ArrayList<>();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         getBusiness();
         getUserLatLng();
@@ -438,13 +440,15 @@ public class TPAMapFragment extends Fragment
     }
 
     public void showNearest(){
-        if(affiliateModel.size() != 0){
-            Object[] transferData = new Object[5];
+            if(affiliateModel.size() != 0){
+            Object[] transferData = new Object[7];
             transferData[0] = affiliateModel;
             transferData[1] = currentLocation;
             transferData[2] = map;
             transferData[3] = API_KEY;
             transferData[4] = currentRadius;
+            transferData[5] = null;
+            transferData[6] = TPAMapFragment.this;
             if(getDistance == null) {
                 getDistance = new GetDistance();
                 getDistance.execute(transferData);
@@ -452,6 +456,10 @@ public class TPAMapFragment extends Fragment
             else
                 getDistance.Display();
         }
+    }
+
+    public void setList(ArrayList<WaterStationOrDealer> thisList){
+        this.thisList = thisList;
     }
 
     public boolean checkUserLocationPermission(){

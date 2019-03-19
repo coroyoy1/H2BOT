@@ -52,12 +52,13 @@
 
 
                 <TextView
-                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Business Hours"
+                    android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
-                    android:textSize="18dp" />
+                    android:text="Business Hours"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -65,48 +66,56 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <EditText
-                            android:id="@+id/startingHour"
-                            android:layout_weight="1"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:hint="Start Time"
-                            android:inputType="time"
-                            android:textAlignment="center"
-                            android:textSize="18dp"
-                            android:layout_marginTop="10dp"
+                        android:orientation="horizontal"
+                        android:layout_margin="10dp">
 
-                            android:layout_marginRight="2dp"/>
-                        <Spinner
-                            android:id="@+id/startSpinner"
+                        <TextView
+                            android:id="@+id/textview2"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent">
-                        </Spinner>
-                    </LinearLayout>
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Start Time"
+                            android:textSize="18dp" />
+                        <TextView
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:id="@+id/startTimeTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/edit_text_border"
+                            android:textSize="18dp"
+                            android:text="Set Time"/>
+                         </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:layout_margin="10dp">
 
-                        <EditText
-                            android:layout_marginLeft="2dp"
-                            android:id="@+id/endingHour"
-                            android:layout_weight="1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="End Time"
-                            android:inputType="time"
-                            android:textAlignment="center"
-                            android:textSize="18dp"
-                            android:layout_marginTop="10dp"/>
-                        <Spinner
-                            android:id="@+id/endSpinner"
+                        <TextView
+                            android:id="@+id/textview3"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"/>
+                            android:layout_height="match_parent"
+                            android:text="End   Time"
+                            android:gravity="center"
+                            android:layout_weight="1"
+                            android:textSize="18dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/endTimeTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/edit_text_border"
+                            android:gravity="center"
+                            android:text="Set Time"
+                            android:textSize="18dp" />
                     </LinearLayout>
                 </LinearLayout>
                 <TextView
+                    android:textStyle="bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Delivery fee method"

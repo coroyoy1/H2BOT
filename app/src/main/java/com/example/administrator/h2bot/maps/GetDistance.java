@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.customer.CustomerMapFragment;
 import com.example.administrator.h2bot.objects.WaterStationOrDealer;
+import com.example.administrator.h2bot.tpaaffiliate.TPAMapFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -39,6 +40,8 @@ public class GetDistance extends AsyncTask<Object, String, String> {
     private TextView currentRadius;
     private Marker mCurrentLocationMarker;
     private CustomerMapFragment customerMapFragment;
+    private TPAMapFragment tpaMapFragment;
+
 
     @Override
     protected String doInBackground(Object... objects) {
@@ -49,6 +52,7 @@ public class GetDistance extends AsyncTask<Object, String, String> {
         API_KEY = (String) objects[3];
         currentRadius = (TextView) objects[4];
         customerMapFragment = (CustomerMapFragment) objects[5];
+        tpaMapFragment = (TPAMapFragment) objects[6];
 
 
         name = new String[list.size()];
@@ -160,6 +164,10 @@ public class GetDistance extends AsyncTask<Object, String, String> {
             }
         }
 
-        customerMapFragment.setList(thisList);
+        if(customerMapFragment != null){
+            customerMapFragment.setList(thisList);
+        } else if(tpaMapFragment != null){
+            tpaMapFragment.setList(thisList);
+        }
     }
 }

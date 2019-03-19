@@ -430,13 +430,14 @@ public class CustomerMapFragment extends Fragment implements
 
     public void showNearest(){
         if(userFileList.size() != 0 && businessInfoFileListis.size() != 0 && userLocationAddressList.size() != 0){
-            Object[] transferData = new Object[6];
+            Object[] transferData = new Object[7];
             transferData[0] = waterStationOrDealers;
             transferData[1] = currentLocation;
             transferData[2] = map;
             transferData[3] = API_KEY;
             transferData[4] = currentRadius;
             transferData[5] = CustomerMapFragment.this;
+            transferData[6] = null;
             if(getDistance == null) {
                 getDistance = new GetDistance();
                 getDistance.execute(transferData);

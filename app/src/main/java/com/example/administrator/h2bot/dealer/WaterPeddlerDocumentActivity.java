@@ -1,5 +1,6 @@
 package com.example.administrator.h2bot.dealer;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -22,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.LoginActivity;
@@ -59,14 +63,15 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
 
     private static final int PICK_IMAGE_REQUEST = 1;
     String userId;
+    TextView startTimeTextView, endTimeTextView;
+    String startHour, startMinute, endHour, endMinute, startAMPM, endAMPM;
     ImageView businessPermit_image, sanitaryPermit_image;
     Button sanitaryPermitBtn, submitButton;
     RadioGroup deliveryFeeGroup;
     boolean check;
-    EditText stationName, stationAddress, endingHour, startingHour, businessDeliveryFeePerGal, businessMinNoCapacity, telNo, deliveryFee, min_no_of_gallons;
-    Spinner startSpinner, endSpinner;
+    EditText stationName, stationAddress, endingHour, businessDeliveryFeePerGal, businessMinNoCapacity, telNo, deliveryFee, min_no_of_gallons;
     String deliveryMethod, mUri;
-
+    Spinner simpleTimePicker;
     FirebaseStorage storage;
     StorageReference storageReference;
     FirebaseAuth mAuth;
@@ -95,10 +100,8 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         mAuth = FirebaseAuth.getInstance();
-
-        startSpinner= findViewById(R.id.startSpinner);
-        endSpinner= findViewById(R.id.endSpinner);
-
+        startTimeTextView = findViewById(R.id.startTimeTextView);
+        endTimeTextView = findViewById(R.id.endTimeTextView);
         // Button
         sanitaryPermitBtn = findViewById(R.id.sanitaryPermitBtn);
         submitButton = findViewById(R.id.submitButton);
@@ -116,7 +119,6 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
         stationAddress = findViewById(R.id.stationAddress);
         telNo = findViewById(R.id.telNo);
         endingHour = findViewById(R.id.endingHour);
-        startingHour = findViewById(R.id.startingHour);
         deliveryFee = findViewById(R.id.deliveryFee);
         min_no_of_gallons = findViewById(R.id.min_no_of_gallons);
 
@@ -146,14 +148,6 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
         String[] arraySpinner2 = new String[]{
                 "PM", "AM"
         };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(WaterPeddlerDocumentActivity.this,
-                android.R.layout.simple_spinner_item, arraySpinner);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(WaterPeddlerDocumentActivity.this,
-                android.R.layout.simple_spinner_item, arraySpinner2);
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        startSpinner.setAdapter(adapter);
-        endSpinner.setAdapter(adapter2);
 
         sanitaryPermitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,7 +161,18 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
 
             }
         });
-
+        startTimeTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                starttimeData();
+            }
+        });
+        endTimeTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                starttimeData2();
+            }
+        });
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,6 +180,10 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                     CreateAccount(mEmail_address, mPassword);
                     checkDocuments();
 //                uploadAllImage();
+                }
+                else if(filepath2 == null)
+                {
+                    Toast.makeText(WaterPeddlerDocumentActivity.this, "Please choose an image", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
@@ -202,6 +211,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                     case R.id.free:
                         deliveryMethod = "Free";
                         deliveryFee.setVisibility(View.GONE);
+                        deliveryFee.setText("");
                         break;
                 }
             }
@@ -237,7 +247,9 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                 sb.append(myItem.getValue());
                                 sb.append("\n");
                             }
-                            if(sb.toString().toLowerCase().contains(mFirstname.toLowerCase()) && sb.toString().toLowerCase().contains(mLastname.toLowerCase())){
+                            if(sb.toString().toLowerCase().contains(mFirstname.toLowerCase()) && sb.toString().toLowerCase().contains(mLastname.toLowerCase())
+                                && sb.toString().toLowerCase().contains("land") && sb.toString().toLowerCase().contains("transportation")
+                                    && sb.toString().toLowerCase().contains("office")){
                                 Picasso.get().load(filepath2).into(sanitaryPermit_image);
                                 Toast.makeText(this, "Valid driver's license", Toast.LENGTH_SHORT).show();
                                 check = true;
@@ -307,8 +319,8 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                             newToken,
                                             "active");
 
-                                    String startHour = startingHour.getText().toString() + " " + startSpinner.getSelectedItem();
-                                    String endHour = endingHour.getText().toString() + " " + endSpinner.getSelectedItem();
+                                    String startHour = startTimeTextView.getText().toString();
+                                    String endHour = endTimeTextView.getText().toString();
 
                                     WSBusinessInfoFile businessInfoFile = new WSBusinessInfoFile(
                                             userId,
@@ -495,5 +507,57 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                 }
             });
         }
+    }
+
+    public void starttimeData()
+    {
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(WaterPeddlerDocumentActivity.this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.timepicker, null);
+
+        TimePicker simpleTimePicker = dialogView.findViewById(R.id.simpleTimePicker);
+        Button setButton = dialogView.findViewById(R.id.setButton);
+        simpleTimePicker.setIs24HourView(true);
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.setCancelable(false);
+        final AlertDialog alertDialog = dialogBuilder.create();
+        setButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startHour = String.valueOf(simpleTimePicker.getHour());
+                startMinute = String.valueOf(simpleTimePicker.getMinute());
+                String AM_PM ;
+
+                Toast.makeText(WaterPeddlerDocumentActivity.this, startHour+","+startMinute,Toast.LENGTH_SHORT).show();
+                startTimeTextView.setText(startHour+":"+startMinute);
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
+    }
+    public void starttimeData2()
+    {
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(WaterPeddlerDocumentActivity.this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.timepicker, null);
+
+        TimePicker simpleTimePicker = dialogView.findViewById(R.id.simpleTimePicker);
+        Button setButton = dialogView.findViewById(R.id.setButton);
+        simpleTimePicker.setIs24HourView(true);
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.setCancelable(false);
+        final AlertDialog alertDialog = dialogBuilder.create();
+        setButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startHour = String.valueOf(simpleTimePicker.getHour());
+                startMinute = String.valueOf(simpleTimePicker.getMinute());
+                String AM_PM ;
+                Toast.makeText(WaterPeddlerDocumentActivity.this, startHour+","+startMinute,Toast.LENGTH_SHORT).show();
+                endTimeTextView.setText(startHour+":"+startMinute);
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
     }
 }
