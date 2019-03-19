@@ -1,14 +1,19 @@
 package com.example.administrator.h2bot.maps;
 
 
+import android.graphics.Color;
+import android.graphics.ColorSpace;
 import android.os.AsyncTask;
 import android.widget.TextView;
 
+import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.customer.CustomerMapFragment;
 import com.example.administrator.h2bot.objects.WaterStationOrDealer;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -30,6 +35,7 @@ public class GetDistance extends AsyncTask<Object, String, String> {
     private String duration, distance;
     private ArrayList<WaterStationOrDealer> thisList = new ArrayList<>();
     private GoogleMap mMap;
+    private Circle mCirle;
     private TextView currentRadius;
     private Marker mCurrentLocationMarker;
     private CustomerMapFragment customerMapFragment;
@@ -52,6 +58,7 @@ public class GetDistance extends AsyncTask<Object, String, String> {
         type = new String[list.size()];
         status = new String[list.size()];
         stationId = new String[list.size()];
+
 
         int ctr = 0;
         for (WaterStationOrDealer myList:list) {
@@ -117,16 +124,23 @@ public class GetDistance extends AsyncTask<Object, String, String> {
         mMap.clear();
         MarkerOptions mMarkerOption = new MarkerOptions();
         mMarkerOption.position(orig);
+        mCirle = mMap.addCircle(new CircleOptions()
+                .center(orig)
+                .fillColor(Color.argb(100, 173, 216, 230))
+                .strokeColor(Color.BLUE)
+                .strokeWidth(1)
+                .radius(Double.parseDouble(currentRadius.getText().toString().substring(0, currentRadius.getText().toString().length()-3))));
         mMarkerOption.title("You");
         mMarkerOption.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 
+
+        double radiusLimit = Double.parseDouble(currentRadius.getText().toString().substring(0, currentRadius.getText().toString().length()-3));
         mCurrentLocationMarker = mMap.addMarker(mMarkerOption);
         mMap.addMarker(mMarkerOption);
-
+        mCirle.setRadius(radiusLimit * 1000);
 
         for(int i = 0; i < thisList.size(); i++){
             LatLng latLng = new LatLng(thisList.get(i).getLat(), thisList.get(i).getLng());
-            double radiusLimit = Double.parseDouble(currentRadius.getText().toString().substring(0, currentRadius.getText().toString().length()-3));
             double stationDistance = Double.parseDouble(thisList.get(i).getDistance().substring(10, thisList.get(i).getDistance().length()-3));
             if(stationDistance <= radiusLimit){
                 if(thisList.get(i).getUserType().equalsIgnoreCase("Water Station")){

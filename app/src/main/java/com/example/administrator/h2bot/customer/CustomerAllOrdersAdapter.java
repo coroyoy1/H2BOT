@@ -35,6 +35,7 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
 
     private DatabaseReference updateOrderRef;
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
+    String deliveryDate, pickupDate;
 
     public CustomerAllOrdersAdapter() {
     }
@@ -60,29 +61,37 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
         final OrderFileModel orderModel = orderList.get(i);
         String orderNo = transactionNoModel.getTransOrderNo();
 
-        String status = orderModel.getOrderStatus();
-        String waterType = orderModel.getOrderWaterType();
+        String myAddress = orderModel.getOrderAddress();
+        String customerId = orderModel.getOrderCustomerId();
+        String dateIssued = orderModel.getOrderDateIssued();
+        String deliveryFee = orderModel.getOrderDeliveryFee();
+        String deliveryFeePerGallon = orderModel.getOrderDeliveryFeePerGallon();
+        String serviceType = orderModel.getOrderDeliveryMethod();
+        String stationId = orderModel.getOrderStationId();
+        String partialAmt = orderModel.getOrderPartialAmt();
         String pricePerGallon = orderModel.getOrderPricePerGallon();
         String quantity = orderModel.getOrderQty();
-        String myAddress = orderModel.getOrderAddress();
-        String serviceType = orderModel.getOrderDeliveryMethod();
-        String deliveryDate = orderModel.getOrderDeliveryDate();
-        String deliveryFee = orderModel.getOrderDeliveryFee();
+        String serviceMethod = orderModel.getOrderServiceMethod();
         String myStatus = orderModel.getOrderStatus();
         String totalAmt = orderModel.getOrderTotalAmt();
-        String customerId = orderModel.getOrderCustomerId();
-        String stationId = orderModel.getOrderStationId();
-        String serviceMethod = orderModel.getOrderServiceMethod();
+        String waterType = orderModel.getOrderWaterType();
+
+        if(serviceMethod.equalsIgnoreCase("Delivery")){
+            deliveryDate = orderModel.getOrderDeliveryDate();
+        }
+        else{
+            pickupDate = orderModel.getOrderDeliveryDate();
+        }
 
         viewHolder.order_no.setText(orderNo);
-        viewHolder.status.setText(status);
+        viewHolder.status.setText(myStatus);
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
                 TextView order_no, water_type, price_per_gallon, qty, address, service_type, delivery_date,
-                delivery_fee, status, total_amt, qr_code, order_type;
+                delivery_fee, status, total_amt, qr_code, order_type, date_issued, deliveryFeePerGal, partialAmount, methodText;
                 Button cancelBtn, viewQrQodeBtn;
                 qrCode = orderNo;
 
@@ -94,13 +103,17 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
                 address = myDialog.findViewById(R.id.address);
                 service_type = myDialog.findViewById(R.id.service_type);
                 delivery_date = myDialog.findViewById(R.id.delivery_date);
-                delivery_fee = myDialog.findViewById(R.id.delivery_fee);
+                delivery_fee = myDialog.findViewById(R.id.deliveryFee);
                 status = myDialog.findViewById(R.id.status);
                 total_amt = myDialog.findViewById(R.id.total_amt);
                 qr_code = myDialog.findViewById(R.id.qr_code);
                 cancelBtn = myDialog.findViewById(R.id.cancelBtn);
                 viewQrQodeBtn = myDialog.findViewById(R.id.viewQrQodeBtn);
                 order_type = myDialog.findViewById(R.id.order_type);
+                date_issued = myDialog.findViewById(R.id.dateIssued);
+                deliveryFeePerGal = myDialog.findViewById(R.id.deliveryFeePerGallon);
+                partialAmount = myDialog.findViewById(R.id.partialPayment);
+                methodText = myDialog.findViewById(R.id.methodText);
 
                 order_type.setText(serviceMethod);
                 order_no.setText(orderNo);
@@ -109,9 +122,19 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
                 qty.setText(quantity + " gallon(s)");
                 address.setText(myAddress);
                 service_type.setText(serviceType);
-                delivery_date.setText(deliveryDate);
+                if(serviceMethod.equalsIgnoreCase("Delivery")){
+                    methodText.setText("Delivery Date: ");
+                    delivery_date.setText(deliveryDate);
+                }
+                else{
+                    methodText.setText("Pickup Date: ");
+                    delivery_date.setText(pickupDate);
+                }
                 delivery_fee.setText(deliveryFee);
                 status.setText(myStatus);
+                date_issued.setText(dateIssued);
+                deliveryFeePerGal.setText(deliveryFeePerGallon);
+                partialAmount.setText(partialAmt);
                 total_amt.setText("Total: " + totalAmt);
                 qr_code.setText(qrCode);
                 if(status.getText().toString().equalsIgnoreCase("Broadcasting")

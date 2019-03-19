@@ -187,7 +187,7 @@ public class DMCompletedAcception extends Fragment implements View.OnClickListen
                 activity.getSupportFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
-                        .replace(R.id.fragment_container_ws, additem)
+                        .replace(R.id.fragment_container_dm, additem)
                         .addToBackStack(null)
                         .commit();
                 break;
