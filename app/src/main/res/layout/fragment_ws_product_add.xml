@@ -20,15 +20,15 @@
 
         <Spinner
 
-            android:textAlignment="center"
             android:id="@+id/waterSpinner"
-            android:hint="Water Type (e.g Purified)"
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@color/colorPrimary"
             android:layout_marginLeft="31dp"
-            android:layout_marginRight="31dp"/>
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="31dp"
+            android:background="@color/colorPrimary"
+            android:hint="Water Type (e.g Purified)"
+            android:textAlignment="center" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,13 +44,13 @@
                 android:textSize="30sp" />
 
             <EditText
+                android:inputType="numberSigned"
                 android:id="@+id/waterPrice"
                 android:layout_width="match_parent"
                 android:layout_marginRight="30dp"
                 android:layout_height="50dp"
                 android:textAlignment="center"
                 android:hint="Price per Gallon"
-                android:inputType="textPersonName"
                 android:background="@drawable/edit_text_border"/>
         </LinearLayout>
         <Button

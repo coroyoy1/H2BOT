@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
@@ -35,7 +36,7 @@ import java.util.List;
 public class WSProductListUpdate extends Fragment implements View.OnClickListener {
 
     EditText productUpdateName, productUpdatePrice;
-    Spinner productUpdateStatus, productUpdateType;
+    TextView productUpdateStatus, productUpdateType;
     Button backUpItem, updateUpItem;
     RadioButton valid, invalid;
 
@@ -51,6 +52,12 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
     ProgressDialog progressDialog;
     String[] arraySpinner;
     ArrayAdapter<String> adapter;
+
+    String itemPr;
+    String itemTy;
+    String itemUi;
+    String itemSt;
+
 
     @Nullable
     @Override
@@ -74,8 +81,6 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
         productUpdatePrice = view.findViewById(R.id.waterUpdatePrice);
         productUpdateType = view.findViewById(R.id.waterUpdateSpinner);
 
-        productUpdateType.setAdapter(adapter);
-
         valid = view.findViewById(R.id.avaiableRadio);
         invalid = view.findViewById(R.id.unavailableRadio);
 
@@ -87,10 +92,10 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            String itemPr = bundle.getString("ItemPricePLI");
-            String itemTy = bundle.getString("ItemTypePLI");
-            String itemUi = bundle.getString("ItemUidPLI");
-            String itemSt = bundle.getString("ItemStatusPLI");
+             itemPr = bundle.getString("ItemPricePLI");
+             itemTy = bundle.getString("ItemTypePLI");
+             itemUi = bundle.getString("ItemUidPLI");
+             itemSt = bundle.getString("ItemStatusPLI");
 
             if (itemSt.equals("active")) {
                 valid.setChecked(true);
@@ -101,9 +106,10 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
                 invalid.setChecked(true);
                 statusGet = "inactive";
             }
+            productUpdateType.setTextSize(24);
+            productUpdateType.setText(itemTy);
+            productUpdatePrice.setText(itemPr);
         }
-
-        retrieveData();
 
         return view;
     }
@@ -115,7 +121,7 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
         } else if (invalid.isChecked()) {
             statY = "inactive";
         }
-        String prodType = productUpdateType.getSelectedItem().toString();
+        String prodType = productUpdateType.getText().toString();
         String prodPrice = productUpdatePrice.getText().toString();
 
         if (prodType.isEmpty() && prodPrice.isEmpty()) {
@@ -128,67 +134,7 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
     }
 
     //Display Data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    private void retrieveData() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Water_Type_File");
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    String waterTypes = dataSnapshot1.getValue(String.class);
-                    list.add(waterTypes);
-                }
-                adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, list);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                productUpdateType.setAdapter(adapter);
-                if (list != null)
-                {
-                    retrieveDataBasedOnUser();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                showMessage("No data available");
-            }
-        });
-    }
-
-    //Close Display Data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    //Retrieving Data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    private void retrieveDataBasedOnUser()
-    {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File");
-        reference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
-                {
-                    UserWSWDWaterTypeFile userWS = dataSnapshot1.getValue(UserWSWDWaterTypeFile.class);
-                    if (userWS != null)
-                    {
-                        String waterType = userWS.getWater_type();
-                        for (int counter = 0; counter < adapter.getCount(); counter++)
-                        {
-                            if (adapter.getItem(counter).equalsIgnoreCase(waterType))
-                            {
-                                productUpdateType.setSelection(counter);
-                            }
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                showMessage("No data available");
-            }
-        });
-    }
-
     //CloseRetrieving Data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
     private void dataConnection(String prodType, String prodPrice, String prodStat) {
         progressDialog.show();

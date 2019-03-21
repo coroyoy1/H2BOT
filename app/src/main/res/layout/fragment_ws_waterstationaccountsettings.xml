@@ -195,6 +195,15 @@
                     android:text="Update"
                     android:textColor="#FFF" />
 
+                <Button
+                    android:id="@+id/RegisterSignUpWithPasswordUAS"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/z_darkbluebutton"
+                    android:text="Update Account"
+                    android:textColor="#FFF" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

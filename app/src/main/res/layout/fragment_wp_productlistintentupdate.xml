@@ -21,12 +21,14 @@
         android:orientation="vertical">
 
         <Spinner
+            android:gravity="center"
+            android:textSize="18dp"
             android:textAlignment="center"
             android:id="@+id/waterUpdateSpinner"
+            android:background="@android:color/holo_blue_bright"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@color/colorPrimary"
             android:layout_marginLeft="31dp"
             android:layout_marginRight="31dp">
         </Spinner>

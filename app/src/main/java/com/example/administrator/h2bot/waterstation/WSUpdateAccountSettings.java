@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.UserAccountFile;
+import com.example.administrator.h2bot.models.UserAccountFile2;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserLocationAddress;
 import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
@@ -59,7 +60,7 @@ import static android.app.Activity.RESULT_OK;
 public class WSUpdateAccountSettings extends Fragment implements View.OnClickListener {
     private static final int PICK_IMAGE_REQUEST = 1;
     private EditText firstNameWU, lastNameWU, addressWU, contactNoWU, emailAddressWU, passwordWU, confirmPasswordWU, retypePassword, oldPass;
-    private Button updateButton, addPhotobutton, changePassword;
+    private Button updateButton, addPhotobutton, changePassword, updateWithPasswordButton;
     LinearLayout linearPassword, linearRenewPassword;
     private CircleImageView imageView;
     private FirebaseAuth mAuth;
@@ -71,7 +72,9 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
     double lat;
     double lng;
     private String newToken;
-    boolean isClick=true;
+    boolean isClick=false;
+
+    String uriImage;
 
     @Nullable
     @Override
@@ -93,6 +96,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
         linearRenewPassword = view.findViewById(R.id.linearPasswordUpdate);
         retypePassword = view.findViewById(R.id.RegisterPasswordRetypeUAS);
         oldPass = view.findViewById(R.id.oldPassword);
+        updateWithPasswordButton = view.findViewById(R.id.RegisterSignUpWithPasswordUAS);
 
         changePassword.setTag(0);
         linearRenewPassword.setVisibility(View.GONE);
@@ -105,9 +109,11 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
         updateButton.setOnClickListener(this);
         addPhotobutton.setOnClickListener(this);
         changePassword.setOnClickListener(this);
+        updateWithPasswordButton.setOnClickListener(this);
+        updateWithPasswordButton.setVisibility(View.GONE);
 
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Loading...");
+        progressDialog.setMessage("Updating Account......");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
@@ -116,6 +122,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
         {
             RetrieveDataThroughEditText();
         }
+
 
         return view;
     }
@@ -166,7 +173,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
         }
         else
         {
-            updateInfoWithRenewPassword();
+            updateInfoWithNewPassword();
         }
     }
 
@@ -257,7 +264,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                             lastNameWU.setText(userFile.getUser_lastname());
                             addressWU.setText(userFile.getUser_address());
                             contactNoWU.setText(userFile.getUser_phone_no());
-                            Picasso.get().load(userFile.getUser_uri()).into(imageView);
+                            Picasso.get().load(userFile.getUser_uri()).fit().centerCrop().into(imageView);
                         }
                         DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("User_Account_File");
                         reference1.child(firebaseUser.getUid())
@@ -284,6 +291,171 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                 });
     }
 
+    private void updateInfoWithNewPassword()
+    {
+        DatabaseReference renew = FirebaseDatabase.getInstance().getReference("User_Account_File");
+        renew.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                UserAccountFile userAccountFile = dataSnapshot.getValue(UserAccountFile.class);
+                if (userAccountFile != null)
+                {
+                    String emailOf = userAccountFile.getUser_email_address();
+                    String passwordOf = userAccountFile.getUser_password();
+
+                    if (!oldPass.getText().toString().equals(passwordOf))
+                    {
+                        showMessage("Password does not match from the server");
+                    }
+                    else if (passwordWU.getText().toString().equals("") && confirmPasswordWU.getText().toString().equals(""))
+                    {
+                        showMessage("New and Confirmation password should not be empty");
+                    }
+                    else
+                    {
+                        if (passwordWU.getText().toString().equals(confirmPasswordWU.getText().toString()))
+                        {
+                            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                                @Override
+                                public void onSuccess(InstanceIdResult instanceIdResult) {
+                                    newToken = instanceIdResult.getToken();
+                                }
+                            });
+                            UserAccountFile userAccountFileNew = new UserAccountFile(
+                                    user.getUid(),
+                                    emailAddressWU.getText().toString(),
+                                    passwordWU.getText().toString(),
+                                    newToken,
+                                    "active"
+                            );
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_Account_File");
+                            databaseReference.child(firebaseUser.getUid()).setValue(userAccountFileNew)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful())
+                                            {
+                                                AuthCredential authCredential = EmailAuthProvider.getCredential(emailOf, passwordOf);
+                                                firebaseUser.reauthenticate(authCredential)
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful())
+                                                                {
+                                                                    firebaseUser.updateEmail(emailAddressWU.getText().toString())
+                                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                @Override
+                                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                                   if (task.isSuccessful())
+                                                                                   {
+                                                                                       firebaseUser.updatePassword(passwordWU.getText().toString())
+                                                                                               .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                                   @Override
+                                                                                                   public void onComplete(@NonNull Task<Void> task) {
+                                                                                                        if (task.isSuccessful())
+                                                                                                        {
+                                                                                                            DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("User_File");
+                                                                                                            databaseReference1.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+                                                                                                                @Override
+                                                                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                                                    UserFile userFile = dataSnapshot.getValue(UserFile.class);
+                                                                                                                    if (userFile != null)
+                                                                                                                    {
+                                                                                                                        uriImage = userFile.getUser_uri();
+                                                                                                                    }
+                                                                                                                }
+
+                                                                                                                @Override
+                                                                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                                                                }
+                                                                                                            });
+                                                                                                            if (uri == null)
+                                                                                                            {
+                                                                                                                UserFile userFile = new UserFile(
+                                                                                                                        user.getUid(),
+                                                                                                                        uriImage,
+                                                                                                                        firstNameWU.getText().toString(),
+                                                                                                                        lastNameWU.getText().toString(),
+                                                                                                                        addressWU.getText().toString(),
+                                                                                                                        contactNoWU.getText().toString(),
+                                                                                                                        "Water Station",
+                                                                                                                        "active"
+                                                                                                                );
+                                                                                                                DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("User_File");
+                                                                                                                databaseReference2.child(firebaseUser.getUid()).setValue(userFile)
+                                                                                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                                                            @Override
+                                                                                                                            public void onSuccess(Void aVoid) {
+                                                                                                                                //getLocationSetter();
+                                                                                                                                progressDialog.dismiss();
+                                                                                                                            }
+                                                                                                                        });
+                                                                                                            }
+                                                                                                            else
+                                                                                                            {
+                                                                                                                StorageReference storageReference1 = FirebaseStorage.getInstance().getReference("users_photo");
+                                                                                                                storageReference1.putFile(uri)
+                                                                                                                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                                                                                            @Override
+                                                                                                                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                                                                                                Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                                                                                                                                result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                                                                                                    @Override
+                                                                                                                                    public void onSuccess(Uri uri) {
+                                                                                                                                        String uriOf = uri.toString();
+                                                                                                                                        UserFile userFile = new UserFile(
+                                                                                                                                                user.getUid(),
+                                                                                                                                                uriOf,
+                                                                                                                                                firstNameWU.getText().toString(),
+                                                                                                                                                lastNameWU.getText().toString(),
+                                                                                                                                                addressWU.getText().toString(),
+                                                                                                                                                contactNoWU.getText().toString(),
+                                                                                                                                                "Water Station",
+                                                                                                                                                "active"
+                                                                                                                                        );
+                                                                                                                                        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("User_File");
+                                                                                                                                        databaseReference2.child(firebaseUser.getUid()).setValue(userFile)
+                                                                                                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                                                                                    @Override
+                                                                                                                                                    public void onSuccess(Void aVoid) {
+                                                                                                                                                        //getLocationSetter();
+                                                                                                                                                        progressDialog.dismiss();
+                                                                                                                                                    }
+                                                                                                                                                });
+                                                                                                                                    }
+                                                                                                                                });
+                                                                                                                            }
+                                                                                                                        });
+                                                                                                            }
+
+                                                                                                        }
+                                                                                                   }
+                                                                                               });
+                                                                                   }
+                                                                                }
+                                                                            });
+                                                                }
+                                                            }
+                                                        });
+                                            }
+                                        }
+                                    });
+                        }
+                        else
+                        {
+                            showMessage("Password both new and confirmation should be the same");
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     private void updateInfoWithRenewPassword()
     {
@@ -320,147 +492,150 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                                 if (task.isSuccessful()) {
                                                                                     user.updatePassword(passwordWU.getText().toString())
-                                                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                                                 @Override
-                                                                                                public void onSuccess(Void aVoid) {
-                                                                                                    if (uri == null) {
-                                                                                                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_File");
-                                                                                                        reference.child(user.getUid()).addValueEventListener(new ValueEventListener() {
-                                                                                                            @Override
-                                                                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                                                                UserFile userFile1 = dataSnapshot.getValue(UserFile.class);
-                                                                                                                String uriSet = userFile1.getUser_uri();
-                                                                                                                UserFile userFile = new UserFile(
-                                                                                                                        user.getUid(),
-                                                                                                                        uriSet,
-                                                                                                                        firstNameWU.getText().toString(),
-                                                                                                                        lastNameWU.getText().toString(),
-                                                                                                                        addressWU.getText().toString(),
-                                                                                                                        contactNoWU.getText().toString(),
-                                                                                                                        "Water Station",
-                                                                                                                        "active"
-                                                                                                                );
-                                                                                                                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File");
-                                                                                                                databaseReference.child(user.getUid()).setValue(userFile)
-                                                                                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                                                                            @Override
-                                                                                                                            public void onSuccess(Void aVoid) {
-                                                                                                                                FirebaseInstanceId.getInstance().getInstanceId()
-                                                                                                                                        .addOnSuccessListener(getActivity(), new OnSuccessListener<InstanceIdResult>() {
-                                                                                                                                            @Override
-                                                                                                                                            public void onSuccess(InstanceIdResult instanceIdResult) {
-                                                                                                                                                newToken = instanceIdResult.getToken();
-                                                                                                                                                UserAccountFile userAccountFile = new UserAccountFile(
-                                                                                                                                                        user.getUid(),
-                                                                                                                                                        emailAddressWU.getText().toString(),
-                                                                                                                                                        passwordWU.getText().toString(),
-                                                                                                                                                        newToken,
-                                                                                                                                                        "active"
-                                                                                                                                                );
-                                                                                                                                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_Account_File");
-                                                                                                                                                reference.child(user.getUid()).setValue(userAccountFile)
-                                                                                                                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                                                                                                            @Override
-                                                                                                                                                            public void onSuccess(Void aVoid) {
-                                                                                                                                                                getLocationSetter();
-                                                                                                                                                            }
-                                                                                                                                                        })
-                                                                                                                                                        .addOnFailureListener(new OnFailureListener() {
-                                                                                                                                                            @Override
-                                                                                                                                                            public void onFailure(@NonNull Exception e) {
-                                                                                                                                                                showMessage("User does not exists");
-                                                                                                                                                            }
-                                                                                                                                                        });
-                                                                                                                                            }
-                                                                                                                                        })
-                                                                                                                                        .addOnFailureListener(new OnFailureListener() {
-                                                                                                                                            @Override
-                                                                                                                                            public void onFailure(@NonNull Exception e) {
-                                                                                                                                                showMessage("Failed to get token");
-                                                                                                                                            }
-                                                                                                                                        });
-                                                                                                                            }
-                                                                                                                        });
-                                                                                                            }
+                                                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                                                    if (task.isSuccessful())
+                                                                                                    {
+                                                                                                        if (uri == null) {
+                                                                                                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_File");
+                                                                                                            reference.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                                                                                                                @Override
+                                                                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                                                    UserFile userFile1 = dataSnapshot.getValue(UserFile.class);
+                                                                                                                    String uriSet = userFile1.getUser_uri();
+                                                                                                                    UserFile userFile = new UserFile(
+                                                                                                                            user.getUid(),
+                                                                                                                            uriSet,
+                                                                                                                            firstNameWU.getText().toString(),
+                                                                                                                            lastNameWU.getText().toString(),
+                                                                                                                            addressWU.getText().toString(),
+                                                                                                                            contactNoWU.getText().toString(),
+                                                                                                                            "Water Station",
+                                                                                                                            "active"
+                                                                                                                    );
+                                                                                                                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File");
+                                                                                                                    databaseReference.child(user.getUid()).setValue(userFile)
+                                                                                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                                                                @Override
+                                                                                                                                public void onSuccess(Void aVoid) {
+                                                                                                                                    FirebaseInstanceId.getInstance().getInstanceId()
+                                                                                                                                            .addOnSuccessListener(getActivity(), new OnSuccessListener<InstanceIdResult>() {
+                                                                                                                                                @Override
+                                                                                                                                                public void onSuccess(InstanceIdResult instanceIdResult) {
+                                                                                                                                                    newToken = instanceIdResult.getToken();
+                                                                                                                                                    UserAccountFile userAccountFile = new UserAccountFile(
+                                                                                                                                                            user.getUid(),
+                                                                                                                                                            emailAddressWU.getText().toString(),
+                                                                                                                                                            passwordWU.getText().toString(),
+                                                                                                                                                            newToken,
+                                                                                                                                                            "active"
+                                                                                                                                                    );
+                                                                                                                                                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_Account_File");
+                                                                                                                                                    reference.child(user.getUid()).setValue(userAccountFile)
+                                                                                                                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                                                                                                @Override
+                                                                                                                                                                public void onSuccess(Void aVoid) {
+                                                                                                                                                                    getLocationSetter();
+                                                                                                                                                                }
+                                                                                                                                                            })
+                                                                                                                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                                                                                                                @Override
+                                                                                                                                                                public void onFailure(@NonNull Exception e) {
+                                                                                                                                                                    showMessage("User does not exists");
+                                                                                                                                                                }
+                                                                                                                                                            });
+                                                                                                                                                }
+                                                                                                                                            })
+                                                                                                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                                                                                                @Override
+                                                                                                                                                public void onFailure(@NonNull Exception e) {
+                                                                                                                                                    showMessage("Failed to get token");
+                                                                                                                                                }
+                                                                                                                                            });
+                                                                                                                                }
+                                                                                                                            });
+                                                                                                                }
 
-                                                                                                            @Override
-                                                                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                                                                @Override
+                                                                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                                                                                            }
-                                                                                                        });
-                                                                                                    }
-                                                                                                    else {
-                                                                                                        StorageReference storageReference = FirebaseStorage.getInstance().getReference("users_photo");
-                                                                                                        storageReference.putFile(uri)
-                                                                                                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                                                                                                    @Override
-                                                                                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                                                                                                        Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-                                                                                                                        result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                                                                                            @Override
-                                                                                                                            public void onSuccess(Uri uri) {
-                                                                                                                                String uriString = uri.toString();
-                                                                                                                                UserFile userFile = new UserFile(
-                                                                                                                                        user.getUid(),
-                                                                                                                                        uriString,
-                                                                                                                                        firstNameWU.getText().toString(),
-                                                                                                                                        lastNameWU.getText().toString(),
-                                                                                                                                        addressWU.getText().toString(),
-                                                                                                                                        contactNoWU.getText().toString(),
-                                                                                                                                        "Water Station",
-                                                                                                                                        "active"
-                                                                                                                                );
-                                                                                                                                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File");
-                                                                                                                                databaseReference.child(user.getUid()).setValue(userFile)
-                                                                                                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                                                                                            @Override
-                                                                                                                                            public void onSuccess(Void aVoid) {
-                                                                                                                                                FirebaseInstanceId.getInstance().getInstanceId()
-                                                                                                                                                        .addOnSuccessListener(getActivity(), new OnSuccessListener<InstanceIdResult>() {
-                                                                                                                                                            @Override
-                                                                                                                                                            public void onSuccess(InstanceIdResult instanceIdResult) {
-                                                                                                                                                                newToken = instanceIdResult.getToken();
-                                                                                                                                                                UserAccountFile userAccountFile = new UserAccountFile(
-                                                                                                                                                                        user.getUid(),
-                                                                                                                                                                        emailAddressWU.getText().toString(),
-                                                                                                                                                                        passwordWU.getText().toString(),
-                                                                                                                                                                        newToken,
-                                                                                                                                                                        "active"
-                                                                                                                                                                );
-                                                                                                                                                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_Account_File");
-                                                                                                                                                                reference.child(firebaseUser.getUid()).setValue(userAccountFile)
-                                                                                                                                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                                                                                                                            @Override
-                                                                                                                                                                            public void onSuccess(Void aVoid) {
-                                                                                                                                                                                getLocationSetter();
-                                                                                                                                                                            }
-                                                                                                                                                                        })
-                                                                                                                                                                        .addOnFailureListener(new OnFailureListener() {
-                                                                                                                                                                            @Override
-                                                                                                                                                                            public void onFailure(@NonNull Exception e) {
-                                                                                                                                                                                showMessage("User does not exists");
-                                                                                                                                                                            }
-                                                                                                                                                                        });
-                                                                                                                                                            }
-                                                                                                                                                        })
-                                                                                                                                                        .addOnFailureListener(new OnFailureListener() {
-                                                                                                                                                            @Override
-                                                                                                                                                            public void onFailure(@NonNull Exception e) {
-                                                                                                                                                                showMessage("Failed to get token");
-                                                                                                                                                            }
-                                                                                                                                                        });
-                                                                                                                                            }
-                                                                                                                                        });
-                                                                                                                            }
-                                                                                                                        });
-                                                                                                                    }
-                                                                                                                })
-                                                                                                                .addOnFailureListener(new OnFailureListener() {
-                                                                                                                    @Override
-                                                                                                                    public void onFailure(@NonNull Exception e) {
-                                                                                                                        showMessage("Failed to update image");
-                                                                                                                    }
-                                                                                                                });
+                                                                                                                }
+                                                                                                            });
+                                                                                                        }
+                                                                                                        else{
+                                                                                                            StorageReference storageReference = FirebaseStorage.getInstance().getReference("users_photo");
+                                                                                                            storageReference.putFile(uri)
+                                                                                                                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                                                                                        @Override
+                                                                                                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                                                                                            Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                                                                                                                            result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                                                                                                @Override
+                                                                                                                                public void onSuccess(Uri uri) {
+                                                                                                                                    String uriString = uri.toString();
+                                                                                                                                    UserFile userFile = new UserFile(
+                                                                                                                                            user.getUid(),
+                                                                                                                                            uriString,
+                                                                                                                                            firstNameWU.getText().toString(),
+                                                                                                                                            lastNameWU.getText().toString(),
+                                                                                                                                            addressWU.getText().toString(),
+                                                                                                                                            contactNoWU.getText().toString(),
+                                                                                                                                            "Water Station",
+                                                                                                                                            "active"
+                                                                                                                                    );
+                                                                                                                                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File");
+                                                                                                                                    databaseReference.child(user.getUid()).setValue(userFile)
+                                                                                                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                                                                                @Override
+                                                                                                                                                public void onSuccess(Void aVoid) {
+                                                                                                                                                    FirebaseInstanceId.getInstance().getInstanceId()
+                                                                                                                                                            .addOnSuccessListener(getActivity(), new OnSuccessListener<InstanceIdResult>() {
+                                                                                                                                                                @Override
+                                                                                                                                                                public void onSuccess(InstanceIdResult instanceIdResult) {
+                                                                                                                                                                    newToken = instanceIdResult.getToken();
+                                                                                                                                                                    UserAccountFile userAccountFile = new UserAccountFile(
+                                                                                                                                                                            user.getUid(),
+                                                                                                                                                                            emailAddressWU.getText().toString(),
+                                                                                                                                                                            passwordWU.getText().toString(),
+                                                                                                                                                                            newToken,
+                                                                                                                                                                            "active"
+                                                                                                                                                                    );
+                                                                                                                                                                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_Account_File");
+                                                                                                                                                                    reference.child(firebaseUser.getUid()).setValue(userAccountFile)
+                                                                                                                                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                                                                                                                @Override
+                                                                                                                                                                                public void onSuccess(Void aVoid) {
+                                                                                                                                                                                    getLocationSetter();
+                                                                                                                                                                                }
+                                                                                                                                                                            })
+                                                                                                                                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                                                                                                                                @Override
+                                                                                                                                                                                public void onFailure(@NonNull Exception e) {
+                                                                                                                                                                                    showMessage("User does not exists");
+                                                                                                                                                                                }
+                                                                                                                                                                            });
+                                                                                                                                                                }
+                                                                                                                                                            })
+                                                                                                                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                                                                                                                @Override
+                                                                                                                                                                public void onFailure(@NonNull Exception e) {
+                                                                                                                                                                    showMessage("Failed to get token");
+                                                                                                                                                                }
+                                                                                                                                                            });
+                                                                                                                                                }
+                                                                                                                                            });
+                                                                                                                                }
+                                                                                                                            });
+                                                                                                                        }
+                                                                                                                    })
+                                                                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                                                                        @Override
+                                                                                                                        public void onFailure(@NonNull Exception e) {
+                                                                                                                            showMessage("Failed to update image");
+                                                                                                                        }
+                                                                                                                    });
+                                                                                                        }
                                                                                                     }
                                                                                                 }
                                                                                             });
@@ -480,6 +655,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                         @Override
                                                         public void onFailure(@NonNull Exception e) {
                                                             showMessage("Failed to update information");
+                                                            progressDialog.dismiss();
                                                         }
                                                     });
                                         }
@@ -491,6 +667,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                 else
                                 {
                                     showMessage("Current password does not match");
+                                    progressDialog.dismiss();
                                 }
                             }
                         }
@@ -500,188 +677,6 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
 
                         }
                     });
-    }
-
-
-    private void thisGetUpdateData(String firstNameString, String lastNameString, String addressString, String contactNoString, String emailAddressString, String passwordString, String confirmPasswordString) {
-        progressDialog.show();
-        firebaseUser.updateEmail(emailAddressString)
-            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    firebaseUser.getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
-                        @Override
-                        public void onSuccess(GetTokenResult getTokenResult) {
-                            device_token_id = getTokenResult.getToken();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    firebaseUser.updatePassword(confirmPasswordWU.getText().toString())
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                if(uri == null) {
-                                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_File");
-                                    reference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            UserFile userFile1 = dataSnapshot.getValue(UserFile.class);
-                                            String uri = userFile1.getUser_uri();
-                                            UserFile userFile = new UserFile(
-                                                    firebaseUser.getUid(),
-                                                    uri,
-                                                    firstNameString,
-                                                    lastNameString,
-                                                    addressString,
-                                                    contactNoString,
-                                                    "Water Station",
-                                                    "active"
-                                            );
-                                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File");
-                                            databaseReference.child(firebaseUser.getUid()).setValue(userFile)
-                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                        @Override
-                                                        public void onSuccess(Void aVoid) {
-                                                            UserAccountFile userAccountFile = new UserAccountFile(
-                                                                    firebaseUser.getUid(),
-                                                                    emailAddressString,
-                                                                    passwordString,
-                                                                    device_token_id,
-                                                                    "active"
-                                                            );
-                                                            DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("User_Account_File");
-                                                            databaseReference1.child(firebaseUser.getUid()).setValue(userAccountFile)
-                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                        @Override
-                                                                        public void onSuccess(Void aVoid) {
-                                                                            Log.d("Hiy","Hi");
-                                                                            getLocationSetter();
-                                                                        }
-                                                                    })
-                                                                    .addOnFailureListener(new OnFailureListener() {
-                                                                        @Override
-                                                                        public void onFailure(@NonNull Exception e) {
-                                                                            showMessages("Failed to save User Account");
-                                                                            progressDialog.dismiss();
-                                                                        }
-                                                                    });
-
-                                                        }
-                                                    })
-                                                    .addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            showMessages("Failed to save data");
-                                                            progressDialog.dismiss();
-                                                        }
-                                                    });
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    });
-                                }
-                                else {
-                                    StorageReference storageReference = FirebaseStorage.getInstance().getReference("users_photo");
-                                    storageReference.putFile(uri)
-                                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                                @Override
-                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                                    Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-                                                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                        @Override
-                                                        public void onSuccess(Uri uri) {
-                                                            String uriString = uri.toString();
-                                                            UserFile userFile = new UserFile(
-                                                                    firebaseUser.getUid(),
-                                                                    uriString,
-                                                                    firstNameString,
-                                                                    lastNameString,
-                                                                    addressString,
-                                                                    contactNoString,
-                                                                    "Water Station",
-                                                                    "active"
-                                                            );
-                                                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File");
-                                                            databaseReference.child(firebaseUser.getUid()).setValue(userFile)
-                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                        @Override
-                                                                        public void onSuccess(Void aVoid) {
-                                                                            UserAccountFile userAccountFile = new UserAccountFile(
-                                                                                    firebaseUser.getUid(),
-                                                                                    emailAddressString,
-                                                                                    passwordString,
-                                                                                    device_token_id,
-                                                                                    "active"
-                                                                            );
-                                                                            DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("User_Account_File");
-                                                                            databaseReference1.child(firebaseUser.getUid()).setValue(userAccountFile)
-                                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                                        @Override
-                                                                                        public void onSuccess(Void aVoid) {
-                                                                                            getLocationSetter();
-                                                                                        }
-                                                                                    })
-                                                                                    .addOnFailureListener(new OnFailureListener() {
-                                                                                        @Override
-                                                                                        public void onFailure(@NonNull Exception e) {
-                                                                                            showMessages("Failed to save User Account");
-                                                                                            progressDialog.dismiss();
-                                                                                        }
-                                                                                    });
-
-                                                                        }
-                                                                    })
-                                                                    .addOnFailureListener(new OnFailureListener() {
-                                                                        @Override
-                                                                        public void onFailure(@NonNull Exception e) {
-                                                                            showMessages("Failed to save data");
-                                                                            progressDialog.dismiss();
-                                                                        }
-                                                                    });
-                                                        }
-                                                    })
-                                                            .addOnFailureListener(new OnFailureListener() {
-                                                                @Override
-                                                                public void onFailure(@NonNull Exception e) {
-                                                                    showMessages("Choose an image!");
-                                                                    progressDialog.dismiss();
-                                                                }
-                                                            });
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    showMessages("image error");
-                                                    progressDialog.dismiss();
-                                                }
-                                            });
-                                }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                showMessages("password error");
-                                progressDialog.dismiss();
-                            }
-                        });
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    showMessages("Failed to update the information");
-                    progressDialog.dismiss();
-                }
-            });
     }
 
     private void updateInfoWithoutRenewPassword()
@@ -923,12 +918,12 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
         switch (v.getId())
         {
             case R.id.RegisterSignUpUAS:
-                if(isClick) {
-                    updateDataAccountSingular();
-                }
-                else {
-                    updateDataAccount();
-                }
+                progressDialog.show();
+                updateDataAccountSingular();
+                break;
+            case R.id.RegisterSignUpWithPasswordUAS:
+                progressDialog.show();
+                updateDataAccount();
                 break;
             case R.id.addPhotoUAS:
                 openGallery();
@@ -942,15 +937,17 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                         changePassword.setText("Cancel Change Password");
                         linearPassword.setVisibility(View.GONE);
                         linearRenewPassword.setVisibility(View.VISIBLE);
-                        isClick=false;
-                        v.setTag(1);
+                        isClick=true;
+                        changePassword.setTag(1);
+                        updateWithPasswordButton.setVisibility(View.VISIBLE);
                         break;
                     case 1:
                         changePassword.setText("Change Password");
                         linearPassword.setVisibility(View.VISIBLE);
                         linearRenewPassword.setVisibility(View.GONE);
-                        isClick=true;
-                        v.setTag(0);
+                        isClick=false;
+                        changePassword.setTag(0);
+                        updateWithPasswordButton.setVisibility(View.GONE);
                         break;
                 }
                 break;

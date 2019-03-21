@@ -80,21 +80,43 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
         return view;
     }
 
+
     public void retrieveData()
     {
+        List<String> array1 = new ArrayList<String>();
+        List<String> array2 = new ArrayList<String>();
+
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Water_Type_File");
-        databaseReference.child(firebaseUser.getUid())
+        databaseReference
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                         {
-                            String userTypes = dataSnapshot1.getValue(String.class);
-                            list.add(userTypes);
+                            String userTypes = dataSnapshot1.child("prodName").getValue(String.class);
+                            array1.add(userTypes);
                         }
-                        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, list);
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        waterProductType.setAdapter(adapter);
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File");
+                        reference.child(firebaseUser.getUid())
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot dataSnapshot2 : dataSnapshot.getChildren())
+                                        {
+                                            String userTypes2 = dataSnapshot2.child("water_type").getValue(String.class);
+                                            array2.add(userTypes2);
+                                        }
+                                        array1.removeAll(array2);
+                                        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, array1);
+                                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                        waterProductType.setAdapter(adapter);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
                     }
 
                     @Override
@@ -136,6 +158,14 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
                 public void onSuccess(Void aVoid) {
                     showMessages("Item added successfully");
                     progressDialog.dismiss();
+                    WSProductListFragment additem = new WSProductListFragment();
+                    AppCompatActivity activity = (AppCompatActivity)getContext();
+                    activity.getSupportFragmentManager()
+                            .beginTransaction()
+                            .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                            .replace(R.id.fragment_container_ws, additem)
+                            .addToBackStack(null)
+                            .commit();
                 }
             })
             .addOnFailureListener(new OnFailureListener() {
