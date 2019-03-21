@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -306,12 +307,13 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                     if (!oldPass.getText().toString().equals(passwordOf))
                     {
                         showMessage("Password does not match from the server");
+                        progressDialog.dismiss();
                     }
+
                     else if (passwordWU.getText().toString().equals("") && confirmPasswordWU.getText().toString().equals(""))
                     {
                         showMessage("New and Confirmation password should not be empty");
-
-
+                        progressDialog.dismiss();
                     }
                     else
                     {
@@ -356,43 +358,50 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                                                    public void onComplete(@NonNull Task<Void> task) {
                                                                                                         if (task.isSuccessful())
                                                                                                         {
-                                                                                                            DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("User_File");
-                                                                                                            databaseReference1.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
-                                                                                                                @Override
-                                                                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                                                                    UserFile userFile = dataSnapshot.getValue(UserFile.class);
-                                                                                                                    if (userFile != null)
-                                                                                                                    {
-                                                                                                                        uriImage = userFile.getUser_uri();
-                                                                                                                    }
-                                                                                                                }
-
-                                                                                                                @Override
-                                                                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                                                                                }
-                                                                                                            });
                                                                                                             if (uri == null)
                                                                                                             {
-                                                                                                                UserFile userFile = new UserFile(
-                                                                                                                        user.getUid(),
-                                                                                                                        uriImage,
-                                                                                                                        firstNameWU.getText().toString(),
-                                                                                                                        lastNameWU.getText().toString(),
-                                                                                                                        addressWU.getText().toString(),
-                                                                                                                        contactNoWU.getText().toString(),
-                                                                                                                        "Water Station",
-                                                                                                                        "active"
-                                                                                                                );
-                                                                                                                DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("User_File");
-                                                                                                                databaseReference2.child(firebaseUser.getUid()).setValue(userFile)
-                                                                                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                                                                            @Override
-                                                                                                                            public void onSuccess(Void aVoid) {
-                                                                                                                                //getLocationSetter();
-                                                                                                                                progressDialog.dismiss();
-                                                                                                                            }
-                                                                                                                        });
+                                                                                                                DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("User_File");
+                                                                                                                databaseReference1.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+                                                                                                                    @Override
+                                                                                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                                                        UserFile userFile = dataSnapshot.getValue(UserFile.class);
+                                                                                                                        if (userFile != null)
+                                                                                                                        {
+                                                                                                                            uriImage = userFile.getUser_uri();
+                                                                                                                            UserFile userFileRenew = new UserFile(
+                                                                                                                                    user.getUid(),
+                                                                                                                                    uriImage,
+                                                                                                                                    firstNameWU.getText().toString(),
+                                                                                                                                    lastNameWU.getText().toString(),
+                                                                                                                                    addressWU.getText().toString(),
+                                                                                                                                    contactNoWU.getText().toString(),
+                                                                                                                                    "Water Station",
+                                                                                                                                    "active"
+                                                                                                                            );
+                                                                                                                            DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("User_File");
+                                                                                                                            databaseReference2.child(firebaseUser.getUid()).setValue(userFileRenew)
+                                                                                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                                                                        @Override
+                                                                                                                                        public void onSuccess(Void aVoid) {
+                                                                                                                                            getLocationSetter();
+                                                                                                                                            progressDialog.dismiss();
+                                                                                                                                        }
+                                                                                                                                    })
+                                                                                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                                                                                        @Override
+                                                                                                                                        public void onFailure(@NonNull Exception e) {
+                                                                                                                                            showMessage("Fail to connect server");
+                                                                                                                                        }
+                                                                                                                                    });
+                                                                                                                        }
+                                                                                                                    }
+
+                                                                                                                    @Override
+                                                                                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                                                                        showMessage("Fail to connect server");
+                                                                                                                        progressDialog.dismiss();
+                                                                                                                    }
+                                                                                                                });
                                                                                                             }
                                                                                                             else
                                                                                                             {
@@ -421,12 +430,26 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                                                                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                                                                                                     @Override
                                                                                                                                                     public void onSuccess(Void aVoid) {
-                                                                                                                                                        //getLocationSetter();
+                                                                                                                                                        getLocationSetter();
+                                                                                                                                                        progressDialog.dismiss();
+                                                                                                                                                    }
+                                                                                                                                                })
+                                                                                                                                                .addOnFailureListener(new OnFailureListener() {
+                                                                                                                                                    @Override
+                                                                                                                                                    public void onFailure(@NonNull Exception e) {
+                                                                                                                                                        showMessage("Fail to update information");
                                                                                                                                                         progressDialog.dismiss();
                                                                                                                                                     }
                                                                                                                                                 });
                                                                                                                                     }
                                                                                                                                 });
+                                                                                                                            }
+                                                                                                                        })
+                                                                                                                        .addOnFailureListener(new OnFailureListener() {
+                                                                                                                            @Override
+                                                                                                                            public void onFailure(@NonNull Exception e) {
+                                                                                                                                showMessage("Fail to get Image");
+                                                                                                                                progressDialog.dismiss();
                                                                                                                             }
                                                                                                                         });
                                                                                                             }
@@ -942,6 +965,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                         isClick=true;
                         changePassword.setTag(1);
                         updateWithPasswordButton.setVisibility(View.VISIBLE);
+                        updateButton.setVisibility(View.GONE);
                         break;
                     case 1:
                         changePassword.setText("Change Password");
@@ -950,6 +974,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                         isClick=false;
                         changePassword.setTag(0);
                         updateWithPasswordButton.setVisibility(View.GONE);
+                        updateButton.setVisibility(View.VISIBLE);
                         break;
                 }
                 break;
