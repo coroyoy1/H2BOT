@@ -311,6 +311,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                     {
                         showMessage("New and Confirmation password should not be empty");
 
+
                     }
                     else
                     {
