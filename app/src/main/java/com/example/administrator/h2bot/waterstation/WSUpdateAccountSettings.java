@@ -325,7 +325,6 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                     newToken = instanceIdResult.getToken();
                                 }
                             });
-
                             UserAccountFile userAccountFileNew = new UserAccountFile(
                                     user.getUid(),
                                     emailAddressWU.getText().toString(),
