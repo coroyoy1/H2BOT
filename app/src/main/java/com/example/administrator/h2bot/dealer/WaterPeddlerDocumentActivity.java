@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -35,6 +36,7 @@ import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserLocationAddress;
 import com.example.administrator.h2bot.models.WDDocFile;
 import com.example.administrator.h2bot.models.WSBusinessInfoFile;
+import com.example.administrator.h2bot.models.WSBusinessInfoFile2;
 import com.example.administrator.h2bot.models.WSDocFile;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -57,9 +59,10 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-public class WaterPeddlerDocumentActivity extends AppCompatActivity{
+public class WaterPeddlerDocumentActivity extends AppCompatActivity implements CheckBox.OnClickListener{
 
     private static final int PICK_IMAGE_REQUEST = 1;
     String userId;
@@ -80,11 +83,12 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
     private double lng;
     RadioButton free,fixPrice,perGallon;
     String newToken;
-
-    Uri filepath, filepath2;
+    CheckBox mon, tue, wed, thurs, fri, sat, sun;
+    Uri filepath, filepath2,mFilepath;
     Boolean isPicked = false;
     Boolean isPicked2 = false;
-    String mFirstname, mLastname, mAddress, mContact_no, mEmail_address, mPassword, mFilepath;
+    String mFirstname, mLastname, mAddress, mContact_no, mEmail_address, mPassword;
+    List<String> week;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,7 +100,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
-
+        week = new ArrayList<String>();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         mAuth = FirebaseAuth.getInstance();
@@ -133,14 +137,28 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
         String email_address = bundle.getString("emailaddress");
         String password = bundle.getString("password");
         String filepath = bundle.getString("filepath");
+        mFilepath = Uri.parse(filepath);
 
+        mon = findViewById(R.id.monBox);
+        tue = findViewById(R.id.tueBox);
+        wed = findViewById(R.id.wedBox);
+        thurs = findViewById(R.id.thursBox);
+        fri = findViewById(R.id.friBox);
+        sat = findViewById(R.id.satBox);
+        sun = findViewById(R.id.sunBox);
+        mon.setOnClickListener(this);
+        tue.setOnClickListener(this);
+        wed.setOnClickListener(this);
+        thurs.setOnClickListener(this);
+        fri.setOnClickListener(this);
+        sat.setOnClickListener(this);
+        sun.setOnClickListener(this);
         mFirstname = firstname;
         mLastname = lastname;
         mAddress = address;
         mContact_no = contact_no;
         mEmail_address = email_address;
         mPassword = password;
-        mFilepath = filepath;
 
         String[] arraySpinner = new String[]{
                 "AM", "PM"
@@ -247,9 +265,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                 sb.append(myItem.getValue());
                                 sb.append("\n");
                             }
-                            if(sb.toString().toLowerCase().contains(mFirstname.toLowerCase()) && sb.toString().toLowerCase().contains(mLastname.toLowerCase())
-                                && sb.toString().toLowerCase().contains("land") && sb.toString().toLowerCase().contains("transportation")
-                                    && sb.toString().toLowerCase().contains("office")){
+                            if(sb.toString().toLowerCase().contains(mFirstname.toLowerCase()) && sb.toString().toLowerCase().contains(mLastname.toLowerCase())){
                                 Picasso.get().load(filepath2).into(sanitaryPermit_image);
                                 Toast.makeText(this, "Valid driver's license", Toast.LENGTH_SHORT).show();
                                 check = true;
@@ -292,9 +308,21 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                             Toast.makeText(WaterPeddlerDocumentActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
+                    StorageReference mStorage1 = FirebaseStorage.getInstance().getReference("user_photo").child(userId);
+                    mStorage1.putFile(mFilepath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                            result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
 
+                                }
+                            });
+                        }
+                    });
                     StorageReference mStorage = FirebaseStorage.getInstance().getReference("dealer_photos").child(userId);
-                    mStorage.putFile(filepath2).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    mStorage.putFile(mFilepath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
@@ -305,7 +333,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
 
                                     String stringUri = uri.toString();
                                     UserFile userFile = new UserFile(userId,
-                                            mFilepath,
+                                            stringUri,
                                             mFirstname,
                                             mLastname,
                                             mAddress,
@@ -322,13 +350,14 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                     String startHour = startTimeTextView.getText().toString();
                                     String endHour = endTimeTextView.getText().toString();
 
-                                    WSBusinessInfoFile businessInfoFile = new WSBusinessInfoFile(
+                                    WSBusinessInfoFile2 businessInfoFile = new WSBusinessInfoFile2(
                                             userId,
                                             name,
                                             mAddress,
                                             mContact_no,
                                             startHour,
                                             endHour,
+                                            week.toString(),
                                             deliveryMethod,
                                             deliveryFee.getText().toString(),
                                             min_no_of_gallons.getText().toString(),
@@ -342,12 +371,10 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
-                                                            Log.d("Hohohoho","Ho");
-                                                            FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(userId).setValue(businessInfoFile)
+                                                           FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(userId).setValue(businessInfoFile)
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override
                                                                 public void onSuccess(Void aVoid) {
-                                                                    Log.d("Hihihihi","Hi");
                                                                     progressDialog.dismiss();
                                                                     getLocationSetter();
                                                                     Toast.makeText(WaterPeddlerDocumentActivity.this, "Successfully registered", Toast.LENGTH_SHORT).show();
@@ -378,7 +405,6 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                                                 return;
                                             }
                                         });
-
                                 }
                             });
                         }
@@ -459,7 +485,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
         if(filepath2 != null){
             FirebaseUser user = mAuth.getCurrentUser();
             userId = user.getUid();
-            StorageReference mStorageRef = storageReference.child("station_documents").child(userId +"/"+"sanitaryPermitDocument");
+            StorageReference mStorageRef = storageReference.child("dealer_documents").child(userId +"/"+"sanitaryPermitDocument");
             mStorageRef.putFile(filepath2).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -527,7 +553,6 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
                 startHour = String.valueOf(simpleTimePicker.getHour());
                 startMinute = String.valueOf(simpleTimePicker.getMinute());
                 String AM_PM ;
-
                 Toast.makeText(WaterPeddlerDocumentActivity.this, startHour+","+startMinute,Toast.LENGTH_SHORT).show();
                 startTimeTextView.setText(startHour+":"+startMinute);
                 alertDialog.dismiss();
@@ -559,5 +584,83 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity{
             }
         });
         alertDialog.show();
+    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId())
+        {
+            case R.id.monBox:
+                String monday = "Monday";
+                String monSplit = String.join(",", monday);
+                if (mon.isChecked()) {
+                    week.add(monSplit);
+                }
+                else {
+                    week.remove(monSplit);
+                }
+                break;
+            case R.id.tueBox:
+                String tuesday = "Tuesday";
+                String tuesdaySplit = String.join(",", tuesday);
+                if (tue.isChecked()) {
+                    week.add(tuesdaySplit);
+                }
+                else {
+                    week.remove(tuesdaySplit);
+                }
+                break;
+            case R.id.wedBox:
+                String wednesday = "Wednesday";
+                String wednesdaySplit = String.join(",", wednesday);
+                if (wed.isChecked()) {
+                    week.add(wednesdaySplit);
+                }
+                else {
+                    week.remove(wednesdaySplit);
+                }
+                break;
+            case R.id.thursBox:
+                String thursday = "Thursday";
+                String thursdaySplit = String.join(",", thursday);
+                if (thurs.isChecked()) {
+                    week.add(thursdaySplit);
+                }
+                else {
+                    week.remove(thursdaySplit);
+                }
+                break;
+            case R.id.friBox:
+                String friday = "Friday";
+                String fridaySplit = String.join(",", friday);
+                if (fri.isChecked()) {
+                    week.add(fridaySplit);
+                }
+                else {
+                    week.remove(fridaySplit);
+                }
+                break;
+            case R.id.satBox:
+                String saturday = "Saturday";
+                String saturdaySplit = String.join(",", saturday);
+                if (sat.isChecked()) {
+                    week.add(saturdaySplit);
+                }
+                else {
+                    week.remove(saturdaySplit);
+                }
+                break;
+            case R.id.sunBox:
+                String sunday = "Sunday";
+                String sundaySplit = String.join(",", sunday);
+                if (sun.isChecked()) {
+                    week.add(sundaySplit);
+                    showMessages(week.toString());
+                }
+                else {
+                    week.remove(sundaySplit);
+                    showMessages(week.toString());
+                }
+                break;
+        }
     }
 }

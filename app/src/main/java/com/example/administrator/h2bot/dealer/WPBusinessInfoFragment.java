@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
+import com.example.administrator.h2bot.models.WSBusinessInfoFile;
 import com.example.administrator.h2bot.waterstation.WSBusinessDocumentUpdate;
 import com.example.administrator.h2bot.waterstation.WSBusinessInformationUpdate;
 import com.google.firebase.auth.FirebaseAuth;
@@ -92,16 +94,16 @@ public class WPBusinessInfoFragment extends Fragment implements View.OnClickList
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                UserWSBusinessInfoFile userWSBusinessInfoFile = dataSnapshot.getValue(UserWSBusinessInfoFile.class);
+                WSBusinessInfoFile userWSBusinessInfoFile = dataSnapshot.getValue(WSBusinessInfoFile.class);
                 if(userWSBusinessInfoFile != null)
                 {
                     String businessTime = userWSBusinessInfoFile.getBusiness_start_time()+" - "+userWSBusinessInfoFile.getBusiness_end_time();
                     stationAddress.setText("Full Address: "+userWSBusinessInfoFile.getBusiness_address());
                     stationHours.setText("Business Hours: "+businessTime);
                     stationTelNo.setText("Contact No.: "+userWSBusinessInfoFile.getBusiness_tel_no());
-                    stationFeePerGal.setText("Fee per Gallon: "+userWSBusinessInfoFile.getBusiness_delivery_fee_per_gal());
-                    stationDelivery.setText("Delivery Status: "+userWSBusinessInfoFile.getBusiness_delivery_service_status());
-                    stationStatus.setText("Station Status: "+userWSBusinessInfoFile.getBusiness_status());
+                    stationFeePerGal.setText("Delivery Fee: "+userWSBusinessInfoFile.getBusiness_delivery_fee());
+                    stationDelivery.setText("Delivery Method: "+userWSBusinessInfoFile.getBusiness_delivery_fee_method());
+                    stationStatus.setText("Minimum order of gallons: "+userWSBusinessInfoFile.getBusiness_min_no_of_gallons());
                     }
                 else
                 {
@@ -120,6 +122,7 @@ public class WPBusinessInfoFragment extends Fragment implements View.OnClickList
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 UserFile user = dataSnapshot.getValue(UserFile.class);
                 String image = user.getUser_uri();
+                Log.d("ImageNako",""+image);
                 Picasso.get().load(image).into(imageView);
             }
 

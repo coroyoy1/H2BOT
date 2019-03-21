@@ -78,7 +78,7 @@
                 </LinearLayout>
 
                 <EditText
-                    android:inputType="textEmailAddress"
+                    android:inputType="text"
                     android:id="@+id/RegisterAddressUAS"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -88,23 +88,13 @@
                     android:textAlignment="center" />
 
                 <EditText
-                    android:inputType="textEmailAddress"
+                    android:inputType="number"
                     android:id="@+id/RegisterContactUAS"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/edit_text_border"
                     android:hint="@string/contact_number"
-                    android:textAlignment="center" />
-
-                <EditText
-                    android:id="@+id/RegisterEmailAddressUAS"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
-                    android:hint="@string/email_address"
-                    android:inputType="textEmailAddress"
                     android:textAlignment="center" />
 
                 <LinearLayout

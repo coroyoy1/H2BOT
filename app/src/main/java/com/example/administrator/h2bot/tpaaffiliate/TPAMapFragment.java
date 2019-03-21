@@ -123,6 +123,8 @@ public class TPAMapFragment extends Fragment
     private final String DELIVERED = "SMS_DELIVERED";
     PendingIntent sentPI, deliveredPI;
     BroadcastReceiver smsSentReceiver, smsDeliveredReceiver;
+    double oldpointstation, newpointstation;
+    double oldpointsaffiliate, newpointsaffiliate;
     public TPAMapFragment() {
         // Required empty public constructor
     }
@@ -550,14 +552,16 @@ public class TPAMapFragment extends Fragment
     private void updateBottomSheetContent(Marker marker) {
         TextView stationName = bottomSheet.findViewById(R.id.stationName);
         TextView fundAmt = bottomSheet.findViewById(R.id.fundAmt);
-        pointsNeeded = Double.parseDouble(fundAmt.getText().toString());
-          Button orderBtn = bottomSheet.findViewById(R.id.orderBtn);
+        Log.d("Points",""+pointsNeeded);
+        Button orderBtn = bottomSheet.findViewById(R.id.orderBtn);
+
 //        Button scanCode = bottomSheetCustomer.findViewById(R.id.scanCode);
 //        Button callBtn = bottomSheetCustomer.findViewById(R.id.callBtn);
 //        Button sendMsg = bottomSheetCustomer.findViewById(R.id.sendMsg);
 
         stationName.setText(marker.getTitle());
         String amtNeeded = fundAmt.getText().toString();
+
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         userFileRef = FirebaseDatabase.getInstance().getReference("User_File");
         businessRef = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
@@ -670,7 +674,7 @@ public class TPAMapFragment extends Fragment
         orderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                pointsNeeded = Double.valueOf(fundAmt.getText().toString());
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
                 dialog.setCancelable(false);
                 dialog.setTitle("CONFIRMATION");
@@ -700,12 +704,44 @@ public class TPAMapFragment extends Fragment
                                 affiliatename = dataSnapshot.child("user_firstname").getValue(String.class) + " " + dataSnapshot.child("user_lastname").getValue(String.class);
                                 affiliateNo = dataSnapshot.child("user_phone_no").getValue(String.class);
                             }
-
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
 
                             }
                         });
+                            Log.d("idid","kakaloka"+firebaseUser.getUid());
+                            DatabaseReference wallet1 = FirebaseDatabase.getInstance().getReference("User_Wallet").child(firebaseUser.getUid());
+                            wallet1.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    oldpointsaffiliate = Double.valueOf(dataSnapshot.child("user_points").getValue(String.class));
+                                    Log.d("pasudla ko","kakalokagago ka"+oldpointstation);
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                            DatabaseReference reference5 = FirebaseDatabase.getInstance().getReference("User_Wallet").child(stationId);
+                            reference5.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    oldpointstation = Double.valueOf(dataSnapshot.child("user_points").getValue(String.class));
+                                    Log.d("pasudla ko1","kakaloka"+oldpointstation);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                            if(oldpointstation!=0 && oldpointsaffiliate != 0) {
+                                newpointsaffiliate = oldpointsaffiliate - pointsNeeded;
+                                newpointstation = oldpointstation + pointsNeeded;
+                                Log.d("newpointstation", "" + newpointstation);
+                                FirebaseDatabase.getInstance().getReference("User_Wallet").child(firebaseUser.getUid()).child("user_points").setValue(String.valueOf(newpointsaffiliate));
+                                FirebaseDatabase.getInstance().getReference("User_Wallet").child(stationId).child("user_points").setValue(String.valueOf(newpointstation));
+                            }
                         DatabaseReference reference3 = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
                         reference3.child(stationId).addValueEventListener(new ValueEventListener() {
                             @Override
@@ -748,20 +784,6 @@ public class TPAMapFragment extends Fragment
                                         args1.putString("transactioncustomerid", customer_id);
                                         args1.putString("stationid", stationId);
                                         detail.setArguments(args1);
-
-//                                TPAAcceptedFragment additem = new TPAAcceptedFragment();
-//                                AppCompatActivity activity = (AppCompatActivity)v.getContext();
-//                                activity.getSupportFragmentManager()
-//                                        .beginTransaction()
-//                                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-//                                        .replace(R.id.fragment_container, additem)
-//                                        .addToBackStack(null)
-//                                        .commit();
-//                                Bundle args1 = new Bundle();
-//                                args1.putString("transactionno", orderno);
-//                                args1.putString("transactioncustomerid", customer_id);
-//                                args1.putString("stationid", stationId);
-//                                additem.setArguments(args1);
                                     }
                                 });
                         Log.d("stations", "hahastation" + stationId + orderno + customer_id);

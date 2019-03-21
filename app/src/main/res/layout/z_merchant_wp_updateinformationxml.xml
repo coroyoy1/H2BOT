@@ -2,11 +2,20 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Update Business Information"
+        android:gravity="center"
+        android:id="@+id/textviewko"
+        android:background="@android:color/holo_blue_dark"
+        android:textColor="@android:color/white"
+        android:textSize="20dp" />
     <ScrollView
         android:layout_centerVertical="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/textviewko"
         android:layout_marginBottom="20dp">
     <LinearLayout
         android:orientation="vertical"
@@ -14,112 +23,146 @@
         android:layout_height="match_parent"
         android:layout_margin="20dp">
 
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Business Hours"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:textStyle="bold"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
-            <EditText
-                android:id="@+id/waterStationStartTimeUIS"
-                android:inputType="time"
-                android:hint="StartTime"
-                android:textAlignment="center"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="2dp"
-                android:background="@drawable/edit_text_border"
-                />
-            <Spinner
-                android:id="@+id/startSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-            </Spinner>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
                 android:gravity="center"
-                android:text="untill"/>
-            <EditText
-                android:id="@+id/waterStationEndTimeUIS"
-                android:inputType="time"
-                android:layout_marginLeft="2dp"
-                android:hint="End Time"
                 android:layout_weight="1"
-                android:textAlignment="center"
+                android:text="Start Time"
+                android:textSize="15dp" />
+            <TimePicker
+                android:id="@+id/simpleTimePicker"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/edit_text_border"
-                />
-            <Spinner
-                android:id="@+id/endSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-            </Spinner>
+                android:layout_weight="1"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:timePickerMode="spinner" />
         </LinearLayout>
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
             <TextView
-                android:layout_weight="1"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Delivery Service"/>
-            <RadioGroup
+                android:gravity="center"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <RadioButton
-                    android:id="@+id/waterStationYesUIS"
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Not Free"/>
-                <RadioButton
-                    android:id="@+id/waterStationFreeUIS"
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Free"/>
-            </RadioGroup>
+                android:text="End   Time"
+                android:textSize="15dp" />
+            <TimePicker
+                android:id="@+id/simpleTimePicker1"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:timePickerMode="spinner" />
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:text="Business Days"
+            android:textSize="18dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/monBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mon" />
+
+            <CheckBox
+                android:id="@+id/tueBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="Tue" />
+
+            <CheckBox
+                android:id="@+id/wedBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="Wed" />
+
+            <CheckBox
+                android:id="@+id/thursBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="Thurs" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <CheckBox
+                android:id="@+id/friBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fri" />
+
+            <CheckBox
+                android:id="@+id/satBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="Sat" />
+
+            <CheckBox
+                android:id="@+id/sunBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="Sun" />
         </LinearLayout>
         <LinearLayout
             android:id="@+id/linearMinGal"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="10dp">
             <EditText
                 android:id="@+id/waterStationMinimumGallonUIS"
                 android:inputType="number"
                 android:textAlignment="center"
-                android:hint="Number of minimum gallon capacity"
+                android:hint="Minimum order of gallon"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/edit_text_border"/>
         </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:text="Delivery Fee"/>
         <LinearLayout
             android:id="@+id/linearDelFee"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Delivery Fee"/>
+            android:layout_height="wrap_content"
+            android:padding="10dp">
             <RadioGroup
                 android:layout_weight="1"
                 android:orientation="horizontal"
@@ -138,7 +181,7 @@
                 android:layout_height="wrap_content"
                 android:text="Fix"/>
                 <RadioButton
-                    android:id="@+id/free"
+                    android:id="@+id/freefree"
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -149,7 +192,8 @@
             android:id="@+id/linearDelFeeNext"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="10dp">
 
             <EditText
                 android:id="@+id/waterStationDeliveryFeeUIS"

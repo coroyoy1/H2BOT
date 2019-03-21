@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
@@ -32,7 +33,7 @@ public class WPProductListUpdate extends Fragment implements View.OnClickListene
 
     EditText productUpdateName, productUpdatePrice;
     EditText productUpdateStatus;
-    Spinner productUpdateType;
+    TextView productUpdateType;
     Button backUpItem, updateUpItem;
     RadioButton valid, invalid;
 
@@ -44,7 +45,6 @@ public class WPProductListUpdate extends Fragment implements View.OnClickListene
 
     String statusGet;
     String keyGet;
-
     ProgressDialog progressDialog;
 
     @Nullable
@@ -79,29 +79,13 @@ public class WPProductListUpdate extends Fragment implements View.OnClickListene
                 "Mineral", "Distilled", "Purified", "Alkaline"
         };
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, arraySpinner);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        productUpdateType.setAdapter(adapter);
-
-
-
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             String itemPr = bundle.getString("ItemPricePLI");
             String itemTy = bundle.getString("ItemTypePLI");
             String itemUi = bundle.getString("ItemUidPLI");
             String itemSt = bundle.getString("ItemStatusPLI");
-
-
-            for (int counter = 0; counter < productUpdateType.getAdapter().getCount(); counter++)
-            {
-                if(productUpdateType.getAdapter().getItem(counter).toString().contains(itemTy))
-                {
-                    productUpdateType.setSelection(counter);
-                }
-            }
+            productUpdateType.setText(itemTy);
             productUpdatePrice.setText(itemPr);
             if(itemSt.equals("active"))
             {
@@ -147,7 +131,7 @@ public class WPProductListUpdate extends Fragment implements View.OnClickListene
         {
             statY = "inactive";
         }
-        String prodType = productUpdateType.getSelectedItem().toString();
+        String prodType = productUpdateType.getText().toString();
         String prodPrice = productUpdatePrice.getText().toString();
 
         if(prodType.isEmpty() && prodPrice.isEmpty())
@@ -175,6 +159,9 @@ public class WPProductListUpdate extends Fragment implements View.OnClickListene
                 @Override
                 public void onSuccess(Void aVoid) {
                     showMessage("Product updated successfully");
+                    WPProductListFragment detail = new WPProductListFragment();
+                    AppCompatActivity activity = (AppCompatActivity)getContext();
+                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp, detail).addToBackStack(null).commit();
                     progressDialog.dismiss();
                 }
             })

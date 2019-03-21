@@ -149,65 +149,65 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
     public void updateData()
     {
         progressDialog.show();
-                                String deliveryStatusIf;
-                                String deliveryStatusFreeIf;
-                                String deliveryFeePerGalIf;
-                                String deliveryMinNoCapaIf;
-                                if(deliveryFeePerGallon.isChecked() || deliveryFeeFix.isChecked())
-                                {
-                                    deliveryStatusIf = "Active";
-                                    deliveryStatusFreeIf = "Not";
-                                    deliveryFeePerGalIf = waterStationDeliveryFee.getText().toString();
-                                    deliveryMinNoCapaIf = waterStationMinimumGallon.getText().toString();
-                                    waterStationDeliveryFee.setVisibility(View.VISIBLE);
-                                }
-                                else if(free.isChecked())
-                                {
-                                    deliveryStatusIf = "Active";
-                                    deliveryStatusFreeIf = "Free";
-                                    deliveryFeePerGalIf = "None";
-                                    deliveryMinNoCapaIf = "None";
-                                    waterStationDeliveryFee.setVisibility(View.GONE);
-                                }
-                                else
-                                {
-                                    showMessage("Choose a radio button");
-                                    return;
-                                }
+            String deliveryStatusIf;
+            String deliveryStatusFreeIf;
+            String deliveryFeePerGalIf;
+            String deliveryMinNoCapaIf;
+            if(deliveryFeePerGallon.isChecked() || deliveryFeeFix.isChecked())
+            {
+                deliveryStatusIf = "Active";
+                deliveryStatusFreeIf = "Not";
+                deliveryFeePerGalIf = waterStationDeliveryFee.getText().toString();
+                deliveryMinNoCapaIf = waterStationMinimumGallon.getText().toString();
+                waterStationDeliveryFee.setVisibility(View.VISIBLE);
+            }
+            else if(free.isChecked())
+            {
+                deliveryStatusIf = "Active";
+                deliveryStatusFreeIf = "Free";
+                deliveryFeePerGalIf = "None";
+                deliveryMinNoCapaIf = "None";
+                waterStationDeliveryFee.setVisibility(View.GONE);
+            }
+            else
+            {
+                showMessage("Choose a radio button");
+                return;
+            }
 
-                                UserWSBusinessInfoFile userWSBusinessInfoFile = new UserWSBusinessInfoFile(
-                                    firebaseUser.getUid(),
-                                        waterStationName.getText().toString(),
-                                        waterStationStartTime.getText().toString() +" "+ startSpinner.getSelectedItem().toString(),
-                                        waterStationEndTime.getText().toString()+" "+ endSpinner.getSelectedItem().toString(),
-                                        deliveryStatusIf,
-                                        deliveryStatusFreeIf,
-                                        deliveryFeePerGalIf,
-                                        deliveryMinNoCapaIf,
-                                        waterStationPhone.getText().toString(),
-                                        waterStationAddress.getText().toString(),
-                                        "Active",
-                                        ""
-                                );
-                                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
-                                databaseReference.child(firebaseUser.getUid()).setValue(userWSBusinessInfoFile)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                getLocationSetter();
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
+            UserWSBusinessInfoFile userWSBusinessInfoFile = new UserWSBusinessInfoFile(
+                firebaseUser.getUid(),
+                    waterStationName.getText().toString(),
+                    waterStationStartTime.getText().toString() +" "+ startSpinner.getSelectedItem().toString(),
+                    waterStationEndTime.getText().toString()+" "+ endSpinner.getSelectedItem().toString(),
+                    deliveryStatusIf,
+                    deliveryStatusFreeIf,
+                    deliveryFeePerGalIf,
+                    deliveryMinNoCapaIf,
+                    waterStationPhone.getText().toString(),
+                    waterStationAddress.getText().toString(),
+                    "Active",
+                    ""
+            );
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
+            databaseReference.child(firebaseUser.getUid()).setValue(userWSBusinessInfoFile)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            getLocationSetter();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
 
-                                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                showMessage("Error to update the image");
-                            }
-                        });
+                        }
+    }).addOnFailureListener(new OnFailureListener() {
+        @Override
+        public void onFailure(@NonNull Exception e) {
+            showMessage("Error to update the image");
+        }
+    });
     }
 
     private void showMessage(String wordMessage) {
@@ -308,16 +308,16 @@ public class WSBusinessInformationUpdate extends Fragment implements View.OnClic
             case R.id.updateInfoButtonUIWS:
                 getInput();
                 break;
-            case R.id.waterStationYesUIS:
-                linearLayout1.setVisibility(View.VISIBLE);
-                linearLayout2.setVisibility(View.VISIBLE);
-                linearLayout3.setVisibility(View.VISIBLE);
-                break;
-            case R.id.waterStationFreeUIS:
-                linearLayout1.setVisibility(View.GONE);
-                linearLayout2.setVisibility(View.GONE);
-                linearLayout3.setVisibility(View.GONE);
-                break;
+//            case R.id.waterStationYesUIS:
+//                linearLayout1.setVisibility(View.VISIBLE);
+//                linearLayout2.setVisibility(View.VISIBLE);
+//                linearLayout3.setVisibility(View.VISIBLE);
+//                break;
+//            case R.id.waterStationFreeUIS:
+//                linearLayout1.setVisibility(View.GONE);
+//                linearLayout2.setVisibility(View.GONE);
+//                linearLayout3.setVisibility(View.GONE);
+//                break;
             case R.id.waterStationPerGallonUIS:
                 break;
             case R.id.waterStationFixUIS:

@@ -55,9 +55,10 @@ import static android.app.Activity.RESULT_OK;
 
 public class WPUpdateAccountSettings extends Fragment implements View.OnClickListener {
     private static final int PICK_IMAGE_REQUEST = 1;
-    private EditText firstNameWU, lastNameWU, addressWU, contactNoWU, emailAddressWU, passwordWU, confirmPasswordWU, retypePassword, oldPass;
+    private EditText firstNameWU, lastNameWU, addressWU, contactNoWU, passwordWU, confirmPasswordWU, retypePassword, oldPass;
     private Button updateButton, addPhotobutton, changePassword;
     LinearLayout linearPassword, linearRenewPassword;
+    String emailnako;
     private CircleImageView imageView;
     private FirebaseAuth mAuth;
     private FirebaseUser firebaseUser, user;
@@ -79,7 +80,6 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
         lastNameWU = view.findViewById(R.id.RegisterLastNameUAS);
         addressWU = view.findViewById(R.id.RegisterAddressUAS);
         contactNoWU = view.findViewById(R.id.RegisterContactUAS);
-        emailAddressWU = view.findViewById(R.id.RegisterEmailAddressUAS);
         passwordWU = view.findViewById(R.id.RegisterPasswordUAS);
         confirmPasswordWU = view.findViewById(R.id.ConfirmPasswordUAS);
         updateButton = view.findViewById(R.id.RegisterSignUpUAS);
@@ -123,14 +123,13 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
         String lastNameString = lastNameWU.getText().toString();
         String addressString = addressWU.getText().toString();
         String contactNoString = contactNoWU.getText().toString();
-        String emailAddressString = emailAddressWU.getText().toString();
         String passwordString = retypePassword.getText().toString();
 
         if(firstNameString.isEmpty()
                 && lastNameString.isEmpty()
                 && addressString.isEmpty()
                 && contactNoString.isEmpty()
-                && emailAddressString.isEmpty()
+                && emailnako.isEmpty()
                 && passwordString.isEmpty())
         {
             showMessages("Please fill up all the fields before you update!");
@@ -147,15 +146,13 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
         String lastNameString = lastNameWU.getText().toString();
         String addressString = addressWU.getText().toString();
         String contactNoString = contactNoWU.getText().toString();
-        String emailAddressString = emailAddressWU.getText().toString();
         String passwordString = passwordWU.getText().toString();
         String confirmPasswordString = confirmPasswordWU.getText().toString();
 
         if(firstNameString.isEmpty()
             && lastNameString.isEmpty()
             && addressString.isEmpty()
-            && contactNoString.isEmpty()
-            && emailAddressString.isEmpty()
+            && emailnako.isEmpty()
             && passwordString.isEmpty()
             && confirmPasswordString.isEmpty())
         {
@@ -253,6 +250,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                             firstNameWU.setText(userFile.getUser_firstname());
                             lastNameWU.setText(userFile.getUser_lastname());
                             addressWU.setText(userFile.getUser_address());
+                            emailnako = user.getEmail();
                             contactNoWU.setText(userFile.getUser_phone_no());
                             Picasso.get().load(userFile.getUser_uri()).into(imageView);
                         }
@@ -264,7 +262,6 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                                         UserAccountFile userAccountFile = dataSnapshot.getValue(UserAccountFile.class);
                                         if (userAccountFile != null)
                                         {
-                                            emailAddressWU.setText(userAccountFile.getUser_email_address());
                                         }
                                     }
 
@@ -311,7 +308,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
                                                             if (task.isSuccessful()) {
-                                                                user.updateEmail(emailAddressWU.getText().toString())
+                                                                user.updateEmail(emailnako)
                                                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                             @Override
                                                                             public void onComplete(@NonNull Task<Void> task) {
@@ -349,7 +346,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                                                                                                 newToken = instanceIdResult.getToken();
                                                                                                                                                 UserAccountFile userAccountFile = new UserAccountFile(
                                                                                                                                                         user.getUid(),
-                                                                                                                                                        emailAddressWU.getText().toString(),
+                                                                                                                                                        emailnako,
                                                                                                                                                         passwordWU.getText().toString(),
                                                                                                                                                         newToken,
                                                                                                                                                         "active"
@@ -419,7 +416,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                                                                                                                 newToken = instanceIdResult.getToken();
                                                                                                                                                                 UserAccountFile userAccountFile = new UserAccountFile(
                                                                                                                                                                         user.getUid(),
-                                                                                                                                                                        emailAddressWU.getText().toString(),
+                                                                                                                                                                        emailnako,
                                                                                                                                                                         passwordWU.getText().toString(),
                                                                                                                                                                         newToken,
                                                                                                                                                                         "active"
@@ -500,9 +497,9 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
     }
 
 
-    private void thisGetUpdateData(String firstNameString, String lastNameString, String addressString, String contactNoString, String emailAddressString, String passwordString, String confirmPasswordString) {
+    private void thisGetUpdateData(String firstNameString, String lastNameString, String addressString, String contactNoString, String emailnako, String passwordString, String confirmPasswordString) {
         progressDialog.show();
-        firebaseUser.updateEmail(emailAddressString)
+        firebaseUser.updateEmail(emailnako)
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -545,7 +542,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                         public void onSuccess(Void aVoid) {
                                                             UserAccountFile userAccountFile = new UserAccountFile(
                                                                     firebaseUser.getUid(),
-                                                                    emailAddressString,
+                                                                    emailnako,
                                                                     passwordString,
                                                                     device_token_id,
                                                                     "active"
@@ -612,7 +609,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                         public void onSuccess(Void aVoid) {
                                                                             UserAccountFile userAccountFile = new UserAccountFile(
                                                                                     firebaseUser.getUid(),
-                                                                                    emailAddressString,
+                                                                                    emailnako,
                                                                                     passwordString,
                                                                                     device_token_id,
                                                                                     "active"
@@ -700,7 +697,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                user.updateEmail(emailAddressWU.getText().toString())
+                                                user.updateEmail(emailnako)
                                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
@@ -734,7 +731,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                                                                 newToken = instanceIdResult.getToken();
                                                                                                                 UserAccountFile userAccountFile = new UserAccountFile(
                                                                                                                         user.getUid(),
-                                                                                                                        emailAddressWU.getText().toString(),
+                                                                                                                        emailnako,
                                                                                                                         retypePassword.getText().toString(),
                                                                                                                         newToken,
                                                                                                                         "active"
@@ -746,7 +743,6 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
 
 
                                                                                                                             public void onSuccess(Void aVoid) {
-                                                                                                                                Log.d("Hoy",""+emailAddressWU.getText().toString());
                                                                                                                                 getLocationSetter();
                                                                                                                             }
                                                                                                                         })
@@ -806,7 +802,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                                                                                 newToken = instanceIdResult.getToken();
                                                                                                                                 UserAccountFile userAccountFile = new UserAccountFile(
                                                                                                                                         user.getUid(),
-                                                                                                                                        emailAddressWU.getText().toString(),
+                                                                                                                                        emailnako,
                                                                                                                                         retypePassword.getText().toString(),
                                                                                                                                         newToken,
                                                                                                                                         "active"
