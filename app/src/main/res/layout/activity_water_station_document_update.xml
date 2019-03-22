@@ -160,7 +160,7 @@
                             android:layout_marginRight="2dp"
                             android:layout_weight="1"
                             android:hint="Start Time"
-                            android:inputType="none"
+                            android:inputType="time"
                             android:textAlignment="center"
                             android:textSize="18dp" />
 
@@ -185,7 +185,7 @@
                             android:layout_marginTop="10dp"
                             android:layout_weight="1"
                             android:hint="End Time"
-                            android:inputType="none"
+                            android:inputType="time"
                             android:textAlignment="center"
                             android:textSize="18dp" />
 
@@ -194,6 +194,74 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent" />
                     </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="10dp"
+                    android:text="Business Days"
+                    android:textSize="18dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/monBoxDU"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mon" />
+
+                    <CheckBox
+                        android:id="@+id/tueBoxDU"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="Tue" />
+
+                    <CheckBox
+                        android:id="@+id/wedBoxDU"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="Wed" />
+
+                    <CheckBox
+                        android:id="@+id/thursBoxDU"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="Thurs" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <CheckBox
+                        android:id="@+id/friBoxDU"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fri" />
+
+                    <CheckBox
+                        android:id="@+id/satBoxDU"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="Sat" />
+
+                    <CheckBox
+                        android:id="@+id/sunBoxDU"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="Sun" />
                 </LinearLayout>
 
                 <TextView
@@ -252,6 +320,54 @@
                     android:textAlignment="center"
                     android:textSize="18dp" />
             </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Do you sell gallons?"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="10dp"
+                android:textSize="18dp"/>
+            <RadioGroup
+                android:id="@+id/doYouHaveGallonGroupDU"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <RadioButton
+                    android:id="@+id/yesDU"
+                    android:layout_marginLeft="10dp"
+                    android:text="Yes"
+                    android:layout_width="wrap_content"
+                    android:checked="true"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"/>
+                <RadioButton
+                    android:id="@+id/noDU"
+                    android:layout_marginLeft="10dp"
+                    android:text="No"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RadioGroup>
+            <EditText
+                android:id="@+id/priceOfGallonDU"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:hint="Price of Gallon"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textSize="18dp" />
+            <EditText
+                android:id="@+id/noOfGallonsDU"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:hint="Cuurent No. of Gallons"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textSize="18dp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

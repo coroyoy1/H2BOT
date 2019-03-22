@@ -309,7 +309,7 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                                                                     {
-                                                                        for (DataSnapshot dataSnapshot2 : dataSnapshot1.child(firebaseUser.getUid()).getChildren())
+                                                                        for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren())
                                                                         {
                                                                             String getPic = dataSnapshot2.child("dealer_drivers_license").getValue(String.class);
                                                                             Picasso.get().load(getPic).fit().centerCrop().into(imageView1);

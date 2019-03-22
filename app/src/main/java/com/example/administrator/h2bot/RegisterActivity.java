@@ -132,6 +132,11 @@ public class RegisterActivity extends AppCompatActivity{
             signUp.setVisibility(View.VISIBLE);
         }
 
+        if (uri == null)
+        {
+            uri = Uri.parse("android.resource://com.example.administrator.h2bot/drawable/ic_account_circle_black_24dp");
+        }
+
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -290,10 +295,10 @@ public class RegisterActivity extends AppCompatActivity{
                     showMessage("Some fields are missing");
                     progressDialog.dismiss();
                 }
-                else if(imageView.getDrawable() == null){
-                    showMessage("Photo is not yet set!");
-                    progressDialog.dismiss();
-                }
+//                else if(imageView.getDrawable() == null){
+//                    showMessage("Photo is not yet set!");
+//                    progressDialog.dismiss();
+//                }
                 else if (contactNoString.length() > 11){
                     showMessage("Contact no. must be maximum of 11 characters");
                     progressDialog.dismiss();
@@ -343,16 +348,13 @@ public class RegisterActivity extends AppCompatActivity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK)
-        {
-            if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
                 uri = data.getData();
                 if(clickable) {
                     Picasso.get().load(uri).into(imageView);
                 }
             }
-        }
         else
         {
             Toast.makeText(RegisterActivity.this, "You haven't picked Image",Toast.LENGTH_LONG).show();

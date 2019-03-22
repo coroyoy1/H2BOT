@@ -142,6 +142,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         min_no_of_gallons = findViewById(R.id.min_no_of_gallons);
         priceOfGallonEdit = findViewById(R.id.priceOfGallon);
         currentNoGallonEdit = findViewById(R.id.noOfGallons);
+        currentNoGallonEdit.setVisibility(View.GONE);
 
         //Radiogroup
         deliveryFeeGroup = findViewById(R.id.deliveryFeeGroup);
@@ -197,7 +198,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int hour = mcurrentTime.get(Calendar.HOUR);
                 int minute = mcurrentTime.get(Calendar.MINUTE);
 
                 TimePickerDialog mTimePicker;
@@ -206,7 +207,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         startingHour.setText( selectedHour + ":" + selectedMinute);
                     }
-                }, hour, minute, true);
+                }, hour, minute, false);
                 mTimePicker.setTitle("Select Time");
                 mTimePicker.show();
             }
@@ -216,7 +217,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int hour = mcurrentTime.get(Calendar.HOUR);
                 int minute = mcurrentTime.get(Calendar.MINUTE);
 
                 TimePickerDialog mTimePicker;
@@ -225,7 +226,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         endingHour.setText( selectedHour + ":" + selectedMinute);
                     }
-                }, hour, minute, true);
+                }, hour, minute, false);
                 mTimePicker.setTitle("Select Time");
                 mTimePicker.show();
             }
@@ -354,11 +355,11 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                 switch (checkedId)
                 {
                     case R.id.no:
-                        currentNoGallonEdit.setVisibility(View.GONE);
+                        //currentNoGallonEdit.setVisibility(View.GONE);
                         priceOfGallonEdit.setVisibility(View.GONE);
                         break;
                     case R.id.yes:
-                        currentNoGallonEdit.setVisibility(View.VISIBLE);
+                        //currentNoGallonEdit.setVisibility(View.VISIBLE);
                         priceOfGallonEdit.setVisibility(View.VISIBLE);
                         break;
                 }
@@ -397,8 +398,8 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                             }
                             Log.d("Data: ", sb.toString());
                             Log.d("Station name: ", stationName.getText().toString().toLowerCase());
-                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
-                                Picasso.get().load(filepath).into(businessPermit_image);
+                            if(sb.toString().toLowerCase().contains("business permit".toLowerCase())){
+                                Picasso.get().load(filepath).fit().centerCrop().into(businessPermit_image);
                                 Toast.makeText(this, "Valid business permit", Toast.LENGTH_SHORT).show();
                             }
                             else{
@@ -434,7 +435,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                 sb.append("\n");
                             }
 //                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
-                                Picasso.get().load(filepath2).into(sanitaryPermit_image);
+                                Picasso.get().load(filepath2).fit().centerCrop().into(sanitaryPermit_image);
                                 Toast.makeText(this, "Valid sanitary permit", Toast.LENGTH_SHORT).show();
 //                            }
 //                            else{
@@ -471,7 +472,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                 sb.append("\n");
                             }
 //                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
-                            Picasso.get().load(filepath3).into(physicochemicalPermit_Image);
+                            Picasso.get().load(filepath3).fit().centerCrop().into(physicochemicalPermit_Image);
                             Toast.makeText(this, "Valid sanitary permit", Toast.LENGTH_SHORT).show();
 //                            }
 //                            else{
@@ -508,7 +509,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                 sb.append("\n");
                             }
 //                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
-                            Picasso.get().load(filepath4).into(birPermit_Image);
+                            Picasso.get().load(filepath4).fit().centerCrop().into(birPermit_Image);
                             Toast.makeText(this, "Valid sanitary permit", Toast.LENGTH_SHORT).show();
 //                            }
 //                            else{
@@ -587,21 +588,8 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                             priceOfGallonEdit.getText().toString(),
                                             startHour,
                                             "active",
-                                            telNo.getText().toString(),
-                                            currentNoGallonEdit.getText().toString()
+                                            telNo.getText().toString()
                                     );
-
-//                                    WSBusinessInfoFile businessInfoFile = new WSBusinessInfoFile(
-//                                            userId,
-//                                            stationName.getText().toString(),
-//                                            stationAddress.getText().toString(),
-//                                            telNo.getText().toString(),
-//                                            startHour,
-//                                            endHour,
-//                                            deliveryMethod,
-//                                            deliveryFee.getText().toString(),
-//                                            min_no_of_gallons.getText().toString(),
-//                                            "active");
 
                                     UserWallet userWallet = new UserWallet(
                                             firebaseUser.getUid(),

@@ -49,6 +49,7 @@ import com.example.administrator.h2bot.models.MerchantCustomerFile;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.UserLocationAddress;
 import com.example.administrator.h2bot.models.UserWSDMFile;
+import com.example.administrator.h2bot.waterstation.WSBroadcast;
 import com.example.administrator.h2bot.waterstation.WSInProgressAccept;
 import com.example.administrator.h2bot.waterstation.WSInProgressFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -151,7 +152,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
     FirebaseUser firebaseUser;
     String transactionNo ,customerNo;
 
-    Button order, launchscan, sms, call, dispatched, accept, decline;
+    Button order, launchscan, sms, call, dispatched, accept, decline, requestBroadcast;
     LinearLayout linearSMSSender, linearOrderSender, linearAcceptDeclineSender;
 
     CircleImageView customerImage;
@@ -204,6 +205,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
         dispatched.setOnClickListener(this);
         accept.setOnClickListener(this);
         decline.setOnClickListener(this);
+        requestBroadcast.setOnClickListener(this);
 
 
         if (userType.equals("Pending"))
@@ -212,6 +214,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
             linearAcceptDeclineSender.setVisibility(View.VISIBLE);
             linearSMSSender.setVisibility(View.GONE);
             launchscan.setVisibility(View.GONE);
+            requestBroadcast.setVisibility(View.GONE);
         }
         if (userType.equals("In-Progress"))
         {
@@ -219,6 +222,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
             linearAcceptDeclineSender.setVisibility(View.GONE);
             linearSMSSender.setVisibility(View.GONE);
             launchscan.setVisibility(View.VISIBLE);
+            requestBroadcast.setVisibility(View.GONE);
         }
         if (userType.equals("Dispatched"))
         {
@@ -226,6 +230,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
             linearAcceptDeclineSender.setVisibility(View.GONE);
             linearSMSSender.setVisibility(View.VISIBLE);
             launchscan.setVisibility(View.VISIBLE);
+            requestBroadcast.setVisibility(View.GONE);
         }
 
         userTypeIdentity();
@@ -244,11 +249,11 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
         dispatched = view.findViewById(R.id.orderDispatched);
         accept = view.findViewById(R.id.orderAccept);
         decline = view.findViewById(R.id.orderDecline);
+        requestBroadcast = view.findViewById(R.id.requestBroadcastButton);
 
         linearSMSSender = view.findViewById(R.id.linearSMSDetails);
         linearOrderSender = view.findViewById(R.id.linearOrderDetails);
         linearAcceptDeclineSender = view.findViewById(R.id.linearAcceptDetails);
-
     }
 
     public void dialogDataFromOrder(View dialogView)
@@ -299,6 +304,12 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                 break;
             case R.id.orderDecline:
                 CancelledOrder();
+                break;
+            case R.id.requestBroadcastButton:
+                Intent intent1 = new Intent(getActivity(), WSBroadcast.class);
+                intent1.putExtra("Customer", customerNo);
+                intent1.putExtra("OrderNo", transactionNo);
+                startActivity(intent1);
                 break;
         }
 
@@ -750,8 +761,17 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                         {
                             if (currentUserType.equals("Water Station"))
                             {
-                                linearSMSSender.setVisibility(View.GONE);
-                                dispatched.setVisibility(View.GONE);
+                                if (userType.equals("Dispatched"))
+                                {
+                                    requestBroadcast.setVisibility(View.GONE);
+                                }
+                                else if (userType.equals("In-Progress"))
+                                {
+                                    requestBroadcast.setVisibility(View.VISIBLE);
+                                    linearSMSSender.setVisibility(View.GONE);
+                                    launchscan.setVisibility(View.VISIBLE);
+                                    dispatched.setVisibility(View.GONE);
+                                }
                             }
                             if (currentUserType.equals("Delivery Man"))
                             {
@@ -780,7 +800,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
     public void updateOrder(String transactionSet)
     {
         DatabaseReference referencedata = FirebaseDatabase.getInstance().getReference("Customer_File");
-        referencedata.child("OVpusHfpxNciCVz4LEAt2XxE3nA2").child("bihh6BewukOfurlAzotIJwuIsmp2").child(transactionSet);
+        referencedata.child(customerNo).child(merchantCheckId).child(transactionSet);
                 referencedata.child("order_status").setValue("Completed")
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
