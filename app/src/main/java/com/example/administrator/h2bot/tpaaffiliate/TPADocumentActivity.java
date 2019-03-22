@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.h2bot.LoginActivity;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.WaterStationDocumentVersion2Activity;
 import com.example.administrator.h2bot.models.TPAModel;
@@ -311,6 +312,7 @@ public class TPADocumentActivity extends AppCompatActivity{
                                                                                             Toast.makeText(TPADocumentActivity.this, "Successfully registered", Toast.LENGTH_SHORT).show();
                                                                                             getLocationSetter();
                                                                                             insertLatLong(FirebaseAuth.getInstance().getCurrentUser().getUid(), mLat, mLong);
+                                                                                            startActivity(new Intent(TPADocumentActivity.this, LoginActivity.class));
                                                                                         }
                                                                                     })
                                                                                     .addOnFailureListener(new OnFailureListener() {
