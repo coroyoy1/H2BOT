@@ -1,24 +1,20 @@
 package com.example.administrator.h2bot.models;
 
 public class WDDocFile {
-    public String getDriverLicense() {
-        return driverLicense;
-    }
 
-    public void setDriverLicense(String driverLicense) {
+    private String dealer_id;
+    private String dealer_status;
+    private String driverLicense;
+
+    public WDDocFile(String dealer_id, String dealer_status, String driverLicense) {
+        this.dealer_id = dealer_id;
+        this.dealer_status = dealer_status;
         this.driverLicense = driverLicense;
     }
 
-    private String driverLicense;
-    private String dealer_status;
-    private String dealer_id;
+    public WDDocFile()
+    {
 
-    public String getDealer_status() {
-        return dealer_status;
-    }
-
-    public void setDealer_status(String dealer_status) {
-        this.dealer_status = dealer_status;
     }
 
     public String getDealer_id() {
@@ -29,16 +25,19 @@ public class WDDocFile {
         this.dealer_id = dealer_id;
     }
 
-    public WDDocFile()
-    {
-
+    public String getDealer_status() {
+        return dealer_status;
     }
 
-    public WDDocFile(String driverLicense, String dealer_status, String dealer_id) {
-        this.driverLicense = driverLicense;
+    public void setDealer_status(String dealer_status) {
         this.dealer_status = dealer_status;
-        this.dealer_id = dealer_id;
     }
 
+    public String getDriverLicense() {
+        return driverLicense;
+    }
 
+    public void setDriverLicense(String driverLicense) {
+        this.driverLicense = driverLicense;
+    }
 }

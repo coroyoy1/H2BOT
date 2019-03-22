@@ -1,30 +1,40 @@
 package com.example.administrator.h2bot.dealer;
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.UserLocationAddress;
 import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
+import com.example.administrator.h2bot.models.WSBusinessInfoFile;
+import com.example.administrator.h2bot.models.WSBusinessInfoFile2;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -41,6 +51,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -63,12 +74,13 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
     FirebaseUser firebaseUser;
     Intent intent;
     LinearLayout linearLayout1, linearLayout2, linearLayout3;
-
+    TimePicker simpleTimePicker,simpleTimePicker1;
     Uri uri;
+    CheckBox mon, tue, wed, thurs, fri, sat, sun;
     private ProgressDialog progressDialog;
     double lat;
     double lng;
-
+    List<String> week;
 
     @Nullable
     @Override
@@ -86,48 +98,43 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
         linearLayout1 = view.findViewById(R.id.linearMinGal);
         linearLayout2 = view.findViewById(R.id.linearDelFee);
         linearLayout3 = view.findViewById(R.id.linearDelFeeNext);
-
+        week = new ArrayList<String>();
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
+        simpleTimePicker = view.findViewById(R.id.simpleTimePicker);
+        simpleTimePicker.setIs24HourView(true);
+        simpleTimePicker1 = view.findViewById(R.id.simpleTimePicker1);
+        simpleTimePicker1.setIs24HourView(true);
 
-
-        waterStationStartTime = view.findViewById(R.id.waterStationStartTimeUIS);
-        waterStationEndTime = view.findViewById(R.id.waterStationEndTimeUIS);
         waterStationMinimumGallon  = view.findViewById(R.id.waterStationMinimumGallonUIS);
         waterStationDeliveryFee = view.findViewById(R.id.waterStationDeliveryFeeUIS);
-
-        deliveryServiceYes = view.findViewById(R.id.waterStationYesUIS);
-        deliveryServiceFree = view.findViewById(R.id.waterStationFreeUIS);
-        free = view.findViewById(R.id.free);
-        deliveryServiceYes.setChecked(true);
-
+        mon = view.findViewById(R.id.monBox);
+        tue = view.findViewById(R.id.tueBox);
+        wed = view.findViewById(R.id.wedBox);
+        thurs = view.findViewById(R.id.thursBox);
+        fri = view.findViewById(R.id.friBox);
+        sat = view.findViewById(R.id.satBox);
+        sun = view.findViewById(R.id.sunBox);
+        mon.setOnClickListener(this);
+        tue.setOnClickListener(this);
+        wed.setOnClickListener(this);
+        thurs.setOnClickListener(this);
+        fri.setOnClickListener(this);
+        sat.setOnClickListener(this);
+        sun.setOnClickListener(this);
+        free = view.findViewById(R.id.freefree);
 
         deliveryFeeFix = view.findViewById(R.id.waterStationFixUIS);
         deliveryFeePerGallon = view.findViewById(R.id.waterStationPerGallonUIS);
-        deliveryFeePerGallon.setChecked(true);
 
+        deliveryFeePerGallon.setChecked(true);
+        free.setOnClickListener(this);
         updateButton.setOnClickListener(this);
         deliveryFeePerGallon.setOnClickListener(this);
         deliveryFeeFix.setOnClickListener(this);
-        deliveryServiceYes.setOnClickListener(this);
-        deliveryServiceFree.setOnClickListener(this);
-        String[] arraySpinner = new String[]{
-                "AM","PM"
-        };
-        String[] arraySpinner2 = new String[]{
-                "PM","AM"
-        };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, arraySpinner);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, arraySpinner2);
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        startSpinner.setAdapter(adapter);
-        endSpinner.setAdapter(adapter2);
         DatabaseReference databaseReference3 = firebaseDatabase.getReference("User_WS_Business_Info_File").child(firebaseUser.getUid());
         databaseReference3.addValueEventListener(new ValueEventListener() {
             @Override
@@ -148,65 +155,56 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
         });
         return view;
     }
-
-
-
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void updateData()
     {
         progressDialog.show();
-                                String deliveryStatusIf;
-                                String deliveryStatusFreeIf;
-                                String deliveryFeePerGalIf;
-                                String deliveryMinNoCapaIf;
-                                if(deliveryServiceYes.isChecked())
-                                {
-                                    deliveryStatusIf = "Active";
-                                    deliveryStatusFreeIf = "Not Free";
-                                    deliveryFeePerGalIf = waterStationDeliveryFee.getText().toString();
-                                    deliveryMinNoCapaIf = waterStationMinimumGallon.getText().toString();
-                                }
-                                else if(free.isChecked())
-                                {
-                                    deliveryStatusIf = "Active";
-                                    deliveryStatusFreeIf = "Free";
-                                    deliveryFeePerGalIf = "None";
-                                    deliveryMinNoCapaIf = "None";
-                                    waterStationDeliveryFee.setVisibility(View.GONE);
-                                }
-                                else
-                                {
-                                    showMessage("Check any radio button");
-                                    return;
-                                }
+            String deliveryStatusFreeIf="";
+            if(free.isChecked())
+            {
+                deliveryStatusFreeIf = "Free";
+                waterStationDeliveryFee.setVisibility(View.GONE);
+            }
+            else if (deliveryFeePerGallon.isChecked())
+            {
+                deliveryStatusFreeIf = "Per gallon";
+            }
+            else if (deliveryFeeFix.isChecked())
+            {
+                deliveryStatusFreeIf = "Fixed price";
+            }
+            else if(!free.isChecked() && !deliveryFeePerGallon.isChecked() && !deliveryFeeFix.isChecked())
+            {
+                showMessage("Check any radio button");
+                progressDialog.dismiss();
+                return;
+            }
+              WSBusinessInfoFile2 userWSBusinessInfoFile = new WSBusinessInfoFile2(
+                firebaseUser.getUid(),
+                namedealer,
+                addressdealer,
+                numberdealer,
+                String.valueOf(simpleTimePicker.getHour())+":"+String.valueOf(simpleTimePicker.getMinute()),
+                String.valueOf(simpleTimePicker1.getHour())+":"+String.valueOf(simpleTimePicker1.getMinute()),
+                      week.toString(),
+                deliveryStatusFreeIf,
+                waterStationDeliveryFee.getText().toString(),
+                waterStationMinimumGallon.getText().toString(),
+                "active");
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
+            databaseReference.child(firebaseUser.getUid()).setValue(userWSBusinessInfoFile)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            getLocationSetter();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
 
-                                UserWSBusinessInfoFile userWSBusinessInfoFile = new UserWSBusinessInfoFile(
-                                    firebaseUser.getUid(),
-                                        namedealer,
-                                        waterStationStartTime.getText().toString()+" "+startSpinner.getSelectedItem().toString(),
-                                        waterStationEndTime.getText().toString()+" "+endSpinner.getSelectedItem().toString(),
-                                        deliveryStatusIf,
-                                        deliveryStatusFreeIf,
-                                        deliveryFeePerGalIf,
-                                        deliveryMinNoCapaIf,
-                                        numberdealer,
-                                        addressdealer,
-                                        "Active",
-                                        ""
-                                );
-                                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
-                                databaseReference.child(firebaseUser.getUid()).setValue(userWSBusinessInfoFile)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                getLocationSetter();
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-
-                                            }
-                                        });
+                        }
+                    });
     }
 
     private void showMessage(String wordMessage) {
@@ -239,7 +237,6 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            showMessage("Successfully Submitted");
                             WPBusinessInfoFragment additem = new WPBusinessInfoFragment();
                             AppCompatActivity activity = (AppCompatActivity)getContext();
                             activity.getSupportFragmentManager()
@@ -249,7 +246,8 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
                                     .addToBackStack(null)
                                     .commit();
                             progressDialog.dismiss();
-
+                            String text = "Successfully updated";
+                            snackBar(text);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -266,16 +264,18 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
             progressDialog.dismiss();
         }
         finally {
-            showMessage("Failed to locate your address");
+            //showMessage("Failed to locate your address");
             progressDialog.dismiss();
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void getInput()
     {
             if(
-                waterStationStartTime.getText().toString().isEmpty()
-            && waterStationEndTime.getText().toString().isEmpty())
+                    deliveryFeePerGallon.isChecked()
+            && waterStationDeliveryFee.getText().toString().trim().isEmpty()
+            || deliveryFeeFix.isChecked() && waterStationDeliveryFee.getText().toString().trim().isEmpty())
             {
                 showMessage("Please fill all the fields!");
             }
@@ -299,6 +299,8 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onClick(View v) {
         switch (v.getId())
@@ -306,26 +308,107 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
             case R.id.updateInfoButtonUIWS:
                 getInput();
                 break;
-            case R.id.waterStationYesUIS:
-                linearLayout1.setVisibility(View.VISIBLE);
-                linearLayout2.setVisibility(View.VISIBLE);
-                linearLayout3.setVisibility(View.VISIBLE);
-                break;
-//            case R.id.waterStationFreeUIS:
-//                linearLayout2.setVisibility(View.GONE);
-//                linearLayout3.setVisibility(View.GONE);
-//                break;
             case R.id.waterStationPerGallonUIS:
+                waterStationDeliveryFee.setText("");
                 waterStationDeliveryFee.setHint("Delivery Fee Per Gallon");
+                waterStationDeliveryFee.setVisibility(View.VISIBLE);
                 break;
             case R.id.waterStationFixUIS:
+                waterStationDeliveryFee.setText("");
                 waterStationDeliveryFee.setHint("Fixed Delivery Fee");
+                waterStationDeliveryFee.setVisibility(View.VISIBLE);
                 break;
-            case R.id.free:
-                linearLayout2.setVisibility(View.GONE);
-                linearLayout3.setVisibility(View.GONE);
+            case R.id.freefree:
+                waterStationDeliveryFee.setText("0");
+                waterStationDeliveryFee.setHint("Free Delivery");
                 waterStationDeliveryFee.setVisibility(View.GONE);
                 break;
+                case R.id.monBox:
+                    String monday = "Monday";
+                    String monSplit = String.join(",", monday);
+                    if (mon.isChecked()) {
+                        week.add(monSplit);
+                    }
+                    else {
+                        week.remove(monSplit);
+                    }
+                    break;
+                case R.id.tueBox:
+                    String tuesday = "Tuesday";
+                    String tuesdaySplit = String.join(",", tuesday);
+                    if (tue.isChecked()) {
+                        week.add(tuesdaySplit);
+                    }
+                    else {
+                        week.remove(tuesdaySplit);
+                    }
+                    break;
+                case R.id.wedBox:
+                    String wednesday = "Wednesday";
+                    String wednesdaySplit = String.join(",", wednesday);
+                    if (wed.isChecked()) {
+                        week.add(wednesdaySplit);
+                    }
+                    else {
+                        week.remove(wednesdaySplit);
+                    }
+                    break;
+                case R.id.thursBox:
+                    String thursday = "Thursday";
+                    String thursdaySplit = String.join(",", thursday);
+                    if (thurs.isChecked()) {
+                        week.add(thursdaySplit);
+                    }
+                    else {
+                        week.remove(thursdaySplit);
+                    }
+                    break;
+                case R.id.friBox:
+                    String friday = "Friday";
+                    String fridaySplit = String.join(",", friday);
+                    if (fri.isChecked()) {
+                        week.add(fridaySplit);
+                    }
+                    else {
+                        week.remove(fridaySplit);
+                    }
+                    break;
+                case R.id.satBox:
+                    String saturday = "Saturday";
+                    String saturdaySplit = String.join(",", saturday);
+                    if (sat.isChecked()) {
+                        week.add(saturdaySplit);
+                    }
+                    else {
+                        week.remove(saturdaySplit);
+                    }
+                    break;
+                case R.id.sunBox:
+                    String sunday = "Sunday";
+                    String sundaySplit = String.join(",", sunday);
+                    if (sun.isChecked()) {
+                        week.add(sundaySplit);
+                    }
+                    else {
+                        week.remove(sundaySplit);
+                    }
+                    break;
+
         }
+    }
+    public void snackBar(String text){
+        View parentLayout = getActivity().findViewById(android.R.id.content);
+        Snackbar snackbar = Snackbar.make(parentLayout, ""+text, Snackbar.LENGTH_LONG);
+        View view = snackbar.getView();
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+        params.gravity = Gravity.BOTTOM;
+        view.setLayoutParams(params);
+        snackbar.setAction("Okay", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        }).setActionTextColor(getResources().getColor(android.R.color.white ));
+        snackbar.show();
     }
 }

@@ -8,15 +8,18 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -83,11 +86,11 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
         button1.setOnClickListener(this);
 
         updateDocummentButton.setOnClickListener(this);
-        DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_WD_Docs_File");
-        reference2.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+        DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_WD_Docs_File").child(currentUser.getUid());
+        reference2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Picasso.get().load(dataSnapshot.child("driver_license").getValue(String.class)).into(imageView1);
+                Picasso.get().load(dataSnapshot.child("driverLicense").getValue(String.class)).into(imageView1);
             }
 
             @Override
@@ -157,7 +160,8 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
         }
         else
         {
-            showMessage("Choose an image!");
+            String text = "Choose an image";
+            snackBar(text);
         }
     }
 
@@ -177,17 +181,20 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
     {
         if(uri1 == null)
         {
-            showMessage("Choose an image");
+            String text = "Choose an image";
+            snackBar(text);
         }
         else
         {
             if(check==true) {
                 updatePhoto();
-                showMessage("Updated successfully");
+               String text = "Updated successfully";
+                snackBar(text);
             }
             else
             {
-                showMessage("Invalid driver's license. Please capture the license clearly!");
+                String text = "Invalid driver's license. Please capture the license clearly!";
+                snackBar(text);
             }
         }
     }
@@ -213,7 +220,7 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
                                     FirebaseDatabase.getInstance()
                                             .getReference("User_WD_Docs_File")
                                             .child(currentUser.getUid())
-                                            .child("driver_license").setValue(uriString);
+                                            .child("driverLicense").setValue(uriString);
                                     FirebaseDatabase.getInstance().getReference("User_WD_Docs_File").child(currentUser.getUid()).child("driverLicense").setValue(uriString);
                                     WPBusinessInfoFragment additem = new WPBusinessInfoFragment();
                                     AppCompatActivity activity = (AppCompatActivity)getContext();
@@ -244,5 +251,20 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
                 getInput();
                 break;
         }
+    }
+    public void snackBar(String text){
+        View parentLayout = getActivity().findViewById(android.R.id.content);
+        Snackbar snackbar = Snackbar.make(parentLayout, ""+text, Snackbar.LENGTH_LONG);
+        View view = snackbar.getView();
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+        params.gravity = Gravity.BOTTOM;
+        view.setLayoutParams(params);
+        snackbar.setAction("Okay", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        }).setActionTextColor(getResources().getColor(android.R.color.white ));
+        snackbar.show();
     }
 }

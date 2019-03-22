@@ -86,10 +86,10 @@ public class WSAccountSettingsFragment extends Fragment implements View.OnClickL
                 UserFile user = dataSnapshot.getValue(UserFile.class);
                 if(user != null)
                 {
-                    FullNameWS.setText("Full Name: "+user.getUser_firstname()+" "+user.getUser_lastname());
-                    AddressWS.setText("Full Adress: "+user.getUser_address());
-                    ContactNoWS.setText("Contact No.: "+user.getUser_phone_no());
-                    UserTypeWS.setText("User Type: "+user.getUser_type());
+                    FullNameWS.setText(user.getUser_firstname()+" "+user.getUser_lastname());
+                    AddressWS.setText(user.getUser_address());
+                    ContactNoWS.setText(user.getUser_phone_no());
+                    UserTypeWS.setText(user.getUser_type());
 
                     Picasso.get()
                             .load(user.getUser_uri())
@@ -111,7 +111,7 @@ public class WSAccountSettingsFragment extends Fragment implements View.OnClickL
                 UserAccountFile userAccount = dataSnapshot.getValue(UserAccountFile.class);
                 if(userAccount != null)
                 {
-                    EmailAddressWS.setText("Email Address: "+userAccount.getUser_email_address());
+                    EmailAddressWS.setText(userAccount.getUser_email_address());
                 }
             }
 
@@ -127,7 +127,7 @@ public class WSAccountSettingsFragment extends Fragment implements View.OnClickL
                 UserWSBusinessInfoFile userBusiness = dataSnapshot.getValue(UserWSBusinessInfoFile.class);
                 if(userBusiness != null)
                 {
-                    StationNameWS.setText("Station Name: "+userBusiness.getBusiness_name());
+                    StationNameWS.setText(userBusiness.getBusiness_name());
                 }
             }
 

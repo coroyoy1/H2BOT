@@ -7,79 +7,143 @@
     <ScrollView
         android:layout_centerVertical="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
+            
+            <TextView
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Business Information"
+                android:background="@android:color/holo_blue_dark"
+                android:textSize="20dp"
+                android:textColor="@android:color/white"/>
 
             <LinearLayout
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="20dp"
-                android:layout_margin="20dp"
-                android:background="@android:color/darker_gray"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="@drawable/cornerborder4"
+                android:gravity="center"
+                android:orientation="vertical">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
+                    android:layout_marginBottom="20dp"
                     android:background="@android:color/holo_blue_dark"
                     android:text="Water Station's Information"
                     android:textAlignment="center"
-                    android:textSize="20dp"
-                    android:layout_marginBottom="20dp"/>
+                    android:textColor="@android:color/white"
+                    android:textSize="20dp" />
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+                <TextView
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Station Name"
+                    android:textSize="18dp" />
+
                 <TextView
                     android:id="@+id/stationaNameBI"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="Station Name"
+                    android:textColor="@android:color/white"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:textColor="@android:color/holo_blue_dark"
                     android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp"
-                    android:text="Station Name"/>
+                    android:text="Station Address"
+                    android:textSize="18dp" />
                 <TextView
                     android:id="@+id/stationAddressBI"
-                    android:layout_marginTop="10dp"
-                    android:textSize="18dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="Station Address"
                     android:textColor="@android:color/white"
-                    android:text="Station Address"/>
+                    android:textSize="18dp" />
+                <TextView
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Business Hours"
+                    android:textSize="18dp" />
                 <TextView
                     android:id="@+id/stationHoursBI"
-                    android:layout_marginTop="10dp"
-                    android:textSize="18dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="Station Hours"
                     android:textColor="@android:color/white"
-                    android:text="Station Hours"/>
+                    android:textSize="18dp" />
+                <TextView
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Contact Number"
+                    android:textSize="18dp" />
                 <TextView
                     android:id="@+id/stationTelNoBI"
-                    android:layout_marginTop="10dp"
-                    android:textSize="18dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="Station Tel No"
                     android:textColor="@android:color/white"
-                    android:text="Station Tel No"/>
+                    android:textSize="18dp" />
+                <TextView
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Delivery Fee"
+                    android:textSize="18dp" />
                 <TextView
                     android:id="@+id/stationFeePerGalBI"
-                    android:layout_marginTop="10dp"
-                    android:textSize="18dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="Station fee per gal"
                     android:textColor="@android:color/white"
-                    android:text="Station fee per gal"/>
+                    android:textSize="18dp" />
+                <TextView
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Minimum number of gallons per order"
+                    android:textSize="18dp" />
                 <TextView
                     android:id="@+id/stationStatusBI"
-                    android:layout_marginTop="10dp"
-                    android:textSize="18dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="Station status"
                     android:textColor="@android:color/white"
-                    android:text="Station status"/>
+                    android:textSize="18dp" />
+                </LinearLayout>
+                </android.support.v7.widget.CardView>
+
             </LinearLayout>
 
             <LinearLayout

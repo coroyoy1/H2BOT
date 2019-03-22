@@ -101,7 +101,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_water_station_document_version2);
-        week = new ArrayList<String>();
+        week = new ArrayList<>();
 
         progressDialog = new ProgressDialog(WaterStationDocumentVersion2Activity.this);
         progressDialog.setMessage("Loading...");

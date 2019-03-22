@@ -50,7 +50,7 @@
                 android:layout_height="50dp"
                 android:textAlignment="center"
                 android:hint="Price per Gallon"
-                android:inputType="textPersonName"
+                android:inputType="number"
                 android:background="@drawable/edit_text_border"/>
         </LinearLayout>
         <Button
