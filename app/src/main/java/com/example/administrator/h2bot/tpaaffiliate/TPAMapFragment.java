@@ -47,6 +47,7 @@ import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserLocationAddress;
 import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
+import com.example.administrator.h2bot.models.UserWallet;
 import com.example.administrator.h2bot.objects.WaterStationOrDealer;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -94,6 +95,7 @@ public class TPAMapFragment extends Fragment
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Location mLastLocation;
+    String stationaddress;
     private Marker mCurrentLocationMarker;
     private static final int REQUEST_USER_LOCATION_CODE = 99;
     public FirebaseAuth mAuth;
@@ -576,8 +578,8 @@ public class TPAMapFragment extends Fragment
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot infoFile : dataSnapshot.getChildren()) {
-                                UserWSBusinessInfoFile businessInfo = infoFile.getValue(UserWSBusinessInfoFile.class);
                                 userLatLongRef.addValueEventListener(new ValueEventListener() {
+                                    UserWSBusinessInfoFile businessInfo = infoFile.getValue(UserWSBusinessInfoFile.class);
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         for (DataSnapshot latlongFile : dataSnapshot.getChildren()) {
@@ -597,10 +599,16 @@ public class TPAMapFragment extends Fragment
                                                                             Log.d("Kaykay", "" + statusOrder);
                                                                             if (statusOrder.equals("Broadcasting")) {
 
+                                                                                Log.d("sAddress",userData3.child("order_merchant_id")+"="+businessInfo.getBusiness_id());
+                                                                                if (userData3.child("order_merchant_id").getValue(String.class).equals(businessInfo.getBusiness_id()))
+                                                                                {
+                                                                                   stationaddress = businessInfo.getBusiness_address();
+                                                                                    Log.d("sAddress","hi"+stationAddress);
+                                                                                }
                                                                                 noOfGallons.setText(userData4.getOrder_qty());
                                                                                 Profit.setText(userData4.getOrder_delivery_fee());
-                                                                                stationadd.setText(userData4.getOrder_address());
-                                                                                fundAmt.setText(userData4.getOrder_total_amt());
+                                                                                stationadd.setText(stationaddress);
+                                                                                fundAmt.setText(userData3.child("order_partial_amt").getValue(String.class));
                                                                                 String type = "Type: " + userType;
                                                                                 station_id_snip = stationId;
 
@@ -714,7 +722,13 @@ public class TPAMapFragment extends Fragment
                             wallet1.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    oldpointsaffiliate = Double.valueOf(dataSnapshot.child("user_points").getValue(String.class));
+                                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                        UserWallet uwallet = data.getValue(UserWallet.class);
+                                        if(uwallet.getUser_id().equals(firebaseUser.getUid()))
+                                        {
+                                            oldpointsaffiliate = Double.valueOf(uwallet.getUser_points());
+                                        }
+                                    }
                                     Log.d("pasudla ko","kakalokagago ka"+oldpointstation);
                                 }
                                 @Override
