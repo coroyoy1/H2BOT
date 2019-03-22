@@ -3,7 +3,6 @@ package com.example.administrator.h2bot.adapter;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,17 +11,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
-import com.example.administrator.h2bot.deliveryman.DMInProgressAcception;
 import com.example.administrator.h2bot.mapmerchant.MapMerchantFragment;
-import com.example.administrator.h2bot.models.OrderFileModel;
 import com.example.administrator.h2bot.models.OrderModel;
-import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
-import com.example.administrator.h2bot.waterstation.WSPendingOrderAcceptDeclineFragment;
 
 import java.util.List;
-import java.util.Objects;
-
-import static java.security.AccessController.getContext;
 
 public class DMInProgressOrdersAdapter extends RecyclerView.Adapter<DMInProgressOrdersAdapter.ImageViewholder> {
 

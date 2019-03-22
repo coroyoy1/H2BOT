@@ -52,7 +52,7 @@
 
         <activity
             android:name=".mapmerchant.MapMerchantFragment"
-            android:label="@string/title_activity_map_merchant_fragment"></activity>
+            android:label="@string/title_activity_map_merchant_fragment"/>
         <activity android:name=".stationtoaffiliate.StationToAffiliateMainActivity" />
         <activity
             android:name=".tpaaffiliate.TPAScanCodeActivity"

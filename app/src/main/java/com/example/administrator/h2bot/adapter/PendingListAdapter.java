@@ -13,8 +13,6 @@ import android.widget.TextView;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.mapmerchant.MapMerchantFragment;
 import com.example.administrator.h2bot.models.OrderModel;
-import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
-import com.example.administrator.h2bot.waterstation.WSPendingOrderAcceptDeclineFragment;
 
 import java.util.List;
 

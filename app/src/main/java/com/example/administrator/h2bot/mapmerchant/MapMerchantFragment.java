@@ -25,7 +25,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
@@ -37,20 +36,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.maps.DirectionsParser;
 import com.example.administrator.h2bot.maps.IOBackPressed;
-import com.example.administrator.h2bot.maps.MapMerchantFragmentRenew;
 import com.example.administrator.h2bot.models.CaptureActivityPortrait;
 import com.example.administrator.h2bot.models.MerchantCustomerFile;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.UserLocationAddress;
-import com.example.administrator.h2bot.models.UserWSDMFile;
 import com.example.administrator.h2bot.waterstation.WSBroadcast;
-import com.example.administrator.h2bot.waterstation.WSInProgressAccept;
 import com.example.administrator.h2bot.waterstation.WSInProgressFragment;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -70,7 +65,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -771,6 +765,13 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                                     linearSMSSender.setVisibility(View.GONE);
                                     launchscan.setVisibility(View.VISIBLE);
                                     dispatched.setVisibility(View.GONE);
+                                }
+                                else if (userType.toLowerCase().equals("Broadcasting".toLowerCase()))
+                                {
+                                        Intent intent = new Intent(getActivity(), WSBroadcast.class);
+                                        intent.putExtra("Customer", customerNo);
+                                        intent.putExtra("OrderNo", transactionNo);
+                                        startActivity(intent);
                                 }
                             }
                             if (currentUserType.equals("Delivery Man"))
