@@ -145,6 +145,12 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                 && passwordString.isEmpty())
         {
             showMessages("Please fill up all the fields before you update!");
+            progressDialog.dismiss();
+        }
+        else if (passwordString.length() < 6)
+        {
+            showMessage("Your password is too short, Must consist of 6 characters or more");
+            progressDialog.dismiss();
         }
         else
         {
@@ -164,13 +170,19 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
 
         if(firstNameString.isEmpty()
             && lastNameString.isEmpty()
+                && emailAddressString.isEmpty()
             && addressString.isEmpty()
             && contactNoString.isEmpty()
-            && emailAddressString.isEmpty()
             && passwordString.isEmpty()
             && confirmPasswordString.isEmpty())
         {
             showMessages("Please fill up all the fields before you update!");
+            progressDialog.dismiss();
+        }
+        else if (passwordString.length() < 6 && confirmPasswordString.length() < 6)
+        {
+            showMessage("Your password is too short, Must consist of 6 characters or more");
+            progressDialog.dismiss();
         }
         else
         {
@@ -867,6 +879,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                                     @Override
                                                                                     public void onFailure(@NonNull Exception e) {
                                                                                         showMessage("Failed to update image");
+                                                                                        progressDialog.dismiss();
                                                                                     }
                                                                                 });
                                                                     }
@@ -877,6 +890,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                             @Override
                                                             public void onFailure(@NonNull Exception e) {
                                                                 showMessage("Data does not updated");
+                                                                progressDialog.dismiss();
                                                             }
                                                         });
                                             }
@@ -886,6 +900,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
                                             showMessage("Failed to update information");
+                                            progressDialog.dismiss();
                                         }
                                     });
                         }

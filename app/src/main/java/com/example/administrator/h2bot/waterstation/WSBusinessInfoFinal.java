@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -66,22 +67,28 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 
-public class WSBusinessInfoFinal extends Fragment {
+public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickListener{
 
     private static final int PICK_IMAGE_REQUEST = 1;
     ImageView businessPermit_image, sanitaryPermit_image, physicochemicalPermit_Image, birPermit_Image;
     Button businessPermitBtn, sanitaryPermitBtn,
             physicochemicalbutton, birbutton, submitButton;
-    RadioGroup deliveryFeeGroup;
 
-    EditText stationName, stationAddress, endingHour, startingHour, businessDeliveryFeePerGal, businessMinNoCapacity, telNo, deliveryFee, min_no_of_gallons;
+    RadioGroup deliveryFeeGroup, doYouHaveGallonGroup;
+
+    EditText stationName, stationAddress, endingHour, startingHour, businessDeliveryFeePerGal, businessMinNoCapacity, telNo, deliveryFee, min_no_of_gallons,
+            priceOfGallon, currentNoOfGallon;
     Spinner startSpinner, endSpinner;
     String deliveryMethod, business, sanitary, physicochemical, bir;
 
@@ -103,6 +110,10 @@ public class WSBusinessInfoFinal extends Fragment {
     ArrayAdapter<String> adapter2;
 
     String mFirstname, mLastname, mAddress, mContact_no, mEmail_address, mPassword, mFilepath;
+
+    CheckBox mon, tue, wed, thu, fri, sat, sun;
+
+    List<String> week;
 
     @Nullable
     @Override
@@ -146,9 +157,37 @@ public class WSBusinessInfoFinal extends Fragment {
         startingHour = view.findViewById(R.id.startingHourDU);
         deliveryFee = view.findViewById(R.id.deliveryFeeDU);
         min_no_of_gallons = view.findViewById(R.id.min_no_of_gallonsDU);
+        currentNoOfGallon = view.findViewById(R.id.noOfGallonsDU);
+        priceOfGallon = view.findViewById(R.id.priceOfGallonDU);
+        currentNoOfGallon.setVisibility(View.GONE);
 
         //Radiogroup
         deliveryFeeGroup = view.findViewById(R.id.deliveryFeeGroupDU);
+        doYouHaveGallonGroup = view.findViewById(R.id.doYouHaveGallonGroupDU);
+
+        //Temp Disappear
+        birbutton.setVisibility(View.GONE);
+        birPermit_Image.setVisibility(View.GONE);
+
+        //List
+        week = new ArrayList<String>();
+
+        //Checkbox
+        mon = view.findViewById(R.id.monBoxDU);
+        tue = view.findViewById(R.id.tueBoxDU);
+        wed = view.findViewById(R.id.wedBoxDU);
+        thu = view.findViewById(R.id.thursBoxDU);
+        fri = view.findViewById(R.id.friBoxDU);
+        sat = view.findViewById(R.id.satBoxDU);
+        sun = view.findViewById(R.id.sunBoxDU);
+
+        mon.setOnClickListener(this);
+        tue.setOnClickListener(this);
+        wed.setOnClickListener(this);
+        thu.setOnClickListener(this);
+        fri.setOnClickListener(this);
+        sat.setOnClickListener(this);
+        sun.setOnClickListener(this);
 
 
         String[] arraySpinner = new String[]{
@@ -271,6 +310,21 @@ public class WSBusinessInfoFinal extends Fragment {
                         deliveryMethod = "Free";
                         deliveryFee.setText("0");
                         deliveryFee.setVisibility(View.GONE);
+                        break;
+                }
+            }
+        });
+
+        doYouHaveGallonGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId)
+                {
+                    case R.id.yesDU:
+                        priceOfGallon.setVisibility(View.VISIBLE);
+                        break;
+                    case R.id.noDU:
+                        priceOfGallon.setVisibility(View.GONE);
                         break;
                 }
             }
@@ -436,43 +490,43 @@ public class WSBusinessInfoFinal extends Fragment {
                         e.printStackTrace();
                     }
                 }
-                if (isPicked4)
-                {
-                    filepath4 = data.getData();
-                    Bitmap bitmap = null;
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filepath4);
-                        TextRecognizer textRecognizer = new TextRecognizer.Builder(getActivity().getApplicationContext()).build();
-
-                        if(!textRecognizer.isOperational())
-                        {
-                            Toast.makeText(getActivity(), "No text detected", Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-                            SparseArray<TextBlock> items = textRecognizer.detect(frame);
-                            StringBuilder sb= new StringBuilder();
-
-                            for(int ctr=0;ctr<items.size();ctr++)
-                            {
-                                TextBlock myItem = items.valueAt(ctr);
-                                sb.append(myItem.getValue());
-                                sb.append("\n");
-                            }
-                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
-                            Picasso.get().load(filepath4).into(birPermit_Image);
-                            Toast.makeText(getActivity(), "Valid sanitary permit", Toast.LENGTH_SHORT).show();
-                            }
-                            else{
-                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
-                                Toast.makeText(getActivity(), "Invalid sanitary permit", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+//                if (isPicked4)
+//                {
+//                    filepath4 = data.getData();
+//                    Bitmap bitmap = null;
+//                    try {
+//                        bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filepath4);
+//                        TextRecognizer textRecognizer = new TextRecognizer.Builder(getActivity().getApplicationContext()).build();
+//
+//                        if(!textRecognizer.isOperational())
+//                        {
+//                            Toast.makeText(getActivity(), "No text detected", Toast.LENGTH_SHORT).show();
+//                        }
+//                        else
+//                        {
+//                            Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+//                            SparseArray<TextBlock> items = textRecognizer.detect(frame);
+//                            StringBuilder sb= new StringBuilder();
+//
+//                            for(int ctr=0;ctr<items.size();ctr++)
+//                            {
+//                                TextBlock myItem = items.valueAt(ctr);
+//                                sb.append(myItem.getValue());
+//                                sb.append("\n");
+//                            }
+//                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
+//                            Picasso.get().load(filepath4).into(birPermit_Image);
+//                            Toast.makeText(getActivity(), "Valid sanitary permit", Toast.LENGTH_SHORT).show();
+//                            }
+//                            else{
+//                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
+//                                Toast.makeText(getActivity(), "Invalid sanitary permit", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
             }
         }
         else
@@ -532,8 +586,8 @@ public class WSBusinessInfoFinal extends Fragment {
 
     public void checkDocuments(){
         if(businessPermit_image.getDrawable() == null
-                || sanitaryPermit_image.getDrawable() == null || physicochemicalPermit_Image.getDrawable() == null
-        || birPermit_Image.getDrawable() == null){
+                || sanitaryPermit_image.getDrawable() == null || physicochemicalPermit_Image.getDrawable() == null)
+        {
             Toast.makeText(getActivity(), "Please fill all the requirments", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -543,6 +597,42 @@ public class WSBusinessInfoFinal extends Fragment {
         }
     }
 
+    public void checkWeek() {
+        String str;
+        if (mon.isChecked()) {
+            str = "Monday";
+            week.add(str);
+        }
+        if (tue.isChecked()) {
+            str = "Tuesday";
+            week.add(str);
+        }
+        if (wed.isChecked())
+        {
+            str = "Wednesday";
+            week.add(str);
+        }
+        if (thu.isChecked())
+        {
+            str = "Thursday";
+            week.add(str);
+        }
+        if (fri.isChecked())
+        {
+            str = "Friday";
+            week.add(str);
+        }
+        if (sat.isChecked())
+        {
+            str = "Saturday";
+            week.add(str);
+        }
+        if (sun.isChecked())
+        {
+            str = "Sunday";
+            week.add(str);
+        }
+    }
 
     public void updateInformation()
     {
@@ -636,124 +726,29 @@ public class WSBusinessInfoFinal extends Fragment {
                 }
             });
         }
-        if (filepath4 != null)
-        {
-            StorageReference mStorageRef = storageReference.child("station_documents").child(mAuth.getCurrentUser().getUid() +"/"+"birPermitDocument");
-            mStorageRef.putFile(filepath4).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            bir = uri.toString();
-
-                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_Docs_File");
-                                reference.child(mAuth.getCurrentUser().getUid()).child("station_bir_permit").setValue(bir);
-
-                        }
-                    });
-                }
-            });
-        }
+//        if (filepath4 != null)
+//        {
+//            StorageReference mStorageRef = storageReference.child("station_documents").child(mAuth.getCurrentUser().getUid() +"/"+"birPermitDocument");
+//            mStorageRef.putFile(filepath4).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                @Override
+//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                    Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+//                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                        @Override
+//                        public void onSuccess(Uri uri) {
+//                            bir = uri.toString();
+//
+//                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_Docs_File");
+//                                reference.child(mAuth.getCurrentUser().getUid()).child("station_bir_permit").setValue(bir);
+//
+//                        }
+//                    });
+//                }
+//            });
+//        }
 
         progressDialog.dismiss();
     }
-
-//            this.business_id = business_id;
-//        this.business_name = business_name;
-//        this.business_address = business_address;
-//        this.business_tel_no = business_tel_no;
-//        this.business_start_time = business_start_time;
-//        this.business_end_time = business_end_time;
-//        this.business_delivery_fee_method = business_delivery_fee_method;
-//        this.business_delivery_fee = business_delivery_fee;
-//        this.business_min_no_of_gallons = business_min_no_of_gallons;
-//        this.business_status = business_status;
-
-//    public void uploadAllImage(){
-//        if(filepath != null){
-//            FirebaseUser user = mAuth.getCurrentUser();
-//            String userId = user.getUid();
-//            Log.d("auth", userId);
-//            StorageReference mStorageRef = storageReference.child("station_documents").child(userId +"/"+"businessPermitDocument");
-//            mStorageRef.putFile(filepath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                @Override
-//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                    Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-//                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                        @Override
-//                        public void onSuccess(Uri uri) {
-//                            mUri = uri.toString();
-//                        }
-//                    });
-//                    progressDialog.dismiss();
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {
-//                    progressDialog.dismiss();
-//                }
-//            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-//                @Override
-//                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-//                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-//                    progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
-//                    progressDialog.show();
-//                }
-//            });
-//        }
-//
-//        if(filepath2 != null){
-//            FirebaseUser user = mAuth.getCurrentUser();
-//            String userId = user.getUid();
-//            StorageReference mStorageRef = storageReference.child("station_documents").child(userId +"/"+"sanitaryPermitDocument");
-//            mStorageRef.putFile(filepath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                @Override
-//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                    Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-//                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                        @Override
-//                        public void onSuccess(Uri uri) {
-//                            String stringUri = uri.toString();
-//                            WSDocFile wsDocFile = new WSDocFile(userId,
-//                                    stringUri,
-//                                    mUri,
-//                                    "active");
-//
-//                            FirebaseDatabase.getInstance().getReference("User_WS_Docs_File").child(userId).setValue(wsDocFile)
-//                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                        @Override
-//                                        public void onSuccess(Void aVoid) {
-//                                            Toast.makeText(getActivity(), "Successfully registered", Toast.LENGTH_SHORT).show();
-//                                        }
-//                                    })
-//                                    .addOnFailureListener(new OnFailureListener() {
-//                                        @Override
-//                                        public void onFailure(@NonNull Exception e) {
-//                                            Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                                        }
-//                                    });
-//                        }
-//                    });
-//                    progressDialog.dismiss();
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {
-//                    Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                    progressDialog.dismiss();
-//                }
-//            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-//                @Override
-//                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-//                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-//                    progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
-//                    progressDialog.show();
-//                }
-//            });
-//        }
-//    }
 
     public String getTime(String clock)
     {
@@ -776,7 +771,7 @@ public class WSBusinessInfoFinal extends Fragment {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        WSBusinessInfoFile wsBusinessInfoFile = dataSnapshot.getValue(WSBusinessInfoFile.class);
+                        StationBusinessInfo wsBusinessInfoFile = dataSnapshot.getValue(StationBusinessInfo.class);
                         if (wsBusinessInfoFile != null)
                         {
                             stationName.setText(wsBusinessInfoFile.getBusiness_name());
@@ -816,6 +811,51 @@ public class WSBusinessInfoFinal extends Fragment {
                             min_no_of_gallons.setText(wsBusinessInfoFile.getBusiness_min_no_of_gallons());
                             deliveryFee.setText(wsBusinessInfoFile.getBusiness_delivery_fee());
 
+                            //Getting the lit of DAYS
+                            String array = wsBusinessInfoFile.getBusiness_days();
+                            List<String> list = new ArrayList<String>(Collections.singleton(array));
+
+                            String removeBracket = list.toString();
+                            removeBracket = removeBracket.substring(2, removeBracket.length() - 2);
+
+                            List<String> stringList = new ArrayList<String>(Arrays.asList(removeBracket.split(",")));
+                            String str = "";
+                            for (int count = 0; count < stringList.size(); count++)
+                            {
+                                str = stringList.get(count);
+                                str = str.replaceAll(" ", "");
+                                showMessages(str);
+                                if (str.toLowerCase().equals("Monday".toLowerCase()))
+                                {
+                                    mon.setChecked(true);
+                                }
+                                if (str.toLowerCase().equals("Tuesday".toLowerCase()))
+                                {
+                                    tue.setChecked(true);
+                                }
+                                if (str.toLowerCase().equals("Wednesday".toLowerCase()))
+                                {
+                                    wed.setChecked(true);
+                                }
+                                if (str.toLowerCase().equals("Thursday".toLowerCase()))
+                                {
+                                    thu.setChecked(true);
+                                }
+                                if (str.toLowerCase().equals("Friday".toLowerCase()))
+                                {
+                                    fri.setChecked(true);
+                                }
+                                if (str.toLowerCase().equals("Saturday".toLowerCase()))
+                                {
+                                    sat.setChecked(true);
+                                }
+                                if (str.toLowerCase().equals("Sunday".toLowerCase()))
+                                {
+                                    sun.setChecked(true);
+                                }
+                            }
+                            checkWeek();
+
                             DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("User_WS_Docs_File");
                             databaseReference1.child(mAuth.getCurrentUser().getUid())
                                     .addValueEventListener(new ValueEventListener() {
@@ -847,4 +887,70 @@ public class WSBusinessInfoFinal extends Fragment {
                 });
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.monBoxDU:
+                String monStr = TextUtils.join(",", Collections.singleton("Monday"));
+                if (!mon.isChecked()) {
+                    week.remove(monStr);
+                } else {
+                    week.add(monStr);
+                }
+                break;
+            case R.id.tueBoxDU:
+                String tueStr = TextUtils.join(",", Collections.singleton("Tuesday"));
+                if (!tue.isChecked()) {
+                    week.remove(tueStr);
+                } else {
+                    week.add(tueStr);
+                }
+                break;
+            case R.id.wedBoxDU:
+                String wedStr = TextUtils.join(",", Collections.singleton("Wednesday"));
+                if (!wed.isChecked()) {
+                    week.remove(wedStr);
+                } else {
+                    week.add(wedStr);
+                }
+                break;
+            case R.id.thursBoxDU:
+                String thuStr = TextUtils.join(",", Collections.singleton("Thursday"));
+                if (!thu.isChecked()) {
+                    week.remove(thuStr);
+                } else {
+                    week.add(thuStr);
+                }
+                break;
+            case R.id.friBoxDU:
+                String friStr = TextUtils.join(",", Collections.singleton("Friday"));
+                if (!fri.isChecked()) {
+                    week.remove(friStr);
+                } else {
+                    week.add(friStr);
+                }
+                break;
+            case R.id.satBoxDU:
+                String satStr = TextUtils.join(",", Collections.singleton("Saturday"));
+                if (!sat.isChecked()) {
+                    week.remove(satStr);
+                } else
+                {
+                    week.add(satStr);
+                }
+                break;
+            case R.id.sunBoxDU:
+                String sunStr = TextUtils.join("," , Collections.singleton("Sunday"));
+                if (!sun.isChecked())
+                {
+                    week.remove(sunStr);
+                }
+                else
+                {
+                    week.add(sunStr);
+                }
+                showMessages(week.toString());
+                break;
+        }
+    }
 }
