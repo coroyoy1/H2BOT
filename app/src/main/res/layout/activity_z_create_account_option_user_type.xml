@@ -11,34 +11,27 @@
 
 
     <LinearLayout
+
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:background="@android:color/holo_blue_dark"
+        android:layout_height="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:orientation="vertical"
         android:gravity="center"
-        android:orientation="vertical">
-
-
+        android:background="@drawable/background">
         <TextView
             android:id="@+id/headerRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="SELECT USER TYPE"
+            android:layout_marginBottom="20dp"
             android:textColor="#FFF"
             android:textSize="25sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:orientation="vertical">
         <Button
             android:id="@+id/cCA"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_margin="5dp"
+            android:layout_margin="10dp"
             android:text="Customer"
             android:background="@android:color/holo_blue_dark"
             android:textColor="@android:color/white"
@@ -49,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:background="@android:color/holo_blue_dark"
-            android:layout_margin="5dp"
+            android:layout_margin="10dp"
             android:text="Water Station"
             android:textColor="@android:color/white"
             android:textSize="20dp" />
@@ -58,7 +51,7 @@
             android:id="@+id/wdCA"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_margin="5dp"
+            android:layout_margin="10dp"
             android:text="Water Dealer"
             android:background="@android:color/holo_blue_dark"
             android:textColor="@android:color/white"
@@ -68,7 +61,7 @@
             android:id="@+id/tpaCA"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_margin="5dp"
+            android:layout_margin="10dp"
             android:background="@android:color/holo_blue_dark"
             android:text="Third Party Affiliate"
             android:textColor="@android:color/white"

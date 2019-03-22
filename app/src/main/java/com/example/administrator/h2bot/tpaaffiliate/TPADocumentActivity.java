@@ -220,11 +220,9 @@ public class TPADocumentActivity extends AppCompatActivity{
                             Log.d("Data: ", mFirstname+""+mLastname);
                             if(sb.toString().trim().toLowerCase().contains(mFirstname.toLowerCase())
                                     && sb.toString().trim().toLowerCase().contains(mLastname.toLowerCase())
-                                    && sb.toString().toUpperCase().contains("DRIVERS LICENSE")
-                                    || sb.toString().toUpperCase().contains("DRIVER'S LICENSE")
-                                    || sb.toString().toUpperCase().contains("LAND")
-                                    || sb.toString().toUpperCase().contains("TRANSPORTATION")
-                                    || sb.toString().toUpperCase().contains("OFFICE")
+                                    && sb.toString().toUpperCase().contains("LAND")
+                                    && sb.toString().toUpperCase().contains("TRANSPORTATION")
+                                    && sb.toString().toUpperCase().contains("OFFICE")
                             ){
                                 Picasso.get().load(filepath).into(driversLicense_image);
                                 Toast.makeText(this, "Valid Driver's License", Toast.LENGTH_SHORT).show();

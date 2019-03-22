@@ -24,6 +24,7 @@ import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
 import com.example.administrator.h2bot.models.WSBusinessInfoFile;
+import com.example.administrator.h2bot.models.WSBusinessInfoFile2;
 import com.example.administrator.h2bot.waterstation.WSBusinessDocumentUpdate;
 import com.example.administrator.h2bot.waterstation.WSBusinessInformationUpdate;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,7 +44,7 @@ public class WPBusinessInfoFragment extends Fragment implements View.OnClickList
     FirebaseUser firebaseUser;
 
     Button updateBI, updateDocBI, updateInfo, cancelBI;
-    TextView stationName, stationAddress, stationHours, stationTelNo, stationFeePerGal, stationDelivery, stationStatus;
+    TextView stationName, stationAddress, stationHours, stationTelNo, stationFeePerGal, stationDelivery, stationStatus,dealerdays,dealerDeliveryMethod;
     ImageView imageView;
 
     LinearLayout linearLayoutUp, linearLayoutUpNext;
@@ -67,12 +68,11 @@ public class WPBusinessInfoFragment extends Fragment implements View.OnClickList
         stationDelivery = view.findViewById(R.id.stationDeliveryBI);
         stationStatus = view.findViewById(R.id.stationStatusBI);
         imageView = view.findViewById(R.id.imageWaterStation);
-
+        dealerdays = view.findViewById(R.id.dealerdays);
         linearLayoutUp = view.findViewById(R.id.linearForUpdate);
         linearLayoutUpNext = view.findViewById(R.id.linearForUpdateNext);
         linearLayoutUpNext.setVisibility(View.GONE);
-
-
+        dealerDeliveryMethod = view.findViewById(R.id.dealerDeliveryMethod);
 
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
@@ -81,7 +81,7 @@ public class WPBusinessInfoFragment extends Fragment implements View.OnClickList
         databaseReference3.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                stationName.setText("Name: "+dataSnapshot.child("user_firstname").getValue(String.class)+" "+dataSnapshot.child("user_lastname").getValue(String.class));
+                stationName.setText(dataSnapshot.child("user_firstname").getValue(String.class)+" "+dataSnapshot.child("user_lastname").getValue(String.class));
             }
 
             @Override
@@ -94,16 +94,18 @@ public class WPBusinessInfoFragment extends Fragment implements View.OnClickList
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                WSBusinessInfoFile userWSBusinessInfoFile = dataSnapshot.getValue(WSBusinessInfoFile.class);
+                WSBusinessInfoFile2 userWSBusinessInfoFile = dataSnapshot.getValue(WSBusinessInfoFile2.class);
                 if(userWSBusinessInfoFile != null)
                 {
                     String businessTime = userWSBusinessInfoFile.getBusiness_start_time()+" - "+userWSBusinessInfoFile.getBusiness_end_time();
-                    stationAddress.setText("Full Address: "+userWSBusinessInfoFile.getBusiness_address());
-                    stationHours.setText("Business Hours: "+businessTime);
-                    stationTelNo.setText("Contact No.: "+userWSBusinessInfoFile.getBusiness_tel_no());
-                    stationFeePerGal.setText("Delivery Fee: "+userWSBusinessInfoFile.getBusiness_delivery_fee());
-                    stationDelivery.setText("Delivery Method: "+userWSBusinessInfoFile.getBusiness_delivery_fee_method());
-                    stationStatus.setText("Minimum order of gallons: "+userWSBusinessInfoFile.getBusiness_min_no_of_gallons());
+                    stationAddress.setText(userWSBusinessInfoFile.getBusiness_address());
+                    stationHours.setText(businessTime);
+                    stationTelNo.setText(userWSBusinessInfoFile.getBusiness_tel_no());
+                    stationFeePerGal.setText(userWSBusinessInfoFile.getBusiness_delivery_fee());
+                    stationDelivery.setText(userWSBusinessInfoFile.getBusiness_delivery_fee_method());
+                    stationStatus.setText(userWSBusinessInfoFile.getBusiness_min_no_of_gallons());
+                    dealerdays.setText(userWSBusinessInfoFile.getBusiness_days());
+                    dealerDeliveryMethod.setText(userWSBusinessInfoFile.getBusiness_delivery_fee_method());
                     }
                 else
                 {
@@ -122,7 +124,6 @@ public class WPBusinessInfoFragment extends Fragment implements View.OnClickList
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 UserFile user = dataSnapshot.getValue(UserFile.class);
                 String image = user.getUser_uri();
-                Log.d("ImageNako",""+image);
                 Picasso.get().load(image).into(imageView);
             }
 

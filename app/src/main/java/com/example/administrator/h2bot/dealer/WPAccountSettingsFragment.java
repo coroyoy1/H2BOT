@@ -66,10 +66,10 @@ public class WPAccountSettingsFragment extends Fragment implements View.OnClickL
                 UserFile user = dataSnapshot.getValue(UserFile.class);
                 if(user != null)
                 {
-                    FullNameWS.setText("Name: "+user.getUser_firstname()+" "+user.getUser_lastname());
-                    AddressWS.setText("Adress: "+user.getUser_address());
-                    ContactNoWS.setText("Contact No.: "+user.getUser_phone_no());
-                    UserTypeWS.setText("User Type: "+user.getUser_type());
+                    FullNameWS.setText(user.getUser_firstname()+" "+user.getUser_lastname());
+                    AddressWS.setText(user.getUser_address());
+                    ContactNoWS.setText(user.getUser_phone_no());
+                    UserTypeWS.setText(user.getUser_type());
 
                     Picasso.get()
                             .load(user.getUser_uri())

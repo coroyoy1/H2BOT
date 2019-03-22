@@ -11,16 +11,19 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -265,14 +268,19 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
                                 sb.append(myItem.getValue());
                                 sb.append("\n");
                             }
-                            if(sb.toString().toLowerCase().contains(mFirstname.toLowerCase()) && sb.toString().toLowerCase().contains(mLastname.toLowerCase())){
+                            if(sb.toString().toLowerCase().contains(mFirstname.toLowerCase()) && sb.toString().toLowerCase().contains(mLastname.toLowerCase())
+                                && sb.toString().toLowerCase().contains("land")
+                                && sb.toString().toLowerCase().contains("transportation")
+                                && sb.toString().toLowerCase().contains("office")){
                                 Picasso.get().load(filepath2).into(sanitaryPermit_image);
-                                Toast.makeText(this, "Valid driver's license", Toast.LENGTH_SHORT).show();
+                                String text = "Valid driver's license";
+                                snackBar(text);
                                 check = true;
                             }
                             else{
                                 sanitaryPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
-                                Toast.makeText(WaterPeddlerDocumentActivity.this, "Invalid driver's license. Please capture the license clearly", Toast.LENGTH_SHORT).show();
+                                String text = "Invalid driver's license. Please capture the license clearly";
+                                snackBar(text);
                                 check = false;
                             }
                         }
@@ -662,5 +670,20 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
                 }
                 break;
         }
+    }
+    public void snackBar(String text){
+        View parentLayout = findViewById(android.R.id.content);
+        Snackbar snackbar = Snackbar.make(parentLayout, ""+text, Snackbar.LENGTH_LONG);
+        View view = snackbar.getView();
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+        params.gravity = Gravity.BOTTOM;
+        view.setLayoutParams(params);
+        snackbar.setAction("Okay", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        }).setActionTextColor(getResources().getColor(android.R.color.white ));
+        snackbar.show();
     }
 }
