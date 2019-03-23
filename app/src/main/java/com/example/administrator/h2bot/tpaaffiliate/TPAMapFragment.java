@@ -62,7 +62,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -90,8 +92,11 @@ public class TPAMapFragment extends Fragment
     String affiliatename, merchantno;
     String affiliateNo;
     // User Permissions
+    String oldpointsaffiliatefinal,oldpointsstationfinal;
+    Double newpointsaffiliatefinal,newpointsstationfinal;
     TextView noOfGallons,Profit,stationadd,fundAmt;
     private GoogleMap map;
+    String pointsoldaffiliate, pointsoldstation, pointsnewaffiliate, pointsnewstation;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Location mLastLocation;
@@ -682,7 +687,7 @@ public class TPAMapFragment extends Fragment
         orderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pointsNeeded = Double.valueOf(fundAmt.getText().toString());
+                pointsNeeded = Double.parseDouble(fundAmt.getText().toString());
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
                 dialog.setCancelable(false);
                 dialog.setTitle("CONFIRMATION");
@@ -690,124 +695,7 @@ public class TPAMapFragment extends Fragment
                 dialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        DatabaseReference wallet = FirebaseDatabase.getInstance().getReference("User_Wallet").child(firebaseUser.getUid());
-                        wallet.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                points = Double.parseDouble(dataSnapshot.child("user_points").getValue(String.class));
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-
-                        if(points>=pointsNeeded)
-                        {
-                        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("User_File");
-                        reference1.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                affiliatename = dataSnapshot.child("user_firstname").getValue(String.class) + " " + dataSnapshot.child("user_lastname").getValue(String.class);
-                                affiliateNo = dataSnapshot.child("user_phone_no").getValue(String.class);
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                            Log.d("idid","kakaloka"+firebaseUser.getUid());
-                            DatabaseReference wallet1 = FirebaseDatabase.getInstance().getReference("User_Wallet").child(firebaseUser.getUid());
-                            wallet1.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    for (DataSnapshot data : dataSnapshot.getChildren()) {
-                                        UserWallet uwallet = data.getValue(UserWallet.class);
-                                        if(uwallet.getUser_id().equals(firebaseUser.getUid()))
-                                        {
-                                            oldpointsaffiliate = Double.valueOf(uwallet.getUser_points());
-                                        }
-                                    }
-                                    Log.d("pasudla ko","kakalokagago ka"+oldpointstation);
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-                            DatabaseReference reference5 = FirebaseDatabase.getInstance().getReference("User_Wallet").child(stationId);
-                            reference5.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    oldpointstation = Double.valueOf(dataSnapshot.child("user_points").getValue(String.class));
-                                    Log.d("pasudla ko1","kakaloka"+oldpointstation);
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-                            if(oldpointstation!=0 && oldpointsaffiliate != 0) {
-                                newpointsaffiliate = oldpointsaffiliate - pointsNeeded;
-                                newpointstation = oldpointstation + pointsNeeded;
-                                Log.d("newpointstation", "" + newpointstation);
-                                FirebaseDatabase.getInstance().getReference("User_Wallet").child(firebaseUser.getUid()).child("user_points").setValue(String.valueOf(newpointsaffiliate));
-                                FirebaseDatabase.getInstance().getReference("User_Wallet").child(stationId).child("user_points").setValue(String.valueOf(newpointstation));
-                            }
-                        DatabaseReference reference3 = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
-                        reference3.child(stationId).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                merchantno = dataSnapshot.child("business_tel_no").getValue(String.class);
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                        Log.d("Hello", stationId + "," + customer_id + "," + orderno);
-                        DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("Customer_File");
-                        reference2.child(customer_id).child(stationId).child(orderno).child("order_status").setValue("Accepted")
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-
-                                        String message = "Your broadcasted order#:" + orderno + " has  been accepted by an affiliate named :" + affiliatename + ". For further information about " + affiliatename;
-                                        String message2 = "Contact # of " + affiliatename + ":" + affiliateNo;
-                                        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
-                                                != PackageManager.PERMISSION_GRANTED) {
-                                            Log.d("NmNakoko", "Hijhosdfgh");
-                                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SEND_SMS},
-                                                    MY_PERMISSIONS_REQUEST_SEND_SMS);
-                                        } else {
-                                            Log.d("NmNako", "Hi" + message);
-                                            SmsManager sms = SmsManager.getDefault();
-                                            Log.d("Log.d", "" + merchantno);
-                                            sms.sendTextMessage(merchantno, null, message, sentPI, deliveredPI);
-                                            sms.sendTextMessage(merchantno, null, message2, sentPI, deliveredPI);
-                                        }
-                                        addStationAffiliate();
-                                        TPAAcceptedFragment detail = new TPAAcceptedFragment();
-                                        AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, detail).addToBackStack(null).commit();
-                                        Bundle args1 = new Bundle();
-                                        args1.putString("transactionno", orderno);
-                                        args1.putString("transactioncustomerid", customer_id);
-                                        args1.putString("stationid", stationId);
-                                        detail.setArguments(args1);
-                                    }
-                                });
-                        Log.d("stations", "hahastation" + stationId + orderno + customer_id);
-                        Toast.makeText(getActivity(), "Accepted", Toast.LENGTH_SHORT).show();
-                        snackBar();
-                    }
-                    else
-                        {
-                            snackBar2();
-                        }
+                        statePoints();
                 }
                 })
 
@@ -820,6 +708,188 @@ public class TPAMapFragment extends Fragment
 
                 final AlertDialog alert = dialog.create();
                 alert.show();
+            }
+        });
+    }
+
+    public void statePoints()
+    {
+        DatabaseReference wallet = FirebaseDatabase.getInstance().getReference("User_Wallet").child(firebaseUser.getUid());
+        wallet.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                                points = Double.parseDouble(dataSnapshot.child("user_points").getValue(String.class));
+                UserWallet userWallet = dataSnapshot.getValue(UserWallet.class);
+                if (userWallet != null)
+                {
+                    String points = userWallet.getUser_points();
+                    double pointAff = Double.parseDouble(points);
+
+                    if (pointAff >= pointsNeeded)
+                    {
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_Wallet");
+                        databaseReference.child(stationId).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                UserWallet userWallet1 = dataSnapshot.getValue(UserWallet.class);
+                                if (userWallet1 != null)
+                                {
+                                    double stationPoint = Double.parseDouble(userWallet1.getUser_points());
+                                    double pointAffRemaining = pointAff - pointsNeeded;
+                                    double pointStationAdded = stationPoint + pointsNeeded;
+
+                                    String getPointAff = String.valueOf(pointAffRemaining);
+                                    String getPointStation = String.valueOf(pointStationAdded);
+
+                                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_Wallet");
+                                        reference.child(firebaseUser.getUid()).child("user_points")
+                                                .setValue(getPointAff)
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful())
+                                                        {
+                                                            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("User_Wallet");
+                                                            reference1.child(stationId).child("user_points")
+                                                                    .setValue(getPointStation)
+                                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                            Toast.makeText(getActivity(), "Success", Toast.LENGTH_LONG).show();
+                                                                        }
+                                                                    });
+                                                        }
+                                                    }
+                                                });
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                    }
+                    else
+                    {
+                        Toast.makeText(getActivity(), "No more points", Toast.LENGTH_LONG).show();
+                    }
+                }
+//                                if(points>=pointsNeeded)
+//                                {
+//
+////                                    DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("User_File");
+////                                    reference1.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+////                                        @Override
+////                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+////                                            affiliatename = dataSnapshot.child("user_firstname").getValue(String.class) + " " + dataSnapshot.child("user_lastname").getValue(String.class);
+////                                            affiliateNo = dataSnapshot.child("user_phone_no").getValue(String.class);
+////                                        }
+////                                        @Override
+////                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+////
+////                                        }
+////                                    });
+////
+////                                    Log.d("idid","kakaloka"+firebaseUser.getUid());
+////                                    DatabaseReference wallet1 = FirebaseDatabase.getInstance().getReference("User_Wallet").child(firebaseUser.getUid());
+////                                    wallet1.addValueEventListener(new ValueEventListener() {
+////                                        @Override
+////                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+////
+////                                            Log.d("pistyyawa",dataSnapshot.child("user_id").getValue(String.class)+""+firebaseUser.getUid());
+////                                            if(dataSnapshot.child("user_id").getValue(String.class).equals(firebaseUser.getUid()))
+////                                            {
+////                                                oldpointsaffiliatefinal = dataSnapshot.child("user_points").getValue(String.class);
+////
+////                                            }
+////                                            Log.d("pasudla ko",Double.valueOf(oldpointsaffiliatefinal)+"kakalokagago ka");
+////                                        }
+////                                        @Override
+////                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+////
+////                                        }
+////                                    });
+////                                    DatabaseReference reference5 = FirebaseDatabase.getInstance().getReference("User_Wallet").child(stationId);
+////                                    reference5.addValueEventListener(new ValueEventListener() {
+////                                        @Override
+////                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+////                                            UserWallet userWallet = dataSnapshot.getValue(UserWallet.class);
+////                                            if (userWallet != null)
+////                                            {
+////                                                oldpointsstationfinal = userWallet.getUser_points();
+////                                                Log.d("pasudla ko gago",Double.valueOf(oldpointsstationfinal)+"kakalokagago ka");
+////                                                newpointsaffiliatefinal = Double.valueOf(oldpointsaffiliatefinal) - pointsNeeded;
+////                                                newpointsstationfinal = Double.valueOf(oldpointsstationfinal) + pointsNeeded;
+////                                                Log.d("newpointstation", "" + newpointstation);
+////                                                FirebaseDatabase.getInstance().getReference("User_Wallet").child(firebaseUser.getUid()).child("user_points").setValue(String.valueOf(newpointsaffiliatefinal.toString()));
+////                                                FirebaseDatabase.getInstance().getReference("User_Wallet").child(stationId).child("user_points").setValue(String.valueOf(newpointsstationfinal.toString()));
+////                                            }
+////                                        }
+////
+////                                        @Override
+////                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+////
+////                                        }
+////                                    });
+//                                    DatabaseReference reference3 = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
+//                                    reference3.child(stationId).addValueEventListener(new ValueEventListener() {
+//                                        @Override
+//                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                                            merchantno = dataSnapshot.child("business_tel_no").getValue(String.class);
+//                                        }
+//
+//                                        @Override
+//                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                                        }
+//                                    });
+//                                    Log.d("Hello", stationId + "," + customer_id + "," + orderno);
+//                                    DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("Customer_File");
+//                                    reference2.child(customer_id).child(stationId).child(orderno).child("order_status").setValue("Accepted")
+//                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                                @Override
+//                                                public void onSuccess(Void aVoid) {
+//
+//                                                    String message = "Your broadcasted order#:" + orderno + " has  been accepted by an affiliate named :" + affiliatename + ". For further information about " + affiliatename;
+//                                                    String message2 = "Contact # of " + affiliatename + ":" + affiliateNo;
+//                                                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
+//                                                            != PackageManager.PERMISSION_GRANTED) {
+//                                                        Log.d("NmNakoko", "Hijhosdfgh");
+//                                                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SEND_SMS},
+//                                                                MY_PERMISSIONS_REQUEST_SEND_SMS);
+//                                                    } else {
+//                                                        Log.d("NmNako", "Hi" + message);
+//                                                        SmsManager sms = SmsManager.getDefault();
+//                                                        Log.d("Log.d", "" + merchantno);
+//                                                        sms.sendTextMessage(merchantno, null, message, sentPI, deliveredPI);
+//                                                        sms.sendTextMessage(merchantno, null, message2, sentPI, deliveredPI);
+//                                                    }
+//                                                    addStationAffiliate();
+//                                                    TPAAcceptedFragment detail = new TPAAcceptedFragment();
+//                                                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
+//                                                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, detail).addToBackStack(null).commit();
+//                                                    Bundle args1 = new Bundle();
+//                                                    args1.putString("transactionno", orderno);
+//                                                    args1.putString("transactioncustomerid", customer_id);
+//                                                    args1.putString("stationid", stationId);
+//                                                    detail.setArguments(args1);
+//                                                }
+//                                            });
+//                                    Log.d("stations", "hahastation" + stationId + orderno + customer_id);
+//                                    Toast.makeText(getActivity(), "Accepted", Toast.LENGTH_SHORT).show();
+//                                    snackBar();
+//                                }
+//                                else
+//                                {
+//                                    snackBar2();
+//                                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }
