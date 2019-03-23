@@ -15,7 +15,13 @@ import com.example.administrator.h2bot.WSCompletedOrdersInformationFragment;
 import com.example.administrator.h2bot.dealer.WPCompletedAccept;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
+import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.waterstation.WSCompletedAccept;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -48,6 +54,26 @@ public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterd
         final OrderModel currentData = mUploads.get(i);
                 viewHolder.transactionNo.setText(currentData.getOrder_no());
                 viewHolder.status.setText(currentData.getOrder_status());
+
+        String customerNo = currentData.getOrder_customer_id();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_File");
+        reference.child(customerNo).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                UserFile userFile = dataSnapshot.getValue(UserFile.class);
+                if (userFile != null)
+                {
+                    String customerName = userFile.getUser_lastname() +", "+ userFile.getUser_firstname();
+                    viewHolder.transactionCustomerText.setText(customerName);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -77,13 +103,15 @@ public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterd
         return mUploads.size();
     }
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView transactionNo, status, details,address, customername, contactno, deliveryfee,itemquantity, pricepergallon,service,totalprice,watertype;
+        public TextView transactionCustomerText, transactionNo, status, details,address, customername, contactno, deliveryfee,itemquantity, pricepergallon,service,totalprice,watertype;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
+            transactionCustomerText = itemView.findViewById(R.id.customerNameCOM);
             transactionNo = itemView.findViewById(R.id.transactionNoCOM);
             status = itemView.findViewById(R.id.transactionStatusCOM);
+
             itemView.setOnClickListener(new View    .OnClickListener() {
                 @Override
                 public void onClick(View v) {
