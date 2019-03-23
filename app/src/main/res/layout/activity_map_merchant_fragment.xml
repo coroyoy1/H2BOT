@@ -66,7 +66,7 @@
             android:layout_width="match_parent">
 
             <Button
-                android:text="Orders"
+                android:text="Orders Details"
                 android:textColor="@android:color/white"
                 android:id="@+id/orderDetails"
                 android:layout_width="match_parent"
@@ -77,7 +77,7 @@
                 android:background="@drawable/z_darkbluebutton"/>
 
             <Button
-                android:text="Launch QR Scanner"
+                android:text="QR Scanner"
                 android:textColor="@android:color/white"
                 android:id="@+id/orderLaunchScan"
                 android:background="@drawable/z_greenbluebutton"
