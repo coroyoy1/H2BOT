@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.mapmerchant.MapMerchantFragment;
 import com.example.administrator.h2bot.models.OrderModel;
+import com.example.administrator.h2bot.waterstation.WSStationToAffiliate;
 
 import java.util.List;
 
@@ -50,21 +51,42 @@ public class WSInProgressOrdersAdapter extends RecyclerView.Adapter<WSInProgress
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MapMerchantFragment additem = new MapMerchantFragment();
-                AppCompatActivity activity = (AppCompatActivity)v.getContext();
-                activity.getSupportFragmentManager()
-                        .beginTransaction()
-                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                        .replace(R.id.fragment_container_ws, additem)
-                        .addToBackStack(null)
-                        .commit();
-                Bundle args = new Bundle();
-                args.putString("transactionno", currentData.getOrder_no());
-                args.putString("transactioncustomer", currentData.getOrder_customer_id());
-                args.putString("status", currentData.getOrder_status());
-                args.putString("transactionusertype", currentData.getOrder_status());
-                args.putString("transactionmerchant", currentData.getOrder_merchant_id());
-                additem.setArguments(args);
+                if (currentData.getOrder_status().equals("Accepted"))
+                {
+                    WSStationToAffiliate additem = new WSStationToAffiliate();
+                    AppCompatActivity activity = (AppCompatActivity)v.getContext();
+                    activity.getSupportFragmentManager()
+                            .beginTransaction()
+                            .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                            .replace(R.id.fragment_container_ws, additem)
+                            .addToBackStack(null)
+                            .commit();
+                    Bundle args = new Bundle();
+                    args.putString("transactionno", currentData.getOrder_no());
+                    args.putString("transactioncustomer", currentData.getOrder_customer_id());
+                    args.putString("status", currentData.getOrder_status());
+                    args.putString("transactionusertype", currentData.getOrder_status());
+                    args.putString("transactionmerchant", currentData.getOrder_merchant_id());
+                    additem.setArguments(args);
+                }
+                else
+                {
+                    MapMerchantFragment additem = new MapMerchantFragment();
+                    AppCompatActivity activity = (AppCompatActivity)v.getContext();
+                    activity.getSupportFragmentManager()
+                            .beginTransaction()
+                            .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                            .replace(R.id.fragment_container_ws, additem)
+                            .addToBackStack(null)
+                            .commit();
+                    Bundle args = new Bundle();
+                    args.putString("transactionno", currentData.getOrder_no());
+                    args.putString("transactioncustomer", currentData.getOrder_customer_id());
+                    args.putString("status", currentData.getOrder_status());
+                    args.putString("transactionusertype", currentData.getOrder_status());
+                    args.putString("transactionmerchant", currentData.getOrder_merchant_id());
+                    additem.setArguments(args);
+                }
             }
         });
 

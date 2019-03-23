@@ -108,6 +108,7 @@ public class WSTransactionsFragment extends Fragment implements WSCompleterdOrde
         databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mUploads.clear();
                 for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                 {
                     for (DataSnapshot post : dataSnapshot1.child(currentUser.getUid()).getChildren())

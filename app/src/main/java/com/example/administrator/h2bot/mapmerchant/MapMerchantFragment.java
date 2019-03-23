@@ -47,6 +47,7 @@ import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.UserLocationAddress;
 import com.example.administrator.h2bot.waterstation.WSBroadcast;
 import com.example.administrator.h2bot.waterstation.WSInProgressFragment;
+import com.example.administrator.h2bot.waterstation.WSTransactionsFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import com.example.administrator.h2bot.R;
@@ -758,6 +759,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                                 if (userType.equals("Dispatched"))
                                 {
                                     requestBroadcast.setVisibility(View.GONE);
+                                    linearAcceptDeclineSender.setVisibility(View.GONE);
                                 }
                                 else if (userType.equals("In-Progress"))
                                 {
@@ -765,6 +767,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                                     linearSMSSender.setVisibility(View.GONE);
                                     launchscan.setVisibility(View.VISIBLE);
                                     dispatched.setVisibility(View.GONE);
+                                    linearAcceptDeclineSender.setVisibility(View.GONE);
                                 }
                                 else if (userType.toLowerCase().equals("Broadcasting".toLowerCase()))
                                 {
@@ -772,6 +775,12 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                                         intent.putExtra("Customer", customerNo);
                                         intent.putExtra("OrderNo", transactionNo);
                                         startActivity(intent);
+
+                                    requestBroadcast.setVisibility(View.VISIBLE);
+                                    linearSMSSender.setVisibility(View.GONE);
+                                    launchscan.setVisibility(View.VISIBLE);
+                                    dispatched.setVisibility(View.GONE);
+                                    linearAcceptDeclineSender.setVisibility(View.GONE);
                                 }
                             }
                             if (currentUserType.equals("Delivery Man"))
@@ -800,14 +809,27 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
     }
     public void updateOrder(String transactionSet)
     {
+        if (merchantCheckId.isEmpty())
+        {
+            merchantCheckId = firebaseUser.getUid();
+        }
         DatabaseReference referencedata = FirebaseDatabase.getInstance().getReference("Customer_File");
-        referencedata.child(customerNo).child(merchantCheckId).child(transactionSet);
-                referencedata.child("order_status").setValue("Completed")
+        referencedata.child(customerNo)
+                .child(merchantCheckId)
+                .child(transactNoScan)
+                .child("order_status").setValue("Completed")
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        showMessages("Successfully scanned");
-                        showMessages(transactionSet);
+                        showMessages("Successfully Completed");
+                        WSTransactionsFragment additem = new WSTransactionsFragment();
+                        AppCompatActivity activity = (AppCompatActivity)getContext();
+                        activity.getSupportFragmentManager()
+                                .beginTransaction()
+                                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                                .replace(R.id.fragment_container_wp, additem)
+                                .addToBackStack(null)
+                                .commit();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -1000,7 +1022,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
             {
                 showMessages(result.getContents());
                 transactNoScan = result.getContents();
-                if(transactNoScan.equals(transactionNo))
+                if(transactNoScan.trim().toLowerCase().replace(" ", "").equals(transactionNo.toLowerCase().trim().replace(" ", "")))
                 {
                     updateOrder(transactNoScan);
                 }

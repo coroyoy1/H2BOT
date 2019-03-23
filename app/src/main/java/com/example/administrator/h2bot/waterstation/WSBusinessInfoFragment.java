@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.deliveryman.DMCompletedAcception;
+import com.example.administrator.h2bot.models.StationBusinessInfo;
 import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,7 +40,7 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
     FirebaseUser firebaseUser;
 
     Button updateBI, updateDocBI, updateInfo, cancelBI;
-    TextView stationName, stationAddress, stationHours, stationTelNo, stationFeePerGal, stationDelivery, stationStatus;
+    TextView stationName, stationAddress, stationHours, stationTelNo, stationFeePerGal, stationDelivery, stationStatus, deliverymethod;
     ImageView imageView;
 
     LinearLayout linearLayoutUp, linearLayoutUpNext;
@@ -74,6 +75,7 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
        stationDelivery = view.findViewById(R.id.stationDeliveryBI);
        stationStatus = view.findViewById(R.id.stationStatusBI);
        imageView = view.findViewById(R.id.imageWaterStation);
+       deliverymethod = view.findViewById(R.id.deliverymethodBI);
 
        linearLayoutUp = view.findViewById(R.id.linearForUpdate);
        linearLayoutUpNext = view.findViewById(R.id.linearForUpdateNext);
@@ -88,16 +90,17 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
        databaseReference.addValueEventListener(new ValueEventListener() {
            @Override
            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                   UserWSBusinessInfoFile userWSBusinessInfoFile = dataSnapshot.getValue(UserWSBusinessInfoFile.class);
+                   StationBusinessInfo userWSBusinessInfoFile = dataSnapshot.getValue(StationBusinessInfo.class);
                    if(userWSBusinessInfoFile != null)
                    {
                        String businessTime = userWSBusinessInfoFile.getBusiness_start_time()+" - "+userWSBusinessInfoFile.getBusiness_end_time();
-                        stationName.setText("Station Name: "+userWSBusinessInfoFile.getBusiness_name());
-                        stationAddress.setText("Full Address: "+userWSBusinessInfoFile.getBusiness_address());
-                        stationHours.setText("Business Hours: "+businessTime);
-                        stationTelNo.setText("Contact No.: "+userWSBusinessInfoFile.getBusiness_tel_no());
-                        stationFeePerGal.setText("Delivery Fee: "+dataSnapshot.child("business_delivery_fee").getValue(String.class));
-                        stationStatus.setText("Station Status: "+userWSBusinessInfoFile.getBusiness_status());
+                        stationName.setText(userWSBusinessInfoFile.getBusiness_name());
+                        stationAddress.setText(userWSBusinessInfoFile.getBusiness_address());
+                        stationHours.setText(businessTime);
+                        stationTelNo.setText(userWSBusinessInfoFile.getBusiness_tel_no());
+                        stationFeePerGal.setText(dataSnapshot.child("business_delivery_fee").getValue(String.class));
+                        stationStatus.setText(userWSBusinessInfoFile.getBusiness_min_no_of_gallons());
+                        deliverymethod.setText(userWSBusinessInfoFile.getBusiness_delivery_fee_method());
                    }
                    else
                    {

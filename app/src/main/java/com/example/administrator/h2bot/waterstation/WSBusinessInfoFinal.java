@@ -782,6 +782,7 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                             String endclockWS = wsBusinessInfoFile.getBusiness_end_time();
                             startingHour.setText(getTime(startclockWS));
                             endingHour.setText(getTime(endclockWS));
+                            priceOfGallon.setText(wsBusinessInfoFile.getBusiness_price_of_gallon());
 
                             String middayAM = getAMPM(wsBusinessInfoFile.getBusiness_start_time());
                             String middayPM = getAMPM(wsBusinessInfoFile.getBusiness_end_time());
@@ -809,6 +810,15 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                             {
                                 deliveryFeeGroup.check(R.id.freeDU);
                             }
+                            if ("".toLowerCase().equals(wsBusinessInfoFile.getBusiness_price_of_gallon().toLowerCase()))
+                            {
+                                doYouHaveGallonGroup.check(R.id.noDU);
+                            }
+                            else
+                            {
+                                doYouHaveGallonGroup.check(R.id.yesDU);
+                            }
+
                             telNo.setText(wsBusinessInfoFile.getBusiness_tel_no());
                             min_no_of_gallons.setText(wsBusinessInfoFile.getBusiness_min_no_of_gallons());
                             deliveryFee.setText(wsBusinessInfoFile.getBusiness_delivery_fee());
