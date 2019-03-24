@@ -3,7 +3,6 @@ package com.example.administrator.h2bot.adapter;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,17 +11,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
-import com.example.administrator.h2bot.deliveryman.DMInProgressAcception;
 import com.example.administrator.h2bot.mapmerchant.MapMerchantFragment;
-import com.example.administrator.h2bot.models.OrderFileModel;
 import com.example.administrator.h2bot.models.OrderModel;
-import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
-import com.example.administrator.h2bot.waterstation.WSPendingOrderAcceptDeclineFragment;
+import com.example.administrator.h2bot.models.UserFile;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
-import java.util.Objects;
-
-import static java.security.AccessController.getContext;
 
 public class DMInProgressOrdersAdapter extends RecyclerView.Adapter<DMInProgressOrdersAdapter.ImageViewholder> {
 
@@ -50,6 +48,25 @@ public class DMInProgressOrdersAdapter extends RecyclerView.Adapter<DMInProgress
         String transactionStation = currentData.getOrder_merchant_id();
         imageViewholder.transactionNoText.setText(transactionNo);
         imageViewholder.transactionStatusText.setText(transactionStatus);
+        String customerNo = currentData.getOrder_customer_id();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_File");
+        reference.child(customerNo).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                UserFile userFile = dataSnapshot.getValue(UserFile.class);
+                if (userFile != null)
+                {
+                    String customerName = userFile.getUser_lastname() +", "+ userFile.getUser_firstname();
+                    imageViewholder.transactionCustomerText.setText(customerName);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
         imageViewholder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,9 +96,10 @@ public class DMInProgressOrdersAdapter extends RecyclerView.Adapter<DMInProgress
     }
 
     public class ImageViewholder extends RecyclerView.ViewHolder{
-        TextView transactionNoText, transactionStatusText;
+        TextView transactionNoText, transactionStatusText, transactionCustomerText;
         public ImageViewholder(@NonNull View itemView) {
             super(itemView);
+            transactionCustomerText = itemView.findViewById(R.id.customerNameDMCOM);
             transactionNoText = itemView.findViewById(R.id.transactionNoINDM);
             transactionStatusText = itemView.findViewById(R.id.transactionStatusINDM);
         }

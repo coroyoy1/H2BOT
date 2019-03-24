@@ -13,8 +13,12 @@ import android.widget.TextView;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.mapmerchant.MapMerchantFragment;
 import com.example.administrator.h2bot.models.OrderModel;
-import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
-import com.example.administrator.h2bot.waterstation.WSPendingOrderAcceptDeclineFragment;
+import com.example.administrator.h2bot.models.UserFile;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -51,6 +55,9 @@ public class PendingListAdapter extends RecyclerView.Adapter<PendingListAdapter.
         final OrderModel currentData = uploadHolder.get(i);
         String transactionNo = currentData.getOrder_no();
         String transactionStatus = currentData.getOrder_status();
+
+
+
         imageViewholder.transactionNoText.setText(transactionNo);
         imageViewholder.transactionStatusText.setText(transactionStatus);
 
@@ -82,11 +89,12 @@ public class PendingListAdapter extends RecyclerView.Adapter<PendingListAdapter.
     }
 
     public class ImageViewholder extends RecyclerView.ViewHolder{
-        TextView transactionNoText, transactionStatusText;
+        TextView transactionNoText, transactionStatusText, transactionCustomerText;
         public ImageViewholder(@NonNull View itemView) {
             super(itemView);
             transactionNoText = itemView.findViewById(R.id.transactionNoPEN);
             transactionStatusText = itemView.findViewById(R.id.transactionStatusPEN);
+            transactionCustomerText = itemView.findViewById(R.id.customerNamePEN);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

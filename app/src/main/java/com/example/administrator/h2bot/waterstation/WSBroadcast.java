@@ -80,10 +80,9 @@ public class WSBroadcast extends AppCompatActivity implements View.OnClickListen
 
     public  void disableFindToAffiliate()
     {
-
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Customer_File");
         reference
-                .child(customerNoText)
+                .child(getIntent().getStringExtra("Customer"))
                 .child(firebaseAuth.getCurrentUser().getUid())
                 .child(orderNoText)
                 .child("order_status")
@@ -112,7 +111,7 @@ public class WSBroadcast extends AppCompatActivity implements View.OnClickListen
     {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Customer_File");
         reference
-                .child(customerNoText)
+                .child(getIntent().getStringExtra("Customer"))
                 .child(firebaseAuth.getCurrentUser().getUid())
                 .child(orderNoText)
                 .child("order_status")

@@ -636,20 +636,22 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
 
     public void updateInformation()
     {
-        WSBusinessInfoFile wsBusinessInfoFile = new WSBusinessInfoFile(
-                mAuth.getCurrentUser().getUid(),
-                stationName.getText().toString(),
+        StationBusinessInfo stationBusinessInfo = new StationBusinessInfo(
                 stationAddress.getText().toString(),
-                telNo.getText().toString(),
-                startingHour.getText().toString() + " "+ startSpinner.getSelectedItem(),
-                endingHour.getText().toString() + " " + endSpinner.getSelectedItem(),
-                deliveryMethod,
+                week.toString(),
                 deliveryFee.getText().toString(),
+                deliveryMethod,
+                endingHour.getText().toString()+ " " +endSpinner.getSelectedItem().toString(),
+                mAuth.getCurrentUser().getUid(),
                 min_no_of_gallons.getText().toString(),
-                "active"
+                stationName.getText().toString(),
+                priceOfGallon.getText().toString(),
+                startingHour.getText().toString() + " " + startSpinner.getSelectedItem().toString(),
+                "active",
+                telNo.getText().toString()
         );
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
-        databaseReference.child(mAuth.getCurrentUser().getUid()).setValue(wsBusinessInfoFile)
+        databaseReference.child(mAuth.getCurrentUser().getUid()).setValue(stationBusinessInfo)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -780,6 +782,7 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                             String endclockWS = wsBusinessInfoFile.getBusiness_end_time();
                             startingHour.setText(getTime(startclockWS));
                             endingHour.setText(getTime(endclockWS));
+                            priceOfGallon.setText(wsBusinessInfoFile.getBusiness_price_of_gallon());
 
                             String middayAM = getAMPM(wsBusinessInfoFile.getBusiness_start_time());
                             String middayPM = getAMPM(wsBusinessInfoFile.getBusiness_end_time());
@@ -807,6 +810,15 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                             {
                                 deliveryFeeGroup.check(R.id.freeDU);
                             }
+                            if ("".toLowerCase().equals(wsBusinessInfoFile.getBusiness_price_of_gallon().toLowerCase()))
+                            {
+                                doYouHaveGallonGroup.check(R.id.noDU);
+                            }
+                            else
+                            {
+                                doYouHaveGallonGroup.check(R.id.yesDU);
+                            }
+
                             telNo.setText(wsBusinessInfoFile.getBusiness_tel_no());
                             min_no_of_gallons.setText(wsBusinessInfoFile.getBusiness_min_no_of_gallons());
                             deliveryFee.setText(wsBusinessInfoFile.getBusiness_delivery_fee());
@@ -824,7 +836,6 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                             {
                                 str = stringList.get(count);
                                 str = str.replaceAll(" ", "");
-                                showMessages(str);
                                 if (str.toLowerCase().equals("Monday".toLowerCase()))
                                 {
                                     mon.setChecked(true);

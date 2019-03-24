@@ -49,13 +49,14 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:padding="10dp">
-                <TextView
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Station Name"
-                    android:textSize="18dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Water Station Name"
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:textSize="18dp" />
 
                 <TextView
                     android:id="@+id/stationaNameBI"
@@ -66,13 +67,13 @@
                     android:textColor="@android:color/black"
                     android:textSize="18dp" />
 
-                <TextView
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Station Address"
-                    android:textSize="18dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Water Station Address"
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:textSize="18dp" />
                 <TextView
                     android:id="@+id/stationAddressBI"
                     android:layout_width="wrap_content"
@@ -141,6 +142,22 @@
                     android:text="Station status"
                     android:textColor="@android:color/black"
                     android:textSize="18dp" />
+
+                    <TextView
+                        android:textColor="@android:color/holo_blue_dark"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Delivery method"
+                        android:textSize="18dp" />
+                    <TextView
+                        android:id="@+id/deliverymethodBI"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="Station status"
+                        android:textColor="@android:color/black"
+                        android:textSize="18dp" />
                 </LinearLayout>
                 </android.support.v7.widget.CardView>
 
