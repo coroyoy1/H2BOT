@@ -769,13 +769,69 @@ public class TPAMapFragment extends Fragment
 
                             }
                         });
+                                    DatabaseReference reference3 = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
+                                    reference3.child(stationId).addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            merchantno = dataSnapshot.child("business_tel_no").getValue(String.class);
+                                        }
 
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                    Log.d("Hello", stationId + "," + customer_id + "," + orderno);
+                                    DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("Customer_File");
+                                    reference2.child(customer_id).child(stationId).child(orderno).child("order_status").setValue("Accepted")
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+
+                                                    String message = "Your broadcasted order#:" + orderno + " has  been accepted by an affiliate named :" + affiliatename + ". For further information about " + affiliatename;
+                                                    String message2 = "Contact # of " + affiliatename + ":" + affiliateNo;
+                                                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
+                                                            != PackageManager.PERMISSION_GRANTED) {
+                                                        Log.d("NmNakoko", "Hijhosdfgh");
+                                                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SEND_SMS},
+                                                                MY_PERMISSIONS_REQUEST_SEND_SMS);
+                                                    } else {
+                                                        Log.d("NmNako", "Hi" + message);
+                                                        SmsManager sms = SmsManager.getDefault();
+                                                        Log.d("Log.d", "" + merchantno);
+                                                        sms.sendTextMessage(merchantno, null, message, sentPI, deliveredPI);
+                                                        sms.sendTextMessage(merchantno, null, message2, sentPI, deliveredPI);
+                                                    }
+                                                    addStationAffiliate();
+                                                    TPAAcceptedFragment detail = new TPAAcceptedFragment();
+                                                    AppCompatActivity activity = (AppCompatActivity)getContext();
+                                                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, detail).addToBackStack(null).commit();
+                                                    Bundle args1 = new Bundle();
+                                                    args1.putString("transactionno", orderno);
+                                                    args1.putString("transactioncustomerid", customer_id);
+                                                    args1.putString("stationid", stationId);
+                                                    detail.setArguments(args1);
+                                                }
+                                            });
+                                    Log.d("stations", "hahastation" + stationId + orderno + customer_id);
+                                    Toast.makeText(getActivity(), "Accepted", Toast.LENGTH_SHORT).show();
+                                    snackBar();
+                                }
+                                else
+                                {
+                                    snackBar2();
+                                }
                     }
                     else
                     {
                         Toast.makeText(getActivity(), "No more points", Toast.LENGTH_LONG).show();
                     }
                 }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
 //                                if(points>=pointsNeeded)
 //                                {
 //
@@ -885,13 +941,14 @@ public class TPAMapFragment extends Fragment
 //                                {
 //                                    snackBar2();
 //                                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+    });
     }
 
 
