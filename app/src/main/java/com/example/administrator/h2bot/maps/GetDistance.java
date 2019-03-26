@@ -1,23 +1,36 @@
 package com.example.administrator.h2bot.maps;
 
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorSpace;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.customer.CustomerMapFragment;
 import com.example.administrator.h2bot.objects.WaterStationOrDealer;
-import com.example.administrator.h2bot.tpaaffiliate.TPAMapFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,8 +53,6 @@ public class GetDistance extends AsyncTask<Object, String, String> {
     private TextView currentRadius;
     private Marker mCurrentLocationMarker;
     private CustomerMapFragment customerMapFragment;
-    private TPAMapFragment tpaMapFragment;
-
 
     @Override
     protected String doInBackground(Object... objects) {
@@ -52,7 +63,6 @@ public class GetDistance extends AsyncTask<Object, String, String> {
         API_KEY = (String) objects[3];
         currentRadius = (TextView) objects[4];
         customerMapFragment = (CustomerMapFragment) objects[5];
-        tpaMapFragment = (TPAMapFragment) objects[6];
 
 
         name = new String[list.size()];
@@ -99,7 +109,7 @@ public class GetDistance extends AsyncTask<Object, String, String> {
 
             WaterStationOrDealer value = new WaterStationOrDealer();
             value.setStation_dealer_name(name[i]);
-            value.setDuration("Duration: " + duration);
+            value.setDuration("Travel Time: " + duration);
             value.setDistance("Distance: " + distance);
             value.setLat(destination[i].latitude);
             value.setLng(destination[i].longitude);
@@ -134,9 +144,7 @@ public class GetDistance extends AsyncTask<Object, String, String> {
                 .strokeColor(Color.BLUE)
                 .strokeWidth(1)
                 .radius(Double.parseDouble(currentRadius.getText().toString().substring(0, currentRadius.getText().toString().length()-3))));
-        mMarkerOption.title("You");
-        mMarkerOption.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-
+                mMarkerOption.title("You").icon(bitmapDescriptorFromVector(customerMapFragment.getActivity(), R.drawable.my_pin));
 
         double radiusLimit = Double.parseDouble(currentRadius.getText().toString().substring(0, currentRadius.getText().toString().length()-3));
         mCurrentLocationMarker = mMap.addMarker(mMarkerOption);
@@ -151,23 +159,27 @@ public class GetDistance extends AsyncTask<Object, String, String> {
                     mMap.addMarker(new MarkerOptions()
                                     .position(latLng).title(thisList.get(i).getStation_dealer_name())
                                     .snippet(thisList.get(i).getType() + "\n" + thisList.get(i).getStatus())
-                                    .icon(BitmapDescriptorFactory
-                                    .defaultMarker(BitmapDescriptorFactory.HUE_RED))).setTag(thisList.get(i).getStationID());
+                                    .icon(bitmapDescriptorFromVector(customerMapFragment.getActivity(), R.drawable.station)))
+                                    .setTag(thisList.get(i).getStationID());
                 }
                 else{
                     mMap.addMarker(new MarkerOptions()
                             .position(latLng).title(thisList.get(i).getStation_dealer_name())
                             .snippet(thisList.get(i).getType() + "\n" + thisList.get(i).getStatus())
-                            .icon(BitmapDescriptorFactory
-                                    .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))).setTag(thisList.get(i).getStationID());
+                            .icon(bitmapDescriptorFromVector(customerMapFragment.getActivity(), R.drawable.my_location)))
+                            .setTag(thisList.get(i).getStationID());
                 }
             }
         }
+        customerMapFragment.setList(thisList);
+    }
 
-        if(customerMapFragment != null){
-            customerMapFragment.setList(thisList);
-        } else if(tpaMapFragment != null){
-            tpaMapFragment.setList(thisList);
-        }
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 }

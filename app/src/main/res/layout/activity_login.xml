@@ -7,8 +7,7 @@
     tools:context=".LoginActivity"
     android:orientation="vertical"
     android:layout_gravity="center"
-    android:background="@drawable/background"
-    android:gravity="center">
+    android:background="@drawable/background">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -80,13 +79,14 @@
                     android:id="@+id/usernameEditText"
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
+                    android:textColor="#8B8B8B"
                     android:textColorHint="#8B8B8B"
                     android:ems="10"
                     android:hint="Email Address"
                     android:drawableLeft="@drawable/ic_email_black_24dp"
                     android:drawableTint="#8B8B8B"
                     android:drawablePadding="15dp"
+                    android:background="@android:color/white"
                     android:inputType="textPersonName"
                     android:padding="12dp" />
                 </eightbitlab.com.blurview.BlurView>
@@ -101,8 +101,8 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:textColorHint="#8B8B8B"
-                    android:textColor="@android:color/white"
-                    android:background="@color/zxing_transparent"
+                    android:textColor="#8B8B8B"
+                    android:background="@android:color/white"
                     android:drawableLeft="@drawable/ic_lock_outline_black_24dp"
                     android:drawableTint="#8B8B8B"
                     android:drawablePadding="15dp"
@@ -120,11 +120,11 @@
 
                 <Button
                     android:id="@+id/logInBtn"
-                    android:layout_width="280dp"
+                    android:layout_width="220dp"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
-                    android:background="@android:color/holo_blue_dark"
+                    android:background="@android:color/holo_orange_dark"
                     android:text="Login"
                     android:textColor="#f5f6fa"
                     android:textSize="20sp" />

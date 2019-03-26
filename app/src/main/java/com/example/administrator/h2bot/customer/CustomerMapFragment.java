@@ -542,6 +542,9 @@ public class CustomerMapFragment extends Fragment implements
                                 waterTypeList.add(userWSWDWaterTypeFile);
                                 isExist = true;
                             }
+                            else{
+                                isExist = false;
+                            }
                         }
                         waterTypeAdapter = new CustomerWaterTypeAdapter(getActivity(), waterTypeList);
                         recyclerView.setAdapter(waterTypeAdapter);
@@ -563,6 +566,7 @@ public class CustomerMapFragment extends Fragment implements
         TextView distance = bottomSheet.findViewById(R.id.distance);
         TextView duration = bottomSheet.findViewById(R.id.duration);
         TextView deliveryMethod = bottomSheet.findViewById(R.id.deliveryMethod);
+        TextView contactNo = bottomSheet.findViewById(R.id.contactNo);
         Button orderBtn = bottomSheet.findViewById(R.id.orderBtn);
 
         stationName.setText(marker.getTitle());
@@ -579,8 +583,10 @@ public class CustomerMapFragment extends Fragment implements
                 String endTime = list.getBusiness_end_time();
                 String delivery_method = list.getBusiness_delivery_fee_method();
                 String deliveryPrice = list.getBusiness_delivery_fee();
+                String contact_no = list.getBusiness_tel_no();
                 business_hours.setText(startTime + " - " + endTime);
                 address.setText(list.getBusiness_address());
+                contactNo.setText(contact_no);
                 //                        deliveryMethod.setText(String.format(delivery_method + " - %.2f", deliveryPrice));
                 for(WaterStationOrDealer list2: thisList){
                     if(list2.getStationID().equalsIgnoreCase(marker.getTag().toString())){

@@ -10,7 +10,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="55dp"
             android:background="@android:color/holo_blue_dark"
             android:orientation="horizontal">
 
@@ -20,27 +20,27 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
-                android:text="Order No."
+                android:text="ORDER NO"
                 android:textColor="@android:color/white"
-                android:textSize="18dp" />
+                android:textSize="15dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="Status"
+                android:text="STATUS"
                 android:textColor="@android:color/white"
-                android:textSize="18dp" />
+                android:textSize="15dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="Details"
+                android:text="DETAILS"
                 android:textColor="@android:color/white"
-                android:textSize="18dp" />
+                android:textSize="15dp" />
 
         </LinearLayout>
         <LinearLayout

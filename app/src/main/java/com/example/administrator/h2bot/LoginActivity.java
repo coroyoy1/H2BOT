@@ -63,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
+        progressDialog.setTitle("Logging in...");
         emailAddress = findViewById(R.id.usernameEditText);
         passwordType = findViewById(R.id.passwordEditText);
         register = findViewById(R.id.registerAccount);
@@ -160,7 +161,6 @@ public class LoginActivity extends AppCompatActivity {
                 public void onFailure(@NonNull Exception e) {
                     showMessages(e.getMessage());
                     progressDialog.dismiss();
-                    mAuth.signOut();
                 }
             });
         }

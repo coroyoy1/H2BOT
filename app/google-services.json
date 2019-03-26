@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "777314395711",
-    "firebase_url": "https://waterassistantagent.firebaseio.com",
-    "project_id": "waterassistantagent",
-    "storage_bucket": "waterassistantagent.appspot.com"
+    "project_number": "840115799966",
+    "firebase_url": "https://water-assistant-agent.firebaseio.com",
+    "project_id": "water-assistant-agent",
+    "storage_bucket": "water-assistant-agent.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:777314395711:android:505b961c7e3dca07",
+        "mobilesdk_app_id": "1:840115799966:android:505b961c7e3dca07",
         "android_client_info": {
           "package_name": "com.example.administrator.h2bot"
         }
       },
       "oauth_client": [
         {
-          "client_id": "777314395711-a0l8f25dt43jaspidj5c5i54m3f0ep75.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.administrator.h2bot",
-            "certificate_hash": "42a053afb87e92fd2fdd779c03d39ca55e61107f"
-          }
-        },
-        {
-          "client_id": "777314395711-ec7bipjtkpjf3ejoiqe4icbid7convas.apps.googleusercontent.com",
+          "client_id": "840115799966-bjml5g1cgpveso39vaucaqpv22ug6bbk.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyABi0MStBCe4Mew78ZVrj8kY7ZWYwF43hk"
+          "current_key": "AIzaSyDl_Hp1mU9U_18XniB_Ibs8umoTCOqyZ6w"
         }
       ],
       "services": {
@@ -37,57 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "777314395711-ec7bipjtkpjf3ejoiqe4icbid7convas.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:777314395711:android:28dc363882eb973a",
-        "android_client_info": {
-          "package_name": "com.example.barcodereader"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "777314395711-g0bvlluq5m8qmbggkha2su62m3o9a5fg.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.barcodereader",
-            "certificate_hash": "847d6bdd0bb4c5a727e482311b8a1e4db8f3208f"
-          }
-        },
-        {
-          "client_id": "777314395711-ec7bipjtkpjf3ejoiqe4icbid7convas.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyABi0MStBCe4Mew78ZVrj8kY7ZWYwF43hk"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "777314395711-ec7bipjtkpjf3ejoiqe4icbid7convas.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

@@ -38,17 +38,16 @@ public class CustomerWaterTypeAdapter extends RecyclerView.Adapter<CustomerWater
     @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        Log.d("isExist: ", CustomerMapFragment.isExist.toString());
-        if(!CustomerMapFragment.isExist){
-            viewHolder.waterType.setText("No water type yet");
-        }
-        else{
-            final UserWSWDWaterTypeFile userWSWDWaterTypeFile = waterTypeList.get(i);
-            String water_type = userWSWDWaterTypeFile.getWater_type();
-            String water_price = userWSWDWaterTypeFile.getWater_price_per_gallon();
+        final UserWSWDWaterTypeFile userWSWDWaterTypeFile = waterTypeList.get(i);
+        String water_type = userWSWDWaterTypeFile.getWater_type();
+        String water_price = userWSWDWaterTypeFile.getWater_price_per_gallon();
 
-            viewHolder.waterType.setText(water_type);
-            viewHolder.waterPrice.setText("- " + String.format("%.2f", Double.parseDouble(water_price)));
+        viewHolder.waterType.setText(water_type);
+        viewHolder.waterPrice.setText("- " + String.format("%.2f", Double.parseDouble(water_price)));
+
+        Log.d("BOOLEAN", "hgeheheheheh");
+        if(CustomerMapFragment.isExist == false){
+            Log.d("HEHEHEH", "hgeheheheheh");
         }
     }
 
@@ -64,7 +63,6 @@ public class CustomerWaterTypeAdapter extends RecyclerView.Adapter<CustomerWater
             super(itemView);
             waterType = itemView.findViewById(R.id.waterType);
             waterPrice = itemView.findViewById(R.id.waterPrice);
-            waterType.setText("HAHAHA");
         }
     }
 }
