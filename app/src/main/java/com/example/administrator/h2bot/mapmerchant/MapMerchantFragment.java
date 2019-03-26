@@ -923,12 +923,8 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
     }
     public void updateOrder(String transactionSet)
     {
-        if (merchantCheckId.isEmpty())
-        {
-            merchantCheckId = firebaseUser.getUid();
-        }
         DatabaseReference referencedata = FirebaseDatabase.getInstance().getReference("Customer_File");
-        referencedata.child(customerNo +"/"+ merchantCheckId + "/" + transactNoScan )
+        referencedata.child(transactionSet)
                 .child("order_status").setValue("Completed")
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -1164,9 +1160,12 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
             {
                 showMessages(result.getContents());
                 transactNoScan = result.getContents();
+                String currentTransact = customerId.replace( " ", "") + "/"
+                        + merchantCheckId.trim().toLowerCase().replace(" ", "") + "/"
+                        + transactNoScan.trim().toLowerCase().replace(" ", "");
                 if(transactNoScan.trim().toLowerCase().replace(" ", "").equals(transactionNo.toLowerCase().trim().replace(" ", "")))
                 {
-                    updateOrder(transactNoScan);
+                    updateOrder(currentTransact);
                 }
                 else
                 {

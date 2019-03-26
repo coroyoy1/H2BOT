@@ -61,8 +61,9 @@ public class TPAAcceptedOrdersAdapter extends RecyclerView.Adapter<TPAAcceptedOr
                         .addToBackStack(null)
                         .commit();
                 Bundle args = new Bundle();
-                args.putString("transactionno", currentData.getOrderNo());
-                args.putString("transactioncustomer", currentData.getCustomerId());
+                args.putString("orderno", currentData.getOrderNo());
+                args.putString("stationid", currentData.getStationid());
+                args.putString("customerid", currentData.getCustomerId());
                 args.putString("status", currentData.getStatus());
                 additem.setArguments(args);
             }

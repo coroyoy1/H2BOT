@@ -6,6 +6,12 @@
     >
 
     <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_dashboard_ws"
+            app:actionViewClass="android.widget.TextView"
+            android:icon="@drawable/ic_dashboard"
+            android:title="Dashboard"
+
+            />
         <item android:id="@+id/nav_transactions_ws"
             app:actionViewClass="android.widget.TextView"
                 android:icon="@drawable/ic_transactions"

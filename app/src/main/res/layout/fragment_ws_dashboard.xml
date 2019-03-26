@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:background="@drawable/cornerborder4"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Dashboard"
+        android:textSize="24dp"
+        android:textAlignment="center"
+        android:background="@android:color/holo_blue_dark"
+        android:textColor="@android:color/white"/>
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ScrollView
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:textColor="@android:color/white"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@android:color/darker_gray"
+                        android:layout_width="match_parent"
+                        android:textAlignment="center"
+                        android:layout_height="wrap_content"
+                        android:text="Your Water Station's Information"/>
+                    <android.support.v7.widget.CardView
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:layout_marginRight="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp">
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                            <TextView
+                                android:layout_marginLeft="10dp"
+                                android:textColor="@android:color/holo_blue_dark"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Water Station Name:"/>
+                            <TextView
+
+                                android:layout_width="match_parent"
+                                android:textAlignment="center"
+                                android:layout_height="wrap_content"
+                                android:text="Station"/>
+                            <TextView
+                                android:layout_marginLeft="10dp"
+                                android:textColor="@android:color/holo_blue_dark"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Business Hours:"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:textAlignment="center"
+                                android:layout_height="wrap_content"
+                                android:text="8:30 - 8:30:"/>
+                            <TextView
+                                android:layout_marginLeft="10dp"
+                                android:textColor="@android:color/holo_blue_dark"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Full Address:"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:textAlignment="center"
+                                android:layout_height="wrap_content"
+                                android:text="Naisipit Talamban Cebu City:"/>
+                            <TextView
+                                android:textColor="@android:color/holo_blue_dark"
+                                android:layout_marginLeft="10dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Contact No.:"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:textAlignment="center"
+                                android:layout_height="wrap_content"
+                                android:text="0229292"/>
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:textColor="@android:color/white"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@android:color/holo_green_light"
+                        android:layout_width="match_parent"
+                        android:textAlignment="center"
+                        android:layout_height="wrap_content"
+                        android:text="Water Station's Product List:"/>
+                    <android.support.v7.widget.CardView
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:layout_marginRight="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="220dp">
+                        <android.support.v7.widget.RecyclerView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                        </android.support.v7.widget.RecyclerView>
+                    </android.support.v7.widget.CardView>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_marginRight="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_height="wrap_content">
+                        <android.support.v7.widget.CardView
+                            android:layout_weight="1"
+                            android:layout_marginRight="3dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="120dp">
+                            <TextView
+                                android:background="@android:color/holo_orange_dark"
+                                android:textColor="@android:color/white"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Current Pending Order(s)"
+                                android:textAlignment="center"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:gravity="center"
+                                android:layout_height="match_parent"
+                                android:text="0"
+                                android:textColor="@android:color/holo_orange_dark"
+                                android:textSize="40dp"
+                                android:textAlignment="center"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:gravity="bottom"
+                                android:layout_height="match_parent"
+                                android:text="Check here for details"
+                                android:textColor="@android:color/holo_orange_dark"
+                                android:textAlignment="center"/>
+                        </android.support.v7.widget.CardView>
+                        <android.support.v7.widget.CardView
+                            android:layout_marginLeft="3dp"
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="120dp">
+                            <TextView
+                                android:background="@android:color/holo_blue_bright"
+                                android:textColor="@android:color/white"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Current In-Progress Order(s)"
+                                android:textAlignment="center"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:gravity="center"
+                                android:layout_height="match_parent"
+                                android:textColor="@android:color/holo_blue_bright"
+                                android:text="0"
+                                android:textSize="40dp"
+                                android:textAlignment="center"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:gravity="bottom"
+                                android:layout_height="match_parent"
+                                android:text="Check here for details"
+                                android:textColor="@android:color/holo_blue_bright"
+                                android:textAlignment="center"/>
+                        </android.support.v7.widget.CardView>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</RelativeLayout>

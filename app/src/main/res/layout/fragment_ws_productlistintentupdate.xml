@@ -14,95 +14,133 @@
         android:textColor="@android:color/white"
         android:textAlignment="center"/>
 
-    <LinearLayout
+    <ScrollView
+        android:layout_centerVertical="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <TextView
-            android:textAlignment="center"
-            android:id="@+id/waterUpdateSpinner"
-            android:gravity="center"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:hint="Water Type (e.g Purified)"
-            android:layout_height="50dp"
-            android:backgroundTint="@color/colorPrimary"
-            android:layout_marginLeft="31dp"
-            android:layout_marginRight="31dp">
-        </TextView>
+        android:layout_height="wrap_content">
         <LinearLayout
+            android:layout_margin="30dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="28dp"
-                android:layout_height="50dp"
-                android:text="₱"
-                android:layout_marginLeft="30dp"
-                android:textColor="@android:color/black"
-                android:textSize="30sp" />
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <EditText
-                android:inputType="numberSigned"
-                android:id="@+id/waterUpdatePrice"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/waterNameUPW"
                 android:layout_width="match_parent"
-                android:layout_marginRight="30dp"
-                android:layout_height="50dp"
-                android:textAlignment="center"
-                android:hint="Price per Gallon"
-                android:background="@drawable/edit_text_border"/>
-        </LinearLayout>
-        <RadioGroup
+                android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:inputType="textEmailAddress"
+                    android:background="@drawable/edit_text_border"
+                    android:textAlignment="center"
+                    android:hint="Water Station's Product Name"
+                    android:gravity="center" />
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:id="@+id/waterTypeUWP"
+                android:textSize="21dp"
+                android:text="Product Type"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:layout_marginTop="11dp"
+                    android:id="@+id/textView14"
+                    android:layout_width="28dp"
+                    android:layout_height="50dp"
+                    android:text="₱"
+                    android:textColor="@android:color/black"
+                    android:textSize="30sp" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/waterPriceUWP"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <android.support.design.widget.TextInputEditText
+                        android:inputType="number"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:textAlignment="center"
+                        android:hint="Price per Gallon"
+                        android:gravity="center"
+                        android:background="@drawable/edit_text_border" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/waterDescriptionUWP"
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputEditText
+                    android:background="@drawable/edit_text_border"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:inputType="textAutoCorrect"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:hint="Additional Description"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <RadioGroup
             android:id="@+id/validRadio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="10dp">
             <TextView
-                android:textColor="@android:color/black"
-                android:textSize="24dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Status: "/>
-            <RadioButton
-                android:id="@+id/avaiableRadio"
-                android:textColor="@android:color/holo_green_dark"
-                android:text="Available"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <RadioButton
-                android:id="@+id/unavailableRadio"
-                android:textColor="@android:color/holo_red_dark"
-                android:text="Unavailable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </RadioGroup>
-        <Button
-
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginLeft="30dp"
-            android:id="@+id/waterUpdateAdd"
-            android:layout_width="match_parent"
+            android:textColor="@android:color/black"
+            android:textSize="16dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/z_darkbluebutton"
-            android:text="Update"
-            android:textColor="@android:color/white" />
-        <Button
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginLeft="30dp"
-            android:id="@+id/waterUpdateBack"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/z_graybuttomv"
-            android:text="Back"
-            android:textColor="@android:color/white" />
-    </LinearLayout>
+            android:text="Status: "/>
+            <RadioButton
+            android:id="@+id/avaiableRadio"
+            android:textColor="@android:color/holo_green_dark"
+            android:text="Available"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+            <RadioButton
+            android:id="@+id/unavailableRadio"
+            android:textColor="@android:color/holo_red_dark"
+            android:text="Unavailable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+            </RadioGroup>
 
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:layout_marginRight="2dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="15dp"
+                    android:id="@+id/waterUpdateAdd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/z_darkbluebutton"
+                    android:text="Add"
+                    android:textColor="@android:color/white" />
+                <Button
+                    android:layout_marginRight="2dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="15dp"
+                    android:id="@+id/waterUpdateBack"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/z_graybuttomv"
+                    android:text="Back"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

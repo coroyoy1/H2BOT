@@ -186,14 +186,12 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
 
     public void locateCustomer(LatLng pLatLng)
     {
-        Log.d("MercantQAQU",""+firebaseUser.getUid()+"="+customerNo);
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_File");
         reference.child(firebaseUser.getUid()).child(customerNo)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         MerchantCustomerFile merchantCustomerFile = dataSnapshot.getValue(MerchantCustomerFile.class);
-                        Log.d("MercantGago","hi");
                         if(merchantCustomerFile != null)
                         {
                             String merchantId = merchantCustomerFile.getStation_id();

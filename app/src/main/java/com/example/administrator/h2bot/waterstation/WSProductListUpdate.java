@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.UserWSWDWaterTypeFile;
+import com.example.administrator.h2bot.models.WSWDWaterTypeFile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,7 +37,8 @@ import java.util.List;
 
 public class WSProductListUpdate extends Fragment implements View.OnClickListener {
 
-    EditText productUpdateName, productUpdatePrice;
+    TextInputLayout productName, productPrice, productDescription;
+
     TextView productUpdateStatus, productUpdateType;
     Button backUpItem, updateUpItem;
     RadioButton valid, invalid;
@@ -78,8 +81,11 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
         databaseReference = firebaseDatabase.getReference("User_WS_WD_Water_Type_File");
         firebaseUser = mAuth.getCurrentUser();
 
-        productUpdatePrice = view.findViewById(R.id.waterUpdatePrice);
-        productUpdateType = view.findViewById(R.id.waterUpdateSpinner);
+        //Edit text Text Layout
+        productName = view.findViewById(R.id.waterNameUPW);
+        productDescription = view.findViewById(R.id.waterDescriptionUWP);
+        productPrice = view.findViewById(R.id.waterPriceUWP);
+        productUpdateType = view.findViewById(R.id.waterTypeUWP);
 
         valid = view.findViewById(R.id.avaiableRadio);
         invalid = view.findViewById(R.id.unavailableRadio);
@@ -106,9 +112,28 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
                 invalid.setChecked(true);
                 statusGet = "inactive";
             }
-            productUpdateType.setTextSize(24);
+
             productUpdateType.setText(itemTy);
-            productUpdatePrice.setText(itemPr);
+            productPrice.getEditText().setText(itemPr);
+
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File");
+            reference.child(firebaseUser.getUid()).child(itemTy).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    WSWDWaterTypeFile wswdWaterTypeFile = dataSnapshot.getValue(WSWDWaterTypeFile.class);
+                    if (wswdWaterTypeFile != null)
+                    {
+                        productDescription.getEditText().setText(wswdWaterTypeFile.getWater_description());
+                        productName.getEditText().setText(wswdWaterTypeFile.getWater_name());
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
         }
 
         return view;
@@ -121,14 +146,17 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
         } else if (invalid.isChecked()) {
             statY = "inactive";
         }
-        String prodType = productUpdateType.getText().toString();
-        String prodPrice = productUpdatePrice.getText().toString();
+
+        String prodType = productUpdateType.getText().toString().trim();
+        String prodPrice = productPrice.getEditText().getText().toString().trim();
+        String prodName = productName.getEditText().getText().toString();
+        String prodDescription = productDescription.getEditText().getText().toString();
 
         if (prodType.isEmpty() && prodPrice.isEmpty()) {
             showMessage("Please fill up all the fields");
             return;
         } else {
-            dataConnection(prodType, prodPrice, statY);
+            dataConnection(prodName, prodType, prodPrice, prodDescription, statY);
         }
 
     }
@@ -136,13 +164,15 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
     //Display Data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //CloseRetrieving Data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    private void dataConnection(String prodType, String prodPrice, String prodStat) {
+    private void dataConnection(String prodName, String prodType, String prodPrice, String prodDescription, String statY) {
         progressDialog.show();
-        UserWSWDWaterTypeFile userWSWDWaterTypeFile = new UserWSWDWaterTypeFile(
+        WSWDWaterTypeFile userWSWDWaterTypeFile = new WSWDWaterTypeFile(
                 firebaseUser.getUid(),
+                prodName,
                 prodType,
                 prodPrice,
-                prodStat
+                prodDescription,
+                statY
         );
         databaseReference.child(firebaseUser.getUid()).child(prodType).setValue(userWSWDWaterTypeFile)
             .addOnSuccessListener(new OnSuccessListener<Void>() {

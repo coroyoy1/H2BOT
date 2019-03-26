@@ -87,8 +87,8 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                 findItem(R.id.nav_inprogress_ws));
         if(savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
-                    new WSPendingOrdersFragment()).commit();
-            Objects.requireNonNull(getSupportActionBar()).setTitle("Pending Orders");
+                    new WSDashboard()).commit();
+            Objects.requireNonNull(getSupportActionBar()).setTitle("Dashboard");
         }
 
        initializeCountDrawer();
@@ -218,6 +218,11 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch(menuItem.getItemId())
         {
+            case R.id.nav_dashboard_ws:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
+                        new WSDashboard()).commit();
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Dashboard");
+                break;
             case R.id.nav_transactions_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
                         new WSTransactionsFragment()).commit();

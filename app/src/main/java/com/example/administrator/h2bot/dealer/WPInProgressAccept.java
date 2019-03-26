@@ -302,7 +302,7 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
         else
         {
             super.onActivityResult(requestCode, resultCode, data);
-            showMessages("Error to scan");
+            showMessages("Error scanning");
         }
     }
 

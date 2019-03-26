@@ -18,16 +18,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.models.WSWDWaterTypeFile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 public class WSProductListIntent extends Fragment implements View.OnClickListener {
-    TextView itemN, itemP, itemU, itemS;
+    TextView itemN, itemP, itemU, itemS, itemName, itemDescription;
     Button backBu, updateBu, deleteButton;
     String itemUi, itemNameString, itemPriceString, itemTypeString, itemStatusString, itemKeyString;
 
@@ -46,6 +50,8 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
         itemP = view.findViewById(R.id.PLIprice);
         itemU = view.findViewById(R.id.PLItype);
         itemS = view.findViewById(R.id.PLIStatus);
+        itemDescription = view.findViewById(R.id.PLIDescription);
+        itemName = view.findViewById(R.id.PLIProdName);
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
@@ -72,15 +78,43 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
             String itemTy = bundle.getString("ItemTypeMDA");
             String itemSt = bundle.getString("ItemStatusMDA");
 
+            String originSt = "";
+            if (itemSt.equals("active"))
+            {
+                originSt = "Available";
+            }
+            else if (itemSt.equals("inactive"))
+            {
+                originSt = "Unavailable";
+            }
+
             itemUi = bundle.getString("ItemUidMDA");
             itemP.setText("  Price: "+itemPr);
             itemU.setText("  Type: "+itemTy);
-            itemS.setText("  Status: "+itemSt);
+            itemS.setText("  Status: "+originSt);
 
             itemPriceString = bundle.getString("ItemPriceMDA");
             itemTypeString = bundle.getString("ItemTypeMDA");
             itemStatusString = bundle.getString("ItemStatusMDA");
 
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File");
+            databaseReference.child(firebaseUser.getUid()).child(itemTy)
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            WSWDWaterTypeFile wswdWaterTypeFile = dataSnapshot.getValue(WSWDWaterTypeFile.class);
+                            if (wswdWaterTypeFile != null)
+                            {
+                                itemDescription.setText(wswdWaterTypeFile.getWater_description());
+                                itemName.setText(wswdWaterTypeFile.getWater_name());
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
 
         }
         return view;
