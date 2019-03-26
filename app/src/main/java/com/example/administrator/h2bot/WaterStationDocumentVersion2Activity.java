@@ -39,6 +39,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 import com.google.firebase.auth.AuthResult;
@@ -57,6 +58,7 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -398,14 +400,14 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                             }
                             Log.d("Data: ", sb.toString());
                             Log.d("Station name: ", stationName.getText().toString().toLowerCase());
-                            if(sb.toString().toLowerCase().contains("business permit".toLowerCase())){
-                                Picasso.get().load(filepath).fit().centerCrop().into(businessPermit_image);
-                                Toast.makeText(this, "Valid business permit", Toast.LENGTH_SHORT).show();
-                            }
-                            else{
-                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
-                                Toast.makeText(this, "Invalid business permit", Toast.LENGTH_SHORT).show();
-                            }
+//                            if(sb.toString().toLowerCase().contains("business permit".toLowerCase())){
+                            Picasso.get().load(filepath).fit().centerCrop().into(businessPermit_image);
+                            Toast.makeText(this, "Valid business permit", Toast.LENGTH_SHORT).show();
+//                            }
+//                            else{
+//                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
+//                                Toast.makeText(this, "Invalid business permit", Toast.LENGTH_SHORT).show();
+//                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -435,8 +437,8 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                 sb.append("\n");
                             }
 //                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
-                                Picasso.get().load(filepath2).fit().centerCrop().into(sanitaryPermit_image);
-                                Toast.makeText(this, "Valid sanitary permit", Toast.LENGTH_SHORT).show();
+                            Picasso.get().load(filepath2).fit().centerCrop().into(sanitaryPermit_image);
+                            Toast.makeText(this, "Valid sanitary permit", Toast.LENGTH_SHORT).show();
 //                            }
 //                            else{
 //                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
@@ -530,134 +532,134 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
     }
     private void CreateAccount(String emailAddress, String password){
         mAuth.createUserWithEmailAndPassword(emailAddress, password)
-        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                    String userId = firebaseUser.getUid();
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                            String userId = firebaseUser.getUid();
 
-                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( WaterStationDocumentVersion2Activity.this,  new OnSuccessListener<InstanceIdResult>() {
-                        @Override
-                        public void onSuccess(InstanceIdResult instanceIdResult) {
-                            newToken = instanceIdResult.getToken();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(WaterStationDocumentVersion2Activity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                    StorageReference mStorage = FirebaseStorage.getInstance().getReference("station_photos").child(userId);
-                    mStorage.putFile(filePathUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-                            result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( WaterStationDocumentVersion2Activity.this,  new OnSuccessListener<InstanceIdResult>() {
                                 @Override
-                                public void onSuccess(Uri uri) {
-                                    String stringUri = uri.toString();
-                                    UserFile userFile = new UserFile(userId,
-                                            stringUri,
-                                            mFirstname,
-                                            mLastname,
-                                            mAddress,
-                                            mContact_no,
-                                            "Water Station",
-                                            "active");
-
-                                    UserAccountFile userAccountFile = new UserAccountFile(userId,
-                                            mEmail_address,
-                                            mPassword,
-                                            newToken,
-                                            "active");
-
-                                    String startHour = startingHour.getText().toString() + " " + startSpinner.getSelectedItem();
-                                    String endHour = endingHour.getText().toString() + " " + endSpinner.getSelectedItem();
-
-                                    StationBusinessInfo stationBusinessInfo = new StationBusinessInfo(
-                                            stationAddress.getText().toString(),
-                                            week.toString(),
-                                            deliveryFee.getText().toString(),
-                                            deliveryMethod,
-                                            endHour,
-                                            firebaseUser.getUid(),
-                                            min_no_of_gallons.getText().toString(),
-                                            stationName.getText().toString(),
-                                            priceOfGallonEdit.getText().toString(),
-                                            startHour,
-                                            "active",
-                                            telNo.getText().toString()
-                                    );
-
-                                    UserWallet userWallet = new UserWallet(
-                                            firebaseUser.getUid(),
-                                            "0",
-                                            "active"
-                                    );
-
-                                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_Wallet");
-                                    databaseReference.child(firebaseUser.getUid()).setValue(userWallet)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    FirebaseDatabase.getInstance().getReference("User_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userFile)
-                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                @Override
-                                                                public void onSuccess(Void aVoid) {
-                                                                    FirebaseDatabase.getInstance().getReference("User_Account_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userAccountFile)
-                                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                                @Override
-                                                                                public void onSuccess(Void aVoid) {
-                                                                                    FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(stationBusinessInfo)
-                                                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                                                @Override
-                                                                                                public void onSuccess(Void aVoid) {
-                                                                                                    progressDialog.dismiss();
-                                                                                                    getLocationSetter();
-                                                                                                    Toast.makeText(WaterStationDocumentVersion2Activity.this, "Successfully registered", Toast.LENGTH_SHORT).show();
-                                                                                                }
-                                                                                            })
-                                                                                            .addOnFailureListener(new OnFailureListener() {
-                                                                                                @Override
-                                                                                                public void onFailure(@NonNull Exception e) {
-                                                                                                    Toast.makeText(WaterStationDocumentVersion2Activity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                                                                }
-                                                                                            });
-                                                                                }
-                                                                            })
-                                                                            .addOnFailureListener(new OnFailureListener() {
-                                                                                @Override
-                                                                                public void onFailure(@NonNull Exception e) {
-                                                                                    Toast.makeText(WaterStationDocumentVersion2Activity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                                                }
-                                                                            });
-                                                                }
-                                                            })
-                                                            .addOnFailureListener(new OnFailureListener() {
-                                                                @Override
-                                                                public void onFailure(@NonNull Exception e) {
-                                                                    Toast.makeText(WaterStationDocumentVersion2Activity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                                }
-                                                            });
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    showMessages("Load cannot be store");
-                                                }
-                                            });
-
+                                public void onSuccess(InstanceIdResult instanceIdResult) {
+                                    newToken = instanceIdResult.getToken();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(WaterStationDocumentVersion2Activity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
+
+                            StorageReference mStorage = FirebaseStorage.getInstance().getReference("station_photos").child(userId);
+                            mStorage.putFile(filePathUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            String stringUri = uri.toString();
+                                            UserFile userFile = new UserFile(userId,
+                                                    stringUri,
+                                                    mFirstname,
+                                                    mLastname,
+                                                    mAddress,
+                                                    mContact_no,
+                                                    "Water Station",
+                                                    "active");
+
+                                            UserAccountFile userAccountFile = new UserAccountFile(userId,
+                                                    mEmail_address,
+                                                    mPassword,
+                                                    newToken,
+                                                    "active");
+
+                                            String startHour = startingHour.getText().toString() + " " + startSpinner.getSelectedItem();
+                                            String endHour = endingHour.getText().toString() + " " + endSpinner.getSelectedItem();
+
+                                            StationBusinessInfo stationBusinessInfo = new StationBusinessInfo(
+                                                    stationAddress.getText().toString(),
+                                                    week.toString(),
+                                                    deliveryFee.getText().toString(),
+                                                    deliveryMethod,
+                                                    endHour,
+                                                    firebaseUser.getUid(),
+                                                    min_no_of_gallons.getText().toString(),
+                                                    stationName.getText().toString(),
+                                                    priceOfGallonEdit.getText().toString(),
+                                                    startHour,
+                                                    "active",
+                                                    telNo.getText().toString()
+                                            );
+
+                                            UserWallet userWallet = new UserWallet(
+                                                    firebaseUser.getUid(),
+                                                    "0",
+                                                    "active"
+                                            );
+
+                                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_Wallet");
+                                            databaseReference.child(firebaseUser.getUid()).setValue(userWallet)
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            FirebaseDatabase.getInstance().getReference("User_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userFile)
+                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                        @Override
+                                                                        public void onSuccess(Void aVoid) {
+                                                                            FirebaseDatabase.getInstance().getReference("User_Account_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userAccountFile)
+                                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                        @Override
+                                                                                        public void onSuccess(Void aVoid) {
+                                                                                            FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(stationBusinessInfo)
+                                                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                                        @Override
+                                                                                                        public void onSuccess(Void aVoid) {
+                                                                                                            progressDialog.dismiss();
+                                                                                                            getLocationSetter();
+                                                                                                            Toast.makeText(WaterStationDocumentVersion2Activity.this, "Successfully registered", Toast.LENGTH_SHORT).show();
+                                                                                                        }
+                                                                                                    })
+                                                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                                                        @Override
+                                                                                                        public void onFailure(@NonNull Exception e) {
+                                                                                                            Toast.makeText(WaterStationDocumentVersion2Activity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                                                                        }
+                                                                                                    });
+                                                                                        }
+                                                                                    })
+                                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                                        @Override
+                                                                                        public void onFailure(@NonNull Exception e) {
+                                                                                            Toast.makeText(WaterStationDocumentVersion2Activity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                                                        }
+                                                                                    });
+                                                                        }
+                                                                    })
+                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                        @Override
+                                                                        public void onFailure(@NonNull Exception e) {
+                                                                            Toast.makeText(WaterStationDocumentVersion2Activity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                                        }
+                                                                    });
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            showMessages("Load cannot be store");
+                                                        }
+                                                    });
+
+                                        }
+                                    });
+                                }
+                            });
+                            uploadAllImage();
                         }
-                    });
-                    uploadAllImage();
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(WaterStationDocumentVersion2Activity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -684,7 +686,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
             String getLocateLatitude = String.valueOf(lat);
             String getLocateLongtitude = String.valueOf(lng);
 
-            UserLocationAddress userLocationAddress = new UserLocationAddress(FirebaseAuth.getInstance().getCurrentUser().getUid(), getLocateLatitude, getLocateLongtitude);
+            UserLocationAddress userLocationAddress = new UserLocationAddress(mAuth.getCurrentUser().getUid() , getLocateLatitude, getLocateLongtitude);
             DatabaseReference locationRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
             locationRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userLocationAddress)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -794,27 +796,27 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                         public void onSuccess(Uri uri) {
                             String stringUri = uri.toString();
                             WSDocFile wsDocFile = new WSDocFile(userId,
-                                business,
+                                    business,
                                     stringUri,
-                                physicochemical,
-                                bir,
-                                "active");
+                                    physicochemical,
+                                    bir,
+                                    "active");
 
                             FirebaseDatabase.getInstance().getReference("User_WS_Docs_File").child(userId).setValue(wsDocFile)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        startActivity(new Intent(WaterStationDocumentVersion2Activity.this, LoginActivity.class));
-                                        mAuth.signOut();
-                                        Toast.makeText(WaterStationDocumentVersion2Activity.this, "Successfully registered", Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(WaterStationDocumentVersion2Activity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            startActivity(new Intent(WaterStationDocumentVersion2Activity.this, LoginActivity.class));
+                                            mAuth.signOut();
+                                            Toast.makeText(WaterStationDocumentVersion2Activity.this, "Successfully registered", Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(WaterStationDocumentVersion2Activity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                         }
                     });
                 }
@@ -822,7 +824,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Toast.makeText(WaterStationDocumentVersion2Activity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                   progressDialog.dismiss();
+                    progressDialog.dismiss();
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -840,7 +842,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         {
             case R.id.monBox:
                 String monday = "Monday";
-                String monSplit = String.join(",", monday);
+                String monSplit = TextUtils.join(",", Collections.singleton(monday));
                 if (mon.isChecked()) {
                     week.add(monSplit);
                 }
@@ -850,7 +852,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                 break;
             case R.id.tueBox:
                 String tuesday = "Tuesday";
-                String tuesdaySplit = String.join(",", tuesday);
+                String tuesdaySplit = TextUtils.join(",", Collections.singleton(tuesday));
                 if (tue.isChecked()) {
                     week.add(tuesdaySplit);
                 }
@@ -860,7 +862,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                 break;
             case R.id.wedBox:
                 String wednesday = "Wednesday";
-                String wednesdaySplit = String.join(",", wednesday);
+                String wednesdaySplit = TextUtils.join(",", Collections.singleton(wednesday));
                 if (wed.isChecked()) {
                     week.add(wednesdaySplit);
                 }
@@ -870,7 +872,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                 break;
             case R.id.thursBox:
                 String thursday = "Thursday";
-                String thursdaySplit = String.join(",", thursday);
+                String thursdaySplit = TextUtils.join(",", Collections.singleton(thursday));
                 if (thurs.isChecked()) {
                     week.add(thursdaySplit);
                 }
@@ -880,7 +882,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                 break;
             case R.id.friBox:
                 String friday = "Friday";
-                String fridaySplit = String.join(",", friday);
+                String fridaySplit = TextUtils.join(",", Collections.singleton(friday));
                 if (fri.isChecked()) {
                     week.add(fridaySplit);
                 }
@@ -890,7 +892,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                 break;
             case R.id.satBox:
                 String saturday = "Saturday";
-                String saturdaySplit = String.join(",", saturday);
+                String saturdaySplit = TextUtils.join(",", Collections.singleton(saturday));
                 if (sat.isChecked()) {
                     week.add(saturdaySplit);
                 }
@@ -900,7 +902,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                 break;
             case R.id.sunBox:
                 String sunday = "Sunday";
-                String sundaySplit = String.join(",", sunday);
+                String sundaySplit = TextUtils.join(",", Collections.singleton(sunday));
                 if (sun.isChecked()) {
                     week.add(sundaySplit);
                     showMessages(week.toString());
