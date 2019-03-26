@@ -1,4 +1,5 @@
 package com.example.administrator.h2bot;
+import com.example.administrator.h2bot.adapter.PlaceAutoCompleteAdapter;
 import com.example.administrator.h2bot.dealer.WaterPeddlerDocumentActivity;
 import com.example.administrator.h2bot.models.*;
 
@@ -13,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,6 +22,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.tpaaffiliate.TPADocumentActivity;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,13 +42,18 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import com.google.android.gms.location.places.Places;
+
+//import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.net.PlacesClient;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegisterActivity extends AppCompatActivity{
+public class RegisterActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final int PICK_IMAGE_REQUEST = 1;
     Button addPhoto, signUp;
@@ -59,7 +70,8 @@ public class RegisterActivity extends AppCompatActivity{
     Boolean clickable=false;
     Boolean boolState = false;
 
-    EditText firstNameRegister, lastNameRegister, addressRegister, contactRegister, emailRegister, passwordRegister,confirmPassword;
+    EditText firstNameRegister, lastNameRegister, contactRegister, emailRegister, passwordRegister,confirmPassword;
+    AutoCompleteTextView addressRegister;
     ProgressDialog progressDialog;
     TextView headerTitle;
     FirebaseUser currentUser;
@@ -68,15 +80,22 @@ public class RegisterActivity extends AppCompatActivity{
     String newToken;
     Boolean isAddressExist = false;
     String mLat, mLong;
+    PlaceAutoCompleteAdapter autocompleteAdapter;
 
+    private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
+            new LatLng(-40 , 168), new LatLng(71, 136));
 
     private FirebaseAuth mAuth;
     private String addressLocate;
+    private GoogleApiClient mGoogleApiClient;
+    private static final String API_KEY = "AIzaSyCIGlVnlwv-hL9fIjqfYSjnX5DlFIbB5bc";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+//        Places.initialize(getApplicationContext(), API_KEY);
+//        PlacesClient placesClient = Places.createClient(this);
 
         mAuth = FirebaseAuth.getInstance();
         String user_type = getIntent().getStringExtra("TextValue");
@@ -318,6 +337,22 @@ public class RegisterActivity extends AppCompatActivity{
                 }
             }
         });
+
+        //GoogleLocation
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(this, this)
+                .build();
+//        PlaceAutoCompleteAdapter placeAutoCompleteAdapter = new PlaceAutoCompleteAdapter(this, mGoogleApiClient, LAT_LNG_BOUNDS, null);
+        autocompleteAdapter = new PlaceAutoCompleteAdapter(RegisterActivity.this, mGoogleApiClient, LAT_LNG_BOUNDS,null);
+        addressRegister.setAdapter(autocompleteAdapter);
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 
 

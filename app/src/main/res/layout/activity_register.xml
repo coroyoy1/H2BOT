@@ -114,7 +114,7 @@
             <!--android:hint="@string/age"-->
             <!--android:inputType="number" />-->
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/RegisterAddress"
                 android:layout_width="match_parent"
                 android:inputType="textEmailAddress"
