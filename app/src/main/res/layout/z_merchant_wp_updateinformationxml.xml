@@ -31,41 +31,55 @@
             android:textStyle="bold"/>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:layout_weight="1"
-                android:text="Start Time"
-                android:textSize="15dp" />
-            <TimePicker
-                android:id="@+id/simpleTimePicker"
-                android:layout_width="wrap_content"
-                android:layout_weight="1"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:timePickerMode="spinner" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:layout_weight="1"
-                android:text="End   Time"
-                android:textSize="15dp" />
-            <TimePicker
-                android:id="@+id/simpleTimePicker1"
-                android:layout_width="wrap_content"
-                android:layout_weight="1"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:timePickerMode="spinner" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="10dp">
+
+                <EditText
+                    android:clickable="true"
+                    android:id="@+id/startingHour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_weight="1"
+                    android:hint="Start Time"
+                    android:inputType="none"
+                    android:textAlignment="center"
+                    android:textSize="18dp" />
+                <Spinner
+                    android:id="@+id/startSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"></Spinner>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="10dp">
+
+                <EditText
+                    android:clickable="true"
+                    android:id="@+id/endHour2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:hint="End Time"
+                    android:inputType="none"
+                    android:textAlignment="center"
+                    android:textSize="18dp" />
+
+                <Spinner
+                    android:id="@+id/endSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"></Spinner>
+            </LinearLayout>
         </LinearLayout>
         <TextView
             android:layout_width="match_parent"
@@ -150,61 +164,7 @@
                 android:layout_height="50dp"
                 android:background="@drawable/edit_text_border"/>
         </LinearLayout>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textStyle="bold"
-            android:textSize="18dp"
-            android:text="Delivery Fee"/>
-        <LinearLayout
-            android:id="@+id/linearDelFee"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
-            <RadioGroup
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <RadioButton
-                    android:id="@+id/waterStationPerGallonUIS"
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Per Gallon"/>
-                <RadioButton
-                android:id="@+id/waterStationFixUIS"
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Fix"/>
-                <RadioButton
-                    android:id="@+id/freefree"
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Free Delivery"/>
-            </RadioGroup>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/linearDelFeeNext"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
 
-            <EditText
-                android:id="@+id/waterStationDeliveryFeeUIS"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/edit_text_border"
-                android:hint="Delivery Fee Per Gallon"
-                android:inputType="number"
-                android:textAlignment="center" />
-        </LinearLayout>
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"

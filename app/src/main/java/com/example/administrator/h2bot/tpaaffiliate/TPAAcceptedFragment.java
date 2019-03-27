@@ -69,7 +69,7 @@ public class TPAAcceptedFragment extends Fragment {
                             AffiliateStationOrderModel orderModel = post2.getValue(AffiliateStationOrderModel.class);
                             if (orderModel != null) {
                                 Log.d("Hi", "Hi");
-                                if (orderModel.getStatus().equals("Accepted")) {
+                                if (orderModel.getStatus().equals("Accepted by affiliate") || orderModel.getStatus().equals("Dispatched by affiliate")) {
                                     noOrdersLayout.setVisibility(View.INVISIBLE);
                                     recyclerView.setVisibility(View.VISIBLE);
                                     uploadPO.add(orderModel);
@@ -136,4 +136,5 @@ public class TPAAcceptedFragment extends Fragment {
                 .setNegativeButton("No", dialogClickListener).show();
 
     }
+
 }

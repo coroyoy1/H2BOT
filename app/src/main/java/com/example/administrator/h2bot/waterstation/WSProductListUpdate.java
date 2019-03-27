@@ -171,6 +171,7 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
                 prodName,
                 prodType,
                 prodPrice,
+                "",
                 prodDescription,
                 statY
         );

@@ -2,6 +2,7 @@ package com.example.administrator.h2bot.dealer;
 
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -52,6 +53,9 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -59,10 +63,10 @@ import static android.app.Activity.RESULT_OK;
 public class WPBusinessInformationUpdate extends Fragment implements View.OnClickListener{
 
     private static final int PICK_IMAGE_REQUEST = 1;
-    EditText waterStationStartTime,
+    EditText waterStationStartTime,startingHour,endHour2,
     waterStationEndTime, waterStationMinimumGallon, waterStationDeliveryFee;
+
     Spinner startSpinner, endSpinner;
-    RadioButton deliveryServiceYes, deliveryServiceFree, deliveryFeePerGallon, free, deliveryFeeFix;
     LinearLayout linearDelFeeNext;
     Button updateButton;
     String namedealer, addressdealer, numberdealer;
@@ -104,13 +108,11 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
-        simpleTimePicker = view.findViewById(R.id.simpleTimePicker);
-        simpleTimePicker.setIs24HourView(true);
-        simpleTimePicker1 = view.findViewById(R.id.simpleTimePicker1);
-        simpleTimePicker1.setIs24HourView(true);
-
+        startingHour = view.findViewById(R.id.startingHour);
+        endHour2 = view.findViewById(R.id.endHour2);
         waterStationMinimumGallon  = view.findViewById(R.id.waterStationMinimumGallonUIS);
         waterStationDeliveryFee = view.findViewById(R.id.waterStationDeliveryFeeUIS);
+
         mon = view.findViewById(R.id.monBox);
         tue = view.findViewById(R.id.tueBox);
         wed = view.findViewById(R.id.wedBox);
@@ -125,16 +127,22 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
         fri.setOnClickListener(this);
         sat.setOnClickListener(this);
         sun.setOnClickListener(this);
-        free = view.findViewById(R.id.freefree);
 
-        deliveryFeeFix = view.findViewById(R.id.waterStationFixUIS);
-        deliveryFeePerGallon = view.findViewById(R.id.waterStationPerGallonUIS);
-
-        deliveryFeePerGallon.setChecked(true);
-        free.setOnClickListener(this);
         updateButton.setOnClickListener(this);
-        deliveryFeePerGallon.setOnClickListener(this);
-        deliveryFeeFix.setOnClickListener(this);
+        String[] arraySpinner = new String[]{
+                "AM", "PM"
+        };
+        String[] arraySpinner2 = new String[]{
+                "PM", "AM"
+        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, arraySpinner);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, arraySpinner2);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        startSpinner.setAdapter(adapter);
+        endSpinner.setAdapter(adapter2);
         DatabaseReference databaseReference3 = firebaseDatabase.getReference("User_WS_Business_Info_File").child(firebaseUser.getUid());
         databaseReference3.addValueEventListener(new ValueEventListener() {
             @Override
@@ -143,9 +151,58 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
                 namedealer = (dataSnapshot.child("business_name").getValue(String.class));
                 addressdealer = (dataSnapshot.child("business_address").getValue(String.class));
                 numberdealer = (dataSnapshot.child("business_tel_no").getValue(String.class));
-                //waterStationStartTime.setText(dataSnapshot.child("business_start_time").getValue(String.class));
-                //waterStationStartTime.setText(dataSnapshot.child("business_end_time").getValue(String.class));
+                startingHour.setText(getTime(dataSnapshot.child("business_start_time").getValue(String.class)));
+                endHour2.setText(getTime(dataSnapshot.child("business_end_time").getValue(String.class)));
                 waterStationMinimumGallon.setText(dataSnapshot.child("business_min_no_of_gallons").getValue(String.class));
+                WSBusinessInfoFile2 wsBusinessInfoFile = dataSnapshot.getValue(WSBusinessInfoFile2.class);
+                String array = wsBusinessInfoFile.getBusiness_days();
+                List<String> list = new ArrayList<String>(Collections.singleton(array));
+
+                String removeBracket = list.toString();
+                removeBracket = removeBracket.substring(2, removeBracket.length() - 2);
+
+                List<String> stringList = new ArrayList<String>(Arrays.asList(removeBracket.split(",")));
+                String str = "";
+                for (int count = 0; count < stringList.size(); count++)
+                {
+                    str = stringList.get(count);
+                    str = str.replaceAll(" ", "");
+                    if (str.toLowerCase().equals("Monday".toLowerCase()))
+                    {
+                        mon.setChecked(true);
+                        week.add("Monday");
+                    }
+                    if (str.toLowerCase().equals("Tuesday".toLowerCase()))
+                    {
+                        tue.setChecked(true);
+                        week.add("Tuesday");
+                    }
+                    if (str.toLowerCase().equals("Wednesday".toLowerCase()))
+                    {
+                        wed.setChecked(true);
+                        week.add("Wednesday");
+                    }
+                    if (str.toLowerCase().equals("Thursday".toLowerCase()))
+                    {
+                        thurs.setChecked(true);
+                        week.add("Thursday");
+                    }
+                    if (str.toLowerCase().equals("Friday".toLowerCase()))
+                    {
+                        fri.setChecked(true);
+                        week.add("Friday");
+                    }
+                    if (str.toLowerCase().equals("Saturday".toLowerCase()))
+                    {
+                        sat.setChecked(true);
+                        week.add("Saturday");
+                    }
+                    if (str.toLowerCase().equals("Sunday".toLowerCase()))
+                    {
+                        sun.setChecked(true);
+                        week.add("Sunday");
+                    }
+                }
             }
 
             @Override
@@ -153,42 +210,60 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
 
             }
         });
+        startingHour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Calendar mcurrentTime = Calendar.getInstance();
+                int hour = mcurrentTime.get(Calendar.HOUR);
+                int minute = mcurrentTime.get(Calendar.MINUTE);
+
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        startingHour.setText( selectedHour + ":" + selectedMinute);
+                    }
+                }, hour, minute, false);
+                mTimePicker.setTitle("Select Time");
+                mTimePicker.show();
+            }
+        });
+        endHour2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Calendar mcurrentTime = Calendar.getInstance();
+                int hour = mcurrentTime.get(Calendar.HOUR);
+                int minute = mcurrentTime.get(Calendar.MINUTE);
+
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        endHour2.setText( selectedHour + ":" + selectedMinute);
+                    }
+                }, hour, minute, false);
+                mTimePicker.setTitle("Select Time");
+                mTimePicker.show();
+            }
+        });
         return view;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void updateData()
     {
         progressDialog.show();
             String deliveryStatusFreeIf="";
-            if(free.isChecked())
-            {
-                deliveryStatusFreeIf = "Free";
-                waterStationDeliveryFee.setVisibility(View.GONE);
-            }
-            else if (deliveryFeePerGallon.isChecked())
-            {
-                deliveryStatusFreeIf = "Per gallon";
-            }
-            else if (deliveryFeeFix.isChecked())
-            {
-                deliveryStatusFreeIf = "Fixed price";
-            }
-            else if(!free.isChecked() && !deliveryFeePerGallon.isChecked() && !deliveryFeeFix.isChecked())
-            {
-                showMessage("Check any radio button");
-                progressDialog.dismiss();
-                return;
-            }
-              WSBusinessInfoFile2 userWSBusinessInfoFile = new WSBusinessInfoFile2(
+            WSBusinessInfoFile2 userWSBusinessInfoFile = new WSBusinessInfoFile2(
                 firebaseUser.getUid(),
                 namedealer,
                 addressdealer,
                 numberdealer,
-                String.valueOf(simpleTimePicker.getHour())+":"+String.valueOf(simpleTimePicker.getMinute()),
-                String.valueOf(simpleTimePicker1.getHour())+":"+String.valueOf(simpleTimePicker1.getMinute()),
-                      week.toString(),
-                deliveryStatusFreeIf,
-                waterStationDeliveryFee.getText().toString(),
+              startingHour.getText().toString() + " " + startSpinner.getSelectedItem(),
+                endHour2.getText().toString() + " " + endSpinner.getSelectedItem(),
+                week.toString(),
                 waterStationMinimumGallon.getText().toString(),
                 "active");
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
@@ -273,9 +348,7 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
     public void getInput()
     {
             if(
-                    deliveryFeePerGallon.isChecked()
-            && waterStationDeliveryFee.getText().toString().trim().isEmpty()
-            || deliveryFeeFix.isChecked() && waterStationDeliveryFee.getText().toString().trim().isEmpty())
+                startingHour.getText().toString().isEmpty() || endHour2.getText().toString().isEmpty() ||waterStationMinimumGallon.getText().toString().isEmpty())
             {
                 showMessage("Please fill all the fields!");
             }
@@ -292,13 +365,6 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
 
     }
 
-    public void openGallery()
-    {
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-    }
-
     @TargetApi(Build.VERSION_CODES.O)
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -307,21 +373,6 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
         {
             case R.id.updateInfoButtonUIWS:
                 getInput();
-                break;
-            case R.id.waterStationPerGallonUIS:
-                waterStationDeliveryFee.setText("");
-                waterStationDeliveryFee.setHint("Delivery Fee Per Gallon");
-                waterStationDeliveryFee.setVisibility(View.VISIBLE);
-                break;
-            case R.id.waterStationFixUIS:
-                waterStationDeliveryFee.setText("");
-                waterStationDeliveryFee.setHint("Fixed Delivery Fee");
-                waterStationDeliveryFee.setVisibility(View.VISIBLE);
-                break;
-            case R.id.freefree:
-                waterStationDeliveryFee.setText("0");
-                waterStationDeliveryFee.setHint("Free Delivery");
-                waterStationDeliveryFee.setVisibility(View.GONE);
                 break;
                 case R.id.monBox:
                     String monday = "Monday";
@@ -396,6 +447,42 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
 
         }
     }
+    public void checkWeek() {
+        String str;
+        if (mon.isChecked()) {
+            str = "Monday";
+            week.add(str);
+        }
+        if (tue.isChecked()) {
+            str = "Tuesday";
+            week.add(str);
+        }
+        if (wed.isChecked())
+        {
+            str = "Wednesday";
+            week.add(str);
+        }
+        if (thurs.isChecked())
+        {
+            str = "Thursday";
+            week.add(str);
+        }
+        if (fri.isChecked())
+        {
+            str = "Friday";
+            week.add(str);
+        }
+        if (sat.isChecked())
+        {
+            str = "Saturday";
+            week.add(str);
+        }
+        if (sun.isChecked())
+        {
+            str = "Sunday";
+            week.add(str);
+        }
+    }
     public void snackBar(String text){
         View parentLayout = getActivity().findViewById(android.R.id.content);
         Snackbar snackbar = Snackbar.make(parentLayout, ""+text, Snackbar.LENGTH_LONG);
@@ -410,5 +497,18 @@ public class WPBusinessInformationUpdate extends Fragment implements View.OnClic
             }
         }).setActionTextColor(getResources().getColor(android.R.color.white ));
         snackbar.show();
+    }
+    public String getTime(String clock)
+    {
+        String clockString = clock;
+        String newDate = clockString.substring(0, clockString.length() - 3);
+        return newDate;
+    }
+
+    public String getAMPM(String midday)
+    {
+        String mid = midday;
+        String midline = mid.substring(mid.length() - 2, mid.length());
+        return midline;
     }
 }

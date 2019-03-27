@@ -2,6 +2,7 @@ package com.example.administrator.h2bot.dealer;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Address;
@@ -34,6 +35,7 @@ import android.widget.Toast;
 
 import com.example.administrator.h2bot.LoginActivity;
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.WaterStationDocumentVersion2Activity;
 import com.example.administrator.h2bot.models.UserAccountFile;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserLocationAddress;
@@ -63,6 +65,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class WaterPeddlerDocumentActivity extends AppCompatActivity implements CheckBox.OnClickListener{
@@ -71,11 +74,11 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
     String userId;
     TextView startTimeTextView, endTimeTextView;
     String startHour, startMinute, endHour, endMinute, startAMPM, endAMPM;
-    ImageView businessPermit_image, sanitaryPermit_image;
-    Button sanitaryPermitBtn, submitButton;
+    ImageView NBIImageView, driversLicense_image;
+    Button driversLicenseBtn, submitButton, NBIButton;
     RadioGroup deliveryFeeGroup;
-    boolean check;
-    EditText stationName, stationAddress, endingHour, businessDeliveryFeePerGal, businessMinNoCapacity, telNo, deliveryFee, min_no_of_gallons;
+    boolean check,check1;
+    EditText stationName, stationAddress, endingHour, businessDeliveryFeePerGal, businessMinNoCapacity, telNo, deliveryFee, min_no_of_gallons,startingHour,endHour2;
     String deliveryMethod, mUri;
     Spinner simpleTimePicker;
     FirebaseStorage storage;
@@ -84,13 +87,13 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
     private ProgressDialog progressDialog;
     private double lat;
     private double lng;
-    RadioButton free,fixPrice,perGallon;
     String newToken;
     CheckBox mon, tue, wed, thurs, fri, sat, sun;
-    Uri filepath, filepath2,mFilepath;
+    Uri filepath3, filepath2,mFilepath;
     Boolean isPicked = false;
     Boolean isPicked2 = false;
     String mFirstname, mLastname, mAddress, mContact_no, mEmail_address, mPassword;
+    Spinner startSpinner, endSpinner;
     List<String> week;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,20 +110,18 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         mAuth = FirebaseAuth.getInstance();
-        startTimeTextView = findViewById(R.id.startTimeTextView);
-        endTimeTextView = findViewById(R.id.endTimeTextView);
+        endHour2 = findViewById(R.id.endHour2);
+        startingHour = findViewById(R.id.startingHour);
+        startSpinner= findViewById(R.id.startSpinner);
+        endSpinner= findViewById(R.id.endSpinner);
         // Button
-        sanitaryPermitBtn = findViewById(R.id.sanitaryPermitBtn);
+        driversLicenseBtn = findViewById(R.id.driversLicenseBtn);
         submitButton = findViewById(R.id.submitButton);
-
-        //Radiobutton
-        free = findViewById(R.id.free);
-        fixPrice = findViewById(R.id.fixPrice);
-        perGallon = findViewById(R.id.perGallon);
+        NBIButton = findViewById(R.id.NBIButton);
 
         //Imageview
-        sanitaryPermit_image = findViewById(R.id.sanitaryPermit_image);
-
+        driversLicense_image = findViewById(R.id.driversLicense_image);
+        NBIImageView = findViewById(R.id.NBIImageView);
         //EditText
         stationName = findViewById(R.id.stationName);
         stationAddress = findViewById(R.id.stationAddress);
@@ -128,9 +129,6 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
         endingHour = findViewById(R.id.endingHour);
         deliveryFee = findViewById(R.id.deliveryFee);
         min_no_of_gallons = findViewById(R.id.min_no_of_gallons);
-
-        //Radiogroup
-        deliveryFeeGroup = findViewById(R.id.deliveryFeeGroup);
 
         Bundle bundle = getIntent().getExtras();
         String firstname = bundle.getString("firstname");
@@ -142,6 +140,8 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
         String filepath = bundle.getString("filepath");
         mFilepath = Uri.parse(filepath);
 
+        startSpinner= findViewById(R.id.startSpinner);
+        endSpinner= findViewById(R.id.endSpinner);
         mon = findViewById(R.id.monBox);
         tue = findViewById(R.id.tueBox);
         wed = findViewById(R.id.wedBox);
@@ -169,8 +169,16 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
         String[] arraySpinner2 = new String[]{
                 "PM", "AM"
         };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(WaterPeddlerDocumentActivity.this,
+                android.R.layout.simple_spinner_item, arraySpinner);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(WaterPeddlerDocumentActivity.this,
+                android.R.layout.simple_spinner_item, arraySpinner2);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        startSpinner.setAdapter(adapter);
+        endSpinner.setAdapter(adapter2);
 
-        sanitaryPermitBtn.setOnClickListener(new View.OnClickListener() {
+        driversLicenseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                     isPicked = false;
@@ -182,22 +190,60 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
 
             }
         });
-        startTimeTextView.setOnClickListener(new View.OnClickListener() {
+        NBIButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                starttimeData();
+                isPicked2 = false;
+                isPicked = true;
+                Log.d("CheckPick",""+isPicked);
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
             }
         });
-        endTimeTextView.setOnClickListener(new View.OnClickListener() {
+        startingHour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                starttimeData2();
+                // TODO Auto-generated method stub
+                Calendar mcurrentTime = Calendar.getInstance();
+                int hour = mcurrentTime.get(Calendar.HOUR);
+                int minute = mcurrentTime.get(Calendar.MINUTE);
+
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(WaterPeddlerDocumentActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        startingHour.setText( selectedHour + ":" + selectedMinute);
+                    }
+                }, hour, minute, false);
+                mTimePicker.setTitle("Select Time");
+                mTimePicker.show();
+            }
+        });
+        endHour2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Calendar mcurrentTime = Calendar.getInstance();
+                int hour = mcurrentTime.get(Calendar.HOUR);
+                int minute = mcurrentTime.get(Calendar.MINUTE);
+
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(WaterPeddlerDocumentActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        endHour2.setText( selectedHour + ":" + selectedMinute);
+                    }
+                }, hour, minute, false);
+                mTimePicker.setTitle("Select Time");
+                mTimePicker.show();
             }
         });
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(check==true) {
+                if(check==true && check1==true) {
                     CreateAccount(mEmail_address, mPassword);
                     checkDocuments();
 //                uploadAllImage();
@@ -213,30 +259,6 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
             }
         });
 
-        deliveryFeeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId){
-                    case R.id.perGallon:
-                        deliveryMethod = "Per Gallon";
-                        deliveryFee.setVisibility(View.VISIBLE);
-                        deliveryFee.setHint("Delivery fee per gallon");
-                        break;
-
-                    case R.id.fixPrice:
-                        deliveryMethod = "Fix Price";
-                        deliveryFee.setVisibility(View.VISIBLE);
-                        deliveryFee.setHint("Fixed delivery fee");
-                        break;
-
-                    case R.id.free:
-                        deliveryMethod = "Free";
-                        deliveryFee.setVisibility(View.GONE);
-                        deliveryFee.setText("");
-                        break;
-                }
-            }
-        });
     }
 
     @Override
@@ -245,8 +267,8 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
         if(resultCode == RESULT_OK)
         {
             if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            if(isPicked2) {
                 filepath2 = data.getData();
-                if(isPicked2) {
                     Bitmap bitmap = null;
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath2);
@@ -267,28 +289,66 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
                                 TextBlock myItem = items.valueAt(ctr);
                                 sb.append(myItem.getValue());
                                 sb.append("\n");
+                                Log.d("Strings",""+sb.append(myItem.getValue()));
                             }
-                            if(sb.toString().toLowerCase().contains(mFirstname.toLowerCase()) && sb.toString().toLowerCase().contains(mLastname.toLowerCase())
-                                && sb.toString().toLowerCase().contains("land")
-                                && sb.toString().toLowerCase().contains("transportation")
-                                && sb.toString().toLowerCase().contains("office")){
-                                Picasso.get().load(filepath2).into(sanitaryPermit_image);
+                            if(sb.toString().toLowerCase().contains(mFirstname.toLowerCase()) && sb.toString().toLowerCase().contains(mLastname.toLowerCase()) &&
+                                    sb.toString().toLowerCase().contains("land transportation office"))
+                                {
+                                Picasso.get().load(filepath2).into(driversLicense_image);
                                 String text = "Valid driver's license";
                                 snackBar(text);
-                                check = true;
+                                check1 = true;
                             }
                             else{
-                                sanitaryPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
+                                driversLicense_image.setImageResource(R.drawable.ic_image_black_24dp);
                                 String text = "Invalid driver's license. Please capture the license clearly";
                                 snackBar(text);
-                                check = false;
+                                check1 = false;
                             }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-            }
+                if(isPicked)
+                {
+                       filepath3 = data.getData();
+                        Bitmap bitmap = null;
+                        try {
+                            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath3);
+                            TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+
+                            if (!textRecognizer.isOperational()) {
+                                Toast.makeText(getApplication(), "No text detected", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+                                SparseArray<TextBlock> items = textRecognizer.detect(frame);
+                                StringBuilder sb = new StringBuilder();
+
+                                for (int ctr = 0; ctr < items.size(); ctr++) {
+                                    TextBlock myItem = items.valueAt(ctr);
+                                    sb.append(myItem.getValue());
+                                    sb.append("\n");
+                                    Log.d("Strings",""+sb.append(myItem.getValue()));
+                                }
+                                if (sb.toString().toLowerCase().contains(mFirstname.toLowerCase()) && sb.toString().toLowerCase().contains(mLastname.toLowerCase())
+                                        && sb.toString().toLowerCase().contains("national bureau of investigation")) {
+                                    Picasso.get().load(filepath3).into(NBIImageView);
+                                    String text = "Valid NBI clearance";
+                                    snackBar(text);
+                                    check = true;
+                                } else {
+                                    NBIImageView.setImageResource(R.drawable.ic_image_black_24dp);
+                                    String text = "Invalid NBI Clearance. Please capture it clearly";
+                                    snackBar(text);
+                                    check = false;
+                                }
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
         }
         else
         {
@@ -355,8 +415,8 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
                                             newToken,
                                             "active");
 
-                                    String startHour = startTimeTextView.getText().toString();
-                                    String endHour = endTimeTextView.getText().toString();
+                                    String startHour = startingHour.getText().toString() + " " + startSpinner.getSelectedItem();
+                                    String endHour = endHour2.getText().toString() + " " + endSpinner.getSelectedItem();
 
                                     WSBusinessInfoFile2 businessInfoFile = new WSBusinessInfoFile2(
                                             userId,
@@ -366,8 +426,6 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
                                             startHour,
                                             endHour,
                                             week.toString(),
-                                            deliveryMethod,
-                                            deliveryFee.getText().toString(),
                                             min_no_of_gallons.getText().toString(),
                                             "active");
 
@@ -483,7 +541,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
     }
 
     public void checkDocuments(){
-        if(sanitaryPermit_image.getDrawable() == null){
+        if(driversLicense_image.getDrawable() == null){
             Toast.makeText(this, "Please fill all the requirments", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -493,7 +551,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
         if(filepath2 != null){
             FirebaseUser user = mAuth.getCurrentUser();
             userId = user.getUid();
-            StorageReference mStorageRef = storageReference.child("dealer_documents").child(userId +"/"+"sanitaryPermitDocument");
+            StorageReference mStorageRef = storageReference.child("dealer_documents").child(userId +"/"+"DriversLicenseDocument");
             mStorageRef.putFile(filepath2).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -510,10 +568,33 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        startActivity(new Intent(WaterPeddlerDocumentActivity.this, LoginActivity.class));
-                                        mAuth.signOut();
-                                        finish();
-                                        Toast.makeText(WaterPeddlerDocumentActivity.this, "Successfully registered", Toast.LENGTH_SHORT).show();
+                                        if(filepath3 != null){
+                                            FirebaseUser user = mAuth.getCurrentUser();
+                                            userId = user.getUid();
+                                            StorageReference mStorageRef = storageReference.child("dealer_documents").child(userId +"/"+"NBIClearanceDocument");
+                                            mStorageRef.putFile(filepath3).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                @Override
+                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                    Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                                                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                        @Override
+                                                        public void onSuccess(Uri uri) {
+                                                            FirebaseDatabase.getInstance().getReference("User_WD_Docs_File").child(userId).child("NBI_clearance").setValue(uri.toString());
+                                                            startActivity(new Intent(WaterPeddlerDocumentActivity.this, LoginActivity.class));
+                                                            mAuth.signOut();
+                                                            finish();
+                                                            Toast.makeText(WaterPeddlerDocumentActivity.this, "Successfully registered", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Toast.makeText(WaterPeddlerDocumentActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    progressDialog.dismiss();
+                                                }
+                                            });
+                                        }
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {

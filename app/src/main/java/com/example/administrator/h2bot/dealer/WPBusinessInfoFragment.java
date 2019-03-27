@@ -72,7 +72,6 @@ public class WPBusinessInfoFragment extends Fragment implements View.OnClickList
         linearLayoutUp = view.findViewById(R.id.linearForUpdate);
         linearLayoutUpNext = view.findViewById(R.id.linearForUpdateNext);
         linearLayoutUpNext.setVisibility(View.GONE);
-        dealerDeliveryMethod = view.findViewById(R.id.dealerDeliveryMethod);
 
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
@@ -101,11 +100,8 @@ public class WPBusinessInfoFragment extends Fragment implements View.OnClickList
                     stationAddress.setText(userWSBusinessInfoFile.getBusiness_address());
                     stationHours.setText(businessTime);
                     stationTelNo.setText(userWSBusinessInfoFile.getBusiness_tel_no());
-                    stationFeePerGal.setText(userWSBusinessInfoFile.getBusiness_delivery_fee());
-                    stationDelivery.setText(userWSBusinessInfoFile.getBusiness_delivery_fee_method());
                     stationStatus.setText(userWSBusinessInfoFile.getBusiness_min_no_of_gallons());
                     dealerdays.setText(userWSBusinessInfoFile.getBusiness_days());
-                    dealerDeliveryMethod.setText(userWSBusinessInfoFile.getBusiness_delivery_fee_method());
                     }
                 else
                 {

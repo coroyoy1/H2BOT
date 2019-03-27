@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.MerchantDataAdapter;
 import com.example.administrator.h2bot.models.UserWSWDWaterTypeFile;
+import com.example.administrator.h2bot.models.WSWDWaterTypeFile2;
 import com.example.administrator.h2bot.waterstation.WSProductAdd;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -39,7 +40,7 @@ public class WPProductListFragment extends Fragment implements View.OnClickListe
     private FloatingActionButton floatButton;
     private WPMerchantDataAdapter PLAdapter;
     private DatabaseReference databaseReferencePL;
-    private List<UserWSWDWaterTypeFile> uploadPL;
+    private List<WSWDWaterTypeFile2> uploadPL;
     private FirebaseAuth mAuth;
 
 
@@ -87,7 +88,7 @@ public class WPProductListFragment extends Fragment implements View.OnClickListe
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot postSnapshot : dataSnapshot.getChildren())
                 {
-                    UserWSWDWaterTypeFile getterSetter = postSnapshot.getValue(UserWSWDWaterTypeFile.class);
+                    WSWDWaterTypeFile2 getterSetter = postSnapshot.getValue(WSWDWaterTypeFile2.class);
                     uploadPL.add(getterSetter);
 
                 }

@@ -510,7 +510,7 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
 
                                 if (confirmPasswordWU.getText().toString().equals("") && passwordWU.getText().toString().equals(""))
                                 {
-                                    showMessage("New password and Confirm password should not be null");
+                                    showMessage("New password and Confirm password should not be empty");
                                     return;
                                 }
 

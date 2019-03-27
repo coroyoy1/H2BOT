@@ -1,22 +1,20 @@
 package com.example.administrator.h2bot.models;
 
-public class WSWDWaterTypeFile {
+public class WSWDWaterTypeFile2 {
     private String water_seller_id;
     private String water_name;
     private String water_type;
-    private String pickup_price;
     private String delivery_price;
     private String water_description;
     private String water_status;
 
-    public WSWDWaterTypeFile() {
+    public WSWDWaterTypeFile2() {
     }
 
-    public WSWDWaterTypeFile(String water_seller_id, String water_name, String water_type, String pickup_price,String delivery_price, String water_description, String water_status) {
+    public WSWDWaterTypeFile2(String water_seller_id, String water_name, String water_type, String delivery_price, String water_description, String water_status) {
         this.water_seller_id = water_seller_id;
         this.water_name = water_name;
         this.water_type = water_type;
-        this.pickup_price = pickup_price;
         this.delivery_price = delivery_price;
         this.water_description = water_description;
         this.water_status = water_status;
@@ -44,14 +42,6 @@ public class WSWDWaterTypeFile {
 
     public void setWater_type(String water_type) {
         this.water_type = water_type;
-    }
-
-    public String getPickup_price() {
-        return pickup_price;
-    }
-
-    public void setPickup_price(String pickup_price) {
-        this.pickup_price = pickup_price;
     }
 
     public String getDelivery_price() {

@@ -17,15 +17,13 @@ public class WSBusinessInfoFile2 {
         this.business_days = business_days;
     }
 
-    private String business_delivery_fee_method;
-    private String business_delivery_fee;
     private String business_min_no_of_gallons;
     private String business_status;
 
     public WSBusinessInfoFile2() {
     }
 
-    public WSBusinessInfoFile2(String business_id, String business_name, String business_address, String business_tel_no, String business_start_time, String business_end_time,String business_days, String business_delivery_fee_method, String business_delivery_fee, String business_min_no_of_gallons, String business_status) {
+    public WSBusinessInfoFile2(String business_id, String business_name, String business_address, String business_tel_no, String business_start_time, String business_end_time,String business_days, String business_min_no_of_gallons, String business_status) {
         this.business_id = business_id;
         this.business_name = business_name;
         this.business_address = business_address;
@@ -33,8 +31,6 @@ public class WSBusinessInfoFile2 {
         this.business_start_time = business_start_time;
         this.business_end_time = business_end_time;
         this.business_days = business_days;
-        this.business_delivery_fee_method = business_delivery_fee_method;
-        this.business_delivery_fee = business_delivery_fee;
         this.business_min_no_of_gallons = business_min_no_of_gallons;
         this.business_status = business_status;
     }
@@ -87,21 +83,6 @@ public class WSBusinessInfoFile2 {
         this.business_end_time = business_end_time;
     }
 
-    public String getBusiness_delivery_fee_method() {
-        return business_delivery_fee_method;
-    }
-
-    public void setBusiness_delivery_fee_method(String business_delivery_fee_method) {
-        this.business_delivery_fee_method = business_delivery_fee_method;
-    }
-
-    public String getBusiness_delivery_fee() {
-        return business_delivery_fee;
-    }
-
-    public void setBusiness_delivery_fee(String business_delivery_fee) {
-        this.business_delivery_fee = business_delivery_fee;
-    }
 
     public String getBusiness_min_no_of_gallons() {
         return business_min_no_of_gallons;

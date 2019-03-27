@@ -37,13 +37,28 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
-                    android:id="@+id/sanitaryPermit_image"
+                    android:id="@+id/driversLicense_image"
                     android:src="@drawable/ic_image_black_24dp"/>
                 <Button
-                    android:id="@+id/sanitaryPermitBtn"
+                    android:id="@+id/driversLicenseBtn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Add Driver's Licernse"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_margin="10dp"
+                    android:background="@android:color/holo_blue_dark"
+                    android:textColor="@android:color/white"/>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:id="@+id/NBIImageView"
+                    android:src="@drawable/ic_image_black_24dp"/>
+                <Button
+                    android:id="@+id/NBIButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Add NBI Clearance"
                     android:layout_marginLeft="50dp"
                     android:layout_marginRight="50dp"
                     android:layout_margin="10dp"
@@ -69,23 +84,22 @@
                         android:orientation="horizontal"
                         android:layout_margin="10dp">
 
-                        <TextView
-                            android:id="@+id/textview2"
+                        <EditText
+                            android:clickable="true"
+                            android:id="@+id/startingHour"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="2dp"
                             android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="Start Time"
+                            android:hint="Start Time"
+                            android:inputType="none"
+                            android:textAlignment="center"
                             android:textSize="18dp" />
-                        <TextView
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:id="@+id/startTimeTextView"
+                        <Spinner
+                            android:id="@+id/startSpinner"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/edit_text_border"
-                            android:textSize="18dp"
-                            android:text="Set Time"/>
+                            android:layout_height="match_parent"></Spinner>
                          </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -93,25 +107,23 @@
                         android:orientation="horizontal"
                         android:layout_margin="10dp">
 
-                        <TextView
-                            android:id="@+id/textview3"
+                        <EditText
+                            android:clickable="true"
+                            android:id="@+id/endHour2"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="End   Time"
-                            android:gravity="center"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginTop="10dp"
                             android:layout_weight="1"
-                            android:textSize="18dp"
-                            />
-
-                        <TextView
-                            android:id="@+id/endTimeTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:background="@drawable/edit_text_border"
-                            android:gravity="center"
-                            android:text="Set Time"
+                            android:hint="End Time"
+                            android:inputType="none"
+                            android:textAlignment="center"
                             android:textSize="18dp" />
+
+                        <Spinner
+                            android:id="@+id/endSpinner"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"></Spinner>
                     </LinearLayout>
                 </LinearLayout>
                 <TextView
@@ -181,46 +193,46 @@
                         android:layout_marginLeft="5dp"
                         android:text="Sun" />
                 </LinearLayout>
-                <TextView
-                    android:textStyle="bold"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Delivery fee method"
-                    android:layout_marginTop="10dp"
-                    android:paddingLeft="10dp"
-                    android:textSize="18dp"/>
-                <RadioGroup
-                    android:id="@+id/deliveryFeeGroup"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <RadioButton
-                        android:id="@+id/perGallon"
-                        android:text="Per Gallon"
-                        android:layout_width="wrap_content"
-                        android:checked="true"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"/>
-                    <RadioButton
-                        android:id="@+id/fixPrice"
-                        android:text="Fix Price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                    <RadioButton
-                        android:id="@+id/free"
-                        android:text="Free Delivery fee"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </RadioGroup>
-                <EditText
-                    android:id="@+id/deliveryFee"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:hint="Delivery fee"
-                    android:inputType="number"
-                    android:textAlignment="center"
-                    android:textSize="18dp" />
+                <!--<TextView-->
+                    <!--android:textStyle="bold"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="Delivery fee method"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:paddingLeft="10dp"-->
+                    <!--android:textSize="18dp"/>-->
+                <!--<RadioGroup-->
+                    <!--android:id="@+id/deliveryFeeGroup"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content">-->
+                    <!--<RadioButton-->
+                        <!--android:id="@+id/perGallon"-->
+                        <!--android:text="Per Gallon"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:checked="true"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginRight="20dp"/>-->
+                    <!--<RadioButton-->
+                        <!--android:id="@+id/fixPrice"-->
+                        <!--android:text="Fix Price"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content" />-->
+                    <!--<RadioButton-->
+                        <!--android:id="@+id/free"-->
+                        <!--android:text="Free Delivery fee"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content" />-->
+                <!--</RadioGroup>-->
+                <!--<EditText-->
+                    <!--android:id="@+id/deliveryFee"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="50dp"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:hint="Delivery fee"-->
+                    <!--android:inputType="number"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:textSize="18dp" />-->
                 <EditText
                     android:id="@+id/min_no_of_gallons"
                     android:layout_weight="1"

@@ -16,6 +16,12 @@ import com.example.administrator.h2bot.models.AffiliateStationOrderModel;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.tpaaffiliate.TPAAcceptedFragment;
 import com.example.administrator.h2bot.tpaaffiliate.TPAAcceptedOrdersInfo;
+import com.example.administrator.h2bot.tpaaffiliate.TPAMapDestinationFragment;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -48,11 +54,24 @@ public class TPAAcceptedOrdersAdapter extends RecyclerView.Adapter<TPAAcceptedOr
         viewHolder.transactionNo.setText(currentData.getOrderNo());
         viewHolder.status.setText(currentData.getStatus());
 
+        DatabaseReference customerFile = FirebaseDatabase.getInstance().getReference("User_File").child(currentData.getCustomerId());
+        customerFile.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                viewHolder.customerNameIN.setText("Customer Name: "+dataSnapshot.child("user_firstname").getValue(String.class)+" "+dataSnapshot.child("user_lastname").getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TPAAcceptedOrdersInfo additem = new TPAAcceptedOrdersInfo();
+                TPAMapDestinationFragment additem = new TPAMapDestinationFragment();
                 AppCompatActivity activity = (AppCompatActivity)v.getContext();
                 activity.getSupportFragmentManager()
                         .beginTransaction()
@@ -79,14 +98,14 @@ public class TPAAcceptedOrdersAdapter extends RecyclerView.Adapter<TPAAcceptedOr
         return mUploads.size();
     }
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView transactionNo, status, details,address, customername, contactno, deliveryfee,itemquantity, pricepergallon,service,totalprice,watertype;
+        public TextView customerNameIN,transactionNo, status, details,address, customername, contactno, deliveryfee,itemquantity, pricepergallon,service,totalprice,watertype;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             transactionNo = itemView.findViewById(R.id.transactionNoIN);
             status = itemView.findViewById(R.id.transactionStatusIN);
-
+            customerNameIN = itemView.findViewById(R.id.customerNameIN);
             itemView.setOnClickListener(new View    .OnClickListener() {
                 @Override
                 public void onClick(View v) {

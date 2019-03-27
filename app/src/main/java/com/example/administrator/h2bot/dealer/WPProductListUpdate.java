@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -21,19 +22,27 @@ import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.UserWSWDWaterTypeFile;
+import com.example.administrator.h2bot.models.WSWDWaterTypeFile;
+import com.example.administrator.h2bot.models.WSWDWaterTypeFile2;
 import com.example.administrator.h2bot.waterstation.WSProductListFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WPProductListUpdate extends Fragment implements View.OnClickListener {
 
-    EditText productUpdateName, productUpdatePrice;
-    EditText productUpdateStatus;
-    TextView productUpdateType;
+    TextInputLayout productName, productPrice, productDescription;
+
+    TextView productUpdateStatus, productUpdateType;
     Button backUpItem, updateUpItem;
     RadioButton valid, invalid;
 
@@ -41,16 +50,28 @@ public class WPProductListUpdate extends Fragment implements View.OnClickListene
     FirebaseAuth mAuth;
     FirebaseUser firebaseUser;
     DatabaseReference databaseReference;
-
+    List<String> list;
 
     String statusGet;
     String keyGet;
+
     ProgressDialog progressDialog;
+    String[] arraySpinner;
+    ArrayAdapter<String> adapter;
+
+    String itemPr;
+    String itemTy;
+    String itemUi;
+    String itemSt;
+    String itemD;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wp_productlistintentupdate, container, false);
+
+        list = new ArrayList<String>();
+        arraySpinner = new String[]{};
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
@@ -63,8 +84,11 @@ public class WPProductListUpdate extends Fragment implements View.OnClickListene
         databaseReference = firebaseDatabase.getReference("User_WS_WD_Water_Type_File");
         firebaseUser = mAuth.getCurrentUser();
 
-        productUpdatePrice = view.findViewById(R.id.waterUpdatePrice);
-        productUpdateType = view.findViewById(R.id.waterUpdateSpinner);
+        //Edit text Text Layout
+        productName = view.findViewById(R.id.waterNameUPW);
+        productDescription= view.findViewById(R.id.waterDescriptionUWP);
+        productPrice = view.findViewById(R.id.waterPriceUWP);
+        productUpdateType = view.findViewById(R.id.waterTypeUWP);
 
         valid = view.findViewById(R.id.avaiableRadio);
         invalid = view.findViewById(R.id.unavailableRadio);
@@ -75,107 +99,112 @@ public class WPProductListUpdate extends Fragment implements View.OnClickListene
         backUpItem.setOnClickListener(this);
         updateUpItem.setOnClickListener(this);
 
-        String[] arraySpinner = new String[]{
-                "Mineral", "Distilled", "Purified", "Alkaline"
-        };
-
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            String itemPr = bundle.getString("ItemPricePLI");
-            String itemTy = bundle.getString("ItemTypePLI");
-            String itemUi = bundle.getString("ItemUidPLI");
-            String itemSt = bundle.getString("ItemStatusPLI");
-            productUpdateType.setText(itemTy);
-            productUpdatePrice.setText(itemPr);
-            if(itemSt.equals("active"))
-            {
+            itemPr = bundle.getString("ItemPricePLI");
+            itemTy = bundle.getString("ItemTypePLI");
+            itemUi = bundle.getString("ItemUidPLI");
+            itemSt = bundle.getString("ItemStatusPLI");
+            itemD = bundle.getString("ItemDesc");
+            if (itemSt.equals("active")) {
                 valid.setChecked(true);
                 invalid.setChecked(false);
                 statusGet = "active";
-            }
-            else
-            {
+            } else {
                 valid.setChecked(false);
                 invalid.setChecked(true);
                 statusGet = "inactive";
             }
-        }
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(event.getAction() == KeyEvent.ACTION_DOWN)
-                {
-                    if (keyCode == KeyEvent.KEYCODE_BACK)
+
+            productDescription.getEditText().setText(itemD);
+            productUpdateType.setText(itemTy);
+            productPrice.getEditText().setText(itemPr);
+
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File");
+            reference.child(firebaseUser.getUid()).child(itemTy).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    WSWDWaterTypeFile wswdWaterTypeFile = dataSnapshot.getValue(WSWDWaterTypeFile.class);
+                    if (wswdWaterTypeFile != null)
                     {
-                        attemptToExit();
-                        return true;
+                        productDescription.getEditText().setText(wswdWaterTypeFile.getWater_description());
+                        productName.getEditText().setText(wswdWaterTypeFile.getWater_name());
                     }
                 }
-                return false;
-            }
-        });
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        }
 
         return view;
     }
 
-    public void updateData()
-    {
+    public void updateData() {
         String statY = "";
-        if(valid.isChecked())
-        {
-            statY = "active";
+        if (valid.isChecked()) {
+            statY = "Available";
+        } else if (invalid.isChecked()) {
+            statY = "Unavailable";
         }
-        else if(invalid.isChecked())
-        {
-            statY = "inactive";
-        }
-        String prodType = productUpdateType.getText().toString();
-        String prodPrice = productUpdatePrice.getText().toString();
 
-        if(prodType.isEmpty() && prodPrice.isEmpty())
-        {
+        String prodType = productUpdateType.getText().toString().trim();
+        String prodPrice = productPrice.getEditText().getText().toString().trim();
+        String prodName = productName.getEditText().getText().toString();
+        String prodDescription2 = productDescription.getEditText().getText().toString();
+
+        if (prodType.isEmpty() && prodPrice.isEmpty()) {
             showMessage("Please fill up all the fields");
             return;
-        }
-        else
-        {
-            dataConnection(prodType, prodPrice, statY);
+        } else {
+            dataConnection(prodName, prodType, prodPrice, prodDescription2, statY);
         }
 
     }
 
-    private void dataConnection(String prodType, String prodPrice, String prodStat) {
+    //Display Data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    //CloseRetrieving Data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    private void dataConnection(String prodName, String prodType, String prodPrice, String prodDescription2, String statY) {
         progressDialog.show();
-        UserWSWDWaterTypeFile userWSWDWaterTypeFile = new UserWSWDWaterTypeFile(
+        WSWDWaterTypeFile2 userWSWDWaterTypeFile = new WSWDWaterTypeFile2(
                 firebaseUser.getUid(),
+                prodName,
                 prodType,
                 prodPrice,
-                prodStat
+                prodDescription2,
+                statY
         );
         databaseReference.child(firebaseUser.getUid()).child(prodType).setValue(userWSWDWaterTypeFile)
-            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    showMessage("Product updated successfully");
-                    WPProductListFragment detail = new WPProductListFragment();
-                    AppCompatActivity activity = (AppCompatActivity)getContext();
-                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_wp, detail).addToBackStack(null).commit();
-                    progressDialog.dismiss();
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    showMessage("Failed to update, Please check your internet connection");
-                    progressDialog.dismiss();
-                }
-            });
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        showMessage("Product updated successfully");
+                        WPProductListFragment additem = new WPProductListFragment();
+                        AppCompatActivity activity = (AppCompatActivity)getContext();
+                        activity.getSupportFragmentManager()
+                                .beginTransaction()
+                                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                                .replace(R.id.fragment_container_wp, additem)
+                                .addToBackStack(null)
+                                .commit();
+                        progressDialog.dismiss();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        showMessage("Failed to Update, Please check your internet connection");
+                        progressDialog.dismiss();
+                    }
+                });
     }
 
     private void showMessage(String s) {
-        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
     }
 
 
@@ -198,23 +227,5 @@ public class WPProductListUpdate extends Fragment implements View.OnClickListene
                 break;
 
         }
-    }
-
-    public void attemptToExit()
-    {
-
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
-                        getActivity().finish();
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        //No button clicked
-                        break;
-                }
-            }
-        };
     }
 }

@@ -147,6 +147,7 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
                 productNameString,
                 productTypeString,
                 productPriceString,
+                "",
                 productDescriptionString,
                 "active"
         );
