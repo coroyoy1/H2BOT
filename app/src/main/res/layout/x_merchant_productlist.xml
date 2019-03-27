@@ -1,29 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card_view_top"
-    android:layout_width="match_parent"
     android:layout_margin="10dp"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
     card_view:cardCornerRadius="6dp"
-    card_view:contentPadding="25dp"
     card_view:cardElevation="4dp"
     card_view:cardMaxElevation="6dp"
-    card_view:cardBackgroundColor="#0077ff">
+    card_view:cardBackgroundColor="@android:color/white">
+
+    <FrameLayout
+        android:background="@drawable/cardviewborder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
     <LinearLayout
+        android:layout_gravity="center"
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
+            android:id="@+id/PLIname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:text=""
-            android:textSize="18dp"
             android:layout_gravity="center"
-            android:id="@+id/PLIapitem"/>
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:text="none"
+            android:textAlignment="center"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textSize="18dp" />
         <!--<TextView-->
             <!--android:layout_weight="1"-->
             <!--android:layout_width="wrap_content"-->
@@ -35,11 +44,12 @@
             <!--android:layout_gravity="center"-->
             <!--android:id="@+id/PLItemNo"/>-->
         <TextView
+            android:textAlignment="center"
             android:layout_weight="1"
             android:layout_marginLeft="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/holo_blue_dark"
             android:text="no;"
             android:textSize="18dp"
             android:layout_gravity="center"

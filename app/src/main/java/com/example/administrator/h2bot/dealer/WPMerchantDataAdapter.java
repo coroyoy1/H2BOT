@@ -80,7 +80,7 @@ public class WPMerchantDataAdapter extends RecyclerView.Adapter<WPMerchantDataAd
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
-           PLItemNoHolder = itemView.findViewById(R.id.PLIapitem);
+           PLItemNoHolder = itemView.findViewById(R.id.PLIname);
             PLItemNameHolder = itemView.findViewById(R.id.PLItemName);
         }
     }

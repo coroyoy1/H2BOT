@@ -20,9 +20,9 @@ import java.util.List;
 public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapter.ImageViewHolder> {
 
     private Context contextHolder;
-    private List<UserWSWDWaterTypeFile>uploadsHolder;
+    private List<WSWDWaterTypeFile>uploadsHolder;
 
-    public MerchantDataAdapter(Context context, List<UserWSWDWaterTypeFile>uploads)
+    public MerchantDataAdapter(Context context, List<WSWDWaterTypeFile>uploads)
     {
         contextHolder = context;
         uploadsHolder = uploads;
@@ -36,13 +36,16 @@ public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapte
 
     @Override
     public void onBindViewHolder(@NonNull MerchantDataAdapter.ImageViewHolder imageViewHolder, int i) {
-        final UserWSWDWaterTypeFile currentData = uploadsHolder.get(i);
+        final WSWDWaterTypeFile currentData = uploadsHolder.get(i);
         imageViewHolder.PLItemNameHolder.setText(currentData.getWater_type());
+        imageViewHolder.PLItemNoHolder.setText(currentData.getWater_name());
 
-        final String itemPrice = currentData.getWater_price_per_gallon();
+        final String itemPrice = currentData.getPickup_price();
+        final String itemDelivery = currentData.getDelivery_price();
         final String itemType = currentData.getWater_type();
         final String itemUid = currentData.getWater_seller_id();
         final String itemStatus = currentData.getWater_status();
+        final String itemDescription = currentData.getWater_description();
 
         imageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +64,8 @@ public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapte
                 args.putString("ItemTypeMDA", itemType);
                 args.putString("ItemUidMDA", itemUid);
                 args.putString("ItemStatusMDA", itemStatus);
+                args.putString("ItemDeliveryMDA", itemDelivery);
+                args.putString("ItemDescriptionMDA", itemDescription);
                 additem.setArguments(args);
                 updateitem.setArguments(args);
             }
@@ -77,7 +82,7 @@ public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapte
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
-           PLItemNoHolder = itemView.findViewById(R.id.PLIapitem);
+            PLItemNoHolder = itemView.findViewById(R.id.PLIname);
             PLItemNameHolder = itemView.findViewById(R.id.PLItemName);
         }
     }

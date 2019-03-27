@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.models.StationWaterTypeFile;
 import com.example.administrator.h2bot.models.UserWSWDWaterTypeFile;
 import com.example.administrator.h2bot.models.WSWDWaterTypeFile;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,7 +35,7 @@ import java.util.List;
 
 public class WSProductAdd extends Fragment implements View.OnClickListener {
 
-    TextInputLayout waterProductName, waterProductPrice, waterProductDescription;
+    TextInputLayout waterProductName, waterProductDescription, waterProductPickup, waterProductDeliveryPrice;
     TextInputLayout waterProductType;
     Button backProductButton, addProductButton;
 
@@ -58,9 +59,10 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
 
         //Text Layout Edit text
         waterProductName = view.findViewById(R.id.waterProductName);
-        waterProductPrice = view.findViewById(R.id.waterPrice);
         waterProductType = view.findViewById(R.id.waterSpinner);
         waterProductDescription = view.findViewById(R.id.waterDescription);
+        waterProductPickup = view.findViewById(R.id.waterPickUp);
+        waterProductDeliveryPrice = view.findViewById(R.id.waterDeliveryPrice);
 
 
         backProductButton = view.findViewById(R.id.waterBack);
@@ -88,8 +90,14 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
     {
         String productNameString = waterProductName.getEditText().getText().toString();
         String productTypeString = waterProductType.getEditText().getText().toString();
-        String productPriceString = waterProductPrice.getEditText().getText().toString();
         String productDescriptionString = waterProductDescription.getEditText().getText().toString();
+        String productPickupString = waterProductPickup.getEditText().getText().toString();
+        String productDeliveryPriceString = waterProductDeliveryPrice.getEditText().getText().toString();
+
+        if (productDeliveryPriceString.isEmpty())
+        {
+            productDeliveryPriceString = "0";
+        }
 
         if (productNameString.isEmpty())
         {
@@ -99,13 +107,13 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
         {
             showMessages("Fields should not be empty!");
         }
-        else if (productPriceString.isEmpty())
+        else if (productPickupString.isEmpty())
         {
-            showMessages("Fields should not be empty!");
+            showMessages("Pick up price should not be empty");
         }
         else
         {
-            saveData(productNameString, productTypeString, productPriceString, productDescriptionString);
+            saveData(productNameString, productTypeString, productDescriptionString, productPickupString, productDeliveryPriceString);
         }
 
     }
@@ -135,7 +143,7 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
                 });
     }
 
-    private void saveData(String productNameString, String productTypeString, String productPriceString, String productDescriptionString)
+    private void saveData(String productNameString, String productTypeString, String productDescriptionString, String productPickupString, String productDeliveryPriceString)
     {
         isExists = true;
         if (productDescriptionString.isEmpty())
@@ -146,10 +154,10 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
                 firebaseUser.getUid(),
                 productNameString,
                 productTypeString,
-                productPriceString,
-                "",
+                productPickupString,
+                productDeliveryPriceString,
                 productDescriptionString,
-                "active"
+                "available"
         );
         DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File");
         dataRef.child(firebaseUser.getUid()).child(productTypeString).setValue(userWSWDWaterTypeFile1)
@@ -179,52 +187,6 @@ public class WSProductAdd extends Fragment implements View.OnClickListener {
                     }
                 });
     }
-
-
-//    public void retrieveData()
-//    {
-//        List<String> array1 = new ArrayList<String>();
-//        List<String> array2 = new ArrayList<String>();
-//
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Water_Type_File");
-//        databaseReference
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
-//                        {
-//                            String userTypes = dataSnapshot1.child("prodName").getValue(String.class);
-//                            array1.add(userTypes);
-//                        }
-//                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File");
-//                        reference.child(firebaseUser.getUid())
-//                                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                                    @Override
-//                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                                        for (DataSnapshot dataSnapshot2 : dataSnapshot.getChildren())
-//                                        {
-//                                            String userTypes2 = dataSnapshot2.child("water_type").getValue(String.class);
-//                                            array2.add(userTypes2);
-//                                        }
-//                                        array1.removeAll(array2);
-//                                        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, array1);
-//                                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                                        waterProductType.setAdapter(adapter);
-//                                    }
-//
-//                                    @Override
-//                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                                    }
-//                                });
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
-//    }
 
     private void showMessages(String s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();

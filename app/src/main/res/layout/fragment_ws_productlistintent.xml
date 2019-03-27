@@ -47,7 +47,7 @@
                         android:text="Product Name"
                         android:textAlignment="center"
                         android:textColor="@android:color/black"
-                        android:textSize="24dp" />
+                        android:textSize="21dp" />
                     <TextView
                         android:id="@+id/PLIprice"
                         android:layout_width="match_parent"
@@ -55,8 +55,18 @@
                         android:layout_marginLeft="40dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginRight="40dp"
-                        android:text="Price"
-                        android:textSize="24dp" />
+                        android:text="Pickup Price"
+                        android:textSize="18dp" />
+
+                    <TextView
+                        android:id="@+id/PLIdelivery"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="40dp"
+                        android:text="Delivery Price"
+                        android:textSize="18dp" />
 
                     <TextView
                         android:id="@+id/PLItype"
@@ -66,7 +76,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginRight="40dp"
                         android:text="Type"
-                        android:textSize="24dp" />
+                        android:textSize="18dp" />
 
                     <TextView
                         android:id="@+id/PLIStatus"
@@ -76,7 +86,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginRight="40dp"
                         android:text="Status"
-                        android:textSize="24dp" />
+                        android:textSize="18dp" />
 
                     <TextView
                         android:id="@+id/PLIDescription"
@@ -125,7 +135,7 @@
                         android:layout_weight="1"
                         android:layout_marginRight="100dp"
                         android:layout_marginLeft="100dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="10dp"
                         android:background="@drawable/z_redbutton"
                         android:text="Delete Item"
                         android:textColor="@android:color/white"

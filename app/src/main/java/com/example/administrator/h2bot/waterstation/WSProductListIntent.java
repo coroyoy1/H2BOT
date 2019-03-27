@@ -31,7 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 public class WSProductListIntent extends Fragment implements View.OnClickListener {
-    TextView itemN, itemP, itemU, itemS, itemName, itemDescription;
+    TextView itemN, itemP, itemU, itemS, itemName, itemDescription, itemD;
     Button backBu, updateBu, deleteButton;
     String itemUi, itemNameString, itemPriceString, itemTypeString, itemStatusString, itemKeyString;
 
@@ -42,6 +42,7 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
     DatabaseReference databaseReference;
 
     ProgressDialog progressDialog;
+    String itemDeliveryString;
 
     @Nullable
     @Override
@@ -50,6 +51,7 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
         itemP = view.findViewById(R.id.PLIprice);
         itemU = view.findViewById(R.id.PLItype);
         itemS = view.findViewById(R.id.PLIStatus);
+        itemD = view.findViewById(R.id.PLIdelivery);
         itemDescription = view.findViewById(R.id.PLIDescription);
         itemName = view.findViewById(R.id.PLIProdName);
 
@@ -77,25 +79,30 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
             String itemPr = bundle.getString("ItemPriceMDA");
             String itemTy = bundle.getString("ItemTypeMDA");
             String itemSt = bundle.getString("ItemStatusMDA");
+            String itemDel = bundle.getString("ItemDeliveryMDA");
+            String itemDesc = bundle.getString("ItemDescriptionMDA");
 
             String originSt = "";
-            if (itemSt.equals("active"))
+            if (itemSt.equals("available"))
             {
                 originSt = "Available";
             }
-            else if (itemSt.equals("inactive"))
+            else if (itemSt.equals("unavailable"))
             {
                 originSt = "Unavailable";
             }
 
             itemUi = bundle.getString("ItemUidMDA");
-            itemP.setText("  Price: "+itemPr);
-            itemU.setText("  Type: "+itemTy);
-            itemS.setText("  Status: "+originSt);
+            itemP.setText("Pickup Price: Php "+itemPr);
+            itemU.setText("Water Type: "+itemTy);
+            itemS.setText("Status: "+originSt);
+            itemD.setText("Delivery Price: Php " +itemDel);
+            itemDescription.setText("Description: "+itemDesc);
 
             itemPriceString = bundle.getString("ItemPriceMDA");
             itemTypeString = bundle.getString("ItemTypeMDA");
             itemStatusString = bundle.getString("ItemStatusMDA");
+            itemDeliveryString = bundle.getString("itemDeliveryMDA");
 
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File");
             databaseReference.child(firebaseUser.getUid()).child(itemTy)
@@ -188,6 +195,7 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
                 String typeString = DataType(itemTypeString);
                 String priceString = DataPrice(itemPriceString);
                 String statusString = DataStatus(itemStatusString);
+
                 WSProductListUpdate updateitem = new WSProductListUpdate();
                 AppCompatActivity activityapp = (AppCompatActivity) v.getContext();
                 activityapp.getSupportFragmentManager()
