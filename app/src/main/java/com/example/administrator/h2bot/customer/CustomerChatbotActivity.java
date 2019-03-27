@@ -202,7 +202,8 @@ public class CustomerChatbotActivity extends AppCompatActivity {
                 queryEditText.setText("You can't reply on this conversation.");
                 queryEditText.setEnabled(false);
                 sendBtn.setEnabled(false);
-            } else if (botReply.equalsIgnoreCase("Your order is now on validation. We will notify you for more details.")) {
+            }
+            else if (botReply.equalsIgnoreCase("Your order is now on validation. We will notify you for more details.")) {
                 Button okayBtn;
                 dialog.setContentView(R.layout.customer_chatbot_order_info_popup);
                 dialog.setCanceledOnTouchOutside(false);
@@ -212,73 +213,6 @@ public class CustomerChatbotActivity extends AppCompatActivity {
                 okayBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        merchantDeviceTokenRef.child(stationId).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                device_token_id = dataSnapshot.child("user_device_token").getValue(String.class);
-                                CustomerToMerchantNotifModel customerToMerchantNotifModel;
-                                customerToMerchantNotifModel = new CustomerToMerchantNotifModel(stationId, device_token_id);
-
-                                notifRef.child(stationId).setValue(customerToMerchantNotifModel).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Toast.makeText(CustomerChatbotActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(CustomerChatbotActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                Toast.makeText(CustomerChatbotActivity.this, "Database Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-//                        customerFileRef.child(myAuth.getCurrentUser().getUid()).child(stationId).addValueEventListener(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                                for(DataSnapshot data: dataSnapshot.getChildren()){
-//                                    OrderFileModel orderFileModel = data.getValue(OrderFileModel.class);
-//                                    TransactionNoModel noOfOrders = data.getValue(TransactionNoModel.class);
-//                                    totalTransactionNo.add(noOfOrders);
-//                                    orderFile.add(orderFileModel);
-//                                    orderFileModel.setOrderNo(data.child("order_no").getValue(String.class));
-//                                    myOrderNo = orderFileModel.getOrderNo();
-//                                }
-//                                orderNo = String.format("%08d", totalTransactionNo.size());
-//                                Toast.makeText(CustomerChatbotActivity.this, "Order no: " + myOrderNo, Toast.LENGTH_SHORT).show();
-//                                myAuth.getCurrentUser().getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
-//                                    @Override
-//                                    public void onSuccess(GetTokenResult getTokenResult) {
-//                                        String token_id = getTokenResult.getToken();
-//                                    }
-//                                });
-//                                CustomerToMerchantNotifModel notify = new CustomerToMerchantNotifModel(
-//                                        userId, stationId, myOrderNo, userId,"", stationId,
-//                                        "New order received", myOrderNo, "Pending", token_id
-//                                );
-//                                notifRef.child(userId).child(stationId).child(myOrderNo).setValue(notify)
-//                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                    @Override
-//                                    public void onSuccess(Void aVoid) {
-//                                        Toast.makeText(CustomerChatbotActivity.this, "Order sent to the station", Toast.LENGTH_SHORT).show();
-//                                    }
-//                                }).addOnFailureListener(new OnFailureListener() {
-//                                    @Override
-//                                    public void onFailure(@NonNull Exception e) {
-//                                        Toast.makeText(CustomerChatbotActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                                    }
-//                                });
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                                Toast.makeText(CustomerChatbotActivity.this, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-//                            }
-//                        });
                         dialog.dismiss();
                         startActivity(new Intent(CustomerChatbotActivity.this, CustomerMainActivity.class));
                     }
