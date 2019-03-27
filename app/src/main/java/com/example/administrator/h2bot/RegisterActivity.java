@@ -302,10 +302,8 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkAllInput(boolState);
-                if(!(RegisterActivity.this).isFinishing()) {
-                    progressDialog.show();
-                }
+//                checkAllInput(boolState);
+
                 String firstNameString = firstNameRegister.getText().toString();
                 String lastNameString = lastNameRegister.getText().toString();
                 String addressString = addressRegister.getText().toString();
@@ -333,6 +331,9 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 else{
                     getLocationSetter();
                     if(isAddressExist){
+                        if(!(RegisterActivity.this).isFinishing()) {
+                            progressDialog.show();
+                        }
                         CreateAccount(emailAddressString, passwordString);
                     }
                     else{
@@ -503,8 +504,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         List<Address> address;
         Address LocationAddress = null;
         String locateAddress = addressRegister.getText().toString();
-        Toast.makeText(this, "locateAddress = " + locateAddress, Toast.LENGTH_SHORT).show();
-
         try {
             address = coder.getFromLocationName(locateAddress, 5);
 
