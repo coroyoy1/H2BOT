@@ -55,7 +55,26 @@ public class PendingListAdapter extends RecyclerView.Adapter<PendingListAdapter.
         final OrderModel currentData = uploadHolder.get(i);
         String transactionNo = currentData.getOrder_no();
         String transactionStatus = currentData.getOrder_status();
+        String transactionCustomer = currentData.getOrder_customer_id();
 
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File");
+        databaseReference.child(transactionCustomer)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        UserFile userFile = dataSnapshot.getValue(UserFile.class);
+                        if (userFile != null)
+                        {
+                            String customerName = userFile.getUser_lastname() + ", " + userFile.getUser_firstname();
+                            imageViewholder.transactionCustomerText.setText(customerName);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
 
 
         imageViewholder.transactionNoText.setText(transactionNo);

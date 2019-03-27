@@ -93,7 +93,9 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
                 TextView order_no, water_type, price_per_gallon, qty, address, service_type, delivery_date,
                 delivery_fee, status, total_amt, qr_code, order_type, date_issued, deliveryFeePerGal, partialAmount, methodText;
                 Button cancelBtn, viewQrQodeBtn;
-                qrCode = customerId +"/"+ stationId + "/" + orderNo;
+                qrCode = customerId.trim().replace(" ", "") +"/"+
+                        stationId.trim().replace(" ", "") + "/" +
+                        orderNo.trim().replace(" ", "");
 
                 myDialog.setContentView(R.layout.customer_order_details_custom_dialog);
                 order_no = myDialog.findViewById(R.id.order_no);

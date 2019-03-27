@@ -24,12 +24,16 @@ import android.widget.Toast;
 import com.example.administrator.h2bot.tpaaffiliate.TPADocumentActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -49,6 +53,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -338,16 +343,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
             }
         });
 
-        //GoogleLocation
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(this, this)
-                .build();
-//        PlaceAutoCompleteAdapter placeAutoCompleteAdapter = new PlaceAutoCompleteAdapter(this, mGoogleApiClient, LAT_LNG_BOUNDS, null);
-        autocompleteAdapter = new PlaceAutoCompleteAdapter(RegisterActivity.this, mGoogleApiClient, LAT_LNG_BOUNDS,null);
-        addressRegister.setAdapter(autocompleteAdapter);
     }
 
     @Override
@@ -398,6 +393,11 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     }
 
     private void CreateAccount(String emailString, String passwordString){
+        if (passwordRegister.getText().toString().toLowerCase().trim().equals(confirmPassword.getText().toString().toLowerCase().trim()))
+        {
+            showMessage("Both password should be the same");
+            return;
+        }
         mAuth.createUserWithEmailAndPassword(emailString, passwordString)
             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override

@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static java.security.AccessController.getContext;
+
 public class WaterStationMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
@@ -86,12 +88,42 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
         nav_inprogress_ws=(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
                 findItem(R.id.nav_inprogress_ws));
         if(savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
-                    new WSDashboard()).commit();
-            Objects.requireNonNull(getSupportActionBar()).setTitle("Dashboard");
+            checkIfHaveProduct();
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
+//                    new WSDashboard()).commit();
+//            Objects.requireNonNull(getSupportActionBar()).setTitle("Dashboard");
         }
 
+
        initializeCountDrawer();
+    }
+
+    private void checkIfHaveProduct()
+    {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File");
+        databaseReference.child(mAuth.getCurrentUser().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists())
+                        {
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
+                                    new WSDashboard()).commit();
+                            Objects.requireNonNull(getSupportActionBar()).setTitle("Dashboard");
+                        }
+                        else
+                        {
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
+                                    new WSProductAdd()).commit();
+                            Objects.requireNonNull(getSupportActionBar()).setTitle("Dashboard");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     private void initializeCountDrawer(){

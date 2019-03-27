@@ -133,6 +133,8 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         sanitaryPermit_image = findViewById(R.id.sanitaryPermit_image);
         physicochemicalPermit_Image = findViewById(R.id.physicochemicalPermit_image);
         birPermit_Image = findViewById(R.id.birPermit_image);
+        birbutton.setVisibility(View.GONE);
+        birPermit_Image.setVisibility(View.GONE);
 
         //EditText
         stationName = findViewById(R.id.stationName);
