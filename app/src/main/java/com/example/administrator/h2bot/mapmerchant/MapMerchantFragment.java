@@ -52,6 +52,7 @@ import com.example.administrator.h2bot.waterstation.WSBroadcast;
 import com.example.administrator.h2bot.waterstation.WSInProgressFragment;
 import com.example.administrator.h2bot.waterstation.WSPendingOrdersFragment;
 import com.example.administrator.h2bot.waterstation.WSTransactionsFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
 import com.example.administrator.h2bot.R;
@@ -683,6 +684,17 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                                                                 String fullname = userFile.getUser_lastname()+", "+userFile.getUser_firstname();
                                                                 map.addMarker(new MarkerOptions().position(latLng).snippet("Customer Name: "+fullname+"\n"+"Address: "+address)
                                                                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                                                                float zoomLevel = 16.0f;
+                                                                CameraPosition cameraPosition = new CameraPosition.Builder()
+                                                                        .target(latLng)
+                                                                        .zoom(zoomLevel)
+                                                                        .build();
+
+                                                                map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                                                                map.setOnMyLocationButtonClickListener(() -> {
+                                                                    map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                                                                    return true;
+                                                                });
                                                             }
                                                         }
 
