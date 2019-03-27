@@ -105,7 +105,7 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
     Geocoder mGeocoder;
     List<Address> myListAddresses;
     List<UserWSBusinessInfoFile> myBusinessInfos;
-    String myAddresses, stationName, userType, stationId;
+    String myAddresses, stationName, userType, stationId, ordernoAffiliate, stationidAffiliate, customeridAffiliate;
     String addresses;
     LatLng latLong = null;
     LatLng mLatLng = null;
@@ -141,6 +141,9 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
         if(bundle != null) {
             transactNum = bundle.getString("transactionno");
             customerNo = bundle.getString("transactioncustomer");
+            ordernoAffiliate = bundle.getString("orderAffiliate");
+            stationidAffiliate = bundle.getString("stationidAffiliate");
+            customeridAffiliate = bundle.getString("customeridAffiliate");
         }
         return view;
     }
@@ -202,18 +205,14 @@ public class MapMerchantFragmentRenew extends Fragment implements OnMapReadyCall
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                             UserLocationAddress userLocationAddress = dataSnapshot.getValue(UserLocationAddress.class);
-                                            Log.d("Polyline",""+userLocationAddress.getUser_id()+","+userLocationAddress.getUser_longtitude());
                                             if(userLocationAddress != null)
                                             {
-                                                Log.d("Pasudla","gago");
                                                 double latitude = Double.parseDouble(userLocationAddress.getUser_latitude());
                                                 double longtitude = Double.parseDouble(userLocationAddress.getUser_longtitude());
                                                 LatLng latLng = new LatLng(latitude, longtitude);
                                                 if(mLatLng !=null)
                                                 {
                                                     TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
-                                                    Log.d("pLatLng",""+pLatLng);
-                                                    Log.d("latLng",""+latLng);
                                                     taskRequestDirections.execute(getRequestURL(pLatLng, latLng));
                                                     DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("User_File");
                                                     reference1.child(customerId).addValueEventListener(new ValueEventListener() {

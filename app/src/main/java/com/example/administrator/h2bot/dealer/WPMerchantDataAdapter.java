@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.UserWSWDWaterTypeFile;
+import com.example.administrator.h2bot.models.WSWDWaterTypeFile2;
 import com.example.administrator.h2bot.waterstation.WSProductListIntent;
 import com.example.administrator.h2bot.waterstation.WSProductListUpdate;
 
@@ -20,9 +21,9 @@ import java.util.List;
 public class WPMerchantDataAdapter extends RecyclerView.Adapter<WPMerchantDataAdapter.ImageViewHolder> {
 
     private Context contextHolder;
-    private List<UserWSWDWaterTypeFile>uploadsHolder;
+    private List<WSWDWaterTypeFile2>uploadsHolder;
 
-    public WPMerchantDataAdapter(Context context, List<UserWSWDWaterTypeFile>uploads)
+    public WPMerchantDataAdapter(Context context, List<WSWDWaterTypeFile2>uploads)
     {
         contextHolder = context;
         uploadsHolder = uploads;
@@ -36,12 +37,13 @@ public class WPMerchantDataAdapter extends RecyclerView.Adapter<WPMerchantDataAd
 
     @Override
     public void onBindViewHolder(@NonNull WPMerchantDataAdapter.ImageViewHolder imageViewHolder, int i) {
-        final UserWSWDWaterTypeFile currentData = uploadsHolder.get(i);
+        final WSWDWaterTypeFile2 currentData = uploadsHolder.get(i);
         imageViewHolder.PLItemNameHolder.setText(currentData.getWater_type());
 
-        final String itemPrice = currentData.getWater_price_per_gallon();
+        final String itemPrice = currentData.getDelivery_price();
         final String itemType = currentData.getWater_type();
         final String itemUid = currentData.getWater_seller_id();
+        final String itemDescription = currentData.getWater_description();
         final String itemStatus = currentData.getWater_status();
 
         imageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -61,6 +63,7 @@ public class WPMerchantDataAdapter extends RecyclerView.Adapter<WPMerchantDataAd
                 args.putString("ItemTypeMDA", itemType);
                 args.putString("ItemUidMDA", itemUid);
                 args.putString("ItemStatusMDA", itemStatus);
+                args.putString("ItemDesc", itemDescription);
                 additem.setArguments(args);
                 updateitem.setArguments(args);
             }

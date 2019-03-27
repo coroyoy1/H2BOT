@@ -288,7 +288,7 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
                 showMessages(result.getContents());
                 transactNoScan = result.getContents();
                 progressDialog.show();
-                if(transactNoScan.equals(transactionNo))
+                if(transactNoScan.equals(firebaseUser.getUid()+"/"+customerNo+"/"+transactionNo))
                 {
                     updateOrder(transactNoScan);
                 }

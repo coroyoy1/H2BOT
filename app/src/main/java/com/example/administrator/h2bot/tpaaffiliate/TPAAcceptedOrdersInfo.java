@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.Gravity;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.dealer.WPInProgressAccept;
+import com.example.administrator.h2bot.maps.MapMerchantFragmentRenew;
 import com.example.administrator.h2bot.models.AffiliateStationOrderModel;
 import com.example.administrator.h2bot.models.CaptureActivityPortrait;
 import com.google.firebase.auth.FirebaseAuth;
@@ -66,38 +68,7 @@ public class TPAAcceptedOrdersInfo extends Fragment implements View.OnClickListe
         View view = inflater.inflate(R.layout.fragment_tpaaccepted_orders_info, container, false);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        orderNo = view.findViewById(R.id.orderNo);
-        customerName = view.findViewById(R.id.customerName);
-        customerAddress = view.findViewById(R.id.customerAddress);
-        customerContactNo = view.findViewById(R.id.customerContactNo);
-        waterStationName = view.findViewById(R.id.waterStationName);
-        stationAddress = view.findViewById(R.id.stationAddress);
-        stationContactNo = view.findViewById(R.id.stationContactNo);
-        expectedDate = view.findViewById(R.id.expectedDate);
-        pricePerGallon = view.findViewById(R.id.pricePerGallon);
-        quantity = view.findViewById(R.id.quantity);
-        waterType = view.findViewById(R.id.waterType);
-        deliveryFee = view.findViewById(R.id.deliveryFee);
-        totalPrice = view.findViewById(R.id.totalPrice);
-
-        viewLocationCustomer = view.findViewById(R.id.viewLocationCustomer);
-        launchSMSCustomer = view.findViewById(R.id.launchSMSCustomer);
-        launchCallCustomer = view.findViewById(R.id.launchCallCustomer);
-        viewLocationStation = view.findViewById(R.id.viewLocationStation);
-        launchSMSStation = view.findViewById(R.id.launchSMSStation);
-        launchCallStation = view.findViewById(R.id.launchCallStation);
-        Dispatch = view.findViewById(R.id.Dispatch);
-        launchQRScanner = view.findViewById(R.id.launchQRScanner);
-
-        viewLocationCustomer.setOnClickListener(this);
-        launchSMSCustomer.setOnClickListener(this);
-        launchCallCustomer.setOnClickListener(this);
-        viewLocationStation.setOnClickListener(this);
-        launchSMSStation.setOnClickListener(this);
-        launchCallStation.setOnClickListener(this);
-        Dispatch.setOnClickListener(this);
-        launchQRScanner.setOnClickListener(this);
-
+        declaration(view);
         progressDialogDeclatation();
         getBunle();
         getFromCustomerFile();
@@ -243,6 +214,19 @@ public class TPAAcceptedOrdersInfo extends Fragment implements View.OnClickListe
         switch (v.getId())
         {
             case R.id.viewLocationCustomer:
+                MapMerchantFragmentRenew map = new MapMerchantFragmentRenew();
+                AppCompatActivity activity = (AppCompatActivity)v.getContext();
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                        .replace(R.id.fragment_container, map)
+                        .addToBackStack(null)
+                        .commit();
+                Bundle args = new Bundle();
+                args.putString("orderAffiliate", orderNumber);
+                args.putString("stationidAffiliate", stationID);
+                args.putString("customeridAffiliate", customerID);
+                map.setArguments(args);
                 break;
             case R.id.launchSMSCustomer:
                 SMSCustomer();
@@ -336,7 +320,7 @@ public class TPAAcceptedOrdersInfo extends Fragment implements View.OnClickListe
             {
                 QRcode = result.getContents();
                 progressDialog.show();
-                if(QRcode.equals(stationID+""+customerID+""+orderNumber))
+                if(QRcode.equals(stationID+"/"+customerID+"/"+orderNumber))
                 {
                     updateOrder();
                 }
@@ -386,5 +370,39 @@ public class TPAAcceptedOrdersInfo extends Fragment implements View.OnClickListe
                 .child("order_status").setValue("Completed with affiliate");
         FirebaseDatabase.getInstance().getReference("Affiliate_WaterStation_Order_File").child(customerID).child(stationID).child(orderNumber)
                 .child("order_status").setValue("Completed with affiliate");
+    }
+    public void declaration(View view)
+    {
+        orderNo = view.findViewById(R.id.orderNo);
+        customerName = view.findViewById(R.id.customerName);
+        customerAddress = view.findViewById(R.id.customerAddress);
+        customerContactNo = view.findViewById(R.id.customerContactNo);
+        waterStationName = view.findViewById(R.id.waterStationName);
+        stationAddress = view.findViewById(R.id.stationAddress);
+        stationContactNo = view.findViewById(R.id.stationContactNo);
+        expectedDate = view.findViewById(R.id.expectedDate);
+        pricePerGallon = view.findViewById(R.id.pricePerGallon);
+        quantity = view.findViewById(R.id.quantity);
+        waterType = view.findViewById(R.id.waterType);
+        deliveryFee = view.findViewById(R.id.deliveryFee);
+        totalPrice = view.findViewById(R.id.totalPrice);
+
+        viewLocationCustomer = view.findViewById(R.id.viewLocationCustomer);
+        launchSMSCustomer = view.findViewById(R.id.launchSMSCustomer);
+        launchCallCustomer = view.findViewById(R.id.launchCallCustomer);
+        viewLocationStation = view.findViewById(R.id.viewLocationStation);
+        launchSMSStation = view.findViewById(R.id.launchSMSStation);
+        launchCallStation = view.findViewById(R.id.launchCallStation);
+        Dispatch = view.findViewById(R.id.Dispatch);
+        launchQRScanner = view.findViewById(R.id.launchQRScanner);
+
+        viewLocationCustomer.setOnClickListener(this);
+        launchSMSCustomer.setOnClickListener(this);
+        launchCallCustomer.setOnClickListener(this);
+        viewLocationStation.setOnClickListener(this);
+        launchSMSStation.setOnClickListener(this);
+        launchCallStation.setOnClickListener(this);
+        Dispatch.setOnClickListener(this);
+        launchQRScanner.setOnClickListener(this);
     }
 }

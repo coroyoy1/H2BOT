@@ -89,7 +89,7 @@ public class TPAMapFragment extends Fragment
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
     FirebaseUser firebaseUser;
-    String affiliatename, merchantno;
+    String affiliatename, merchantno, affiliateOrderStatus;
     String affiliateNo;
     // User Permissions
     String oldpointsaffiliatefinal,oldpointsstationfinal;
@@ -533,7 +533,6 @@ public class TPAMapFragment extends Fragment
         }
         showNearest();
     }
-
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         mLocationRequest = new LocationRequest();
@@ -577,33 +576,42 @@ public class TPAMapFragment extends Fragment
         userFileRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d("kapoy","ya");
                 for (DataSnapshot userData : dataSnapshot.getChildren()) {
                     UserFile userFile = userData.getValue(UserFile.class);
                     businessRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            Log.d("kapoy","yaya");
                             for (DataSnapshot infoFile : dataSnapshot.getChildren()) {
                                 userLatLongRef.addValueEventListener(new ValueEventListener() {
                                     UserWSBusinessInfoFile businessInfo = infoFile.getValue(UserWSBusinessInfoFile.class);
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         for (DataSnapshot latlongFile : dataSnapshot.getChildren()) {
+                                            Log.d("Gago","maso");
                                             UserLocationAddress locationFile = latlongFile.getValue(UserLocationAddress.class);
                                             if (userFile.getUser_getUID().equals(businessInfo.getBusiness_id())
                                                     && businessInfo.getBusiness_id().equals(locationFile.getUser_id())) {
                                                 if (userFile.getUser_type().equals("Water Station")) {
+                                                    Log.d("Gago","maskoo");
                                                     if (userFile.getUser_status().equalsIgnoreCase("Active")) {
+                                                        Log.d("Gago","koo");
                                                         orderModel.addValueEventListener(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                Log.d("Gago","ka");
                                                                 for (DataSnapshot order : dataSnapshot.getChildren()) {
+                                                                    Log.d("Gago","ko");
                                                                     for(DataSnapshot userData2 : order.getChildren()) {
+                                                                        Log.d("Gago","ki");
                                                                         for (DataSnapshot userData3 : userData2.getChildren()) {
+                                                                            Log.d("Gago","ku");
                                                                             OrderModel userData4 = userData3.getValue(OrderModel.class);
-                                                                            String statusOrder = userData4.getOrder_status();
+                                                                            String statusOrder =userData3.child("order_status").getValue(String.class);
+                                                                            Log.d("ID",stationId+""+customer_id);
                                                                             Log.d("Kaykay", "" + statusOrder);
                                                                             if (statusOrder.equals("Broadcasting")) {
-
                                                                                 Log.d("sAddress",userData3.child("order_merchant_id")+"="+businessInfo.getBusiness_id());
                                                                                 if (userData3.child("order_merchant_id").getValue(String.class).equals(businessInfo.getBusiness_id()))
                                                                                 {
@@ -687,6 +695,7 @@ public class TPAMapFragment extends Fragment
         orderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getAffiliateOrder();
                 pointsNeeded = Double.parseDouble(fundAmt.getText().toString());
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
                 dialog.setCancelable(false);
@@ -695,7 +704,14 @@ public class TPAMapFragment extends Fragment
                 dialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        statePoints();
+                        if(affiliateOrderStatus.equalsIgnoreCase("Accepted by affiliate")||affiliateOrderStatus.equalsIgnoreCase("Dispatched by affiliate")) {
+                            statePoints();
+                        }
+                        else
+                        {
+                            String text="You still have an in-progress order to deliver. Please deliver it first to accept another broadcasting orders";
+                            snackBar(text);
+                        }
                 }
                 })
 
@@ -783,7 +799,7 @@ public class TPAMapFragment extends Fragment
                                     });
                                     Log.d("Hello", stationId + "," + customer_id + "," + orderno);
                                     DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("Customer_File");
-                                    reference2.child(customer_id).child(stationId).child(orderno).child("order_status").setValue("Accepted")
+                                    reference2.child(customer_id).child(stationId).child(orderno).child("order_status").setValue("Accepted by affiliate")
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
@@ -815,7 +831,8 @@ public class TPAMapFragment extends Fragment
                                             });
                                     Log.d("stations", "hahastation" + stationId + orderno + customer_id);
                                     Toast.makeText(getActivity(), "Accepted", Toast.LENGTH_SHORT).show();
-                                    snackBar();
+                                    String text = "You can see the recipient's information in the IN PROGRESS menu.";
+                                    snackBar(text);
                                 }
                                 else
                                 {
@@ -952,9 +969,9 @@ public class TPAMapFragment extends Fragment
     }
 
 
-    public void snackBar(){
+    public void snackBar(String text){
         View parentLayout = getActivity().findViewById(android.R.id.content);
-        Snackbar snackbar = Snackbar.make(parentLayout, "You can see the recipient's information in the IN PROGRESS menu."
+        Snackbar snackbar = Snackbar.make(parentLayout, text
                 , Snackbar.LENGTH_LONG);
         View view = snackbar.getView();
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
@@ -1070,7 +1087,6 @@ public class TPAMapFragment extends Fragment
 
             }
         };
-
         getActivity().registerReceiver(smsSentReceiver, new IntentFilter(SENT));
         getActivity().registerReceiver(smsDeliveredReceiver, new IntentFilter(DELIVERED));
     }
@@ -1114,7 +1130,21 @@ public class TPAMapFragment extends Fragment
                 stationId,
                 customer_id,
                 orderno,
-                "Accepted");
+                "Accepted by affiliate");
         FirebaseDatabase.getInstance().getReference("Affiliate_WaterStation_Order_File").child(firebaseUser.getUid()).child(stationId).child(orderno).setValue(ASmodel);
+    }
+    public void getAffiliateOrder()
+    {
+        DatabaseReference databaseReference4 = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(firebaseUser.getUid()).child(stationId);
+        databaseReference4.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                affiliateOrderStatus = dataSnapshot.child("status").getValue(String.class);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

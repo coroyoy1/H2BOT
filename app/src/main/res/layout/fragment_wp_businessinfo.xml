@@ -136,46 +136,6 @@
                         android:layout_height="wrap_content"
                         android:textColor="@android:color/black"
                         android:text="Cellphone No"/>
-                    <TextView
-                        android:textColor="@android:color/holo_blue_dark"
-                        android:layout_marginTop="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Delivery Fee"
-                        android:textSize="18dp" />
-                    <TextView
-                        android:id="@+id/stationFeePerGalBI"
-                        android:layout_marginLeft="20dp"
-                        android:textSize="18dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@android:color/black"
-                        android:text="Fee per gal"/>
-                    <TextView
-                        android:visibility="gone"
-                        android:id="@+id/stationDeliveryBI"
-                        android:layout_marginTop="10dp"
-                        android:textSize="18dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@android:color/white"
-                        android:text="Station Delivery status"/>
-
-                    <TextView
-                        android:textColor="@android:color/holo_blue_dark"
-                        android:layout_marginTop="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Delivery Fee Method"
-                        android:textSize="18dp" />
-                    <TextView
-                        android:id="@+id/dealerDeliveryMethod"
-                        android:layout_marginLeft="20dp"
-                        android:textSize="18dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@android:color/black"
-                        android:text="Status"/>
 
                     <TextView
                         android:textColor="@android:color/holo_blue_dark"
@@ -191,7 +151,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@android:color/black"
-                        android:text="Status"/>
+                        android:text="Minimum Order of gallons per order"/>
                 </LinearLayout>
                 </android.support.v7.widget.CardView>
             </LinearLayout>

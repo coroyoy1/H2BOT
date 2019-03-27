@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/mapGet"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".mapmerchant.MapMerchantFragment" />
+
+
+    <LinearLayout
+        android:id="@+id/layouthi"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:id="@+id/userTypeDirection"
+            android:layout_width="180dp"
+            android:layout_height="match_parent"
+            android:background="@color/bluebackground"
+            android:drawableLeft="@drawable/ic_account_box_black_24dp"
+            android:gravity="center"
+            android:text="Water Station"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_below="@+id/layouthi"
+        android:layout_height="30dp"
+        android:layout_marginLeft="10dp">
+        <Button
+            android:id="@+id/switchUser"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+            android:background="@color/bluebackground"
+            android:gravity="center"
+            android:text="View Water Station location"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+    <LinearLayout
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="160dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/openArrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:drawableLeft="@drawable/ic_arrow_up"
+                android:text="open"
+                android:padding="5dp"
+                android:background="@color/bluebackground"
+                android:textStyle="bold" />
+            <TextView
+                android:textStyle="bold"
+                android:padding="5dp"
+                android:id="@+id/closeArrow"
+                android:text="close"
+                android:background="@color/bluebackground"
+                android:layout_marginLeft="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_arrow_down"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:id="@+id/linearOrderDetails"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+
+            <Button
+                android:text="Orders Details"
+                android:textColor="@android:color/white"
+                android:id="@+id/orderDetails"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/z_darkbluebutton"/>
+
+            <Button
+                android:text="QR Scanner"
+                android:textColor="@android:color/white"
+                android:id="@+id/orderLaunchScan"
+                android:background="@drawable/z_greenbluebutton"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_height="50dp" />
+
+            <Button
+                android:id="@+id/orderDispatched"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/z_darkbluebutton"
+                android:text="Dispatch"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:id="@+id/linearAcceptDetails"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearSMSDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/orderSMS"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/z_darkbluebutton"
+                android:text="SMS Water Station"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/orderCall"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/z_darkbluebutton"
+                android:text="Call Water Station"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    </RelativeLayout>

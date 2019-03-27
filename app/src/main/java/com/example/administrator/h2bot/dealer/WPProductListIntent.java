@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,13 +23,16 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class WPProductListIntent extends Fragment implements View.OnClickListener {
-    TextView itemN, itemP, itemU, itemS;
+    TextView productName, itemP, itemU, itemS,itemDesc;
     Button backBu, updateBu, deleteButton;
-    String itemUi, itemNameString, itemPriceString, itemTypeString, itemStatusString, itemKeyString;
+    String itemUi, itemNameString, itemPriceString, itemTypeString, itemStatusString, itemDescString;
 
 
     FirebaseDatabase firebaseDatabase;
@@ -45,7 +49,8 @@ public class WPProductListIntent extends Fragment implements View.OnClickListene
         itemP = view.findViewById(R.id.PLIprice);
         itemU = view.findViewById(R.id.PLItype);
         itemS = view.findViewById(R.id.PLIStatus);
-
+        itemDesc = view.findViewById(R.id.itemDesc);
+        productName = view.findViewById(R.id.productName);
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -55,6 +60,7 @@ public class WPProductListIntent extends Fragment implements View.OnClickListene
         firebaseDatabase = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
+        getProductDetail();
         databaseReference = firebaseDatabase.getReference("User_WS_WD_Water_Type_File");
 
         backBu = view.findViewById(R.id.PLIbackbutton);
@@ -70,16 +76,12 @@ public class WPProductListIntent extends Fragment implements View.OnClickListene
             String itemPr = bundle.getString("ItemPriceMDA");
             String itemTy = bundle.getString("ItemTypeMDA");
             String itemSt = bundle.getString("ItemStatusMDA");
-
-            itemUi = bundle.getString("ItemUidMDA");
-            itemP.setText("  Price: "+itemPr);
-            itemU.setText("  Type: "+itemTy);
-            itemS.setText("  Status: "+itemSt);
+            String itemD = bundle.getString("ItemDesc");
 
             itemPriceString = bundle.getString("ItemPriceMDA");
             itemTypeString = bundle.getString("ItemTypeMDA");
             itemStatusString = bundle.getString("ItemStatusMDA");
-
+            itemDescString = bundle.getString("ItemDesc");
 
         }
         view.setFocusableInTouchMode(true);
@@ -151,6 +153,10 @@ public class WPProductListIntent extends Fragment implements View.OnClickListene
     {
         return itemStatus;
     }
+    public String Datadesc(String itemdesc)
+    {
+        return itemdesc;
+    }
 
     @Override
     public void onClick(View v) {
@@ -171,6 +177,7 @@ public class WPProductListIntent extends Fragment implements View.OnClickListene
                 String typeString = DataType(itemTypeString);
                 String priceString = DataPrice(itemPriceString);
                 String statusString = DataStatus(itemStatusString);
+                String desc = Datadesc(itemDescString);
                 WPProductListUpdate updateitem = new WPProductListUpdate();
                 AppCompatActivity activityapp = (AppCompatActivity) v.getContext();
                 activityapp.getSupportFragmentManager()
@@ -184,6 +191,7 @@ public class WPProductListIntent extends Fragment implements View.OnClickListene
                 args.putString("ItemPricePLI", priceString);
                 args.putString("ItemTypePLI", typeString);
                 args.putString("ItemStatusPLI", statusString);
+                args.putString("ItemDesc", desc);
                 updateitem.setArguments(args);
                 break;
             case R.id.PLIDeletebutton:
@@ -191,7 +199,27 @@ public class WPProductListIntent extends Fragment implements View.OnClickListene
                 break;
         }
     }
+    public void getProductDetail()
+    {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File").child(firebaseUser.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot data : dataSnapshot.getChildren()) {
+                    productName.setText("  Water Gallon Name: " + data.child("water_name").getValue(String.class));
+                    itemP.setText("  Price: " + data.child("delivery_price").getValue(String.class));
+                    itemU.setText("  Type: " + data.child("water_type").getValue(String.class));
+                    itemS.setText("  Status: " + data.child("water_status").getValue(String.class));
+                    itemDesc.setText("  Product Description" + data.child("water_description").getValue(String.class));
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
     public void attemptToExit()
     {
 
@@ -209,4 +237,5 @@ public class WPProductListIntent extends Fragment implements View.OnClickListene
             }
         };
     }
+
 }

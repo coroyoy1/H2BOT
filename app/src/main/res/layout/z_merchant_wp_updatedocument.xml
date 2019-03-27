@@ -35,7 +35,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_weight="1"
-                    android:text="Business Permit"
+                    android:text="Driver's License"
                     android:textSize="18dp"
                     android:textStyle="bold" />
 
@@ -50,6 +50,40 @@
                 <Button
                     android:layout_weight="1"
                     android:id="@+id/permitButtonUD1"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_photo_camera_black_24dp" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="1dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:text="NBI Clearance"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/imageUD2"
+                    android:layout_marginRight="20dp"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_image_black_24dp" />
+                <Button
+                    android:layout_weight="1"
+                    android:id="@+id/permitButtonUD2"
                     android:layout_marginTop="4dp"
                     android:layout_marginRight="10dp"
                     android:layout_width="wrap_content"
