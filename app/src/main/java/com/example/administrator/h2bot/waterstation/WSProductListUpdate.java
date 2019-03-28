@@ -37,7 +37,7 @@ import java.util.List;
 
 public class WSProductListUpdate extends Fragment implements View.OnClickListener {
 
-    TextInputLayout productName, productPrice, productDescription;
+    TextInputLayout productName, productPrice, productDescription, productUpdateDelivery, productUpdatePickup;
 
     TextView productUpdateStatus, productUpdateType;
     Button backUpItem, updateUpItem;
@@ -50,16 +50,12 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
     List<String> list;
 
     String statusGet;
-    String keyGet;
 
     ProgressDialog progressDialog;
     String[] arraySpinner;
     ArrayAdapter<String> adapter;
 
-    String itemPr;
     String itemTy;
-    String itemUi;
-    String itemSt;
 
 
     @Nullable
@@ -84,7 +80,8 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
         //Edit text Text Layout
         productName = view.findViewById(R.id.waterNameUPW);
         productDescription = view.findViewById(R.id.waterDescriptionUWP);
-        productPrice = view.findViewById(R.id.waterPriceUWP);
+        productUpdatePickup = view.findViewById(R.id.waterPickUpUWP);
+        productUpdateDelivery = view.findViewById(R.id.waterDeliveryPriceUWP);
         productUpdateType = view.findViewById(R.id.waterTypeUWP);
 
         valid = view.findViewById(R.id.avaiableRadio);
@@ -98,23 +95,7 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-             itemPr = bundle.getString("ItemPricePLI");
              itemTy = bundle.getString("ItemTypePLI");
-             itemUi = bundle.getString("ItemUidPLI");
-             itemSt = bundle.getString("ItemStatusPLI");
-
-            if (itemSt.equals("active")) {
-                valid.setChecked(true);
-                invalid.setChecked(false);
-                statusGet = "active";
-            } else {
-                valid.setChecked(false);
-                invalid.setChecked(true);
-                statusGet = "inactive";
-            }
-
-            productUpdateType.setText(itemTy);
-            productPrice.getEditText().setText(itemPr);
 
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File");
             reference.child(firebaseUser.getUid()).child(itemTy).addValueEventListener(new ValueEventListener() {
@@ -125,6 +106,21 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
                     {
                         productDescription.getEditText().setText(wswdWaterTypeFile.getWater_description());
                         productName.getEditText().setText(wswdWaterTypeFile.getWater_name());
+                        productUpdateDelivery.getEditText().setText(wswdWaterTypeFile.getDelivery_price());
+                        productUpdatePickup.getEditText().setText(wswdWaterTypeFile.getPickup_price());
+                        productUpdateType.setText(wswdWaterTypeFile.getWater_type());
+                        if (wswdWaterTypeFile.getWater_status().toLowerCase().equals("available".toLowerCase()))
+                        {
+                            valid.setChecked(true);
+                            invalid.setChecked(false);
+                            statusGet = "available";
+                        }
+                        else if (wswdWaterTypeFile.getWater_status().toLowerCase().equals("unavailable".toLowerCase()))
+                        {
+                            valid.setChecked(false);
+                            invalid.setChecked(true);
+                            statusGet = "unavailable";
+                        }
                     }
                 }
 
@@ -142,36 +138,41 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
     public void updateData() {
         String statY = "";
         if (valid.isChecked()) {
-            statY = "active";
+            statY = "available";
         } else if (invalid.isChecked()) {
-            statY = "inactive";
+            statY = "unavailable";
         }
 
-        String prodType = productUpdateType.getText().toString().trim();
-        String prodPrice = productPrice.getEditText().getText().toString().trim();
         String prodName = productName.getEditText().getText().toString();
+        String prodType = productUpdateType.getText().toString();
+        String prodPickup = productUpdatePickup.getEditText().getText().toString();
+        String prodDelivery = productUpdateDelivery.getEditText().getText().toString();
         String prodDescription = productDescription.getEditText().getText().toString();
 
-        if (prodType.isEmpty() && prodPrice.isEmpty()) {
-            showMessage("Please fill up all the fields");
-            return;
-        } else {
-            dataConnection(prodName, prodType, prodPrice, prodDescription, statY);
+        if (prodName.isEmpty() && prodType.isEmpty()
+            && prodPickup.isEmpty() && prodDelivery.isEmpty()
+            && prodDescription.isEmpty())
+        {
+            showMessage("Fields should not empty");
         }
+        else {
+            dataConnection(prodName, prodType, prodPickup, prodDelivery, prodDescription, statY);
+        }
+
 
     }
 
     //Display Data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //CloseRetrieving Data~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    private void dataConnection(String prodName, String prodType, String prodPrice, String prodDescription, String statY) {
+    private void dataConnection(String prodName, String prodType, String prodPickup, String prodDelivery, String prodDescription, String statY) {
         progressDialog.show();
         WSWDWaterTypeFile userWSWDWaterTypeFile = new WSWDWaterTypeFile(
                 firebaseUser.getUid(),
                 prodName,
                 prodType,
-                prodPrice,
-                "",
+                prodPickup,
+                prodDelivery,
                 prodDescription,
                 statY
         );

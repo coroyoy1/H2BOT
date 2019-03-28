@@ -100,7 +100,6 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
                         stationTelNo.setText(userWSBusinessInfoFile.getBusiness_tel_no());
                         stationFeePerGal.setText(dataSnapshot.child("business_delivery_fee").getValue(String.class));
                         stationStatus.setText(userWSBusinessInfoFile.getBusiness_min_no_of_gallons());
-                        deliverymethod.setText(userWSBusinessInfoFile.getBusiness_delivery_fee_method());
                    }
                    else
                    {
