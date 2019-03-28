@@ -207,7 +207,7 @@ public class WPProductListIntent extends Fragment implements View.OnClickListene
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot data : dataSnapshot.getChildren()) {
                     productName.setText("  Water Gallon Name: " + data.child("water_name").getValue(String.class));
-                    itemP.setText("  Price: " + data.child("delivery_price").getValue(String.class));
+                    itemP.setText("  Price: " + data.child("delivery_price_per_gallon").getValue(String.class));
                     itemU.setText("  Type: " + data.child("water_type").getValue(String.class));
                     itemS.setText("  Status: " + data.child("water_status").getValue(String.class));
                     itemDesc.setText("  Product Description" + data.child("water_description").getValue(String.class));
