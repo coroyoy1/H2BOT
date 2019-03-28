@@ -1269,6 +1269,7 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful())
                         {
+                            getLocationSetter();
                             uploadAllImage();
                         }
                     }
@@ -1442,7 +1443,7 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            showMessages("Successfully Updated");
+                            showMessages("Successfully Address");
                             progressDialog.dismiss();
                         }
                     })
@@ -1457,10 +1458,6 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
         } catch (IOException ex) {
 
             ex.printStackTrace();
-            progressDialog.dismiss();
-        }
-        finally {
-            showMessages("Error to locate your address, please change again");
             progressDialog.dismiss();
         }
     }
@@ -1537,7 +1534,6 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                     });
                 }
             });
-            getLocationSetter();
         }
     }
     public void uploadSanitaryPermit(String sanitary)
