@@ -1,21 +1,18 @@
 package com.example.administrator.h2bot;
 
-import com.example.administrator.h2bot.dealer.WaterPeddlerDocumentActivity;
 import com.example.administrator.h2bot.models.*;
 
-import android.app.NotificationManager;
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -25,13 +22,11 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TimePicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,7 +34,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.Frame;
-import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 import com.google.firebase.auth.AuthResult;
@@ -57,25 +51,18 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-
-import io.grpc.Context;
 
 public class WaterStationDocumentVersion2Activity extends AppCompatActivity implements CheckBox.OnClickListener {
 
     private static final int PICK_IMAGE_REQUEST = 1;
     ImageView businessPermit_image, sanitaryPermit_image, physicochemicalPermit_Image, birPermit_Image;
     Button businessPermitBtn, sanitaryPermitBtn,
-            physicochemicalbutton, birbutton, submitButton;
-    RadioGroup deliveryFeeGroup, haveGallonGroup;
+            physicochemicalbutton, submitButton;
+    RadioGroup haveGallonGroup;
 
-    EditText stationName, stationAddress, endingHour, startingHour,
-            businessDeliveryFeePerGal, businessMinNoCapacity,
-            telNo, deliveryFee, min_no_of_gallons, priceOfGallonEdit, currentNoGallonEdit;
+    TextInputLayout stationName, stationAddress, telNo,min_no_of_gallons, priceOfGallonEdit, currentNoGallonEdit;
     Spinner startSpinner, endSpinner;
     String deliveryMethod, business, sanitary, physicochemical, bir;
 
@@ -92,13 +79,17 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
     Boolean isPicked = false;
     Boolean isPicked2 = false;
     Boolean isPicked3 = false;
-    Boolean isPicked4 = false;
 
     CheckBox mon, tue, wed, thurs, fri, sat, sun;
 
     List<String> week;
 
     String mFirstname, mLastname, mAddress, mContact_no, mEmail_address, mPassword, mFilepath;
+
+    Button startTime, endTime;
+    TextView startTimeView, endTimeView;
+    private boolean isAddressExist;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,7 +106,6 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         mAuth = FirebaseAuth.getInstance();
-        RadioButton free,fixPrice,perGallon;
         startSpinner= findViewById(R.id.startSpinner);
         endSpinner= findViewById(R.id.endSpinner);
 
@@ -123,33 +113,30 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         businessPermitBtn = findViewById(R.id.businessPermitBtn);
         sanitaryPermitBtn = findViewById(R.id.sanitaryPermitBtn);
         physicochemicalbutton = findViewById(R.id.physicochemicalPermitBtn);
-        birbutton = findViewById(R.id.birPermitBtn);
         submitButton = findViewById(R.id.submitButton);
-        free = findViewById(R.id.free);
-        fixPrice = findViewById(R.id.fixPrice);
-        perGallon = findViewById(R.id.perGallon);
+        startTime = findViewById(R.id.startTimeButton);
+        endTime = findViewById(R.id.endTimeButton);
+
+
+        //TextView
+        startTimeView = findViewById(R.id.startTimeTextView);
+        endTimeView = findViewById(R.id.endTimeTextView);
+
+
         //Imageview
         businessPermit_image = findViewById(R.id.businessPermit_image);
         sanitaryPermit_image = findViewById(R.id.sanitaryPermit_image);
-        physicochemicalPermit_Image = findViewById(R.id.physicochemicalPermit_image);
-        birPermit_Image = findViewById(R.id.birPermit_image);
-        birbutton.setVisibility(View.GONE);
-        birPermit_Image.setVisibility(View.GONE);
+        physicochemicalPermit_Image = findViewById(R.id.physicochemicalPermit_image);;
 
         //EditText
         stationName = findViewById(R.id.stationName);
         stationAddress = findViewById(R.id.stationAddress);
         telNo = findViewById(R.id.telNo);
-        endingHour = findViewById(R.id.endingHour);
-        startingHour = findViewById(R.id.startingHour);
-        deliveryFee = findViewById(R.id.deliveryFee);
         min_no_of_gallons = findViewById(R.id.min_no_of_gallons);
         priceOfGallonEdit = findViewById(R.id.priceOfGallon);
         currentNoGallonEdit = findViewById(R.id.noOfGallons);
-        currentNoGallonEdit.setVisibility(View.GONE);
 
         //Radiogroup
-        deliveryFeeGroup = findViewById(R.id.deliveryFeeGroup);
         haveGallonGroup = findViewById(R.id.doYouHaveGallonGroup);
 
         //CheckBox
@@ -179,76 +166,18 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         mPassword = password;
         mFilepath = filepath;
 
-
-
-        String[] arraySpinner = new String[]{
-                "AM", "PM"
-        };
-        String[] arraySpinner2 = new String[]{
-                "PM", "AM"
-        };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(WaterStationDocumentVersion2Activity.this,
-                android.R.layout.simple_spinner_item, arraySpinner);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(WaterStationDocumentVersion2Activity.this,
-                android.R.layout.simple_spinner_item, arraySpinner2);
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        startSpinner.setAdapter(adapter);
-        endSpinner.setAdapter(adapter2);
-
-        //EditText Listener
-        startingHour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
-
-                TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(WaterStationDocumentVersion2Activity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        startingHour.setText( selectedHour + ":" + selectedMinute);
-                    }
-                }, hour, minute, false);
-                mTimePicker.setTitle("Select Time");
-                mTimePicker.show();
-            }
-        });
-        endingHour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
-
-                TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(WaterStationDocumentVersion2Activity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        endingHour.setText( selectedHour + ":" + selectedMinute);
-                    }
-                }, hour, minute, false);
-                mTimePicker.setTitle("Select Time");
-                mTimePicker.show();
-            }
-        });
-
         //Button Listener
         businessPermitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(TextUtils.isEmpty(stationName.getText().toString()) || TextUtils.isEmpty(stationAddress.getText().toString())){
+                if(TextUtils.isEmpty(stationName.getEditText().getText().toString()) || TextUtils.isEmpty(stationAddress.getEditText().getText().toString())){
                     Toast.makeText(WaterStationDocumentVersion2Activity.this, "Plesae fill the needed information above", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     isPicked = true;
                     isPicked2 = false;
                     isPicked3 = false;
-                    isPicked4 = false;
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -259,14 +188,13 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         sanitaryPermitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(TextUtils.isEmpty(stationName.getText().toString()) || TextUtils.isEmpty(stationAddress.getText().toString())){
+                if(TextUtils.isEmpty(stationName.getEditText().getText().toString()) || TextUtils.isEmpty(stationAddress.getEditText().getText().toString())){
                     Toast.makeText(WaterStationDocumentVersion2Activity.this, "Plesae fill the needed information above", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     isPicked = false;
                     isPicked2 = true;
                     isPicked3 = false;
-                    isPicked4 = false;
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -277,32 +205,13 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         physicochemicalbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(TextUtils.isEmpty(stationName.getText().toString()) || TextUtils.isEmpty(stationAddress.getText().toString())){
+                if(TextUtils.isEmpty(stationName.getEditText().getText().toString()) || TextUtils.isEmpty(stationAddress.getEditText().getText().toString())){
                     Toast.makeText(WaterStationDocumentVersion2Activity.this, "Plesae fill the needed information above", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     isPicked = false;
                     isPicked2 = false;
                     isPicked3 = true;
-                    isPicked4 = false;
-                    Intent intent = new Intent();
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-                }
-            }
-        });
-        birbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(TextUtils.isEmpty(stationName.getText().toString()) || TextUtils.isEmpty(stationAddress.getText().toString())){
-                    Toast.makeText(WaterStationDocumentVersion2Activity.this, "Plesae fill the needed information above", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    isPicked = false;
-                    isPicked2 = false;
-                    isPicked3 = false;
-                    isPicked4 = true;
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -328,54 +237,62 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         sat.setOnClickListener(this);
         sun.setOnClickListener(this);
 
-
-        //RadioGroup
-        deliveryFeeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId){
-                    case R.id.perGallon:
-                        deliveryMethod = "Per Gallon";
-                        deliveryFee.setVisibility(View.VISIBLE);
-                        deliveryFee.setHint("Delivery fee per gallon");
-                        break;
-
-                    case R.id.fixPrice:
-                        deliveryMethod = "Fix Price";
-                        deliveryFee.setVisibility(View.VISIBLE);
-                        deliveryFee.setHint("Fixed delivery fee");
-                        break;
-
-                    case R.id.free:
-                        deliveryMethod = "Free";
-                        deliveryFee.setVisibility(View.GONE);
-                        break;
-                }
-            }
-        });
         haveGallonGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId)
                 {
                     case R.id.no:
-                        //currentNoGallonEdit.setVisibility(View.GONE);
+                        currentNoGallonEdit.setVisibility(View.GONE);
                         priceOfGallonEdit.setVisibility(View.GONE);
+                        currentNoGallonEdit.getEditText().setText("NONE");
+                        priceOfGallonEdit.getEditText().setText("NONE");
                         break;
                     case R.id.yes:
-                        //currentNoGallonEdit.setVisibility(View.VISIBLE);
+                        currentNoGallonEdit.setVisibility(View.VISIBLE);
                         priceOfGallonEdit.setVisibility(View.VISIBLE);
+                        currentNoGallonEdit.getEditText().setText("");
+                        priceOfGallonEdit.getEditText().setText("");
                         break;
                 }
             }
         });
+
+        startTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment dFragment = new TimePickerStartingTimeFragment();
+                dFragment.show(getFragmentManager(),"Time Picker");
+            }
+        });
+        endTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment dFragment = new TimePickerEndingTimeFragment();
+                dFragment.show(getFragmentManager(),"Time Picker");
+            }
+        });
+    }
+
+    private boolean checkAddress(String mAddress)
+    {
+        Geocoder coder = new Geocoder(this);
+        List<Address> address;
+        String locateAddress = mAddress;
+        try {
+            address = coder.getFromLocationName(locateAddress, 5);
+            if(address.size() == 0){
+                return true;
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return false;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK)
-        {
             if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
                 if(isPicked) {
                     filepath = data.getData();
@@ -401,15 +318,15 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                 sb.append("\n");
                             }
                             Log.d("Data: ", sb.toString());
-                            Log.d("Station name: ", stationName.getText().toString().toLowerCase());
-//                            if(sb.toString().toLowerCase().contains("business permit".toLowerCase())){
+                            Log.d("Station name: ", stationName.getEditText().getText().toString().toLowerCase());
+                            if(sb.toString().toLowerCase().contains(stationName.getEditText().getText().toString().toLowerCase())){
                             Picasso.get().load(filepath).fit().centerCrop().into(businessPermit_image);
                             Toast.makeText(this, "Valid business permit", Toast.LENGTH_SHORT).show();
-//                            }
-//                            else{
-//                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
-//                                Toast.makeText(this, "Invalid business permit", Toast.LENGTH_SHORT).show();
-//                            }
+                            }
+                            else{
+                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
+                                Toast.makeText(this, "Invalid business permit", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -438,14 +355,14 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                 sb.append(myItem.getValue());
                                 sb.append("\n");
                             }
-//                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
+                            if(sb.toString().toLowerCase().contains(stationName.getEditText().getText().toString().toLowerCase())){
                             Picasso.get().load(filepath2).fit().centerCrop().into(sanitaryPermit_image);
                             Toast.makeText(this, "Valid sanitary permit", Toast.LENGTH_SHORT).show();
-//                            }
-//                            else{
-//                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
-//                                Toast.makeText(this, "Invalid sanitary permit", Toast.LENGTH_SHORT).show();
-//                            }
+                            }
+                            else{
+                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
+                                Toast.makeText(this, "Invalid sanitary permit", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -475,57 +392,19 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                 sb.append(myItem.getValue());
                                 sb.append("\n");
                             }
-//                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
+                            if(sb.toString().toLowerCase().contains(stationName.getEditText().getText().toString().toLowerCase())){
                             Picasso.get().load(filepath3).fit().centerCrop().into(physicochemicalPermit_Image);
-                            Toast.makeText(this, "Valid sanitary permit", Toast.LENGTH_SHORT).show();
-//                            }
-//                            else{
-//                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
-//                                Toast.makeText(this, "Invalid sanitary permit", Toast.LENGTH_SHORT).show();
-//                            }
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (isPicked4)
-                {
-                    filepath4 = data.getData();
-                    Bitmap bitmap = null;
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath4);
-                        TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
-
-                        if(!textRecognizer.isOperational())
-                        {
-                            Toast.makeText(getApplication(), "No text detected", Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-                            SparseArray<TextBlock> items = textRecognizer.detect(frame);
-                            StringBuilder sb= new StringBuilder();
-
-                            for(int ctr=0;ctr<items.size();ctr++)
-                            {
-                                TextBlock myItem = items.valueAt(ctr);
-                                sb.append(myItem.getValue());
-                                sb.append("\n");
+                            Toast.makeText(this, "Valid Physicochemical permit", Toast.LENGTH_SHORT).show();
                             }
-//                            if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
-                            Picasso.get().load(filepath4).fit().centerCrop().into(birPermit_Image);
-                            Toast.makeText(this, "Valid sanitary permit", Toast.LENGTH_SHORT).show();
-//                            }
-//                            else{
-//                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
-//                                Toast.makeText(this, "Invalid sanitary permit", Toast.LENGTH_SHORT).show();
-//                            }
+                            else{
+                                businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
+                                Toast.makeText(this, "Invalid Physicochemical permit", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-            }
         }
         else
         {
@@ -533,6 +412,11 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         }
     }
     private void CreateAccount(String emailAddress, String password){
+        if (checkAddress(mAddress))
+        {
+            showMessages("Address is not valid, Please make sure your input are correct!");
+            return;
+        }
         mAuth.createUserWithEmailAndPassword(emailAddress, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -577,22 +461,18 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                                     newToken,
                                                     "active");
 
-                                            String startHour = startingHour.getText().toString() + " " + startSpinner.getSelectedItem();
-                                            String endHour = endingHour.getText().toString() + " " + endSpinner.getSelectedItem();
-
                                             StationBusinessInfo stationBusinessInfo = new StationBusinessInfo(
-                                                    stationAddress.getText().toString(),
-                                                    week.toString(),
-                                                    deliveryFee.getText().toString(),
-                                                    deliveryMethod,
-                                                    endHour,
-                                                    firebaseUser.getUid(),
-                                                    min_no_of_gallons.getText().toString(),
-                                                    stationName.getText().toString(),
-                                                    priceOfGallonEdit.getText().toString(),
-                                                    startHour,
-                                                    "active",
-                                                    telNo.getText().toString()
+                                                firebaseUser.getUid(),
+                                                    stationName.getEditText().getText().toString(),
+                                                    stationAddress.getEditText().getText().toString(),
+                                                    telNo.getEditText().getText().toString(),
+                                                    startTimeView.getText().toString(),
+                                                    endTimeView.getText().toString(),
+                                                    week.toString().substring(0, week.size()-1),
+                                                    min_no_of_gallons.getEditText().getText().toString(),
+                                                    priceOfGallonEdit.getEditText().getText().toString(),
+                                                    currentNoGallonEdit.getEditText().getText().toString(),
+                                                    "active"
                                             );
 
                                             UserWallet userWallet = new UserWallet(
@@ -675,7 +555,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
         Geocoder coder = new Geocoder(this);
         List<Address> address;
         Address LocationAddress = null;
-        String locateAddress = stationAddress.getText().toString();
+        String locateAddress = stationAddress.getEditText().getText().toString();
 
         try {
             address = coder.getFromLocationName(locateAddress, 5);
@@ -766,30 +646,12 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
             });
         }
 
-        if(filepath4 != null){
-            FirebaseUser user = mAuth.getCurrentUser();
-            String userId = user.getUid();
-            Log.d("auth", userId);
-            StorageReference mStorageRef = storageReference.child("station_documents").child(userId +"/"+"birDocument");
-            mStorageRef.putFile(filepath4).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-                    result.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            bir = uri.toString();
-                        }
-                    });
-                }
-            });
-        }
 
         if(filepath2 != null){
             FirebaseUser user = mAuth.getCurrentUser();
             String userId = user.getUid();
             StorageReference mStorageRef = storageReference.child("station_documents").child(userId +"/"+"sanitaryPermitDocument");
-            mStorageRef.putFile(filepath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            mStorageRef.putFile(filepath2).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();

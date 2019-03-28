@@ -24,6 +24,13 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/waterTypeUWP"
+                android:textSize="21dp"
+                android:text="Product Type"/>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/waterNameUPW"
@@ -38,40 +45,56 @@
                     android:hint="Water Station's Product Name"
                     android:gravity="center" />
             </android.support.design.widget.TextInputLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:id="@+id/waterTypeUWP"
-                android:textSize="21dp"
-                android:text="Product Type"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:gravity="center">
+
                 <TextView
-                    android:layout_marginTop="11dp"
-                    android:id="@+id/textView14"
-                    android:layout_width="28dp"
-                    android:layout_height="50dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="₱"
-                    android:textColor="@android:color/black"
+                    android:textColor="@android:color/holo_blue_dark"
                     android:textSize="30sp" />
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/waterPriceUWP"
+                    android:id="@+id/waterPickUpUWP"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
                     <android.support.design.widget.TextInputEditText
-                        android:inputType="number"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:textAlignment="center"
-                        android:hint="Price per Gallon"
+                        android:background="@drawable/edit_text_border"
                         android:gravity="center"
-                        android:background="@drawable/edit_text_border" />
+                        android:hint="Pick up Price"
+                        android:inputType="number"
+                        android:textAlignment="center" />
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₱"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:textSize="30sp" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/waterDeliveryPriceUWP"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/edit_text_border"
+                        android:gravity="center"
+                        android:hint="Delivery Price"
+                        android:inputType="number"
+                        android:textAlignment="center" />
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 

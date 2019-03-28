@@ -40,12 +40,13 @@ public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapte
         imageViewHolder.PLItemNameHolder.setText(currentData.getWater_type());
         imageViewHolder.PLItemNoHolder.setText(currentData.getWater_name());
 
-        final String itemPrice = currentData.getPickup_price();
-        final String itemDelivery = currentData.getDelivery_price();
+        final String itemPrice = currentData.getPickup_price_per_gallon();
+        final String itemDelivery = currentData.getDelivery_price_per_gallon();
         final String itemType = currentData.getWater_type();
         final String itemUid = currentData.getWater_seller_id();
         final String itemStatus = currentData.getWater_status();
         final String itemDescription = currentData.getWater_description();
+        final String itemName = currentData.getWater_name();
 
         imageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +56,7 @@ public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapte
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 activity.getSupportFragmentManager()
                         .beginTransaction()
-                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
                         .replace(R.id.fragment_container_ws, additem)
                         .addToBackStack(null)
                         .commit();
@@ -63,6 +64,7 @@ public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapte
                 args.putString("ItemPriceMDA", itemPrice);
                 args.putString("ItemTypeMDA", itemType);
                 args.putString("ItemUidMDA", itemUid);
+                args.putString("ItemNameMDA", itemName);
                 args.putString("ItemStatusMDA", itemStatus);
                 args.putString("ItemDeliveryMDA", itemDelivery);
                 args.putString("ItemDescriptionMDA", itemDescription);

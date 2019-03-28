@@ -264,6 +264,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 String contactNoString = contactRegister.getText().toString();
                 String emailAddressString = emailRegister.getText().toString();
                 String passwordString = passwordRegister.getText().toString();
+                String confirmPassString = confirmPassword.getText().toString();
                 String filepath = "";
                 if(firstNameString.isEmpty() || lastNameString.isEmpty() || addressString.isEmpty()
                         || contactNoString.isEmpty() || emailAddressString.isEmpty() || passwordString.isEmpty() || uri == null){
@@ -282,6 +283,14 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 }
                 else if(!isValidPhone(contactNoString)){
                     Toast.makeText(RegisterActivity.this, "Phone number is invalid", Toast.LENGTH_LONG).show();
+                }
+                else if (!passwordString.toLowerCase().equals(confirmPassString.toLowerCase()))
+                {
+                    showMessage("Password and Confirm Password does not match!");
+                }
+                else if (checkAddress(addressString))
+                {
+                    showMessage("Address is not valid, Please make sure your inputs are correct!");
                 }
                 else{
                     filepath = uri.toString();
@@ -499,7 +508,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     }
 
     private void getLocationSetter()
-        {
+    {
         Geocoder coder = new Geocoder(this);
         List<Address> address;
         Address LocationAddress = null;
@@ -576,5 +585,21 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         else{
             return false;
         }
+    }
+
+    public boolean checkAddress(String addressString)
+    {
+        Geocoder coder = new Geocoder(this);
+        List<Address> address;
+        try {
+            address = coder.getFromLocationName(addressString, 5);
+            if(address.size() == 0){
+                return true;
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        //continue
+        return false;
     }
 }

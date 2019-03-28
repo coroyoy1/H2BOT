@@ -24,7 +24,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
-                    android:text="Submit Station's Document"
+                    android:text="Update Station's Document"
                     android:textColor="#FFF"
                     android:textSize="20sp"
                     android:textStyle="bold"/>
@@ -37,7 +37,7 @@
                 android:orientation="vertical">
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/stationName"
+                    android:id="@+id/stationNameUSD"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <android.support.design.widget.TextInputEditText
@@ -53,7 +53,7 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/stationAddress"
+                    android:id="@+id/stationAddressUSD"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <android.support.design.widget.TextInputEditText
@@ -70,7 +70,7 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/telNo"
+                    android:id="@+id/telNoUSD"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <android.support.design.widget.TextInputEditText
@@ -87,13 +87,13 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <ImageView
-                    android:id="@+id/businessPermit_image"
+                    android:id="@+id/businessPermit_imageUSD"
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
                     android:src="@drawable/ic_image_black_24dp" />
 
                 <Button
-                    android:id="@+id/businessPermitBtn"
+                    android:id="@+id/businessPermitBtnUSD"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -104,13 +104,13 @@
                     android:textColor="@android:color/white" />
 
                 <ImageView
-                    android:id="@+id/sanitaryPermit_image"
+                    android:id="@+id/sanitaryPermit_imageUSD"
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
                     android:src="@drawable/ic_image_black_24dp" />
 
                 <Button
-                    android:id="@+id/sanitaryPermitBtn"
+                    android:id="@+id/sanitaryPermitBtnUSD"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -121,13 +121,13 @@
                     android:textColor="@android:color/white" />
 
                 <ImageView
-                    android:id="@+id/physicochemicalPermit_image"
+                    android:id="@+id/physicochemicalPermit_imageUSD"
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
                     android:src="@drawable/ic_image_black_24dp" />
 
                 <Button
-                    android:id="@+id/physicochemicalPermitBtn"
+                    android:id="@+id/physicochemicalPermitBtnUSD"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -161,14 +161,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:text="Set Start Time"
-                            android:id="@+id/startTimeButton"/>
+                            android:id="@+id/startTimeButtonUSD"/>
 
                         <TextView
                             android:textSize="18dp"
                             android:layout_weight="1"
                             android:textColor="@android:color/holo_blue_dark"
                             android:gravity="center"
-                            android:id="@+id/startTimeTextView"
+                            android:id="@+id/startTimeTextViewUSD"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:textAlignment="center"
@@ -186,14 +186,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:text="Set End Time"
-                            android:id="@+id/endTimeButton"/>
+                            android:id="@+id/endTimeButtonUSD"/>
 
                         <TextView
                             android:layout_weight="1"
                             android:textSize="18dp"
                             android:textColor="@android:color/holo_blue_dark"
                             android:gravity="center"
-                            android:id="@+id/endTimeTextView"
+                            android:id="@+id/endTimeTextViewUSD"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:textAlignment="center"
@@ -215,27 +215,27 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/monBox"
+                        android:id="@+id/monBoxUSD"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Mon" />
 
                     <CheckBox
-                        android:id="@+id/tueBox"
+                        android:id="@+id/tueBoxUSD"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:text="Tue" />
 
                     <CheckBox
-                        android:id="@+id/wedBox"
+                        android:id="@+id/wedBoxUSD"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:text="Wed" />
 
                     <CheckBox
-                        android:id="@+id/thursBox"
+                        android:id="@+id/thursBoxUSD"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
@@ -249,20 +249,20 @@
 
 
                     <CheckBox
-                        android:id="@+id/friBox"
+                        android:id="@+id/friBoxUSD"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Fri" />
 
                     <CheckBox
-                        android:id="@+id/satBox"
+                        android:id="@+id/satBoxUSD"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:text="Sat" />
 
                     <CheckBox
-                        android:id="@+id/sunBox"
+                        android:id="@+id/sunBoxUSD"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
@@ -270,7 +270,7 @@
                 </LinearLayout>
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/min_no_of_gallons"
+                    android:id="@+id/min_no_of_gallonsUSD"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <android.support.design.widget.TextInputEditText
@@ -293,11 +293,11 @@
                 android:paddingLeft="10dp"
                 android:textSize="18dp"/>
             <RadioGroup
-                android:id="@+id/doYouHaveGallonGroup"
+                android:id="@+id/doYouHaveGallonGroupUSD"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <RadioButton
-                    android:id="@+id/yes"
+                    android:id="@+id/yesUSD"
                     android:layout_marginLeft="10dp"
                     android:text="Yes"
                     android:layout_width="wrap_content"
@@ -305,7 +305,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"/>
                 <RadioButton
-                    android:id="@+id/no"
+                    android:id="@+id/noUSD"
                     android:layout_marginLeft="10dp"
                     android:text="No"
                     android:layout_width="wrap_content"
@@ -313,7 +313,7 @@
             </RadioGroup>
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/priceOfGallon"
+                android:id="@+id/priceOfGallonUSD"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <android.support.design.widget.TextInputEditText
@@ -329,7 +329,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/noOfGallons"
+                android:id="@+id/noOfGallonsUSD"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <android.support.design.widget.TextInputEditText
@@ -344,6 +344,7 @@
                     android:textSize="18dp"/>
             </android.support.design.widget.TextInputLayout>
             <LinearLayout
+                android:layout_marginBottom="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -351,7 +352,7 @@
                 android:layout_margin="10dp">
                 <Button
                     android:layout_weight="1"
-                    android:id="@+id/submitButton"
+                    android:id="@+id/submitButtonUSD"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Update Information"

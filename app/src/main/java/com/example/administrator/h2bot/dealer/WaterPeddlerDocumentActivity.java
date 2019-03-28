@@ -126,7 +126,6 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
         stationName = findViewById(R.id.stationName);
         stationAddress = findViewById(R.id.stationAddress);
         telNo = findViewById(R.id.telNo);
-        endingHour = findViewById(R.id.endingHour);
         deliveryFee = findViewById(R.id.deliveryFee);
         min_no_of_gallons = findViewById(R.id.min_no_of_gallons);
 

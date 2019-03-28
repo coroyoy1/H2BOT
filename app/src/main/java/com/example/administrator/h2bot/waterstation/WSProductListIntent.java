@@ -1,19 +1,15 @@
 package com.example.administrator.h2bot.waterstation;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,13 +24,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 public class WSProductListIntent extends Fragment implements View.OnClickListener {
     TextView itemN, itemP, itemU, itemS, itemName, itemDescription, itemD;
     Button backBu, updateBu, deleteButton;
     String itemUi, itemNameString, itemPriceString, itemTypeString, itemStatusString, itemKeyString;
 
+    String itemPr, itemTy, itemSt, itemDel, itemDesc, itemNa;
 
     FirebaseDatabase firebaseDatabase;
     FirebaseAuth mAuth;
@@ -53,7 +49,7 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
         itemS = view.findViewById(R.id.PLIStatus);
         itemD = view.findViewById(R.id.PLIdelivery);
         itemDescription = view.findViewById(R.id.PLIDescription);
-        itemName = view.findViewById(R.id.PLIProdName);
+        itemN = view.findViewById(R.id.PLIProdName);
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
@@ -76,52 +72,31 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            String itemPr = bundle.getString("ItemPriceMDA");
-            String itemTy = bundle.getString("ItemTypeMDA");
-            String itemSt = bundle.getString("ItemStatusMDA");
-            String itemDel = bundle.getString("ItemDeliveryMDA");
-            String itemDesc = bundle.getString("ItemDescriptionMDA");
 
-            String originSt = "";
-            if (itemSt.equals("available"))
-            {
-                originSt = "Available";
-            }
-            else if (itemSt.equals("unavailable"))
-            {
-                originSt = "Unavailable";
-            }
+            itemTy = bundle.getString("ItemTypeMDA");
 
-            itemUi = bundle.getString("ItemUidMDA");
-            itemP.setText("Pickup Price: Php "+itemPr);
-            itemU.setText("Water Type: "+itemTy);
-            itemS.setText("Status: "+originSt);
-            itemD.setText("Delivery Price: Php " +itemDel);
-            itemDescription.setText("Description: "+itemDesc);
-
-            itemPriceString = bundle.getString("ItemPriceMDA");
-            itemTypeString = bundle.getString("ItemTypeMDA");
-            itemStatusString = bundle.getString("ItemStatusMDA");
-            itemDeliveryString = bundle.getString("itemDeliveryMDA");
-
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File");
-            databaseReference.child(firebaseUser.getUid()).child(itemTy)
-                    .addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            WSWDWaterTypeFile wswdWaterTypeFile = dataSnapshot.getValue(WSWDWaterTypeFile.class);
-                            if (wswdWaterTypeFile != null)
-                            {
-                                itemDescription.setText(wswdWaterTypeFile.getWater_description());
-                                itemName.setText(wswdWaterTypeFile.getWater_name());
-                            }
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File");
+        databaseReference.child(firebaseUser.getUid()).child(itemTy)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        WSWDWaterTypeFile wswdWaterTypeFile = dataSnapshot.getValue(WSWDWaterTypeFile.class);
+                        if (wswdWaterTypeFile != null)
+                        {
+                            itemDescription.setText("Description: "+wswdWaterTypeFile.getWater_description());
+                            itemN.setText(wswdWaterTypeFile.getWater_name());
+                            itemP.setText("Pickup Price: "+wswdWaterTypeFile.getPickup_price_per_gallon());
+                            itemU.setText("Water Type: "+wswdWaterTypeFile.getWater_type());
+                            itemD.setText("Delivery Price: "+wswdWaterTypeFile.getDelivery_price_per_gallon());
+                            itemS.setText("Status: "+wswdWaterTypeFile.getWater_status());
                         }
+                    }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        }
-                    });
+                    }
+                });
 
         }
         return view;
@@ -130,7 +105,7 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
     public void deleteData()
     {
         progressDialog.show();
-        databaseReference.child(firebaseUser.getUid()).child(itemTypeString).removeValue()
+        databaseReference.child(firebaseUser.getUid()).child(itemTy).removeValue()
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -159,23 +134,6 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
         Toast.makeText(getActivity(),s, Toast.LENGTH_SHORT).show();
     }
 
-    public String DataID(String itemUD)
-    {
-        return itemUD;
-    }
-    public String DataPrice(String itemPrice)
-    {
-        return itemPrice;
-    }
-    public String DataType(String itemType)
-    {
-        return itemType;
-    }
-    public String DataStatus(String itemStatus)
-    {
-        return itemStatus;
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId())
@@ -191,11 +149,6 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
                         .commit();
                 break;
             case R.id.PLIupdatebutton:
-                String uidString = DataID(itemUi);
-                String typeString = DataType(itemTypeString);
-                String priceString = DataPrice(itemPriceString);
-                String statusString = DataStatus(itemStatusString);
-
                 WSProductListUpdate updateitem = new WSProductListUpdate();
                 AppCompatActivity activityapp = (AppCompatActivity) v.getContext();
                 activityapp.getSupportFragmentManager()
@@ -205,10 +158,12 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
                         .addToBackStack(null)
                         .commit();
                 Bundle args = new Bundle();
-                args.putString("ItemUidPLI", uidString);
-                args.putString("ItemPricePLI", priceString);
-                args.putString("ItemTypePLI", typeString);
-                args.putString("ItemStatusPLI", statusString);
+                args.putString("ItemPricePLI", itemPr);
+                args.putString("ItemTypePLI", itemTy);
+                args.putString("ItemStatusPLI", itemSt);
+                args.putString("ItemDescPLI", itemDesc);
+                args.putString("ItemDeliveryPLI", itemDel);
+                args.putString("ItemNamePLI", itemNa);
                 updateitem.setArguments(args);
                 break;
             case R.id.PLIDeletebutton:
