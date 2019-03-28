@@ -72,6 +72,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.sql.Array;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -1128,14 +1129,14 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
         startTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment dFragment = new TimePickerStartingTimeFragment();
+                DialogFragment dFragment = new TimePickerStartingFragmentForUpdate();
                 dFragment.show(getActivity().getFragmentManager(),"Time Picker");
             }
         });
         endTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment dFragment = new TimePickerEndingTimeFragment();
+                DialogFragment dFragment = new TimePickerEndingFragmentForUpdate();
                 dFragment.show(getActivity().getFragmentManager(),"Time Picker");
             }
         });
@@ -1182,31 +1183,31 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                         str = str.replaceAll(" ", "");
                         if (str.toLowerCase().equals("Monday".toLowerCase()))
                         {
-                            mon.setChecked(true);
+                            mon.setEnabled(true);
                         }
                         if (str.toLowerCase().equals("Tuesday".toLowerCase()))
                         {
-                            tue.setChecked(true);
+                            tue.setEnabled(true);
                         }
                         if (str.toLowerCase().equals("Wednesday".toLowerCase()))
                         {
-                            wed.setChecked(true);
+                            wed.setEnabled(true);
                         }
                         if (str.toLowerCase().equals("Thursday".toLowerCase()))
                         {
-                            thurs.setChecked(true);
+                            thurs.setEnabled(true);
                         }
                         if (str.toLowerCase().equals("Friday".toLowerCase()))
                         {
-                            fri.setChecked(true);
+                            fri.setEnabled(true);
                         }
                         if (str.toLowerCase().equals("Saturday".toLowerCase()))
                         {
-                            sat.setChecked(true);
+                            sat.setEnabled(true);
                         }
                         if (str.toLowerCase().equals("Sunday".toLowerCase()))
                         {
-                            sun.setChecked(true);
+                            sun.setEnabled(true);
                         }
                     }
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_Docs_File");
@@ -1493,6 +1494,7 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                         @Override
                         public void onSuccess(Uri uri) {
                             business = uri.toString();
+                            uploadBusinessPermit(business);
                         }
                     });
                 }
@@ -1512,6 +1514,7 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                         @Override
                         public void onSuccess(Uri uri) {
                             physicochemical = uri.toString();
+                            uploadPhysicoChemicalPermit(physicochemical);
                         }
                     });
                 }
@@ -1529,15 +1532,37 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                         @Override
                         public void onSuccess(Uri uri) {
                             sanitary = uri.toString();
+                            uploadSanitaryPermit(sanitary);
                         }
                     });
                 }
             });
-
-            uploadEachImages(business, sanitary, physicochemical);
+            getLocationSetter();
         }
     }
-    public void uploadEachImages(String business, String sanitary, String physicochemical)
+    public void uploadSanitaryPermit(String sanitary)
+    {
+        if (!sanitary.isEmpty())
+        {
+            FirebaseDatabase.getInstance().getReference("User_WS_Docs_File").child(mAuth.getCurrentUser().getUid())
+                    .child("station_sanitary_permit")
+                    .setValue(sanitary)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid)
+                        {
+                            Toast.makeText(getActivity(), "Uploaded ", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+    public void uploadBusinessPermit(String business)
     {
         if (!business.isEmpty())
         {
@@ -1558,25 +1583,9 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                         }
                     });
         }
-        if (!sanitary.isEmpty())
-        {
-            FirebaseDatabase.getInstance().getReference("User_WS_Docs_File").child(mAuth.getCurrentUser().getUid())
-                    .child("station_sanitary_permit")
-                    .setValue(sanitary)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid)
-                        {
-                            Toast.makeText(getActivity(), "Uploaded ", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }
+    }
+    public void uploadPhysicoChemicalPermit(String physicochemical)
+    {
         if (!physicochemical.isEmpty())
         {
             FirebaseDatabase.getInstance().getReference("User_WS_Docs_File").child(mAuth.getCurrentUser().getUid())
@@ -1596,7 +1605,6 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                         }
                     });
         }
-        getLocationSetter();
     }
     @Override
     public void onClick(View v) {
