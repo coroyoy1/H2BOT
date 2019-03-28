@@ -84,7 +84,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickListener{
 
-//    private static final int PICK_IMAGE_REQUEST = 1;
+    //    private static final int PICK_IMAGE_REQUEST = 1;
 //    ImageView businessPermit_image, sanitaryPermit_image, physicochemicalPermit_Image, birPermit_Image;
 //    Button businessPermitBtn, sanitaryPermitBtn,
 //            physicochemicalbutton, birbutton, submitButton;
@@ -1163,7 +1163,7 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                     currentNoGallonEdit.getEditText().setText(stationBusiness.getBusiness_current_no_gallons());
                     priceOfGallonEdit.getEditText().setText(stationBusiness.getBusiness_price_of_gallon());
                     if (stationBusiness.getBusiness_current_no_gallons().toLowerCase().equals("none".toLowerCase())
-                            && stationBusiness.getBusiness_min_no_of_gallons().toLowerCase().equals("none".toLowerCase()))
+                            && stationBusiness.getBusiness_price_of_gallon().toLowerCase().equals("none".toLowerCase()))
                     {
                         haveGallonGroup.check(R.id.noUSD);
                     }
@@ -1209,6 +1209,28 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                             sun.setChecked(true);
                         }
                     }
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_Docs_File");
+                    databaseReference.child(mAuth.getCurrentUser().getUid())
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    WSDocFile wsDocFile = dataSnapshot.getValue(WSDocFile.class);
+                                    if (wsDocFile != null)
+                                    {
+                                        String businessPermit = wsDocFile.getStation_business_permit();
+                                        String sanitaryPermit = wsDocFile.getStation_sanitary_permit();
+                                        String physicochemicalPermit = wsDocFile.getStation_physicochemical_permit();
+                                        Picasso.get().load(businessPermit).fit().centerCrop().into(businessPermit_image);
+                                        Picasso.get().load(sanitaryPermit).fit().centerCrop().into(sanitaryPermit_image);
+                                        Picasso.get().load(physicochemicalPermit).fit().centerCrop().into(physicochemicalPermit_Image);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
                 }
             }
 
@@ -1217,6 +1239,46 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
 
             }
         });
+    }
+    private void updateBusinessInfo()
+    {
+        mAddress = stationAddress.getEditText().getText().toString();
+        if (checkAddress(mAddress))
+        {
+            showMessages("Address is not valid, Please make sure your input are correct!");
+            return;
+        }
+        StationBusinessInfo stationBusinessInfo = new StationBusinessInfo(
+                mAuth.getCurrentUser().getUid(),
+                stationName.getEditText().getText().toString(),
+                stationAddress.getEditText().getText().toString(),
+                telNo.getEditText().getText().toString(),
+                startTimeView.getText().toString(),
+                endTimeView.getText().toString(),
+                week.toString(),
+                min_no_of_gallons.getEditText().getText().toString(),
+                priceOfGallonEdit.getEditText().getText().toString(),
+                currentNoGallonEdit.getEditText().getText().toString(),
+                "active"
+        );
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
+        databaseReference.child(mAuth.getCurrentUser().getUid()).setValue(stationBusinessInfo)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful())
+                        {
+                            uploadAllImage();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        showMessages("Failed to update your business info, please check internet connection!");
+                        progressDialog.dismiss();
+                    }
+                });
     }
 
     private boolean checkAddress(String mAddress)
@@ -1234,7 +1296,6 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
         }
         return false;
     }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1262,8 +1323,6 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                             sb.append(myItem.getValue());
                             sb.append("\n");
                         }
-                        Log.d("Data: ", sb.toString());
-                        Log.d("Station name: ", stationName.getEditText().getText().toString().toLowerCase());
                         if(sb.toString().toLowerCase().contains(stationName.getEditText().getText().toString().toLowerCase())){
                             Picasso.get().load(filepath).fit().centerCrop().into(businessPermit_image);
                             Toast.makeText(getActivity(), "Valid business permit", Toast.LENGTH_SHORT).show();
@@ -1356,17 +1415,10 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
             Toast.makeText(getActivity(), "You haven't picked an image",Toast.LENGTH_LONG).show();
         }
     }
-    private void updateBusinessInfo(String emailAddress, String password){
-        if (checkAddress(mAddress))
-        {
-            showMessages("Address is not valid, Please make sure your input are correct!");
-            return;
-        }
-    }
     private void getLocationSetter()
     {
         progressDialog.show();
-        progressDialog.setMessage("Location Finishing");
+        progressDialog.setMessage("Finishing the BusinessInfo");
         Geocoder coder = new Geocoder(getActivity());
         List<Address> address;
         Address LocationAddress = null;
@@ -1389,7 +1441,7 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            showMessages("Successfully Submitted");
+                            showMessages("Successfully Updated");
                             progressDialog.dismiss();
                         }
                     })
@@ -1417,9 +1469,14 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
     }
     public void checkDocuments(){
         if(businessPermit_image.getDrawable() == null
-                || sanitaryPermit_image.getDrawable() == null){
-            Toast.makeText(getActivity(), "Please fill all the requirments", Toast.LENGTH_SHORT).show();
+                || sanitaryPermit_image.getDrawable() == null
+                || physicochemicalPermit_Image.getDrawable() == null){
+            Toast.makeText(getActivity(), "Please upload document", Toast.LENGTH_SHORT).show();
             return;
+        }
+        else
+        {
+            updateBusinessInfo();
         }
     }
     public void uploadAllImage(){
@@ -1460,8 +1517,6 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                 }
             });
         }
-
-
         if(filepath2 != null){
             FirebaseUser user = mAuth.getCurrentUser();
             String userId = user.getUid();
@@ -1473,47 +1528,75 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                     result.addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            String stringUri = uri.toString();
-                            WSDocFile wsDocFile = new WSDocFile(userId,
-                                    business,
-                                    stringUri,
-                                    physicochemical,
-                                    bir,
-                                    "active");
-
-                            FirebaseDatabase.getInstance().getReference("User_WS_Docs_File").child(userId).setValue(wsDocFile)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            startActivity(new Intent(getActivity(), LoginActivity.class));
-                                            mAuth.signOut();
-                                            Toast.makeText(getActivity(), "Successfully registered", Toast.LENGTH_SHORT).show();
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                            sanitary = uri.toString();
                         }
                     });
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
-                }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                    progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
-                    progressDialog.show();
-                }
             });
+
+            uploadEachImages(business, sanitary, physicochemical);
         }
+    }
+    public void uploadEachImages(String business, String sanitary, String physicochemical)
+    {
+        if (!business.isEmpty())
+        {
+            FirebaseDatabase.getInstance().getReference("User_WS_Docs_File").child(mAuth.getCurrentUser().getUid())
+                    .child("station_business_permit")
+                    .setValue(business)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid)
+                        {
+                            Toast.makeText(getActivity(), "Uploaded ", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+        if (!sanitary.isEmpty())
+        {
+            FirebaseDatabase.getInstance().getReference("User_WS_Docs_File").child(mAuth.getCurrentUser().getUid())
+                    .child("station_sanitary_permit")
+                    .setValue(sanitary)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid)
+                        {
+                            Toast.makeText(getActivity(), "Uploaded ", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+        if (!physicochemical.isEmpty())
+        {
+            FirebaseDatabase.getInstance().getReference("User_WS_Docs_File").child(mAuth.getCurrentUser().getUid())
+                    .child("station_physicochemical_permit")
+                    .setValue(physicochemical)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid)
+                        {
+                            Toast.makeText(getActivity(), "Uploaded ", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+        getLocationSetter();
     }
     @Override
     public void onClick(View v) {

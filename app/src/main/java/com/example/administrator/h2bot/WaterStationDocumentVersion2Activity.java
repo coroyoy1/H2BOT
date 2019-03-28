@@ -468,7 +468,7 @@ public class WaterStationDocumentVersion2Activity extends AppCompatActivity impl
                                                     telNo.getEditText().getText().toString(),
                                                     startTimeView.getText().toString(),
                                                     endTimeView.getText().toString(),
-                                                    week.toString(),
+                                                    week.toString().substring(0, week.size()-1),
                                                     min_no_of_gallons.getEditText().getText().toString(),
                                                     priceOfGallonEdit.getEditText().getText().toString(),
                                                     currentNoGallonEdit.getEditText().getText().toString(),

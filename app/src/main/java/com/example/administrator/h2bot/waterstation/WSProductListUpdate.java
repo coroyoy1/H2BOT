@@ -12,14 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
-import com.example.administrator.h2bot.models.UserWSWDWaterTypeFile;
 import com.example.administrator.h2bot.models.WSWDWaterTypeFile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,7 +29,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class WSProductListUpdate extends Fragment implements View.OnClickListener {
@@ -106,8 +102,8 @@ public class WSProductListUpdate extends Fragment implements View.OnClickListene
                     {
                         productDescription.getEditText().setText(wswdWaterTypeFile.getWater_description());
                         productName.getEditText().setText(wswdWaterTypeFile.getWater_name());
-                        productUpdateDelivery.getEditText().setText(wswdWaterTypeFile.getDelivery_price());
-                        productUpdatePickup.getEditText().setText(wswdWaterTypeFile.getPickup_price());
+                        productUpdateDelivery.getEditText().setText(wswdWaterTypeFile.getDelivery_price_per_gallon());
+                        productUpdatePickup.getEditText().setText(wswdWaterTypeFile.getPickup_price_per_gallon());
                         productUpdateType.setText(wswdWaterTypeFile.getWater_type());
                         if (wswdWaterTypeFile.getWater_status().toLowerCase().equals("available".toLowerCase()))
                         {

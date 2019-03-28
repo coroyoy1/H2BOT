@@ -1,19 +1,15 @@
 package com.example.administrator.h2bot.waterstation;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +24,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 public class WSProductListIntent extends Fragment implements View.OnClickListener {
     TextView itemN, itemP, itemU, itemS, itemName, itemDescription, itemD;
@@ -90,9 +85,9 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
                         {
                             itemDescription.setText("Description: "+wswdWaterTypeFile.getWater_description());
                             itemN.setText(wswdWaterTypeFile.getWater_name());
-                            itemP.setText("Pickup Price: "+wswdWaterTypeFile.getPickup_price());
+                            itemP.setText("Pickup Price: "+wswdWaterTypeFile.getPickup_price_per_gallon());
                             itemU.setText("Water Type: "+wswdWaterTypeFile.getWater_type());
-                            itemD.setText("Delivery Price: "+wswdWaterTypeFile.getDelivery_price());
+                            itemD.setText("Delivery Price: "+wswdWaterTypeFile.getDelivery_price_per_gallon());
                             itemS.setText("Status: "+wswdWaterTypeFile.getWater_status());
                         }
                     }

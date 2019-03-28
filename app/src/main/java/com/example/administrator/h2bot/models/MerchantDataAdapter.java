@@ -40,8 +40,8 @@ public class MerchantDataAdapter extends RecyclerView.Adapter<MerchantDataAdapte
         imageViewHolder.PLItemNameHolder.setText(currentData.getWater_type());
         imageViewHolder.PLItemNoHolder.setText(currentData.getWater_name());
 
-        final String itemPrice = currentData.getPickup_price();
-        final String itemDelivery = currentData.getDelivery_price();
+        final String itemPrice = currentData.getPickup_price_per_gallon();
+        final String itemDelivery = currentData.getDelivery_price_per_gallon();
         final String itemType = currentData.getWater_type();
         final String itemUid = currentData.getWater_seller_id();
         final String itemStatus = currentData.getWater_status();
