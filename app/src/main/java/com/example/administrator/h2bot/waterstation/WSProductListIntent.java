@@ -85,9 +85,9 @@ public class WSProductListIntent extends Fragment implements View.OnClickListene
                         {
                             itemDescription.setText("Description: "+wswdWaterTypeFile.getWater_description());
                             itemN.setText(wswdWaterTypeFile.getWater_name());
-                            itemP.setText("Pickup Price: "+wswdWaterTypeFile.getPickup_price_per_gallon());
+                            itemP.setText("Pickup Price Per Gallon: Php "+wswdWaterTypeFile.getPickup_price_per_gallon());
                             itemU.setText("Water Type: "+wswdWaterTypeFile.getWater_type());
-                            itemD.setText("Delivery Price: "+wswdWaterTypeFile.getDelivery_price_per_gallon());
+                            itemD.setText("Delivery Price Per Gallon: Php "+wswdWaterTypeFile.getDelivery_price_per_gallon());
                             itemS.setText("Status: "+wswdWaterTypeFile.getWater_status());
                         }
                     }

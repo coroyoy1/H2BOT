@@ -1,6 +1,7 @@
 package com.example.administrator.h2bot.waterstation;
 
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,20 +11,45 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.models.MerchantCustomerFile;
+import com.example.administrator.h2bot.models.OrderModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class WSDashboard extends Fragment implements View.OnClickListener {
 
-    Button updateInfo, addProduct;
-    CardView currentIN, currentPEN, currentCOM;
+    private Button updateInfo, addProduct;
+    private CardView currentIN, currentPEN, currentCOM;
+    private TextView numCountPEN, numCountIN, numCountCOM;
+
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
+
+    private List<MerchantCustomerFile> merchantCustomerFileList;
+    private List<OrderModel> orderModelList;
+
+    private int countComppleted, countPending, countInProgress;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ws_dashboard, container, false);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
 
         cardViews(view);
         onClickers();
@@ -41,6 +67,17 @@ public class WSDashboard extends Fragment implements View.OnClickListener {
         currentIN = view.findViewById(R.id.currentInProgress);
         currentPEN = view.findViewById(R.id.currentPending);
         currentCOM = view.findViewById(R.id.currentCompleted);
+
+        //TextView
+        numCountCOM = view.findViewById(R.id.zeroCOM);
+        numCountIN = view.findViewById(R.id.zeroIN);
+        numCountPEN = view.findViewById(R.id.zeroPEN);
+
+        merchantCustomerFileList = new ArrayList<>();
+        orderModelList = new ArrayList<>();
+
+        getCustomerFile();
+        getMerchantFile();
     }
 
     private void onClickers()
@@ -51,6 +88,78 @@ public class WSDashboard extends Fragment implements View.OnClickListener {
         currentIN.setOnClickListener(this);
         currentPEN.setOnClickListener(this);
     }
+
+    //Valuelistener
+    public void countChildren()
+    {
+        countComppleted = countPending = countInProgress = 0;
+        if(merchantCustomerFileList.size() == 0 || orderModelList.size() == 0){
+            return;
+        }
+        for(MerchantCustomerFile file : merchantCustomerFileList){
+            for(OrderModel list : orderModelList){
+                if(file.getStation_id().equalsIgnoreCase(firebaseUser.getUid()) && file.getCustomer_id().equalsIgnoreCase(list.getOrder_customer_id())){
+                    if(list.getOrder_status().equalsIgnoreCase("Pending")){
+                        countPending++;
+                    }else if(list.getOrder_status().equalsIgnoreCase("Completed")){
+                        countComppleted++;
+                    }
+                    else if (list.getOrder_status().equalsIgnoreCase("In-Progress")) {
+                        countInProgress++;
+                    }
+                }
+            }
+        }
+        numCountPEN.setText(countPending + "");
+        numCountCOM.setText(countComppleted + "");
+        numCountIN.setText(countInProgress + "");
+    }
+
+    public void getCustomerFile(){
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
+        databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                        for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren()){
+                            for (DataSnapshot dataSnapshot3 : dataSnapshot2.getChildren()){
+                                OrderModel orderModel = dataSnapshot3.getValue(OrderModel.class);
+                                if (orderModel.getOrder_merchant_id().equalsIgnoreCase(firebaseUser.getUid()))
+                                {
+                                    orderModelList.add(orderModel);
+                                }
+                            }
+                        }
+                    }
+                    countChildren();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+    }
+
+    public void getMerchantFile(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Merchant_File");
+        databaseReference.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot value : dataSnapshot.getChildren()){
+                    MerchantCustomerFile merchantCustomerFile = value.getValue(MerchantCustomerFile.class);
+                    merchantCustomerFileList.add(merchantCustomerFile);
+                }
+                countChildren();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
 
     //Card View Intent
