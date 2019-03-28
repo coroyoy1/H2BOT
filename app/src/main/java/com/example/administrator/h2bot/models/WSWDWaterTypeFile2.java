@@ -4,18 +4,18 @@ public class WSWDWaterTypeFile2 {
     private String water_seller_id;
     private String water_name;
     private String water_type;
-    private String delivery_price;
+    private String delivery_price_per_gallon;
     private String water_description;
     private String water_status;
 
     public WSWDWaterTypeFile2() {
     }
 
-    public WSWDWaterTypeFile2(String water_seller_id, String water_name, String water_type, String delivery_price, String water_description, String water_status) {
+    public WSWDWaterTypeFile2(String water_seller_id, String water_name, String water_type, String delivery_price_per_gallon, String water_description, String water_status) {
         this.water_seller_id = water_seller_id;
         this.water_name = water_name;
         this.water_type = water_type;
-        this.delivery_price = delivery_price;
+        this.delivery_price_per_gallon = delivery_price_per_gallon;
         this.water_description = water_description;
         this.water_status = water_status;
     }
@@ -45,11 +45,11 @@ public class WSWDWaterTypeFile2 {
     }
 
     public String getDelivery_price() {
-        return delivery_price;
+        return delivery_price_per_gallon;
     }
 
-    public void setDelivery_price(String delivery_price) {
-        this.delivery_price = delivery_price;
+    public void setDelivery_price(String delivery_price_per_gallon) {
+        this.delivery_price_per_gallon = delivery_price_per_gallon;
     }
 
     public String getWater_description() {
