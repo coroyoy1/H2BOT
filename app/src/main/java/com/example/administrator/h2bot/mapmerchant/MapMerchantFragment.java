@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -26,6 +27,8 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
@@ -106,6 +109,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.example.administrator.h2bot.Notification.CHANNEL_3_ID;
+
 public class MapMerchantFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         LocationListener, IOBackPressed, View.OnClickListener
 {
@@ -120,6 +125,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
     private Marker mCurrentLocationMarker;
     private static final int REQUEST_USER_LOCATION_CODE = 99;
     public static final String EXTRA_stationID = "stationID";
+    private NotificationManagerCompat notificationManager;
 
     private ChildEventListener mChilExventListener;
     private Location mCurrentLocation;
@@ -187,7 +193,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_map_merchant_fragment, container, false);
-
+        notificationManager = NotificationManagerCompat.from(getActivity());
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
         Bundle bundle = this.getArguments();
@@ -294,7 +300,18 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
     }
 
     //View Inputs~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    private void sendNotification() {
+        Log.d("Hi","Hi RYAN");
+        Notification notification = new NotificationCompat.Builder(getActivity(), CHANNEL_3_ID)
+                .setSmallIcon(R.drawable.ic_arrow_down)
+                .setContentTitle("H2BOT")
+                .setContentText("Order Accepted")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .build();
 
+        notificationManager.notify(1, notification);
+    }
     public void inputData(View view)
     {
         order = view.findViewById(R.id.orderDetails);
@@ -749,6 +766,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                                                     StationBusinessInfo stationBusinessInfo = dataSnapshot.getValue(StationBusinessInfo.class);
                                                     if (stationBusinessInfo != null)
                                                     {
+
                                                         String message = "Your order:"+transactionNo+" has been accepted by "+stationBusinessInfo.getBusiness_name()+". We will notify you for further details. Thank You!";
                                                         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
                                                                 != PackageManager.PERMISSION_GRANTED)
@@ -757,6 +775,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                                                                     MY_PERMISSIONS_REQUEST_SEND_SMS);
                                                         }
                                                         else {
+                                                            sendNotification();
                                                             SmsManager sms = SmsManager.getDefault();
                                                             sms.sendTextMessage(contactNoMMF.getText().toString(), null, message, sentPI, deliveredPI);
                                                         }

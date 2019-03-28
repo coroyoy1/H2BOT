@@ -30,6 +30,7 @@
         android:protectionLevel="signature" />
 
     <application
+        android:name="Notification"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -58,9 +59,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".mapmerchant.MapMerchantFragment"
-            android:label="@string/title_activity_map_merchant_fragment"/>
+        <!--<activity-->
+            <!--android:name=".mapmerchant.MapMerchantFragment"-->
+            <!--android:label="@string/title_activity_map_merchant_fragment"/>-->
         <activity android:name=".stationtoaffiliate.StationToAffiliateMainActivity" />
         <activity
             android:name=".tpaaffiliate.TPAScanCodeActivity"
