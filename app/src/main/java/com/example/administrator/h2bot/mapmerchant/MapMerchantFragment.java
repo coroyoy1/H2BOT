@@ -43,6 +43,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.h2bot.dealer.WPCompletedAccept;
+import com.example.administrator.h2bot.dealer.WPPendingOrdersFragment;
 import com.example.administrator.h2bot.deliveryman.DMCompleteFragment;
 import com.example.administrator.h2bot.maps.DirectionsParser;
 import com.example.administrator.h2bot.maps.IOBackPressed;
@@ -308,6 +310,8 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                 .setContentText("Order Accepted")
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .setVibrate(new long[]{250,300,350,500,1000})
+                .setDefaults( Notification.DEFAULT_ALL)
                 .build();
 
         notificationManager.notify(1, notification);
