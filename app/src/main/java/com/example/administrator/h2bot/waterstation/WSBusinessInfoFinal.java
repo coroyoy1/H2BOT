@@ -1183,31 +1183,31 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                         str = str.replaceAll(" ", "");
                         if (str.toLowerCase().equals("Monday".toLowerCase()))
                         {
-                            mon.setEnabled(true);
+                            mon.setChecked(true);
                         }
                         if (str.toLowerCase().equals("Tuesday".toLowerCase()))
                         {
-                            tue.setEnabled(true);
+                            tue.setChecked(true);
                         }
                         if (str.toLowerCase().equals("Wednesday".toLowerCase()))
                         {
-                            wed.setEnabled(true);
+                            wed.setChecked(true);
                         }
                         if (str.toLowerCase().equals("Thursday".toLowerCase()))
                         {
-                            thurs.setEnabled(true);
+                            thurs.setChecked(true);
                         }
                         if (str.toLowerCase().equals("Friday".toLowerCase()))
                         {
-                            fri.setEnabled(true);
+                            fri.setChecked(true);
                         }
                         if (str.toLowerCase().equals("Saturday".toLowerCase()))
                         {
-                            sat.setEnabled(true);
+                            sat.setChecked(true);
                         }
                         if (str.toLowerCase().equals("Sunday".toLowerCase()))
                         {
-                            sun.setEnabled(true);
+                            sun.setChecked(true);
                         }
                     }
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_Docs_File");
