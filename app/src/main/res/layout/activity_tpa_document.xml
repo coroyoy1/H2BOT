@@ -59,8 +59,23 @@
                     android:layout_marginLeft="50dp"
                     android:layout_marginRight="50dp"
                     android:background="@android:color/holo_blue_dark"
-                    android:text="Choose Image"
+                    android:text="Choose Driver's License"
                     android:textColor="@android:color/white" />
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:id="@+id/NBIImageView"
+                    android:src="@drawable/ic_image_black_24dp"/>
+                <Button
+                    android:id="@+id/NBIButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Add NBI Clearance"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_margin="10dp"
+                    android:background="@android:color/holo_blue_dark"
+                    android:textColor="@android:color/white"/>
             </LinearLayout>
 
             <LinearLayout

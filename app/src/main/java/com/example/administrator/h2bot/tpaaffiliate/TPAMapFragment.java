@@ -86,10 +86,12 @@ public class TPAMapFragment extends Fragment
     FirebaseUser firebaseUser;
     String affiliatename, merchantno, affiliateOrderStatus;
     String affiliateNo;
-    // User Permissions
+    // User PermissionsFF
     String oldpointsaffiliatefinal, oldpointsstationfinal;
     Double newpointsaffiliatefinal, newpointsstationfinal;
-    String pickUpPricePerGallon, deliveryPricePerGallon;
+    Double pickUpPricePerGallon, deliveryPricePerGallon;
+    Double partialDelivery, partialPickup;
+    Double profit;
     TextView noOfGallons, Profit, stationadd, fundAmt;
     private GoogleMap map;
     String pointsoldaffiliate, pointsoldstation, pointsnewaffiliate, pointsnewstation;
@@ -567,57 +569,47 @@ public class TPAMapFragment extends Fragment
         userFileRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("kapoy", "ya");
                 for (DataSnapshot userData : dataSnapshot.getChildren()) {
                     UserFile userFile = userData.getValue(UserFile.class);
                     businessRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            Log.d("kapoy", "yaya");
                             for (DataSnapshot infoFile : dataSnapshot.getChildren()) {
                                 userLatLongRef.addValueEventListener(new ValueEventListener() {
                                     UserWSBusinessInfoFile businessInfo = infoFile.getValue(UserWSBusinessInfoFile.class);
 
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        getPrice();
                                         for (DataSnapshot latlongFile : dataSnapshot.getChildren()) {
-                                            Log.d("Gago", "maso");
                                             UserLocationAddress locationFile = latlongFile.getValue(UserLocationAddress.class);
                                             if (userFile.getUser_getUID().equals(businessInfo.getBusiness_id())
                                                     && businessInfo.getBusiness_id().equals(locationFile.getUser_id())) {
                                                 if (userFile.getUser_type().equals("Water Station")) {
-                                                    Log.d("Gago", "maskoo");
                                                     if (userFile.getUser_status().equalsIgnoreCase("Active")) {
-                                                        Log.d("Gago", "koo");
                                                         orderModel.addValueEventListener(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                Log.d("Gago", "ka");
                                                                 for (DataSnapshot order : dataSnapshot.getChildren()) {
-                                                                    Log.d("Gago", "ko");
                                                                     for (DataSnapshot userData2 : order.getChildren()) {
-                                                                        Log.d("Gago", "ki");
                                                                         for (DataSnapshot userData3 : userData2.getChildren()) {
-                                                                            Log.d("Gago", "ku");
                                                                             OrderModel userData4 = userData3.getValue(OrderModel.class);
                                                                             String statusOrder = userData3.child("order_status").getValue(String.class);
-                                                                            Log.d("ID", stationId + "" + customer_id);
-                                                                            Log.d("Kaykay", "" + statusOrder);
                                                                             if (statusOrder.equals("Broadcasting")) {
-                                                                                Log.d("sAddress", userData3.child("order_merchant_id") + "=" + businessInfo.getBusiness_id());
                                                                                 if (userData3.child("order_merchant_id").getValue(String.class).equals(businessInfo.getBusiness_id())) {
                                                                                     stationaddress = businessInfo.getBusiness_address();
-                                                                                    Log.d("sAddress", "hi" + stationAddress);
                                                                                 }
                                                                                 noOfGallons.setText(userData4.getOrder_qty());
-                                                                                Profit.setText(userData4.getOrder_delivery_fee());
+                                                                                partialDelivery = deliveryPricePerGallon * Double.valueOf(noOfGallons.getText().toString());
+                                                                                partialPickup = pickUpPricePerGallon * Double.valueOf(noOfGallons.getText().toString());
+
+                                                                                Double profit = partialDelivery - partialPickup;
+                                                                                Profit.setText(profit.toString());
                                                                                 stationadd.setText(stationaddress);
-                                                                                fundAmt.setText(userData3.child("order_partial_amt").getValue(String.class));
+                                                                                fundAmt.setText(partialPickup.toString());
                                                                                 String type = "Type: " + userType;
                                                                                 station_id_snip = stationId;
-
-
-                                                                            }
+                                                                          }
                                                                         }
                                                                     }
                                                                 }
@@ -1135,8 +1127,8 @@ public class TPAMapFragment extends Fragment
             getPrice.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    pickUpPricePerGallon = dataSnapshot.child("delivery_price_per_gallon").getValue(String.class);
-                    deliveryPricePerGallon = dataSnapshot.child("pickup_price_per_gallon").getValue(String.class);
+                    pickUpPricePerGallon = Double.valueOf(dataSnapshot.child("delivery_price_per_gallon").getValue(String.class));
+                    deliveryPricePerGallon = Double.valueOf(dataSnapshot.child("pickup_price_per_gallon").getValue(String.class));
                 }
 
                 @Override
