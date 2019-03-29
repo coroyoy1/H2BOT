@@ -165,6 +165,7 @@
 
                         <TextView
                             android:textSize="18dp"
+                            android:inputType="time"
                             android:layout_weight="1"
                             android:textColor="@android:color/holo_blue_dark"
                             android:gravity="center"
@@ -193,6 +194,7 @@
                             android:textSize="18dp"
                             android:textColor="@android:color/holo_blue_dark"
                             android:gravity="center"
+                            android:inputType="time"
                             android:id="@+id/endTimeTextViewUSD"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"

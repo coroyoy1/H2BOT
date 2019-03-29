@@ -75,11 +75,11 @@ public class TPADocumentActivity extends AppCompatActivity{
     private StorageTask mUploadTask,mUploadTask2;
     private ProgressDialog progressDialog;
     private StorageReference storageReference;
-    Button licenseBtn,chooseButton2,SubmitButtonWaterPeddlerHomeActivity;
+    Button licenseBtn,NBIButton,SubmitButtonWaterPeddlerHomeActivity;
     Boolean isPicked = false;
     TextView driverLicenseNo;
-    ImageView driversLicense_image;
-    Uri filepath;
+    ImageView driversLicense_image, NBIImageView;
+    Uri filepath, filepath2;
     Button register;
     Double latitude, longitude;
 
@@ -100,6 +100,8 @@ public class TPADocumentActivity extends AppCompatActivity{
 
         mStorageRef = FirebaseStorage.getInstance().getReference("Water Dealer Documents");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("Water Dealer Documents");
+        NBIButton = findViewById(R.id.NBIButton);
+        NBIImageView = findViewById(R.id.NBIImageView);
         licenseBtn = findViewById(R.id.licenseBtn);
         driversLicense_image = findViewById(R.id.driversLicense_image);
         register = findViewById(R.id.submitButton);
@@ -127,11 +129,15 @@ public class TPADocumentActivity extends AppCompatActivity{
 
         licenseBtn.setOnClickListener(v -> {
                 isPicked = true;
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+                openGalery();
               });
+        NBIButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isPicked = false;
+                openGalery();
+            }
+        });
     }
 
     private void getLocationSetter()
@@ -199,6 +205,49 @@ public class TPADocumentActivity extends AppCompatActivity{
                     Bitmap bitmap = null;
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
+                        TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+
+                        if(!textRecognizer.isOperational())
+                        {
+                            Toast.makeText(getApplication(), "No text found", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+                            SparseArray<TextBlock> items = textRecognizer.detect(frame);
+                            StringBuilder sb= new StringBuilder();
+
+                            for(int ctr=0;ctr<items.size();ctr++)
+                            {
+                                TextBlock myItem = items.valueAt(ctr);
+                                sb.append(myItem.getValue());
+                                sb.append("\n");
+                            }
+                            Log.d("Data: ", sb.toString());
+                            Log.d("Data: ", mFirstname+""+mLastname);
+                            if(sb.toString().trim().toLowerCase().contains(mFirstname.toLowerCase())
+                                    && sb.toString().trim().toLowerCase().contains(mLastname.toLowerCase())
+                                    && sb.toString().toUpperCase().contains("LAND")
+                                    && sb.toString().toUpperCase().contains("TRANSPORTATION")
+                                    && sb.toString().toUpperCase().contains("OFFICE")
+                            ){
+                                Picasso.get().load(filepath).into(driversLicense_image);
+                                Toast.makeText(this, "Valid Driver's License", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                driversLicense_image.setImageResource(R.drawable.ic_image_black_24dp);
+                                Toast.makeText(this, "Invalid Driver's License or please use a better image.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath2);
                         TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
 
                         if(!textRecognizer.isOperational())

@@ -77,11 +77,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PrimitiveIterator;
-
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class TPAMapFragment extends Fragment
         implements
         OnMapReadyCallback,
@@ -91,10 +86,13 @@ public class TPAMapFragment extends Fragment
     FirebaseUser firebaseUser;
     String affiliatename, merchantno, affiliateOrderStatus;
     String affiliateNo;
-    // User Permissions
-    String oldpointsaffiliatefinal,oldpointsstationfinal;
-    Double newpointsaffiliatefinal,newpointsstationfinal;
-    TextView noOfGallons,Profit,stationadd,fundAmt;
+    // User PermissionsFF
+    String oldpointsaffiliatefinal, oldpointsstationfinal;
+    Double newpointsaffiliatefinal, newpointsstationfinal;
+    Double pickUpPricePerGallon, deliveryPricePerGallon;
+    Double partialDelivery, partialPickup;
+    Double profit;
+    TextView noOfGallons, Profit, stationadd, fundAmt;
     private GoogleMap map;
     String pointsoldaffiliate, pointsoldstation, pointsnewaffiliate, pointsnewstation;
     private GoogleApiClient mGoogleApiClient;
@@ -105,10 +103,10 @@ public class TPAMapFragment extends Fragment
     private static final int REQUEST_USER_LOCATION_CODE = 99;
     public FirebaseAuth mAuth;
     DatabaseReference userFileRef, merchantRef, userLatLongRef, orderModel, businessRef;
-    String stationName, userType, stationId, station_id_snip,orderno,customer_id;
+    String stationName, userType, stationId, station_id_snip, orderno, customer_id;
     String customerAddress, orderDeliveryDate, orderDeliveryFee, orderPricePerGallon, orderQty, orderTotalAmount, orderWaterType;
     String stationAddress, stationBussinessName, businessTelNo;
-    double points,pointsNeeded;
+    double points, pointsNeeded;
     LatLng latLong = null;
     double latitude, longitude;
     private BottomSheetBehavior sheetBehavior, bottomSheetBehavior;
@@ -132,6 +130,7 @@ public class TPAMapFragment extends Fragment
     BroadcastReceiver smsSentReceiver, smsDeliveredReceiver;
     double oldpointstation, newpointstation;
     double oldpointsaffiliate, newpointsaffiliate;
+
     public TPAMapFragment() {
         // Required empty public constructor
     }
@@ -160,10 +159,8 @@ public class TPAMapFragment extends Fragment
         view.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(event.getAction() == KeyEvent.ACTION_DOWN)
-                {
-                    if (keyCode == KeyEvent.KEYCODE_BACK)
-                    {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
                         attemptToExit();
                         return true;
                     }
@@ -177,7 +174,7 @@ public class TPAMapFragment extends Fragment
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkUserLocationPermission();
         }
 
@@ -228,7 +225,7 @@ public class TPAMapFragment extends Fragment
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             buildGoogleApiClient();
             map.setMyLocationEnabled(true);
             Toast.makeText(getActivity(), "Permission granted", Toast.LENGTH_SHORT).show();
@@ -242,12 +239,11 @@ public class TPAMapFragment extends Fragment
             public boolean onMarkerClick(Marker marker) {
                 Toast.makeText(getActivity(), "" + marker.getTitle(), Toast.LENGTH_SHORT).show();
                 //bottomSheetCustomer.setVisibility(View.VISIBLE);
-                if(!marker.getTitle().equalsIgnoreCase("You")){
+                if (!marker.getTitle().equalsIgnoreCase("You")) {
                     updateBottomSheetContent(marker);
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                }
-                else{
-                    if(bottomSheetBehavior.STATE_COLLAPSED == BottomSheetBehavior.STATE_COLLAPSED){
+                } else {
+                    if (bottomSheetBehavior.STATE_COLLAPSED == BottomSheetBehavior.STATE_COLLAPSED) {
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         bottomSheetCustomer.setVisibility(View.GONE);
                     }
@@ -284,19 +280,19 @@ public class TPAMapFragment extends Fragment
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-               // bottomSheetCustomer.setVisibility(View.GONE);
+                // bottomSheetCustomer.setVisibility(View.GONE);
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         });
     }
 
-    private void getBusiness(){
+    private void getBusiness() {
         merchantRef = FirebaseDatabase.getInstance().getReference("Merchant_File");
         merchantRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot infoFile : dataSnapshot.getChildren()) {
-                    for(DataSnapshot infoFile2 : infoFile.getChildren()){
+                    for (DataSnapshot infoFile2 : infoFile.getChildren()) {
                         MerchantCustomerFile merchantCustomerFile = infoFile2.getValue(MerchantCustomerFile.class);
                         merchantCustomerFileList.add(merchantCustomerFile);
                     }
@@ -311,7 +307,7 @@ public class TPAMapFragment extends Fragment
         });
     }
 
-    private void getUserFile(){
+    private void getUserFile() {
         userFileRef = FirebaseDatabase.getInstance().getReference("User_File");
         userFileRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -330,7 +326,7 @@ public class TPAMapFragment extends Fragment
         });
     }
 
-    private void getUserLatLng(){
+    private void getUserLatLng() {
         userLatLongRef = FirebaseDatabase.getInstance().getReference("User_LatLong");
         userLatLongRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -349,7 +345,7 @@ public class TPAMapFragment extends Fragment
         });
     }
 
-    private void getBusinessFile(){
+    private void getBusinessFile() {
         businessRef = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
         businessRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -368,13 +364,13 @@ public class TPAMapFragment extends Fragment
         });
     }
 
-    private void getOrderModel(){
+    private void getOrderModel() {
         orderModel = FirebaseDatabase.getInstance().getReference("Customer_File");
         orderModel.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot order : dataSnapshot.getChildren()) {
-                    for(DataSnapshot userData2 : order.getChildren()) {
+                    for (DataSnapshot userData2 : order.getChildren()) {
                         for (DataSnapshot userData3 : userData2.getChildren()) {
                             OrderModel userData4 = userData3.getValue(OrderModel.class);
                             orderModelList.add(userData4);
@@ -392,42 +388,42 @@ public class TPAMapFragment extends Fragment
         });
     }
 
-    private void getList(){
-        if(orderModelList.size() == 0 || merchantCustomerFileList.size() == 0 || businessInfoFileList.size() == 0
-                || userLocationAddressList.size() == 0 || userFileList.size() == 0){
+    private void getList() {
+        if (orderModelList.size() == 0 || merchantCustomerFileList.size() == 0 || businessInfoFileList.size() == 0
+                || userLocationAddressList.size() == 0 || userFileList.size() == 0) {
             return;
         }
 
         affiliateModel = new ArrayList<>();
 
-        for(MerchantCustomerFile merchantCustomerFile: merchantCustomerFileList){
-            for(OrderModel orderModel: orderModelList){
+        for (MerchantCustomerFile merchantCustomerFile : merchantCustomerFileList) {
+            for (OrderModel orderModel : orderModelList) {
                 String orderStatus = orderModel.getOrder_status();
-                if(merchantCustomerFile.getCustomer_id().equalsIgnoreCase(orderModel.getOrder_customer_id())
+                if (merchantCustomerFile.getCustomer_id().equalsIgnoreCase(orderModel.getOrder_customer_id())
                         && orderModel.getOrder_status().equalsIgnoreCase("Broadcasting")
-                        && merchantCustomerFile.getStation_id().equalsIgnoreCase(orderModel.getOrder_merchant_id())){
+                        && merchantCustomerFile.getStation_id().equalsIgnoreCase(orderModel.getOrder_merchant_id())) {
                     orderno = orderModel.getOrder_no();
                     customer_id = orderModel.getOrder_customer_id();
                     stationId = orderModel.getOrder_merchant_id();
 
-                    for(UserLocationAddress userLocationAddress: userLocationAddressList){
-                        if(userLocationAddress.getUser_id().equalsIgnoreCase(merchantCustomerFile.getStation_id())){
+                    for (UserLocationAddress userLocationAddress : userLocationAddressList) {
+                        if (userLocationAddress.getUser_id().equalsIgnoreCase(merchantCustomerFile.getStation_id())) {
                             latitude = Double.parseDouble(userLocationAddress.getUser_latitude());
                             longitude = Double.parseDouble(userLocationAddress.getUser_longtitude());
                             break;
                         }
                     }
 
-                    for(UserFile list: userFileList){
-                        if(merchantCustomerFile.getStation_id().equalsIgnoreCase(list.getUser_getUID())
-                                && list.getUser_type().equalsIgnoreCase("Water Station")){
+                    for (UserFile list : userFileList) {
+                        if (merchantCustomerFile.getStation_id().equalsIgnoreCase(list.getUser_getUID())
+                                && list.getUser_type().equalsIgnoreCase("Water Station")) {
                             userType = list.getUser_type();
                             break;
                         }
                     }
 
-                    for(UserWSBusinessInfoFile infoFile: businessInfoFileList){
-                        if(infoFile.getBusiness_id().equalsIgnoreCase(stationId)){
+                    for (UserWSBusinessInfoFile infoFile : businessInfoFileList) {
+                        if (infoFile.getBusiness_id().equalsIgnoreCase(stationId)) {
                             stationName = infoFile.getBusiness_name();
                             break;
                         }
@@ -448,8 +444,8 @@ public class TPAMapFragment extends Fragment
         }
     }
 
-    public void showNearest(){
-            if(affiliateModel.size() != 0){
+    public void showNearest() {
+        if (affiliateModel.size() != 0) {
             Object[] transferData = new Object[7];
             transferData[0] = affiliateModel;
             transferData[1] = currentLocation;
@@ -458,47 +454,43 @@ public class TPAMapFragment extends Fragment
             transferData[4] = currentRadius;
             transferData[5] = null;
             transferData[6] = TPAMapFragment.this;
-            if(getDistance == null) {
+            if (getDistance == null) {
                 getDistance = new GetDistance();
                 getDistance.execute(transferData);
-            }
-            else
+            } else
                 getDistance.Display();
         }
     }
 
-    public void setList(ArrayList<WaterStationOrDealer> thisList){
+    public void setList(ArrayList<WaterStationOrDealer> thisList) {
         this.thisList = thisList;
     }
 
-    public boolean checkUserLocationPermission(){
-        if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)){
+    public boolean checkUserLocationPermission() {
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_USER_LOCATION_CODE);
-            }
-            else{
+            } else {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_USER_LOCATION_CODE);
             }
             return false;
-        }
-        else{
+        } else {
             return true;
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
+        switch (requestCode) {
             case REQUEST_USER_LOCATION_CODE:
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                        if(mGoogleApiClient == null){
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        if (mGoogleApiClient == null) {
                             buildGoogleApiClient();
                         }
                         map.setMyLocationEnabled(true);
                     }
-                }
-                else{
+                } else {
                     Toast.makeText(getActivity(), "Permission denied...", Toast.LENGTH_SHORT).show();
 
                 }
@@ -506,7 +498,7 @@ public class TPAMapFragment extends Fragment
         }
     }
 
-    protected synchronized void buildGoogleApiClient(){
+    protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -519,7 +511,7 @@ public class TPAMapFragment extends Fragment
     @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
-        if(mCurrentLocationMarker != null){
+        if (mCurrentLocationMarker != null) {
             mCurrentLocationMarker.remove();
         }
         LatLng mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -528,11 +520,12 @@ public class TPAMapFragment extends Fragment
         float zoomLevel = 16.0f;
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, zoomLevel));
 
-        if(mGoogleApiClient != null){
+        if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
         showNearest();
     }
+
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         mLocationRequest = new LocationRequest();
@@ -558,7 +551,7 @@ public class TPAMapFragment extends Fragment
     private void updateBottomSheetContent(Marker marker) {
         TextView stationName = bottomSheet.findViewById(R.id.stationName);
         TextView fundAmt = bottomSheet.findViewById(R.id.fundAmt);
-        Log.d("Points",""+pointsNeeded);
+        Log.d("Points", "" + pointsNeeded);
         Button orderBtn = bottomSheet.findViewById(R.id.orderBtn);
 
 //        Button scanCode = bottomSheetCustomer.findViewById(R.id.scanCode);
@@ -576,57 +569,47 @@ public class TPAMapFragment extends Fragment
         userFileRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("kapoy","ya");
                 for (DataSnapshot userData : dataSnapshot.getChildren()) {
                     UserFile userFile = userData.getValue(UserFile.class);
                     businessRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            Log.d("kapoy","yaya");
                             for (DataSnapshot infoFile : dataSnapshot.getChildren()) {
                                 userLatLongRef.addValueEventListener(new ValueEventListener() {
                                     UserWSBusinessInfoFile businessInfo = infoFile.getValue(UserWSBusinessInfoFile.class);
+
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        getPrice();
                                         for (DataSnapshot latlongFile : dataSnapshot.getChildren()) {
-                                            Log.d("Gago","maso");
                                             UserLocationAddress locationFile = latlongFile.getValue(UserLocationAddress.class);
                                             if (userFile.getUser_getUID().equals(businessInfo.getBusiness_id())
                                                     && businessInfo.getBusiness_id().equals(locationFile.getUser_id())) {
                                                 if (userFile.getUser_type().equals("Water Station")) {
-                                                    Log.d("Gago","maskoo");
                                                     if (userFile.getUser_status().equalsIgnoreCase("Active")) {
-                                                        Log.d("Gago","koo");
                                                         orderModel.addValueEventListener(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                Log.d("Gago","ka");
                                                                 for (DataSnapshot order : dataSnapshot.getChildren()) {
-                                                                    Log.d("Gago","ko");
-                                                                    for(DataSnapshot userData2 : order.getChildren()) {
-                                                                        Log.d("Gago","ki");
+                                                                    for (DataSnapshot userData2 : order.getChildren()) {
                                                                         for (DataSnapshot userData3 : userData2.getChildren()) {
-                                                                            Log.d("Gago","ku");
                                                                             OrderModel userData4 = userData3.getValue(OrderModel.class);
-                                                                            String statusOrder =userData3.child("order_status").getValue(String.class);
-                                                                            Log.d("ID",stationId+""+customer_id);
-                                                                            Log.d("Kaykay", "" + statusOrder);
+                                                                            String statusOrder = userData3.child("order_status").getValue(String.class);
                                                                             if (statusOrder.equals("Broadcasting")) {
-                                                                                Log.d("sAddress",userData3.child("order_merchant_id")+"="+businessInfo.getBusiness_id());
-                                                                                if (userData3.child("order_merchant_id").getValue(String.class).equals(businessInfo.getBusiness_id()))
-                                                                                {
-                                                                                   stationaddress = businessInfo.getBusiness_address();
-                                                                                    Log.d("sAddress","hi"+stationAddress);
+                                                                                if (userData3.child("order_merchant_id").getValue(String.class).equals(businessInfo.getBusiness_id())) {
+                                                                                    stationaddress = businessInfo.getBusiness_address();
                                                                                 }
                                                                                 noOfGallons.setText(userData4.getOrder_qty());
-                                                                                Profit.setText(userData4.getOrder_delivery_fee());
+                                                                                partialDelivery = deliveryPricePerGallon * Double.valueOf(noOfGallons.getText().toString());
+                                                                                partialPickup = pickUpPricePerGallon * Double.valueOf(noOfGallons.getText().toString());
+
+                                                                                Double profit = partialDelivery - partialPickup;
+                                                                                Profit.setText(profit.toString());
                                                                                 stationadd.setText(stationaddress);
-                                                                                fundAmt.setText(userData3.child("order_partial_amt").getValue(String.class));
+                                                                                fundAmt.setText(partialPickup.toString());
                                                                                 String type = "Type: " + userType;
                                                                                 station_id_snip = stationId;
-
-
-                                                                            }
+                                                                          }
                                                                         }
                                                                     }
                                                                 }
@@ -704,15 +687,13 @@ public class TPAMapFragment extends Fragment
                 dialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        if(affiliateOrderStatus.equalsIgnoreCase("Accepted by affiliate")||affiliateOrderStatus.equalsIgnoreCase("Dispatched by affiliate")) {
+                        if (affiliateOrderStatus.equalsIgnoreCase("Accepted by affiliate") || affiliateOrderStatus.equalsIgnoreCase("Dispatched by affiliate")) {
                             statePoints();
-                        }
-                        else
-                        {
-                            String text="You still have an in-progress order to deliver. Please deliver it first to accept another broadcasting orders";
+                        } else {
+                            String text = "You still have an in-progress order to deliver. Please deliver it first to accept another broadcasting orders";
                             snackBar(text);
                         }
-                }
+                    }
                 })
 
                         .setNegativeButton("Cancel ", new DialogInterface.OnClickListener() {
@@ -728,28 +709,24 @@ public class TPAMapFragment extends Fragment
         });
     }
 
-    public void statePoints()
-    {
+    public void statePoints() {
         DatabaseReference wallet = FirebaseDatabase.getInstance().getReference("User_Wallet").child(firebaseUser.getUid());
         wallet.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 //                                points = Double.parseDouble(dataSnapshot.child("user_points").getValue(String.class));
                 UserWallet userWallet = dataSnapshot.getValue(UserWallet.class);
-                if (userWallet != null)
-                {
+                if (userWallet != null) {
                     String points = userWallet.getUser_points();
                     double pointAff = Double.parseDouble(points);
 
-                    if (pointAff >= pointsNeeded)
-                    {
+                    if (pointAff >= pointsNeeded) {
                         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_Wallet");
                         databaseReference.child(stationId).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 UserWallet userWallet1 = dataSnapshot.getValue(UserWallet.class);
-                                if (userWallet1 != null)
-                                {
+                                if (userWallet1 != null) {
                                     double stationPoint = Double.parseDouble(userWallet1.getUser_points());
                                     double pointAffRemaining = pointAff - pointsNeeded;
                                     double pointStationAdded = stationPoint + pointsNeeded;
@@ -757,26 +734,25 @@ public class TPAMapFragment extends Fragment
                                     String getPointAff = String.valueOf(pointAffRemaining);
                                     String getPointStation = String.valueOf(pointStationAdded);
 
-                                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_Wallet");
-                                        reference.child(firebaseUser.getUid()).child("user_points")
-                                                .setValue(getPointAff)
-                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        if (task.isSuccessful())
-                                                        {
-                                                            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("User_Wallet");
-                                                            reference1.child(stationId).child("user_points")
-                                                                    .setValue(getPointStation)
-                                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                        @Override
-                                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                                            Toast.makeText(getActivity(), "Success", Toast.LENGTH_LONG).show();
-                                                                        }
-                                                                    });
-                                                        }
+                                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_Wallet");
+                                    reference.child(firebaseUser.getUid()).child("user_points")
+                                            .setValue(getPointAff)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("User_Wallet");
+                                                        reference1.child(stationId).child("user_points")
+                                                                .setValue(getPointStation)
+                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                        Toast.makeText(getActivity(), "Success", Toast.LENGTH_LONG).show();
+                                                                    }
+                                                                });
                                                     }
-                                                });
+                                                }
+                                            });
                                 }
                             }
 
@@ -785,65 +761,61 @@ public class TPAMapFragment extends Fragment
 
                             }
                         });
-                                    DatabaseReference reference3 = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
-                                    reference3.child(stationId).addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            merchantno = dataSnapshot.child("business_tel_no").getValue(String.class);
+                        DatabaseReference reference3 = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
+                        reference3.child(stationId).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                merchantno = dataSnapshot.child("business_tel_no").getValue(String.class);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                        Log.d("Hello", stationId + "," + customer_id + "," + orderno);
+                        DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("Customer_File");
+                        reference2.child(customer_id).child(stationId).child(orderno).child("order_status").setValue("Accepted by affiliate")
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+
+                                        String message = "Your broadcasted order#:" + orderno + " has  been accepted by an affiliate named :" + affiliatename + ". For further information about " + affiliatename;
+                                        String message2 = "Contact # of " + affiliatename + ":" + affiliateNo;
+                                        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
+                                                != PackageManager.PERMISSION_GRANTED) {
+                                            Log.d("NmNakoko", "Hijhosdfgh");
+                                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SEND_SMS},
+                                                    MY_PERMISSIONS_REQUEST_SEND_SMS);
+                                        } else {
+                                            Log.d("NmNako", "Hi" + message);
+                                            SmsManager sms = SmsManager.getDefault();
+                                            Log.d("Log.d", "" + merchantno);
+                                            sms.sendTextMessage(merchantno, null, message, sentPI, deliveredPI);
+                                            sms.sendTextMessage(merchantno, null, message2, sentPI, deliveredPI);
                                         }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    });
-                                    Log.d("Hello", stationId + "," + customer_id + "," + orderno);
-                                    DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("Customer_File");
-                                    reference2.child(customer_id).child(stationId).child(orderno).child("order_status").setValue("Accepted by affiliate")
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-
-                                                    String message = "Your broadcasted order#:" + orderno + " has  been accepted by an affiliate named :" + affiliatename + ". For further information about " + affiliatename;
-                                                    String message2 = "Contact # of " + affiliatename + ":" + affiliateNo;
-                                                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
-                                                            != PackageManager.PERMISSION_GRANTED) {
-                                                        Log.d("NmNakoko", "Hijhosdfgh");
-                                                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SEND_SMS},
-                                                                MY_PERMISSIONS_REQUEST_SEND_SMS);
-                                                    } else {
-                                                        Log.d("NmNako", "Hi" + message);
-                                                        SmsManager sms = SmsManager.getDefault();
-                                                        Log.d("Log.d", "" + merchantno);
-                                                        sms.sendTextMessage(merchantno, null, message, sentPI, deliveredPI);
-                                                        sms.sendTextMessage(merchantno, null, message2, sentPI, deliveredPI);
-                                                    }
-                                                    addStationAffiliate();
-                                                    TPAAcceptedFragment detail = new TPAAcceptedFragment();
-                                                    AppCompatActivity activity = (AppCompatActivity)getContext();
-                                                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, detail).addToBackStack(null).commit();
-                                                    Bundle args1 = new Bundle();
-                                                    args1.putString("transactionno", orderno);
-                                                    args1.putString("transactioncustomerid", customer_id);
-                                                    args1.putString("stationid", stationId);
-                                                    detail.setArguments(args1);
-                                                }
-                                            });
-                                    Log.d("stations", "hahastation" + stationId + orderno + customer_id);
-                                    Toast.makeText(getActivity(), "Accepted", Toast.LENGTH_SHORT).show();
-                                    String text = "You can see the recipient's information in the IN PROGRESS menu.";
-                                    snackBar(text);
-                                }
-                                else
-                                {
-                                    snackBar2();
-                                }
+                                        addStationAffiliate();
+                                        TPAAcceptedFragment detail = new TPAAcceptedFragment();
+                                        AppCompatActivity activity = (AppCompatActivity) getContext();
+                                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, detail).addToBackStack(null).commit();
+                                        Bundle args1 = new Bundle();
+                                        args1.putString("transactionno", orderno);
+                                        args1.putString("transactioncustomerid", customer_id);
+                                        args1.putString("stationid", stationId);
+                                        detail.setArguments(args1);
+                                    }
+                                });
+                        Log.d("stations", "hahastation" + stationId + orderno + customer_id);
+                        Toast.makeText(getActivity(), "Accepted", Toast.LENGTH_SHORT).show();
+                        String text = "You can see the recipient's information in the IN PROGRESS menu.";
+                        snackBar(text);
+                    } else {
+                        snackBar2();
                     }
-                    else
-                    {
-                        Toast.makeText(getActivity(), "No more points", Toast.LENGTH_LONG).show();
-                    }
+                } else {
+                    Toast.makeText(getActivity(), "No more points", Toast.LENGTH_LONG).show();
                 }
+            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -965,11 +937,11 @@ public class TPAMapFragment extends Fragment
 //
 //            }
 //        });
-    });
+        });
     }
 
 
-    public void snackBar(String text){
+    public void snackBar(String text) {
         View parentLayout = getActivity().findViewById(android.R.id.content);
         Snackbar snackbar = Snackbar.make(parentLayout, text
                 , Snackbar.LENGTH_LONG);
@@ -982,10 +954,11 @@ public class TPAMapFragment extends Fragment
             public void onClick(View v) {
                 snackbar.dismiss();
             }
-        }).setActionTextColor(getResources().getColor(android.R.color.white ));
+        }).setActionTextColor(getResources().getColor(android.R.color.white));
         snackbar.show();
     }
-    public void snackBar2(){
+
+    public void snackBar2() {
         View parentLayout = getActivity().findViewById(android.R.id.content);
         Snackbar snackbar = Snackbar.make(parentLayout, "Insufficient points, please reload.", Snackbar.LENGTH_LONG);
         View view = snackbar.getView();
@@ -997,16 +970,16 @@ public class TPAMapFragment extends Fragment
             public void onClick(View v) {
                 snackbar.dismiss();
             }
-        }).setActionTextColor(getResources().getColor(android.R.color.white ));
+        }).setActionTextColor(getResources().getColor(android.R.color.white));
         snackbar.show();
     }
-    public void attemptToExit()
-    {
+
+    public void attemptToExit() {
 
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which){
+                switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         getActivity().finish();
                         break;
@@ -1021,6 +994,7 @@ public class TPAMapFragment extends Fragment
                 .setNegativeButton("No", dialogClickListener).show();
 
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -1036,8 +1010,7 @@ public class TPAMapFragment extends Fragment
             @Override
             public void onReceive(Context context, Intent intent) {
 
-                switch (getResultCode())
-                {
+                switch (getResultCode()) {
                     case Activity.RESULT_OK:
                         Toast.makeText(context, "SMS sent successfully!", Toast.LENGTH_SHORT).show();
                         break;
@@ -1074,8 +1047,7 @@ public class TPAMapFragment extends Fragment
             @Override
             public void onReceive(Context context, Intent intent) {
 
-                switch(getResultCode())
-                {
+                switch (getResultCode()) {
                     case Activity.RESULT_OK:
                         Toast.makeText(context, "SMS delivered!", Toast.LENGTH_SHORT).show();
                         break;
@@ -1090,14 +1062,14 @@ public class TPAMapFragment extends Fragment
         getActivity().registerReceiver(smsSentReceiver, new IntentFilter(SENT));
         getActivity().registerReceiver(smsDeliveredReceiver, new IntentFilter(DELIVERED));
     }
-    public void addStationAffiliate()
-    {
-        Log.d("Hi",""+orderno);
+
+    public void addStationAffiliate() {
+        Log.d("Hi", "" + orderno);
         DatabaseReference databaseReference3 = FirebaseDatabase.getInstance().getReference("Customer_File");
         databaseReference3.child(customer_id).child(stationId).child(orderno).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("HiHi",""+orderno);
+                Log.d("HiHi", "" + orderno);
                 customerAddress = dataSnapshot.child("order_address").getValue(String.class);
                 orderDeliveryDate = dataSnapshot.child("order_delivery_date").getValue(String.class);
                 orderDeliveryFee = dataSnapshot.child("order_delivery_fee").getValue(String.class);
@@ -1133,18 +1105,37 @@ public class TPAMapFragment extends Fragment
                 "Accepted by affiliate");
         FirebaseDatabase.getInstance().getReference("Affiliate_WaterStation_Order_File").child(firebaseUser.getUid()).child(stationId).child(orderno).setValue(ASmodel);
     }
-    public void getAffiliateOrder()
-    {
+
+    public void getAffiliateOrder() {
         DatabaseReference databaseReference4 = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(firebaseUser.getUid()).child(stationId);
         databaseReference4.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 affiliateOrderStatus = dataSnapshot.child("status").getValue(String.class);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
+    }
+
+    public void getPrice() {
+        DatabaseReference getPrice = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File").child(stationId);
+        {
+            getPrice.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    pickUpPricePerGallon = Double.valueOf(dataSnapshot.child("delivery_price_per_gallon").getValue(String.class));
+                    deliveryPricePerGallon = Double.valueOf(dataSnapshot.child("pickup_price_per_gallon").getValue(String.class));
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 }
