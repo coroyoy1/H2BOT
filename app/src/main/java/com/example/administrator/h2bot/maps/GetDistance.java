@@ -16,7 +16,9 @@ import android.widget.TextView;
 
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.customer.CustomerMapFragment;
+import com.example.administrator.h2bot.customer.SearchMerchantAdapter;
 import com.example.administrator.h2bot.objects.WaterStationOrDealer;
+import com.example.administrator.h2bot.tpaaffiliate.TPAMapFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -53,6 +55,7 @@ public class GetDistance extends AsyncTask<Object, String, String> {
     private TextView currentRadius;
     private Marker mCurrentLocationMarker;
     private CustomerMapFragment customerMapFragment;
+    private TPAMapFragment tpaMapFragment;
 
     @Override
     protected String doInBackground(Object... objects) {
@@ -63,7 +66,7 @@ public class GetDistance extends AsyncTask<Object, String, String> {
         API_KEY = (String) objects[3];
         currentRadius = (TextView) objects[4];
         customerMapFragment = (CustomerMapFragment) objects[5];
-
+        tpaMapFragment = (TPAMapFragment) objects[6];
 
         name = new String[list.size()];
         googleDirectionsData = new String[list.size()];
@@ -150,11 +153,13 @@ public class GetDistance extends AsyncTask<Object, String, String> {
         mCurrentLocationMarker = mMap.addMarker(mMarkerOption);
         mMap.addMarker(mMarkerOption);
         mCirle.setRadius(radiusLimit * 1000);
-
+        ArrayList<WaterStationOrDealer> searchList = new ArrayList<>();
         for(int i = 0; i < thisList.size(); i++){
             LatLng latLng = new LatLng(thisList.get(i).getLat(), thisList.get(i).getLng());
             double stationDistance = Double.parseDouble(thisList.get(i).getDistance().substring(10, thisList.get(i).getDistance().length()-3));
             if(stationDistance <= radiusLimit){
+                searchList.add(thisList.get(i));
+
                 if(thisList.get(i).getUserType().equalsIgnoreCase("Water Station")){
                     mMap.addMarker(new MarkerOptions()
                                     .position(latLng).title(thisList.get(i).getStation_dealer_name())
@@ -171,7 +176,12 @@ public class GetDistance extends AsyncTask<Object, String, String> {
                 }
             }
         }
-        customerMapFragment.setList(thisList);
+        if(customerMapFragment != null) {
+            customerMapFragment.setList(thisList);
+            customerMapFragment.setSearchList(searchList);
+        }
+        else if(tpaMapFragment != null)
+            tpaMapFragment.setList(thisList);
     }
 
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {

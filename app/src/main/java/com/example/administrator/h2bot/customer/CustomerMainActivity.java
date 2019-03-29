@@ -12,11 +12,13 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 import com.example.administrator.h2bot.LoginActivity;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.OrderModel;
+import com.example.administrator.h2bot.objects.WaterStationOrDealer;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,6 +45,9 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class CustomerMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private ArrayList<WaterStationOrDealer> thisList;
+
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private FirebaseAuth mAuth;
@@ -216,9 +222,9 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         String get_qrCode = CustomerAllOrdersAdapter.qrCode;
         ImageView generate_qr_code;
         String qrString;
-        Button dismissBtn;
+        TextView closeDialog;
         dialog.setContentView(R.layout.customer_generate_qr_code);
-        dismissBtn = dialog.findViewById(R.id.dismissBtn);
+        closeDialog = dialog.findViewById(R.id.closeDialog);
         generate_qr_code = dialog.findViewById(R.id.generate_qr_code);
 
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
@@ -229,18 +235,19 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
             generate_qr_code.setImageBitmap(bitmap);
-            }
-            catch(WriterException e)
-            {
-                e.printStackTrace();
-            }
-        dismissBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
+        }
+        catch(WriterException e)
+        {
+            e.printStackTrace();
+        }
+        closeDialog.setOnClickListener(v -> {
+            dialog.dismiss();
         });
         dialog.show();
+    }
+
+    public void setList(ArrayList<WaterStationOrDealer> thisList){
+        this.thisList = thisList;
     }
 
 }

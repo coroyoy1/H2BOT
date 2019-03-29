@@ -40,15 +40,12 @@ public class CustomerWaterTypeAdapter extends RecyclerView.Adapter<CustomerWater
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         final UserWSWDWaterTypeFile userWSWDWaterTypeFile = waterTypeList.get(i);
         String water_type = userWSWDWaterTypeFile.getWater_type();
-        String water_price = userWSWDWaterTypeFile.getWater_price_per_gallon();
+        String pickup_price = userWSWDWaterTypeFile.getPickup_price_per_gallon();
+        String delivery_price = userWSWDWaterTypeFile.getDelivery_price_per_gallon();
 
         viewHolder.waterType.setText(water_type);
-        viewHolder.waterPrice.setText("- " + String.format("%.2f", Double.parseDouble(water_price)));
-
-        Log.d("BOOLEAN", "hgeheheheheh");
-        if(CustomerMapFragment.isExist == false){
-            Log.d("HEHEHEH", "hgeheheheheh");
-        }
+        viewHolder.pickupPrice.setText(String.format("%.2f", Double.parseDouble(pickup_price)));
+        viewHolder.deliveryPrice.setText(String.format("%.2f", Double.parseDouble(delivery_price)));
     }
 
     @Override
@@ -58,11 +55,13 @@ public class CustomerWaterTypeAdapter extends RecyclerView.Adapter<CustomerWater
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView waterType;
-        TextView waterPrice;
+        TextView pickupPrice;
+        TextView deliveryPrice;
         public ViewHolder(View itemView) {
             super(itemView);
             waterType = itemView.findViewById(R.id.waterType);
-            waterPrice = itemView.findViewById(R.id.waterPrice);
+            pickupPrice = itemView.findViewById(R.id.pickupPrice);
+            deliveryPrice = itemView.findViewById(R.id.deliveryPrice);
         }
     }
 }

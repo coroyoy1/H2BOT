@@ -11,9 +11,15 @@
         android:layout_weight="1"
         android:text="Purified"/>
     <TextView
-        android:id="@+id/waterPrice"
+        android:id="@+id/pickupPrice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Purified"/>
+        android:text="10.00"/>
+    <TextView
+        android:id="@+id/deliveryPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="10.00"/>
 </LinearLayout>

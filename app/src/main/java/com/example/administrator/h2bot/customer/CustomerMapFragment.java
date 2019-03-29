@@ -3,6 +3,7 @@ package com.example.administrator.h2bot.customer;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -29,6 +31,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -81,6 +84,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -103,6 +107,8 @@ public class CustomerMapFragment extends Fragment implements
 
 
     // User Permissions
+
+    private Dialog dialog;
     private GoogleMap map;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
@@ -140,12 +146,14 @@ public class CustomerMapFragment extends Fragment implements
     ProgressDialog progressDialog;
     private SeekBar radius;
     private TextView currentRadius;
+    private Button searchButton;
     private GetDistance getDistance = null;
     private LatLng currentLocation;
     private List<UserFile> userFileList;
     private List<WSBusinessInfoFile> businessInfoFileListis;
     private List<UserLocationAddress> userLocationAddressList;
     private ArrayList<WaterStationOrDealer> thisList;
+    private ArrayList<WaterStationOrDealer> searchList;
 
     private ArrayList<UserWSWDWaterTypeFile> waterTypeList;
     CustomerWaterTypeAdapter waterTypeAdapter;
@@ -177,6 +185,7 @@ public class CustomerMapFragment extends Fragment implements
         return view;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -191,6 +200,7 @@ public class CustomerMapFragment extends Fragment implements
         bottomSheetBehavior.setPeekHeight(bottomSheetBehavior.getPeekHeight());
         bottomSheetBehavior.setHideable(true);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        dialog = new Dialog(getActivity());
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading map...");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -199,14 +209,18 @@ public class CustomerMapFragment extends Fragment implements
         progressDialog.show();
         API_KEY = getResources().getString(R.string.google_maps_key);
         radius = getActivity().findViewById(R.id.seekBar);
+        radius.setProgress(1);
         currentRadius = getActivity().findViewById(R.id.current_radius);
         radius.setOnSeekBarChangeListener(seekBarChangeListener);
+        searchButton = view.findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(search);
 
         arrayListUserFile = new ArrayList<UserFile>();
         arrayListBusinessInfo = new ArrayList<WSBusinessInfoFile>();
         arrayListMerchantLatLong = new ArrayList<UserLocationAddress>();
 
         mAuth = FirebaseAuth.getInstance();
+        SearchMerchantPopup();
         mGeocoder = new Geocoder(getActivity().getApplicationContext());
 
 
@@ -227,6 +241,13 @@ public class CustomerMapFragment extends Fragment implements
             }
         });
     }
+
+    public View.OnClickListener search = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            SearchMerchantPopup();
+        }
+    };
 
     private SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
@@ -266,7 +287,7 @@ public class CustomerMapFragment extends Fragment implements
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 marker.showInfoWindow();
             } else {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 marker.showInfoWindow();
             }
             return false;
@@ -299,7 +320,6 @@ public class CustomerMapFragment extends Fragment implements
 
         map.setOnMapClickListener(latLng -> {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-            map.clear();
             showNearest();
         });
 
@@ -540,7 +560,7 @@ public class CustomerMapFragment extends Fragment implements
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot data: dataSnapshot.getChildren()){
                             UserWSWDWaterTypeFile userWSWDWaterTypeFile = data.getValue(UserWSWDWaterTypeFile.class);
-                            if(userWSWDWaterTypeFile.getWater_status().equalsIgnoreCase("active")){
+                            if(userWSWDWaterTypeFile.getWater_status().equalsIgnoreCase("available")){
                                 waterTypeList.add(userWSWDWaterTypeFile);
                                 isExist = true;
                             }
@@ -618,5 +638,30 @@ public class CustomerMapFragment extends Fragment implements
             detailIntent.putExtra(EXTRA_stationName, stationName.getText().toString());
             startActivity(detailIntent);
         });
+    }
+
+    public void setSearchList(ArrayList<WaterStationOrDealer> searchList){
+        this.searchList = searchList;
+    }
+
+    public void SearchMerchantPopup() {
+        SearchMerchantAdapter searchMerchantAdapter;
+        TextView closeDialog;
+        EditText waterType;
+        RecyclerView recyclerView;
+        dialog.setContentView(R.layout.search_merchant_popup);
+        closeDialog = dialog.findViewById(R.id.closeDialog);
+        waterType = dialog.findViewById(R.id.waterType);
+        recyclerView = dialog.findViewById(R.id.recyclerView);
+        searchMerchantAdapter = new SearchMerchantAdapter(getActivity(), searchList);
+        recyclerView.setAdapter(searchMerchantAdapter);
+        closeDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 }

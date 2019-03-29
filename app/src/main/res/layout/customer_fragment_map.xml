@@ -44,7 +44,7 @@
                     android:layout_margin="5dp"
                     android:text="Nature Spring Station"
                     android:textAlignment="center"
-                    android:textSize="25dip"
+                    android:textSize="18dip"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -89,9 +89,15 @@
                         android:layout_gravity="top"
                         android:textStyle="bold"
                         android:layout_weight="1"
-                        android:text="Prices" />
+                        android:text="Pickup Price(s)" />
 
-
+                    <TextView
+                        android:layout_width="230dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:textStyle="bold"
+                        android:layout_weight="1"
+                        android:text="Delivery Price(s)" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -273,10 +279,10 @@
             android:id="@+id/seekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="10"
+            android:max="5"
             android:maxHeight="5dp"
             android:minHeight="5dp"
-            android:progress="10"
+            android:progress="5"
             android:progressDrawable="@drawable/volume_seekbar"
             android:thumb="@drawable/forward"
             android:thumbTint="@color/black" />
@@ -285,7 +291,7 @@
             android:id="@+id/current_radius"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="10 km"
+            android:text="5 km"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -368,6 +374,24 @@
                     android:layout_height="20dp"
 
                     android:background="@drawable/my_pin" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/searchButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="   Search Merchant"
+                    android:textAllCaps="false"
+                    android:alpha=".8"
+                    android:drawableLeft="@drawable/ic_search_black_24dp"
+                    android:background="@drawable/backgroundv2"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="10dp"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
