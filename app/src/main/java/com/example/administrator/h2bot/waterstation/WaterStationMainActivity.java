@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -47,7 +49,7 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
     private ActionBarDrawerToggle actionBarDrawerToggle;
     FirebaseAuth mAuth;
     GoogleMap map;
-    TextView nav_pendingorders_ws,nav_inprogress_ws;
+    TextView nav_pendingorders_ws, nav_inprogress_ws;
     private ProgressDialog progressDialog;
     FirebaseUser currentUser;
     String currendId;
@@ -58,17 +60,20 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
     private ArrayList<OrderModel> adapter;
     private ArrayList<OrderModel> adapter2;
 
+    private NotificationManagerCompat notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_water_station_main);
-
+        notificationManager = NotificationManagerCompat.from(this);
         progressDialog = new ProgressDialog(WaterStationMainActivity.this);
         progressDialog.setMessage("Loading...");
+        notificationManager = NotificationManagerCompat.from(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
+
         adapter = new ArrayList<OrderModel>();
         adapter2 = new ArrayList<OrderModel>();
         mAuth = FirebaseAuth.getInstance();
@@ -83,11 +88,11 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        nav_pendingorders_ws=(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
+        nav_pendingorders_ws = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().
                 findItem(R.id.nav_pendingorders_ws));
-        nav_inprogress_ws=(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
+        nav_inprogress_ws = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().
                 findItem(R.id.nav_inprogress_ws));
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             checkIfHaveProduct();
 //            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
 //                    new WSDashboard()).commit();
@@ -95,24 +100,20 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
         }
 
 
-       initializeCountDrawer();
+        initializeCountDrawer();
     }
 
-    private void checkIfHaveProduct()
-    {
+    private void checkIfHaveProduct() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File");
         databaseReference.child(mAuth.getCurrentUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists())
-                        {
+                        if (dataSnapshot.exists()) {
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
                                     new WSDashboard()).commit();
                             Objects.requireNonNull(getSupportActionBar()).setTitle("Dashboard");
-                        }
-                        else
-                        {
+                        } else {
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
                                     new WSProductAdd()).commit();
                             Objects.requireNonNull(getSupportActionBar()).setTitle("Dashboard");
@@ -126,7 +127,7 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                 });
     }
 
-    private void initializeCountDrawer(){
+    private void initializeCountDrawer() {
         DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
         databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
@@ -135,77 +136,61 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                 adapter2.clear();
                 nav_pendingorders_ws.setVisibility(View.VISIBLE);
                 nav_inprogress_ws.setVisibility(View.VISIBLE);
-                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
-                {
-                    for (DataSnapshot post : dataSnapshot1.child(currendId).getChildren())
-                    {
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    for (DataSnapshot post : dataSnapshot1.child(currendId).getChildren()) {
                         OrderModel orderModel = post.getValue(OrderModel.class);
-                        if(orderModel != null)
-                        {
-                            if(orderModel.getOrder_merchant_id().equals(currendId)
-                                    && orderModel.getOrder_status().equals("Pending"))
-                            {
+                        if (orderModel != null) {
+                            if (orderModel.getOrder_merchant_id().equals(currendId)
+                                    && orderModel.getOrder_status().equals("Pending")) {
                                 adapter.add(orderModel);
                                 adapter.size();
                                 nav_pendingorders_ws.setVisibility(View.VISIBLE);
                                 countPending = adapter.size();
-                                Log.d("CountPending", ""+countPending);
+                                Log.d("CountPending", "" + countPending);
 
+                                nav_pendingorders_ws.setGravity(Gravity.CENTER_VERTICAL);
+                                nav_pendingorders_ws.setTextSize(20);
+                                nav_pendingorders_ws.setTypeface(null, Typeface.BOLD);
+                                nav_pendingorders_ws.setTextColor(getResources().getColor(R.color.colorAccent));
+                                nav_pendingorders_ws.setText("" + countPending);
+
+                            } else {
+                                countPending = adapter.size();
+
+                                if (countPending == 0) {
+                                    nav_pendingorders_ws.setVisibility(View.INVISIBLE);
+                                } else {
                                     nav_pendingorders_ws.setGravity(Gravity.CENTER_VERTICAL);
                                     nav_pendingorders_ws.setTextSize(20);
                                     nav_pendingorders_ws.setTypeface(null, Typeface.BOLD);
                                     nav_pendingorders_ws.setTextColor(getResources().getColor(R.color.colorAccent));
                                     nav_pendingorders_ws.setText("" + countPending);
-
-                            }
-                            else
-                            {
-                                countPending = adapter.size();
-
-                                if (countPending==0)
-                                {
-                                    nav_pendingorders_ws.setVisibility(View.INVISIBLE);
-                                }
-                                else
-                                {
-                                    nav_pendingorders_ws.setGravity(Gravity.CENTER_VERTICAL);
-                                    nav_pendingorders_ws.setTextSize(20);
-                                    nav_pendingorders_ws.setTypeface(null, Typeface.BOLD);
-                                    nav_pendingorders_ws.setTextColor(getResources().getColor(R.color.colorAccent));
-                                    nav_pendingorders_ws.setText(""+ countPending);
                                 }
                             }
-                            if(orderModel.getOrder_merchant_id().equals(currendId)
-                                    && orderModel.getOrder_status().equals("In-Progress") && orderModel.getOrder_status().equalsIgnoreCase("Dispatched"))
-                            {
+                            if (orderModel.getOrder_merchant_id().equals(currendId)
+                                    && orderModel.getOrder_status().equals("In-Progress") && orderModel.getOrder_status().equalsIgnoreCase("Dispatched")) {
                                 adapter2.add(orderModel);
                                 adapter2.size();
                                 countInprogress = adapter2.size();
-                                Log.d("CountInprogress", ""+countInprogress);
-                                if(countInprogress != 0)
-                                {
+                                Log.d("CountInprogress", "" + countInprogress);
+                                if (countInprogress != 0) {
                                     nav_inprogress_ws.setGravity(Gravity.CENTER_VERTICAL);
                                     nav_inprogress_ws.setTextSize(20);
                                     nav_inprogress_ws.setTypeface(null, Typeface.BOLD);
                                     nav_inprogress_ws.setTextColor(getResources().getColor(R.color.colorAccent));
                                     nav_inprogress_ws.setText("" + countInprogress);
                                 }
-                            }
-                            else
-                            {
+                            } else {
                                 countInprogress = adapter2.size();
 
-                                if (countInprogress==0)
-                                {
+                                if (countInprogress == 0) {
                                     nav_inprogress_ws.setVisibility(View.INVISIBLE);
-                                }
-                                else
-                                {
+                                } else {
                                     nav_inprogress_ws.setGravity(Gravity.CENTER_VERTICAL);
                                     nav_inprogress_ws.setTextSize(20);
                                     nav_inprogress_ws.setTypeface(null, Typeface.BOLD);
                                     nav_inprogress_ws.setTextColor(getResources().getColor(R.color.colorAccent));
-                                    nav_inprogress_ws.setText(""+ countInprogress);
+                                    nav_inprogress_ws.setText("" + countInprogress);
                                 }
                             }
                         }
@@ -227,12 +212,10 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
 //        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
 //            drawerLayout.closeDrawer(GravityCompat.START);
 //        } else {
-            if(count > 0)
-            {
-                getSupportFragmentManager().popBackStackImmediate();
-            }
-            else {
-                super.onBackPressed();
+        if (count > 0) {
+            getSupportFragmentManager().popBackStackImmediate();
+        } else {
+            super.onBackPressed();
 //            }
         }
     }
@@ -248,8 +231,7 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        switch(menuItem.getItemId())
-        {
+        switch (menuItem.getItemId()) {
             case R.id.nav_dashboard_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
                         new WSDashboard()).commit();
@@ -291,21 +273,25 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
 //                Objects.requireNonNull(getSupportActionBar()).setTitle("Map");
 //                showMessages("Map");
 //                break;
+
             case R.id.nav_accountsettings_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
                         new WSAccountSettingsFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Account Settings");
                 break;
+
             case R.id.nav_feedback_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
                         new WSFeedbackFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Feedback");
                 break;
+
             case R.id.nav_deliveryman_ws:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_ws,
                         new WSDMFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Delivery Man");
                 break;
+
             case R.id.nav_logout_ws:
                 mAuth.signOut();
                 finish();
@@ -316,12 +302,26 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                 intent3.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 showMessages("logout Successfully");
                 break;
+
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
-    public void showMessages(String message)
-    {
+
+    public void showMessages(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void sendNotification(String orderno) {
+        android.app.Notification notification = new NotificationCompat.Builder(this, "notificationforpending")
+                .setSmallIcon(R.drawable.ic_look1)
+                .setContentTitle("H2BOT")
+                .setContentText("Order " + orderno + "has been Accepted")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                .build();
+
+        notificationManager.notify(1, notification);
     }
 }

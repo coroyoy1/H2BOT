@@ -11,15 +11,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,10 +30,13 @@ import android.widget.Toast;
 import com.example.administrator.h2bot.LoginActivity;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.WaterStationDocumentVersion2Activity;
+import com.example.administrator.h2bot.dealer.WaterPeddlerDocumentActivity;
 import com.example.administrator.h2bot.models.TPAModel;
 import com.example.administrator.h2bot.models.UserAccountFile;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserLocationAddress;
+import com.example.administrator.h2bot.models.UserWallet;
+import com.example.administrator.h2bot.models.WDDocFile;
 import com.example.administrator.h2bot.models.WSBusinessInfoFile;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -42,8 +48,11 @@ import com.google.android.gms.vision.text.TextRecognizer;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
@@ -68,7 +77,8 @@ public class TPADocumentActivity extends AppCompatActivity{
     String currentuser;
     Uri mImageUri;
     String image1;
-    Boolean check1;
+    Boolean check, check1;
+    String userId;
     private FirebaseAuth mAuth;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
@@ -76,15 +86,15 @@ public class TPADocumentActivity extends AppCompatActivity{
     private ProgressDialog progressDialog;
     private StorageReference storageReference;
     Button licenseBtn,NBIButton,SubmitButtonWaterPeddlerHomeActivity;
-    Boolean isPicked = false;
+    Boolean isPicked = false,isPicked1 = false;
     TextView driverLicenseNo;
     ImageView driversLicense_image, NBIImageView;
-    Uri filepath, filepath2;
+    Uri filepath4, filepath2;
     Button register;
     Double latitude, longitude;
 
-    Uri mUri;
-    String mFirstname, mLastname, mAddress, mContact_no, mEmail_address, mPassword, mFilepath;
+    Uri mFilepath;
+    String mFirstname, mLastname, mAddress, mContact_no, mEmail_address, mPassword;
     String newToken;
     String mLat, mLong;
     @Override
@@ -97,7 +107,7 @@ public class TPADocumentActivity extends AppCompatActivity{
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
         mAuth = FirebaseAuth.getInstance();
-
+        FirebaseStorage storage = FirebaseStorage.getInstance();
         mStorageRef = FirebaseStorage.getInstance().getReference("Water Dealer Documents");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("Water Dealer Documents");
         NBIButton = findViewById(R.id.NBIButton);
@@ -113,21 +123,22 @@ public class TPADocumentActivity extends AppCompatActivity{
         String contact_no = bundle.getString("contactno");
         String email_address = bundle.getString("emailaddress");
         String password = bundle.getString("password");
-        String filepath = bundle.getString("filepath");
-
+        String filepath3 = bundle.getString("uri");
+        Log.d("filepath3",""+filepath3);
         mFirstname = firstname;
         mLastname = lastname;
         mAddress = address;
         mContact_no = contact_no;
         mEmail_address = email_address;
         mPassword = password;
-        mFilepath = filepath;
+        mFilepath = Uri.parse(filepath3);
 
         register.setOnClickListener(v -> {
                 CreateAccount(mEmail_address, mPassword);
         });
 
         licenseBtn.setOnClickListener(v -> {
+                isPicked1 = false;
                 isPicked = true;
                 openGalery();
               });
@@ -135,6 +146,7 @@ public class TPADocumentActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 isPicked = false;
+                isPicked1 = true;
                 openGalery();
             }
         });
@@ -146,8 +158,6 @@ public class TPADocumentActivity extends AppCompatActivity{
         List<Address> address;
         Address LocationAddress = null;
         String locateAddress = mAddress;
-        Toast.makeText(this, "locateAddress = " + locateAddress, Toast.LENGTH_SHORT).show();
-
         try {
             address = coder.getFromLocationName(locateAddress, 5);
 
@@ -200,11 +210,11 @@ public class TPADocumentActivity extends AppCompatActivity{
         {
             if (requestCode == PICK_IMAGE_REQUEST && data != null && data.getData() != null) {
 
-                filepath = data.getData();
                 if(isPicked) {
+                    filepath4 = data.getData();
                     Bitmap bitmap = null;
                     try {
-                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
+                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath4);
                         TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
 
                         if(!textRecognizer.isOperational())
@@ -225,26 +235,31 @@ public class TPADocumentActivity extends AppCompatActivity{
                             }
                             Log.d("Data: ", sb.toString());
                             Log.d("Data: ", mFirstname+""+mLastname);
-                            if(sb.toString().trim().toLowerCase().contains(mFirstname.toLowerCase())
-                                    && sb.toString().trim().toLowerCase().contains(mLastname.toLowerCase())
-                                    && sb.toString().toUpperCase().contains("LAND")
-                                    && sb.toString().toUpperCase().contains("TRANSPORTATION")
-                                    && sb.toString().toUpperCase().contains("OFFICE")
-                            ){
-                                Picasso.get().load(filepath).into(driversLicense_image);
+                            if(sb.toString().trim().toLowerCase().contains(mFirstname.toLowerCase().trim())&&
+                            sb.toString().trim().toLowerCase().contains(mLastname.toLowerCase().trim()) &&
+                            sb.toString().toLowerCase().contains("republic of the philippines") &&
+                            sb.toString().toLowerCase().contains("department of transportation") &&
+                            sb.toString().toLowerCase().contains("land transportation office")
+                            && sb.toString().toLowerCase().contains("driver's license")
+                            && sb.toString().toLowerCase().contains("license no"))
+                            {
+                                Picasso.get().load(filepath4).into(driversLicense_image);
                                 Toast.makeText(this, "Valid Driver's License", Toast.LENGTH_SHORT).show();
+                                check = true;
                             }
                             else{
                                 driversLicense_image.setImageResource(R.drawable.ic_image_black_24dp);
-                                Toast.makeText(this, "Invalid Driver's License or please use a better image.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, "Invalid Driver's License, use a clear image", Toast.LENGTH_SHORT).show();
+                                check = false;
                             }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-                else
+                if(isPicked1)
                 {
+                    filepath2 = data.getData();
                     Bitmap bitmap = null;
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath2);
@@ -268,18 +283,22 @@ public class TPADocumentActivity extends AppCompatActivity{
                             }
                             Log.d("Data: ", sb.toString());
                             Log.d("Data: ", mFirstname+""+mLastname);
-                            if(sb.toString().trim().toLowerCase().contains(mFirstname.toLowerCase())
-                                    && sb.toString().trim().toLowerCase().contains(mLastname.toLowerCase())
-                                    && sb.toString().toUpperCase().contains("LAND")
-                                    && sb.toString().toUpperCase().contains("TRANSPORTATION")
-                                    && sb.toString().toUpperCase().contains("OFFICE")
-                            ){
-                                Picasso.get().load(filepath).into(driversLicense_image);
-                                Toast.makeText(this, "Valid Driver's License", Toast.LENGTH_SHORT).show();
-                            }
-                            else{
-                                driversLicense_image.setImageResource(R.drawable.ic_image_black_24dp);
-                                Toast.makeText(this, "Invalid Driver's License or please use a better image.", Toast.LENGTH_SHORT).show();
+                            if (sb.toString().toLowerCase().contains(mFirstname.toLowerCase().trim())
+                            && sb.toString().toLowerCase().contains(mLastname.toLowerCase().trim())
+                            && sb.toString().toLowerCase().contains("department of justice")
+                            && sb.toString().toLowerCase().contains("philippines")
+                            && sb.toString().toLowerCase().contains("republic")
+                            && sb.toString().toLowerCase().contains("national bureau of investigation"))
+                            {
+                                Picasso.get().load(filepath2).into(NBIImageView);
+                                String text = "Valid NBI clearance";
+                                snackBar(text);
+                                check1 = true;
+                            } else {
+                                NBIImageView.setImageResource(R.drawable.ic_image_black_24dp);
+                                String text = "Invalid NBI Clearance. Please capture it clearly";
+                                snackBar(text);
+                                check1 = false;
                             }
                         }
                     } catch (IOException e) {
@@ -300,6 +319,7 @@ public class TPADocumentActivity extends AppCompatActivity{
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
+
                             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                             String userId = firebaseUser.getUid();
 
@@ -314,9 +334,9 @@ public class TPADocumentActivity extends AppCompatActivity{
                                     Toast.makeText(TPADocumentActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
-
+                            uploadDocument();
                             StorageReference mStorage = FirebaseStorage.getInstance().getReference("tpa_photos").child(userId);
-                            mStorage.putFile(filepath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            mStorage.putFile(mFilepath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
@@ -325,7 +345,7 @@ public class TPADocumentActivity extends AppCompatActivity{
                                         public void onSuccess(Uri uri) {
                                             String stringUri = uri.toString();
                                             UserFile userFile = new UserFile(userId,
-                                                    mFilepath,
+                                                    stringUri,
                                                     mFirstname,
                                                     mLastname,
                                                     mAddress,
@@ -339,12 +359,6 @@ public class TPADocumentActivity extends AppCompatActivity{
                                                     newToken,
                                                     "active");
 
-                                            TPAModel tpaModel = new TPAModel(userId,
-                                                    stringUri,
-                                                    "active"
-                                            );
-
-
 
                                             FirebaseDatabase.getInstance().getReference("User_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userFile)
                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -354,22 +368,10 @@ public class TPADocumentActivity extends AppCompatActivity{
                                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                         @Override
                                                                         public void onSuccess(Void aVoid) {
-                                                                            FirebaseDatabase.getInstance().getReference("User_TPA_Docs_File").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(tpaModel)
-                                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                                        @Override
-                                                                                        public void onSuccess(Void aVoid) {
-                                                                                            Toast.makeText(TPADocumentActivity.this, "Successfully registered", Toast.LENGTH_SHORT).show();
+                                                                                         Toast.makeText(TPADocumentActivity.this, "Successfully registered", Toast.LENGTH_SHORT).show();
                                                                                             getLocationSetter();
+                                                                                            createWallet();
                                                                                             insertLatLong(FirebaseAuth.getInstance().getCurrentUser().getUid(), mLat, mLong);
-                                                                                            startActivity(new Intent(TPADocumentActivity.this, LoginActivity.class));
-                                                                                        }
-                                                                                    })
-                                                                                    .addOnFailureListener(new OnFailureListener() {
-                                                                                        @Override
-                                                                                        public void onFailure(@NonNull Exception e) {
-                                                                                            Toast.makeText(TPADocumentActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                                                        }
-                                                                                    });
                                                                         }
                                                                     })
                                                                     .addOnFailureListener(new OnFailureListener() {
@@ -402,19 +404,58 @@ public class TPADocumentActivity extends AppCompatActivity{
     }
 
     private void uploadDocument() {
-        if(filepath != null){
+        Log.d("adadadad", filepath4+","+filepath2);
+        if(filepath4 != null || filepath2 != null){
             FirebaseUser user = mAuth.getCurrentUser();
-            String userId = user.getUid();
+            userId = user.getUid();
             Log.d("auth", userId);
-            StorageReference mStorageRef = storageReference.child("tpa_documents").child(userId +"/"+"driversLicense");
-            mStorageRef.putFile(filepath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference mStorageRef = storage.getReference().child("tpa_documents").child(userId +"/"+"driversLicense");
+            mStorageRef.putFile(filepath4).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
                     result.addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
-                        public void onSuccess(Uri uri) {
-                            mFilepath = uri.toString();
+                        public void onSuccess(Uri uri3) {
+                            String stringUri3 = uri3.toString();
+                            WDDocFile wsDocFile = new WDDocFile(userId,
+                                    "active",
+                                    stringUri3);
+                            FirebaseDatabase.getInstance().getReference("User_TPA_Docs_File").child(userId).setValue(wsDocFile)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            if(filepath2 != null){
+                                                FirebaseUser user = mAuth.getCurrentUser();
+                                                userId = user.getUid();
+                                                StorageReference mStorageRef = storage.getReference().child("tpa_documents").child(userId +"/"+"NBIClearanceDocument");
+                                                mStorageRef.putFile(filepath2).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                        Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                                                        result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                            @Override
+                                                            public void onSuccess(Uri uri2) {
+                                                                String stringUri2 = uri2.toString();
+                                                                FirebaseDatabase.getInstance().getReference("User_TPA_Docs_File").child(userId).child("NBI_clearance").setValue(stringUri2);
+                                                                startActivity(new Intent(TPADocumentActivity.this, LoginActivity.class));
+                                                                mAuth.signOut();
+                                                                finish();
+                                                                Toast.makeText(TPADocumentActivity.this, "Successfully registered", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(TPADocumentActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                        progressDialog.dismiss();
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
                         }
                     });
                     progressDialog.dismiss();
@@ -436,8 +477,36 @@ public class TPADocumentActivity extends AppCompatActivity{
 
     }
 
-    private void showMessages(String s)
+    public void snackBar(String text){
+        View parentLayout = findViewById(android.R.id.content);
+        Snackbar snackbar = Snackbar.make(parentLayout, ""+text, Snackbar.LENGTH_LONG);
+        View view = snackbar.getView();
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+        params.gravity = Gravity.BOTTOM;
+        view.setLayoutParams(params);
+        snackbar.setAction("Okay", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        }).setActionTextColor(getResources().getColor(android.R.color.white ));
+        snackbar.show();
+    }
+    public void createWallet()
     {
-        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+        DatabaseReference wallet = FirebaseDatabase.getInstance().getReference("User_Wallet").child(userId);
+        wallet.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                UserWallet uwallet = new UserWallet(userId, "0", "active");
+                FirebaseDatabase.getInstance().getReference("User_Wallet").child(userId).setValue(uwallet);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

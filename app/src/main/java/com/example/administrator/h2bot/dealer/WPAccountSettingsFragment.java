@@ -91,7 +91,7 @@ public class WPAccountSettingsFragment extends Fragment implements View.OnClickL
                 UserAccountFile userAccount = dataSnapshot.getValue(UserAccountFile.class);
                 if(userAccount != null)
                 {
-                    EmailAddressWS.setText("Email Address: "+userAccount.getUser_email_address());
+                    EmailAddressWS.setText(userAccount.getUser_email_address());
                 }
             }
 
@@ -107,7 +107,7 @@ public class WPAccountSettingsFragment extends Fragment implements View.OnClickL
                 UserWSBusinessInfoFile userBusiness = dataSnapshot.getValue(UserWSBusinessInfoFile.class);
                 if(userBusiness != null)
                 {
-                    StationNameWS.setText("Water Dealer Name: "+userBusiness.getBusiness_name());
+                    StationNameWS.setText(userBusiness.getBusiness_name());
                 }
             }
 

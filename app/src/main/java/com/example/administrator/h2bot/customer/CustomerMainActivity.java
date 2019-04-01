@@ -1,29 +1,31 @@
 package com.example.administrator.h2bot.customer;
 
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.LoginActivity;
+import com.example.administrator.h2bot.Notification;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.objects.WaterStationOrDealer;
@@ -44,6 +46,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import java.util.ArrayList;
 import java.util.Objects;
 
+
 public class CustomerMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private ArrayList<WaterStationOrDealer> thisList;
@@ -57,11 +60,13 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
     int countInprogress;
     private ArrayList<OrderModel> adapter;
     FirebaseUser currentUser;
-    String currendId;
+    String currendId, order, stationID;
+    private NotificationManagerCompat notificationManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.customer_actvity_main);
+        notificationManager = NotificationManagerCompat.from(this);
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         currendId = currentUser.getUid();
         dialog = new Dialog(this);
@@ -81,7 +86,7 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
             Objects.requireNonNull(getSupportActionBar()).setTitle("Find Water Merchant");
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        initializeCountDrawer();
+        initializeCountDrawer();
     }
     private void initializeCountDrawer(){
         DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
@@ -92,24 +97,27 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
                 my_order.setVisibility(View.VISIBLE);
                 for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                 {
-                    Log.d("gugu", ""+currendId);
                     for (DataSnapshot post : dataSnapshot1.getChildren())
                     {
-                        Log.d("gaga", ""+currendId);
                         for (DataSnapshot post1 : post.getChildren())
                         {
-                            Log.d("gago", ""+currendId);
                         OrderModel orderModel = post1.getValue(OrderModel.class);
                         if (orderModel != null) {
-                            Log.d("curr", ""+currendId);
+                            if(orderModel.getOrder_status().equalsIgnoreCase("In-Progress"))
+                            {
+                                Log.d("EUTTTT","Hi GWAPZ NI SUD DRI");
+                                sendNotification(orderModel.getOrder_no());
+                            }
                             if (orderModel.getOrder_customer_id().equals(currendId)
                                     && orderModel.getOrder_status().equalsIgnoreCase("In-Progress") || orderModel.getOrder_status().equalsIgnoreCase("Dispatched")) {
+
                                 adapter.add(orderModel);
                                 adapter.size();
                                 my_order.setVisibility(View.VISIBLE);
                                 my_order.setVisibility(View.VISIBLE);
                                 countInprogress = adapter.size();
-                                Log.d("CountInprogress", "" + countInprogress);
+
+                                stationID = orderModel.getOrder_merchant_id();
 
                                 my_order.setGravity(Gravity.CENTER_VERTICAL);
                                 my_order.setTextSize(20);
@@ -248,6 +256,19 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
 
     public void setList(ArrayList<WaterStationOrDealer> thisList){
         this.thisList = thisList;
+    }
+
+    private void sendNotification(String orderno) {
+        android.app.Notification notification = new NotificationCompat.Builder(this,"notificationforpending")
+                .setSmallIcon(R.drawable.ic_look1)
+                .setContentTitle("H2BOT")
+                .setContentText("Your order with an order no."+orderno+"has been Accepted")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setVibrate(new long[]{1000,1000,1000,1000,1000})
+                .build();
+
+        notificationManager.notify(1,notification);
     }
 
 }

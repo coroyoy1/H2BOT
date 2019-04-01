@@ -89,9 +89,10 @@ public class TPAMapFragment extends Fragment
     // User PermissionsFF
     String oldpointsaffiliatefinal, oldpointsstationfinal;
     Double newpointsaffiliatefinal, newpointsstationfinal;
-    Double pickUpPricePerGallon, deliveryPricePerGallon;
-    Double partialDelivery, partialPickup;
-    Double profit;
+    String waterType;
+    double pickUpPricePerGallon, deliveryPricePerGallon;
+    double partialDelivery, partialPickup;
+    double profit;
     TextView noOfGallons, Profit, stationadd, fundAmt;
     private GoogleMap map;
     String pointsoldaffiliate, pointsoldstation, pointsnewaffiliate, pointsnewstation;
@@ -580,7 +581,6 @@ public class TPAMapFragment extends Fragment
 
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        getPrice();
                                         for (DataSnapshot latlongFile : dataSnapshot.getChildren()) {
                                             UserLocationAddress locationFile = latlongFile.getValue(UserLocationAddress.class);
                                             if (userFile.getUser_getUID().equals(businessInfo.getBusiness_id())
@@ -599,16 +599,38 @@ public class TPAMapFragment extends Fragment
                                                                                 if (userData3.child("order_merchant_id").getValue(String.class).equals(businessInfo.getBusiness_id())) {
                                                                                     stationaddress = businessInfo.getBusiness_address();
                                                                                 }
-                                                                                noOfGallons.setText(userData4.getOrder_qty());
-                                                                                partialDelivery = deliveryPricePerGallon * Double.valueOf(noOfGallons.getText().toString());
-                                                                                partialPickup = pickUpPricePerGallon * Double.valueOf(noOfGallons.getText().toString());
+                                                                                waterType = userData4.getOrder_water_type();
+                                                                                DatabaseReference getPrice = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File").child(stationId).child(waterType);
+                                                                                {
+                                                                                    getPrice.addValueEventListener(new ValueEventListener() {
+                                                                                        @Override
+                                                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                            Log.d("PRICES",dataSnapshot.child("delivery_price").getValue(String.class)+""+dataSnapshot.child("pickup_price").getValue(String.class)+""+waterType);
+                                                                                            pickUpPricePerGallon = Double.parseDouble(dataSnapshot.child("pickup_price").getValue(String.class));
+                                                                                            deliveryPricePerGallon = Double.parseDouble(dataSnapshot.child("delivery_price").getValue(String.class));
+                                                                                            Log.d("PRICES 2",pickUpPricePerGallon+""+deliveryPricePerGallon+""+waterType);
+                                                                                            Log.d("Gallon No",""+userData4.getOrder_qty());
+                                                                                            noOfGallons.setText(userData4.getOrder_qty());
+                                                                                            partialDelivery = deliveryPricePerGallon * Double.valueOf(userData4.getOrder_qty());
+                                                                                            Log.d("Times:",deliveryPricePerGallon+" * "+userData4.getOrder_qty());
+                                                                                            Log.d("Times2:",deliveryPricePerGallon+" * "+noOfGallons.getText().toString());
+                                                                                            partialPickup = pickUpPricePerGallon * Double.valueOf(userData4.getOrder_qty());
+                                                                                            Log.d("partial pickup","HI."+partialPickup+","+partialDelivery);
+                                                                                            double profit = partialDelivery - partialPickup;
+                                                                                            Log.d("profit","HILO<"+profit);
+                                                                                            Profit.setText(String.valueOf(profit));
+                                                                                            stationadd.setText(stationaddress);
+                                                                                            fundAmt.setText(String.valueOf(partialPickup));
+                                                                                            String type = "Type: " + userType;
+                                                                                            station_id_snip = stationId;
+                                                                                        }
 
-                                                                                Double profit = partialDelivery - partialPickup;
-                                                                                Profit.setText(profit.toString());
-                                                                                stationadd.setText(stationaddress);
-                                                                                fundAmt.setText(partialPickup.toString());
-                                                                                String type = "Type: " + userType;
-                                                                                station_id_snip = stationId;
+                                                                                        @Override
+                                                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                                        }
+                                                                                    });
+                                                                                }
                                                                           }
                                                                         }
                                                                     }
@@ -683,16 +705,37 @@ public class TPAMapFragment extends Fragment
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
                 dialog.setCancelable(false);
                 dialog.setTitle("CONFIRMATION");
-                dialog.setMessage("Use " + amtNeeded + " of load?");
+                dialog.setMessage("Use " + String.valueOf(partialPickup) + " of load?");
                 dialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        if (affiliateOrderStatus.equalsIgnoreCase("Accepted by affiliate") || affiliateOrderStatus.equalsIgnoreCase("Dispatched by affiliate")) {
-                            statePoints();
-                        } else {
-                            String text = "You still have an in-progress order to deliver. Please deliver it first to accept another broadcasting orders";
-                            snackBar(text);
-                        }
+                        DatabaseReference databaseReference4 = FirebaseDatabase.getInstance().getReference("Affiliate_WaterStation_Order_File").child(firebaseUser.getUid());
+                        databaseReference4.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for(DataSnapshot infoFile : dataSnapshot.getChildren())
+                                {
+                                    for(DataSnapshot infoFile1 : infoFile.getChildren()) {
+
+                                            affiliateOrderStatus = infoFile1.child("status").getValue(String.class);
+                                            Log.d("affiliate status", "" + affiliateOrderStatus);
+                                            if (affiliateOrderStatus.equalsIgnoreCase("Accepted by affiliate") || affiliateOrderStatus.equalsIgnoreCase("Dispatched by affiliate")) {
+                                                String text = "You still have an in-progress order to deliver. Please deliver it first to accept another broadcasting orders";
+                                                snackBar(text);
+                                                break;
+                                            } else {
+                                                statePoints();
+                                            }
+
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
                     }
                 })
 
@@ -1107,11 +1150,14 @@ public class TPAMapFragment extends Fragment
     }
 
     public void getAffiliateOrder() {
-        DatabaseReference databaseReference4 = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File").child(firebaseUser.getUid()).child(stationId);
+        DatabaseReference databaseReference4 = FirebaseDatabase.getInstance().getReference("Customer_File").child(customer_id).child(stationId);
         databaseReference4.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                affiliateOrderStatus = dataSnapshot.child("status").getValue(String.class);
+                for(DataSnapshot infoFile : dataSnapshot.getChildren())
+                {
+                    affiliateOrderStatus = dataSnapshot.child("status").getValue(String.class);
+                }
             }
 
             @Override
@@ -1122,13 +1168,15 @@ public class TPAMapFragment extends Fragment
     }
 
     public void getPrice() {
-        DatabaseReference getPrice = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File").child(stationId);
+        DatabaseReference getPrice = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File").child(stationId).child(waterType);
         {
             getPrice.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    pickUpPricePerGallon = Double.valueOf(dataSnapshot.child("delivery_price_per_gallon").getValue(String.class));
-                    deliveryPricePerGallon = Double.valueOf(dataSnapshot.child("pickup_price_per_gallon").getValue(String.class));
+                    Log.d("PRICES",dataSnapshot.child("delivery_price").getValue(String.class)+""+dataSnapshot.child("pickup_price").getValue(String.class)+""+waterType);
+                    pickUpPricePerGallon = Double.parseDouble(dataSnapshot.child("pickup_price").getValue(String.class));
+                    deliveryPricePerGallon = Double.parseDouble(dataSnapshot.child("delivery_price").getValue(String.class));
+                    Log.d("PRICES 2",pickUpPricePerGallon+""+deliveryPricePerGallon+""+waterType);
                 }
 
                 @Override

@@ -64,13 +64,6 @@ public class WPCompletedAccept extends Fragment implements View.OnClickListener 
         deliveryMethod = view.findViewById(R.id.MethodCOMACC);
         deliveryDate = view.findViewById(R.id.datedeliveredCOMACC);
 
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Loading...");
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setProgress(0);
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        progressDialog.show();
 
         Bundle bundle = this.getArguments();
         if(bundle != null)

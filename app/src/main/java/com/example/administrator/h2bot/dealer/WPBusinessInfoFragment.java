@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -120,7 +123,7 @@ public class WPBusinessInfoFragment extends Fragment implements View.OnClickList
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 UserFile user = dataSnapshot.getValue(UserFile.class);
                 String image = user.getUser_uri();
-                Picasso.get().load(image).into(imageView);
+                Picasso.get().load(image).resize(1000,1000).into(imageView);
             }
 
             @Override
@@ -137,6 +140,24 @@ public class WPBusinessInfoFragment extends Fragment implements View.OnClickList
         updateDocBI.setOnClickListener(this);
         updateInfo.setOnClickListener(this);
         cancelBI.setOnClickListener(this);
+
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(event.getAction() == KeyEvent.ACTION_DOWN)
+                {
+                    if (keyCode == KeyEvent.KEYCODE_BACK)
+                    {
+                        attemptToExit();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
         return view;
     }
 

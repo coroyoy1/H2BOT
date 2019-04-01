@@ -170,10 +170,11 @@ public class WPProductListUpdate extends Fragment implements View.OnClickListene
 
     private void dataConnection(String prodName, String prodType, String prodPrice, String prodDescription2, String statY) {
         progressDialog.show();
-        WSWDWaterTypeFile2 userWSWDWaterTypeFile = new WSWDWaterTypeFile2(
+        WSWDWaterTypeFile userWSWDWaterTypeFile = new WSWDWaterTypeFile(
                 firebaseUser.getUid(),
                 prodName,
                 prodType,
+                "None",
                 prodPrice,
                 prodDescription2,
                 statY

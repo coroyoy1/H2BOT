@@ -178,11 +178,11 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
                         if (sb.toString().toLowerCase().contains(firstname.toLowerCase()) && sb.toString().toLowerCase().contains(lastname.toLowerCase())
                                 && sb.toString().toLowerCase().contains("national bureau of investigation")) {
                             Picasso.get().load(uri2).into(imageUD2);
-                            Toast.makeText(getActivity(), "Valid driver's license", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Valid NBI Clearance", Toast.LENGTH_SHORT).show();
                             check2 = true;
                         } else {
                             imageUD2.setImageResource(R.drawable.ic_image_black_24dp);
-                            Toast.makeText(getActivity(), "Invalid driver's license. Please capture the license clearly", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Invalid NBI Clearance. Choose a clear image", Toast.LENGTH_SHORT).show();
                             check2 = false;
                         }
                     }

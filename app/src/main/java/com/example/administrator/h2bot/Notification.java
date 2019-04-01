@@ -1,3 +1,4 @@
+
 package com.example.administrator.h2bot;
 
 import android.app.Application;
@@ -9,10 +10,11 @@ public class Notification extends Application {
     public static final String CHANNEL_1_ID = "notificationforcomplete";
     public static final String CHANNEL_2_ID = "notificationforcanceled";
     public static final String CHANNEL_3_ID = "notificationforpending";
+    public static final String CHANNEL_4_ID = "notificationforcustomeracceptedorder";
     @Override
     public void onCreate() {
         super.onCreate();
-
+        createNotificationChannels();
     }
     private void createNotificationChannels()
     {
@@ -39,14 +41,18 @@ public class Notification extends Application {
             );
             notificationforpending.setDescription("Transaction is Pending");
 
+            NotificationChannel notificationforcustomeracceptedorder = new NotificationChannel(
+                    CHANNEL_4_ID,
+                    "Notification for Pending Orders",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            notificationforcustomeracceptedorder.setDescription("Order has been accepted");
+
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(notificationforcomplete);
             manager.createNotificationChannel(notificationforcanceled);
             manager.createNotificationChannel(notificationforpending);
-
-
-
-
+            manager.createNotificationChannel(notificationforcustomeracceptedorder);
         }
     }
 }

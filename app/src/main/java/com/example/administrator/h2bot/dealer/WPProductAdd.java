@@ -149,10 +149,11 @@ public class WPProductAdd extends Fragment implements View.OnClickListener {
         {
             productDescriptionString = "";
         }
-        WSWDWaterTypeFile2 userWSWDWaterTypeFile1 = new WSWDWaterTypeFile2(
+        WSWDWaterTypeFile userWSWDWaterTypeFile1 = new WSWDWaterTypeFile(
                 firebaseUser.getUid(),
                 productNameString,
                 productTypeString,
+                "None",
                 productPriceString,
                 productDescriptionString,
                 "Available"
@@ -185,52 +186,6 @@ public class WPProductAdd extends Fragment implements View.OnClickListener {
                     }
                 });
     }
-
-
-//    public void retrieveData()
-//    {
-//        List<String> array1 = new ArrayList<String>();
-//        List<String> array2 = new ArrayList<String>();
-//
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Water_Type_File");
-//        databaseReference
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
-//                        {
-//                            String userTypes = dataSnapshot1.child("prodName").getValue(String.class);
-//                            array1.add(userTypes);
-//                        }
-//                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_WD_Water_Type_File");
-//                        reference.child(firebaseUser.getUid())
-//                                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                                    @Override
-//                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                                        for (DataSnapshot dataSnapshot2 : dataSnapshot.getChildren())
-//                                        {
-//                                            String userTypes2 = dataSnapshot2.child("water_type").getValue(String.class);
-//                                            array2.add(userTypes2);
-//                                        }
-//                                        array1.removeAll(array2);
-//                                        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, array1);
-//                                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                                        waterProductType.setAdapter(adapter);
-//                                    }
-//
-//                                    @Override
-//                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                                    }
-//                                });
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
-//    }
 
     private void showMessages(String s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();

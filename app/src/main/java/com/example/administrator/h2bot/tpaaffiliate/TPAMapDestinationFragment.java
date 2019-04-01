@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -35,6 +36,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -296,10 +298,19 @@ public class TPAMapDestinationFragment extends Fragment implements OnMapReadyCal
                 cameraDisplay();
                 break;
             case R.id.orderCall:
-                Intent intentcall = new Intent(Intent.ACTION_DIAL);
-                intentcall.setData(Uri.parse("tel:"+contactNoMMF.getText().toString()));
-                startActivity(intentcall);
-                Toast.makeText(getActivity(), "Calling....", Toast.LENGTH_LONG).show();
+                if(check) {
+                    Intent intentcall = new Intent(Intent.ACTION_DIAL);
+                    intentcall.setData(Uri.parse("tel:" + customerContactNo.getText().toString()));
+                    startActivity(intentcall);
+                    Toast.makeText(getActivity(), "Calling....", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Intent intentcall = new Intent(Intent.ACTION_DIAL);
+                    intentcall.setData(Uri.parse("tel:" + stationContactNo.getText().toString()));
+                    startActivity(intentcall);
+                    Toast.makeText(getActivity(), "Calling....", Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.orderSMS:
                 if(check) {
@@ -689,7 +700,7 @@ public class TPAMapDestinationFragment extends Fragment implements OnMapReadyCal
                             if(status.equals("AC"))
                             {
                                 DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
-                                reference1.child(customerID).child(stationID).child(orderNumber).child("status").setValue("Dispatched by affiliate")
+                                reference1.child(customerID).child(stationID).child(orderNumber).child("order_status").setValue("Dispatched by affiliate")
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
@@ -702,9 +713,10 @@ public class TPAMapDestinationFragment extends Fragment implements OnMapReadyCal
                                                 }
                                                 else {
                                                     SmsManager sms = SmsManager.getDefault();
-                                                    sms.sendTextMessage(contactNoMMF.getText().toString(), null, message, sentPI, deliveredPI);
+                                                    sms.sendTextMessage(customerContactNo.getText().toString(), null, message, sentPI, deliveredPI);
                                                 }
-                                                showMessages("Successfully updated");
+                                                String text = "You are now dispatching the order";
+                                                snackBar(text);
                                                 linearSMSSender.setVisibility(View.VISIBLE);
                                                 dispatched.setVisibility(View.GONE);
                                                 launchscan.setVisibility(View.VISIBLE);
@@ -740,20 +752,37 @@ public class TPAMapDestinationFragment extends Fragment implements OnMapReadyCal
                     }
                 });
     }
-
-    public void updateOrder(String transactionSet)
+    public void snackBar(String text) {
+        View parentLayout = getActivity().findViewById(android.R.id.content);
+        Snackbar snackbar = Snackbar.make(parentLayout, text
+                , Snackbar.LENGTH_LONG);
+        View view = snackbar.getView();
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+        params.gravity = Gravity.BOTTOM;
+        view.setLayoutParams(params);
+        snackbar.setAction("Okay", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        }).setActionTextColor(getResources().getColor(android.R.color.white));
+        snackbar.show();
+    }
+    public void updateOrder()
     {
         if (merchantCheckId.isEmpty())
         {
             merchantCheckId = firebaseUser.getUid();
         }
+        FirebaseDatabase.getInstance().getReference("Affiliate_WaterStation_Order_File")
+                .child(firebaseUser.getUid()).child(stationID).child(orderNumber).child("status").setValue("Completed with affiliate");
+
         DatabaseReference referencedata = FirebaseDatabase.getInstance().getReference("Customer_File");
-        referencedata.child(customerID +"/"+ stationID + "/" + transactNoScan )
-                .child("order_status").setValue("Completed")
+        referencedata.child(customerID +"/"+ stationID + "/" + orderNumber )
+                .child("order_status").setValue("Completed with affiliate")
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        showMessages("Successfully Completed");
                         TPAAcceptedFragment additem = new TPAAcceptedFragment();
                         AppCompatActivity activity = (AppCompatActivity)getContext();
                         activity.getSupportFragmentManager()
@@ -879,7 +908,7 @@ public class TPAMapDestinationFragment extends Fragment implements OnMapReadyCal
                 transactNoScan = result.getContents();
                 if(transactNoScan.trim().toLowerCase().replace(" ", "").equals(stationID+"/"+customerID+"/"+orderNumber))
                 {
-                    updateOrder(transactNoScan);
+                    updateOrder();
                 }
                 else
                 {

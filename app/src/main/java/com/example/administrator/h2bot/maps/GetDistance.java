@@ -141,47 +141,96 @@ public class GetDistance extends AsyncTask<Object, String, String> {
         mMap.clear();
         MarkerOptions mMarkerOption = new MarkerOptions();
         mMarkerOption.position(orig);
-        mCirle = mMap.addCircle(new CircleOptions()
-                .center(orig)
-                .fillColor(Color.argb(100, 173, 216, 230))
-                .strokeColor(Color.BLUE)
-                .strokeWidth(1)
-                .radius(Double.parseDouble(currentRadius.getText().toString().substring(0, currentRadius.getText().toString().length()-3))));
-                mMarkerOption.title("You").icon(bitmapDescriptorFromVector(customerMapFragment.getActivity(), R.drawable.my_pin));
+        if(customerMapFragment!=null) {
+            mCirle = mMap.addCircle(new CircleOptions()
+                    .center(orig)
+                    .fillColor(Color.argb(100, 173, 216, 230))
+                    .strokeColor(Color.BLUE)
+                    .strokeWidth(1)
+                    .radius(Double.parseDouble(currentRadius.getText().toString().substring(0, currentRadius.getText().toString().length() - 3))));
+            mMarkerOption.title("You").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 
-        double radiusLimit = Double.parseDouble(currentRadius.getText().toString().substring(0, currentRadius.getText().toString().length()-3));
-        mCurrentLocationMarker = mMap.addMarker(mMarkerOption);
-        mMap.addMarker(mMarkerOption);
-        mCirle.setRadius(radiusLimit * 1000);
-        ArrayList<WaterStationOrDealer> searchList = new ArrayList<>();
-        for(int i = 0; i < thisList.size(); i++){
-            LatLng latLng = new LatLng(thisList.get(i).getLat(), thisList.get(i).getLng());
-            double stationDistance = Double.parseDouble(thisList.get(i).getDistance().substring(10, thisList.get(i).getDistance().length()-3));
-            if(stationDistance <= radiusLimit){
-                searchList.add(thisList.get(i));
+            double radiusLimit = Double.parseDouble(currentRadius.getText().toString().substring(0, currentRadius.getText().toString().length()-3));
+            mCurrentLocationMarker = mMap.addMarker(mMarkerOption);
+            mMap.addMarker(mMarkerOption);
+            mCirle.setRadius(radiusLimit * 1000);
+            ArrayList<WaterStationOrDealer> searchList = new ArrayList<>();
+            for(int i = 0; i < thisList.size(); i++){
+                LatLng latLng = new LatLng(thisList.get(i).getLat(), thisList.get(i).getLng());
+                double stationDistance = Double.parseDouble(thisList.get(i).getDistance().substring(10, thisList.get(i).getDistance().length()-3));
+                if(stationDistance <= radiusLimit){
+                    searchList.add(thisList.get(i));
 
-                if(thisList.get(i).getUserType().equalsIgnoreCase("Water Station")){
-                    mMap.addMarker(new MarkerOptions()
-                                    .position(latLng).title(thisList.get(i).getStation_dealer_name())
-                                    .snippet(thisList.get(i).getType() + "\n" + thisList.get(i).getStatus())
-                                    .icon(bitmapDescriptorFromVector(customerMapFragment.getActivity(), R.drawable.station)))
-                                    .setTag(thisList.get(i).getStationID());
-                }
-                else{
-                    mMap.addMarker(new MarkerOptions()
-                            .position(latLng).title(thisList.get(i).getStation_dealer_name())
-                            .snippet(thisList.get(i).getType() + "\n" + thisList.get(i).getStatus())
-                            .icon(bitmapDescriptorFromVector(customerMapFragment.getActivity(), R.drawable.my_location)))
-                            .setTag(thisList.get(i).getStationID());
+                    if(thisList.get(i).getUserType().equalsIgnoreCase("Water Station")){
+                        mMap.addMarker(new MarkerOptions()
+                                .position(latLng).title(thisList.get(i).getStation_dealer_name())
+                                .snippet(thisList.get(i).getType() + "\n" + thisList.get(i).getStatus())
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)))
+                                .setTag(thisList.get(i).getStationID());
+                    }
+                    else{
+                        mMap.addMarker(new MarkerOptions()
+                                .position(latLng).title(thisList.get(i).getStation_dealer_name())
+                                .snippet(thisList.get(i).getType() + "\n" + thisList.get(i).getStatus())
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)))
+                                .setTag(thisList.get(i).getStationID());
+                    }
                 }
             }
+            if(customerMapFragment != null) {
+                customerMapFragment.setList(thisList);
+                customerMapFragment.setSearchList(searchList);
+            }
+            else if(tpaMapFragment != null)
+                tpaMapFragment.setList(thisList);
         }
-        if(customerMapFragment != null) {
-            customerMapFragment.setList(thisList);
-            customerMapFragment.setSearchList(searchList);
+        else{
+            mCirle = mMap.addCircle(new CircleOptions()
+                    .center(orig)
+                    .fillColor(Color.argb(100, 173, 216, 230))
+                    .strokeColor(Color.BLUE)
+                    .strokeWidth(1)
+                    .radius(Double.parseDouble(currentRadius.getText().toString().substring(0, currentRadius.getText().toString().length() - 3))));
+            mMarkerOption.title("You").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+
+            double radiusLimit = Double.parseDouble(currentRadius.getText().toString().substring(0, currentRadius.getText().toString().length()-3));
+            mCurrentLocationMarker = mMap.addMarker(mMarkerOption);
+            mMap.addMarker(mMarkerOption);
+            mCirle.setRadius(radiusLimit * 1000);
+            ArrayList<WaterStationOrDealer> searchList = new ArrayList<>();
+            for(int i = 0; i < thisList.size(); i++){
+                LatLng latLng = new LatLng(thisList.get(i).getLat(), thisList.get(i).getLng());
+                double stationDistance = Double.parseDouble(thisList.get(i).getDistance().substring(10, thisList.get(i).getDistance().length()-3));
+                if(stationDistance <= radiusLimit){
+                    searchList.add(thisList.get(i));
+
+                    if(thisList.get(i).getUserType().equalsIgnoreCase("Water Station")){
+                        mMap.addMarker(new MarkerOptions()
+                                .position(latLng).title(thisList.get(i).getStation_dealer_name())
+                                .snippet(thisList.get(i).getType() + "\n" + thisList.get(i).getStatus())
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)))
+                                //.icon(bitmapDescriptorFromVector(tpaMapFragment.getActivity(), R.drawable.station)))
+                                .setTag(thisList.get(i).getStationID());
+                    }
+                    else
+                        {
+                        mMap.addMarker(new MarkerOptions()
+                                .position(latLng).title(thisList.get(i).getStation_dealer_name())
+                                .snippet(thisList.get(i).getType() + "\n" + thisList.get(i).getStatus())
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)))
+                                .setTag(thisList.get(i).getStationID());
+                    }
+                }
+            }
+            if(customerMapFragment != null) {
+                customerMapFragment.setList(thisList);
+                customerMapFragment.setSearchList(searchList);
+            }
+            else if(tpaMapFragment != null)
+                tpaMapFragment.setList(thisList);
         }
-        else if(tpaMapFragment != null)
-            tpaMapFragment.setList(thisList);
+
+
     }
 
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {

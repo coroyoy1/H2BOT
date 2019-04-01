@@ -83,6 +83,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
     Spinner simpleTimePicker;
     FirebaseStorage storage;
     StorageReference storageReference;
+
     FirebaseAuth mAuth;
     private ProgressDialog progressDialog;
     private double lat;
@@ -244,16 +245,10 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
             public void onClick(View v) {
                 if(check==true && check1==true) {
                     CreateAccount(mEmail_address, mPassword);
-                    checkDocuments();
-//                uploadAllImage();
                 }
-                else if(filepath2 == null)
+                else if(filepath2 == null || filepath3==null)
                 {
                     Toast.makeText(WaterPeddlerDocumentActivity.this, "Please choose an image", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    Toast.makeText(WaterPeddlerDocumentActivity.this, "Invalid driver's license. Please capture the license clearly", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -290,8 +285,13 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
                                 sb.append("\n");
                                 Log.d("Strings",""+sb.append(myItem.getValue()));
                             }
-                            if(sb.toString().toLowerCase().contains(mFirstname.toLowerCase()) && sb.toString().toLowerCase().contains(mLastname.toLowerCase()) &&
-                                    sb.toString().toLowerCase().contains("land transportation office"))
+                            if(sb.toString().toLowerCase().contains(mFirstname.toLowerCase())
+                                && sb.toString().toLowerCase().contains(mLastname.toLowerCase())
+                                && sb.toString().toLowerCase().contains("republic of the philippines")
+                                && sb.toString().toLowerCase().contains("department of transportation")
+                                && sb.toString().toLowerCase().contains("land transportation office")
+                                && sb.toString().toLowerCase().contains("driver's license")
+                                && sb.toString().toLowerCase().contains("license no"))
                                 {
                                 Picasso.get().load(filepath2).into(driversLicense_image);
                                 String text = "Valid driver's license";
@@ -330,13 +330,19 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
                                     sb.append("\n");
                                     Log.d("Strings",""+sb.append(myItem.getValue()));
                                 }
-                                if (sb.toString().toLowerCase().contains(mFirstname.toLowerCase()) && sb.toString().toLowerCase().contains(mLastname.toLowerCase())
-                                        && sb.toString().toLowerCase().contains("national bureau of investigation")) {
+                                if (sb.toString().toLowerCase().contains(mFirstname.toLowerCase().trim())
+                                    && sb.toString().toLowerCase().contains(mLastname.toLowerCase().trim())
+                                    && sb.toString().toLowerCase().contains("republic")
+                                        && sb.toString().toLowerCase().contains("philippines")
+                                    && sb.toString().toLowerCase().contains("department of justice")
+                                    && sb.toString().toLowerCase().contains("national bureau of investigation"))
+                                {
                                     Picasso.get().load(filepath3).into(NBIImageView);
                                     String text = "Valid NBI clearance";
                                     snackBar(text);
                                     check = true;
-                                } else {
+                                }
+                                else {
                                     NBIImageView.setImageResource(R.drawable.ic_image_black_24dp);
                                     String text = "Invalid NBI Clearance. Please capture it clearly";
                                     snackBar(text);
@@ -361,6 +367,8 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    userId = user.getUid();
                     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                     String userId = firebaseUser.getUid();
 
@@ -443,6 +451,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
                                                                     progressDialog.dismiss();
                                                                     getLocationSetter();
                                                                     Toast.makeText(WaterPeddlerDocumentActivity.this, "Successfully registered", Toast.LENGTH_SHORT).show();
+                                                                    uploadAllImage();
                                                                 }
                                                             })
                                                             .addOnFailureListener(new OnFailureListener() {
@@ -474,7 +483,7 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
                             });
                         }
                     });
-                    uploadAllImage();
+                  //  uploadAllImage();
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -539,17 +548,11 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
         Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
     }
 
-    public void checkDocuments(){
-        if(driversLicense_image.getDrawable() == null){
-            Toast.makeText(this, "Please fill all the requirments", Toast.LENGTH_SHORT).show();
-            return;
-        }
-    }
+
+
 
     public void uploadAllImage(){
         if(filepath2 != null){
-            FirebaseUser user = mAuth.getCurrentUser();
-            userId = user.getUid();
             StorageReference mStorageRef = storageReference.child("dealer_documents").child(userId +"/"+"DriversLicenseDocument");
             mStorageRef.putFile(filepath2).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override

@@ -39,8 +39,8 @@ public class WPMerchantDataAdapter extends RecyclerView.Adapter<WPMerchantDataAd
     public void onBindViewHolder(@NonNull WPMerchantDataAdapter.ImageViewHolder imageViewHolder, int i) {
         final WSWDWaterTypeFile2 currentData = uploadsHolder.get(i);
         imageViewHolder.PLItemNameHolder.setText(currentData.getWater_type());
-
-        final String itemPrice = currentData.getDelivery_price();
+        imageViewHolder.PLItemNoHolder.setText(currentData.getWater_name());
+        final String itemPrice = currentData.getDelivery_price_per_gallon();
         final String itemType = currentData.getWater_type();
         final String itemUid = currentData.getWater_seller_id();
         final String itemDescription = currentData.getWater_description();

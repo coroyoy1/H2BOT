@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -26,9 +25,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
@@ -43,8 +41,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.administrator.h2bot.dealer.WPCompletedAccept;
-import com.example.administrator.h2bot.dealer.WPPendingOrdersFragment;
+import com.example.administrator.h2bot.Notification;
 import com.example.administrator.h2bot.deliveryman.DMCompleteFragment;
 import com.example.administrator.h2bot.maps.DirectionsParser;
 import com.example.administrator.h2bot.maps.IOBackPressed;
@@ -111,7 +108,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.example.administrator.h2bot.Notification.CHANNEL_3_ID;
+import static com.example.administrator.h2bot.Notification.CHANNEL_1_ID;
+import static com.example.administrator.h2bot.Notification.CHANNEL_2_ID;
 
 public class MapMerchantFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         LocationListener, IOBackPressed, View.OnClickListener
@@ -121,12 +119,13 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
     private static GoogleMap map;
     private int routeColor;
     TextView stationID;
-    private GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient  mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Location mLastLocation;
     private Marker mCurrentLocationMarker;
     private static final int REQUEST_USER_LOCATION_CODE = 99;
     public static final String EXTRA_stationID = "stationID";
+
     private NotificationManagerCompat notificationManager;
 
     private ChildEventListener mChilExventListener;
@@ -195,7 +194,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_map_merchant_fragment, container, false);
-        notificationManager = NotificationManagerCompat.from(getActivity());
+        notificationManager = NotificationManagerCompat.from(getContext());
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
         Bundle bundle = this.getArguments();
@@ -303,19 +302,17 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
 
     //View Inputs~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     private void sendNotification() {
-        Log.d("Hi","Hi RYAN");
-        Notification notification = new NotificationCompat.Builder(getActivity(), CHANNEL_3_ID)
-                .setSmallIcon(R.drawable.ic_arrow_down)
+        android.app.Notification notification = new NotificationCompat.Builder(getContext(),"notificationforcomplete")
+                .setSmallIcon(R.drawable.ic_look1)
                 .setContentTitle("H2BOT")
                 .setContentText("Order Accepted")
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_ALARM)
-                .setVibrate(new long[]{250,300,350,500,1000})
-                .setDefaults( Notification.DEFAULT_ALL)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setVibrate(new long[]{1000,1000,1000,1000,1000})
                 .build();
-
-        notificationManager.notify(1, notification);
+        notificationManager.notify(2,notification);
     }
+
     public void inputData(View view)
     {
         order = view.findViewById(R.id.orderDetails);
@@ -600,7 +597,6 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                                                             || orderModel.getOrder_status().equals("Dispatched")
                                                             || orderModel.getOrder_status().equals("Accepted"))
                                                     {
-
 //                                                        if (orderModel.getOrder_status().equals("Pending"))
 //                                                        {
 //                                                            linearSMSSender.setVisibility(View.GONE);
@@ -613,7 +609,6 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
 //                                                            linearAcceptDeclineSender.setVisibility(View.GONE);
 //                                                            linearSMSSender.setVisibility(View.VISIBLE);
 //                                                        }
-
                                                         orderNoMMF.setText(orderModel.getOrder_no());
                                                         quantityMMF.setText(orderModel.getOrder_qty());
                                                         pricePerGallonMMF.setText(orderModel.getOrder_price_per_gallon());

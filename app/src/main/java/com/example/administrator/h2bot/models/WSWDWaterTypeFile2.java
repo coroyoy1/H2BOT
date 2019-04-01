@@ -44,11 +44,11 @@ public class WSWDWaterTypeFile2 {
         this.water_type = water_type;
     }
 
-    public String getDelivery_price() {
+    public String getDelivery_price_per_gallon() {
         return delivery_price_per_gallon;
     }
 
-    public void setDelivery_price(String delivery_price_per_gallon) {
+    public void setDelivery_price_per_gallon(String delivery_price_per_gallon) {
         this.delivery_price_per_gallon = delivery_price_per_gallon;
     }
 
