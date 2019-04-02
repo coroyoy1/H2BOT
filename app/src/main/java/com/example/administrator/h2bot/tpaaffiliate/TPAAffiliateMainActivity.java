@@ -79,12 +79,12 @@ public class TPAAffiliateMainActivity extends AppCompatActivity implements Navig
                 drawerLayout.closeDrawer(GravityCompat.START);
                 break;
 
-            case R.id.ratings:
-                final Dialog dialog = new Dialog(this);
-                dialog.setContentView(R.layout.ratings_popup);
-                dialog.show();
-                drawerLayout.isDrawerOpen(GravityCompat.START);
-                break;
+//            case R.id.ratings:
+//                final Dialog dialog = new Dialog(this);
+//                dialog.setContentView(R.layout.ratings_popup);
+//                dialog.show();
+//                drawerLayout.isDrawerOpen(GravityCompat.START);
+//                break;
         }
         if (menuItem.getItemId() == R.id.logout) {
             logout();

@@ -20,10 +20,10 @@
                 android:id="@+id/account_settings"
                 android:icon="@drawable/ic_settings_black_24dp"
                 android:title="Account Settings" />
-            <item
-                android:id="@+id/ratings"
-                android:icon="@drawable/ic_star_black_24dp"
-                android:title="Ratings" />
+            <!--<item-->
+                <!--android:id="@+id/ratings"-->
+                <!--android:icon="@drawable/ic_star_black_24dp"-->
+                <!--android:title="Ratings" />-->
             <item
                 android:id="@+id/logout"
                 android:icon="@drawable/ic_power_settings_new_black_24dp"
