@@ -42,7 +42,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="Order No:"
@@ -53,7 +53,7 @@
                     android:id="@+id/orderNoAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="sample edit"
@@ -71,7 +71,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="Customer:"
@@ -82,7 +82,7 @@
                     android:id="@+id/customerAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="sample edit"
@@ -99,7 +99,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="Contact NO.:"
@@ -110,7 +110,7 @@
                     android:id="@+id/contactNoAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="sample edit"
@@ -127,10 +127,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
-                    android:text="Water Type:"
+                    android:text="Water type:"
                     android:textColor="@android:color/white"
                     android:textSize="18dp" />
 
@@ -138,7 +138,7 @@
                     android:id="@+id/waterTypeAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="sample edit"
@@ -155,7 +155,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="Quantity:"
@@ -166,7 +166,7 @@
                     android:id="@+id/itemQuantityAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="sample edit"
@@ -183,10 +183,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
-                    android:text="Price per Gallon:"
+                    android:text="Delivery price per gallon:"
                     android:textColor="@android:color/white"
                     android:textSize="18dp" />
 
@@ -194,7 +194,7 @@
                     android:id="@+id/pricePerGallonAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="sample edit"
@@ -228,7 +228,6 @@
                     android:id="@+id/addressAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="sample edit"
@@ -243,7 +242,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_marginLeft="20dp"
+                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:textSize="18dp"
                     android:layout_weight="1"
@@ -255,6 +254,7 @@
                     android:id="@+id/datedeliveredAll"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
+                    android:textAlignment="center"
                     android:textSize="18dp"
                     android:textColor="@android:color/white"
                     android:layout_width="wrap_content"
@@ -263,6 +263,7 @@
 
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/deliveryFeeNonCons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -270,7 +271,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="Delivery Fee:"
@@ -281,7 +282,7 @@
                     android:id="@+id/deliveryFeeAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="sample edit"
@@ -298,10 +299,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
-                    android:text="Method:"
+                    android:text="Service:"
                     android:textColor="@android:color/white"
                     android:textSize="18dp" />
 
@@ -309,7 +310,7 @@
                     android:id="@+id/MethodAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="sample edit"
@@ -326,7 +327,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="Total Price:"
@@ -337,7 +338,7 @@
                     android:id="@+id/totalPriceAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="sample edit"

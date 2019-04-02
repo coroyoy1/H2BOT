@@ -167,12 +167,10 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
     TextView orderNoMMF, customerMMF, contactNoMMF, waterTypeMMF, quantityMMF,
     pricePerGallonMMF, addressMMF, dateDeliveredMMF, deliveryFeeMMF, methodMMF,
     totalPriceMMF;
+    LinearLayout deliveryCons;
 
     Button closeOrderDialog, submitReason;
 
-    String orderNoString, customerString, contactString, waterTypeString, quantityString,
-            pricePerGallonString, addressString, dateDeliveredString, deliveryFeeString,
-            methodString, totalPriceString;
     private String customerId,name;
     EditText reason;
     private final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1;
@@ -347,7 +345,19 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
         totalPriceMMF = dialogView.findViewById(R.id.totalPriceAll);
         customerImage = dialogView.findViewById(R.id.imageViewAll);
 
+        deliveryCons = dialogView.findViewById(R.id.deliveryFeeNonCons);
+        deliveryCons.setVisibility(View.GONE);
+
         closeOrderDialog = dialogView.findViewById(R.id.closeDialogAll);
+
+        if (deliveryFeeMMF.getText().toString().equalsIgnoreCase("pickup"))
+        {
+            requestBroadcast.setVisibility(View.GONE);
+        }
+        else
+        {
+            requestBroadcast.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -406,11 +416,36 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 String statusOf = dataSnapshot.child("order_status").getValue(String.class);
-                                if (statusOf.toLowerCase().equals("Dispatched".toLowerCase()))
+                                if (statusOf.equalsIgnoreCase("Dispatched"))
                                 {
-                                    dispatched.setVisibility(View.GONE);
-                                    launchscan.setVisibility(View.VISIBLE);
-                                    linearSMSSender.setVisibility(View.VISIBLE);
+                                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_File");
+                                    reference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            UserFile userFileNew = dataSnapshot.getValue(UserFile.class);
+                                            if (userFileNew != null)
+                                            {
+                                                String userT = userFileNew.getUser_type();
+                                                if (userT.equalsIgnoreCase("Water Station"))
+                                                {
+                                                    dispatched.setVisibility(View.GONE);
+                                                    launchscan.setVisibility(View.VISIBLE);
+                                                    linearSMSSender.setVisibility(View.GONE);
+                                                }
+                                                else
+                                                {
+                                                    dispatched.setVisibility(View.GONE);
+                                                    launchscan.setVisibility(View.VISIBLE);
+                                                    linearSMSSender.setVisibility(View.VISIBLE);
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
                                 }
                             }
 
@@ -597,18 +632,6 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                                                             || orderModel.getOrder_status().equals("Dispatched")
                                                             || orderModel.getOrder_status().equals("Accepted"))
                                                     {
-//                                                        if (orderModel.getOrder_status().equals("Pending"))
-//                                                        {
-//                                                            linearSMSSender.setVisibility(View.GONE);
-//                                                            linearAcceptDeclineSender.setVisibility(View.VISIBLE);
-//                                                            dispatched.setVisibility(View.GONE);
-//                                                        }
-//                                                        if (orderModel.getOrder_status().equals("Dispatched"))
-//                                                        {
-//                                                            dispatched.setVisibility(View.GONE);
-//                                                            linearAcceptDeclineSender.setVisibility(View.GONE);
-//                                                            linearSMSSender.setVisibility(View.VISIBLE);
-//                                                        }
                                                         orderNoMMF.setText(orderModel.getOrder_no());
                                                         quantityMMF.setText(orderModel.getOrder_qty());
                                                         pricePerGallonMMF.setText(orderModel.getOrder_price_per_gallon());
@@ -905,6 +928,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                                     requestBroadcast.setVisibility(View.GONE);
                                     linearAcceptDeclineSender.setVisibility(View.GONE);
                                     linearSMSSender.setVisibility(View.GONE);
+                                    closeOrderDialog.performClick();
                                 }
                                 else if (userType.equals("In-Progress"))
                                 {
@@ -913,6 +937,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                                     launchscan.setVisibility(View.VISIBLE);
                                     dispatched.setVisibility(View.GONE);
                                     linearAcceptDeclineSender.setVisibility(View.GONE);
+                                    closeOrderDialog.performClick();
                                 }
                                 else if (userType.toLowerCase().equals("Broadcasting".toLowerCase()))
                                 {
@@ -932,12 +957,13 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                             {
                                 if (userType.equals("Dispatched"))
                                 {
-
+                                    closeOrderDialog.performClick();
                                 }
                                 else if (userType.equals("In-Progress"))
                                 {
                                     linearSMSSender.setVisibility(View.GONE);
                                     launchscan.setVisibility(View.GONE);
+                                    closeOrderDialog.performClick();
                                 }
                             }
                             if (currentUserType.equals("Water Dealer"))
