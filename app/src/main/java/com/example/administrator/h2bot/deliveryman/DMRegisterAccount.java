@@ -414,6 +414,7 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
                 uri = data.getData();
                 Picasso.get().load(uri).into(imageView);
             }
+
             if(eClick)
             {
                 uriv = data.getData();
