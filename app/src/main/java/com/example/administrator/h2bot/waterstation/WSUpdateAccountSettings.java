@@ -303,7 +303,6 @@ public class WSUpdateAccountSettings extends Fragment implements View.OnClickLis
                     }
                 });
     }
-
     private void updateInfoWithNewPassword()
     {
         DatabaseReference renew = FirebaseDatabase.getInstance().getReference("User_Account_File");
