@@ -67,6 +67,7 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_water_station_main);
         notificationManager = NotificationManagerCompat.from(this);
+
         progressDialog = new ProgressDialog(WaterStationMainActivity.this);
         progressDialog.setMessage("Loading...");
         notificationManager = NotificationManagerCompat.from(this);
@@ -147,14 +148,24 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                                 nav_pendingorders_ws.setVisibility(View.VISIBLE);
                                 countPending = adapter.size();
                                 Log.d("CountPending", "" + countPending);
-
+                                if(orderModel.getOrder_status().equals("Pending"))
+                                {
+                                    String text = "You have pending order(s)";
+                                    sendNotification(text);
+                                }
+                                else if(orderModel.getOrder_status().equals("Dispatched by affiliate"))
+                                {
+                                    String text = "You broadcast-ed order"+orderModel.getOrder_no()+" has been accepted by an affiliate";
+                                    sendNotification(text);
+                                }
                                 nav_pendingorders_ws.setGravity(Gravity.CENTER_VERTICAL);
                                 nav_pendingorders_ws.setTextSize(20);
                                 nav_pendingorders_ws.setTypeface(null, Typeface.BOLD);
                                 nav_pendingorders_ws.setTextColor(getResources().getColor(R.color.colorAccent));
                                 nav_pendingorders_ws.setText("" + countPending);
 
-                            } else {
+                            }
+                            else {
                                 countPending = adapter.size();
 
                                 if (countPending == 0) {
@@ -312,11 +323,11 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    private void sendNotification(String orderno) {
+    private void sendNotification(String text) {
         android.app.Notification notification = new NotificationCompat.Builder(this, "notificationforpending")
                 .setSmallIcon(R.drawable.ic_look1)
                 .setContentTitle("H2BOT")
-                .setContentText("Order " + orderno + "has been Accepted")
+                .setContentText(text)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})

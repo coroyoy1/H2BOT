@@ -9,6 +9,8 @@ import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -50,12 +52,12 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
     String currendId;
     int countPending;
     int countInprogress;
-
+    private NotificationManagerCompat notificationManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_water_peddler_home);
-
+        notificationManager = NotificationManagerCompat.from(this);
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         currendId = currentUser.getUid();
 
@@ -105,9 +107,9 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
                             if(orderModel.getOrder_merchant_id().equals(currendId)
                                     && orderModel.getOrder_status().equals("Pending"))
                             {
-                                Log.d("Hiko","Hi"+orderModel.getOrder_status());
                                 adapter.add(orderModel);
                                 adapter.size();
+                                sendNotification();
                                 nav_pending_orders_wp.setVisibility(View.VISIBLE);
                                 nav_inprogress_wp.setVisibility(View.VISIBLE);
                                 countPending = adapter.size();
@@ -300,5 +302,17 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
             }
         });
         dialog.show();
+    }
+    private void sendNotification() {
+        android.app.Notification notification = new NotificationCompat.Builder(this, "notificationforpending")
+                .setSmallIcon(R.drawable.ic_look1)
+                .setContentTitle("H2BOT")
+                .setContentText("You have pending order(s).")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                .build();
+
+        notificationManager.notify(1, notification);
     }
 }

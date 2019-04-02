@@ -105,8 +105,15 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
                         if (orderModel != null) {
                             if(orderModel.getOrder_status().equalsIgnoreCase("In-Progress"))
                             {
-                                Log.d("EUTTTT","Hi GWAPZ NI SUD DRI");
-                                sendNotification(orderModel.getOrder_no());
+                                String text="Your order with an order no."+orderModel.getOrder_status()+"has been Accepted";
+
+                                sendNotification(orderModel.getOrder_no(), text);
+                            }
+                            else if(orderModel.getOrder_status().equalsIgnoreCase("Dispatched") || orderModel.getOrder_status().equalsIgnoreCase("Dispatched by affiliate"))
+                            {
+                                String text="Your order with an order no."+orderModel.getOrder_status()+"has been dispatched. Be ready with the payment.";
+
+                                sendNotification(orderModel.getOrder_no(), text);
                             }
                             if (orderModel.getOrder_customer_id().equals(currendId)
                                     && orderModel.getOrder_status().equalsIgnoreCase("In-Progress") || orderModel.getOrder_status().equalsIgnoreCase("Dispatched")) {
@@ -258,11 +265,11 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         this.thisList = thisList;
     }
 
-    private void sendNotification(String orderno) {
+    private void sendNotification(String orderno, String text) {
         android.app.Notification notification = new NotificationCompat.Builder(this,"notificationforpending")
                 .setSmallIcon(R.drawable.ic_look1)
                 .setContentTitle("H2BOT")
-                .setContentText("Your order with an order no."+orderno+"has been Accepted")
+                .setContentText(text)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setVibrate(new long[]{1000,1000,1000,1000,1000})
