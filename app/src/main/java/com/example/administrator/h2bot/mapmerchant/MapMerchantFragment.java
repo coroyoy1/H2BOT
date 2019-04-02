@@ -349,6 +349,15 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
         deliveryCons.setVisibility(View.GONE);
 
         closeOrderDialog = dialogView.findViewById(R.id.closeDialogAll);
+
+        if (deliveryFeeMMF.getText().toString().equalsIgnoreCase("pickup"))
+        {
+            requestBroadcast.setVisibility(View.GONE);
+        }
+        else
+        {
+            requestBroadcast.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
