@@ -318,11 +318,11 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
         sms = view.findViewById(R.id.orderSMS);
         call = view.findViewById(R.id.orderCall);
         dispatched = view.findViewById(R.id.orderDispatched);
-        accept = view.findViewById(R.id.orderAccept);
-        decline = view.findViewById(R.id.orderDecline);
+        //accept = view.findViewById(R.id.orderAccept);
+        //decline = view.findViewById(R.id.orderDecline);
         requestBroadcast = view.findViewById(R.id.requestBroadcastButton);
 
-        linearSMSSender = view.findViewById(R.id.linearSMSDetails);
+        //linearSMSSender = view.findViewById(R.id.linearSMSDetails);
         linearOrderSender = view.findViewById(R.id.linearOrderDetails);
         linearAcceptDeclineSender = view.findViewById(R.id.linearAcceptDetails);
 
@@ -344,6 +344,11 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
         methodMMF = dialogView.findViewById(R.id.MethodAll);
         totalPriceMMF = dialogView.findViewById(R.id.totalPriceAll);
         customerImage = dialogView.findViewById(R.id.imageViewAll);
+
+        //Temp
+        linearSMSSender = dialogView.findViewById(R.id.linearSMSDetails);
+        accept = dialogView.findViewById(R.id.orderAccept);
+        decline = dialogView.findViewById(R.id.orderDecline);
 
         deliveryCons = dialogView.findViewById(R.id.deliveryFeeNonCons);
         deliveryCons.setVisibility(View.GONE);

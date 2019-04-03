@@ -99,37 +99,37 @@
                 android:layout_height="50dp" />
 
         </LinearLayout>
-        <LinearLayout
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            android:id="@+id/linearAcceptDetails"
-            android:gravity="center"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent">
+        <!--<LinearLayout-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:id="@+id/linearAcceptDetails"-->
+            <!--android:gravity="center"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_width="match_parent">-->
 
-            <Button
-                android:text="Accept"
-                android:textColor="@android:color/white"
-                android:id="@+id/orderAccept"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/z_greenbluebutton"/>
+            <!--<Button-->
+                <!--android:text="Accept"-->
+                <!--android:textColor="@android:color/white"-->
+                <!--android:id="@+id/orderAccept"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_marginRight="10dp"-->
+                <!--android:layout_marginLeft="10dp"-->
+                <!--android:background="@drawable/z_greenbluebutton"/>-->
 
-            <Button
-                android:text="Decline"
-                android:textColor="@android:color/white"
-                android:id="@+id/orderDecline"
-                android:background="@drawable/z_redbutton"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_height="50dp" />
+            <!--<Button-->
+                <!--android:text="Decline"-->
+                <!--android:textColor="@android:color/white"-->
+                <!--android:id="@+id/orderDecline"-->
+                <!--android:background="@drawable/z_redbutton"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_marginRight="10dp"-->
+                <!--android:layout_marginLeft="10dp"-->
+                <!--android:layout_height="50dp" />-->
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
         <LinearLayout
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
