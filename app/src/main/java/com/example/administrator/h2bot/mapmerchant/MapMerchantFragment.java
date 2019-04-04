@@ -239,7 +239,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                         if (statusType.equals("Pending"))
                         {
                             dispatched.setVisibility(View.VISIBLE);
-                            linearAcceptDeclineSender.setVisibility(View.VISIBLE);
+                           // linearAcceptDeclineSender.setVisibility(View.VISIBLE);
                             linearSMSSender.setVisibility(View.GONE);
                             launchscan.setVisibility(View.GONE);
                             requestBroadcast.setVisibility(View.GONE);
@@ -247,7 +247,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                         if (statusType.equals("In-Progress"))
                         {
                             dispatched.setVisibility(View.VISIBLE);
-                            linearAcceptDeclineSender.setVisibility(View.GONE);
+                            //linearAcceptDeclineSender.setVisibility(View.GONE);
                             linearSMSSender.setVisibility(View.GONE);
                             launchscan.setVisibility(View.VISIBLE);
                             requestBroadcast.setVisibility(View.GONE);
@@ -255,7 +255,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                         if (statusType.equals("Dispatched"))
                         {
                             dispatched.setVisibility(View.GONE);
-                            linearAcceptDeclineSender.setVisibility(View.GONE);
+                           // linearAcceptDeclineSender.setVisibility(View.GONE);
                             linearSMSSender.setVisibility(View.VISIBLE);
                             launchscan.setVisibility(View.VISIBLE);
                             requestBroadcast.setVisibility(View.GONE);
@@ -266,7 +266,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                         if (statusType.equals("Pending"))
                         {
                             dispatched.setVisibility(View.GONE);
-                            linearAcceptDeclineSender.setVisibility(View.VISIBLE);
+                           // linearAcceptDeclineSender.setVisibility(View.VISIBLE);
                             linearSMSSender.setVisibility(View.GONE);
                             launchscan.setVisibility(View.GONE);
                             requestBroadcast.setVisibility(View.GONE);
@@ -274,7 +274,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                         if (statusType.equals("In-Progress"))
                         {
                             dispatched.setVisibility(View.GONE);
-                            linearAcceptDeclineSender.setVisibility(View.GONE);
+                            //linearAcceptDeclineSender.setVisibility(View.GONE);
                             linearSMSSender.setVisibility(View.GONE);
                             launchscan.setVisibility(View.VISIBLE);
                             requestBroadcast.setVisibility(View.GONE);
@@ -282,7 +282,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                         if (statusType.equals("Dispatched"))
                         {
                             dispatched.setVisibility(View.GONE);
-                            linearAcceptDeclineSender.setVisibility(View.GONE);
+                          //  linearAcceptDeclineSender.setVisibility(View.GONE);
                             linearSMSSender.setVisibility(View.GONE);
                             launchscan.setVisibility(View.VISIBLE);
                             requestBroadcast.setVisibility(View.GONE);
@@ -322,9 +322,9 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
         //decline = view.findViewById(R.id.orderDecline);
         requestBroadcast = view.findViewById(R.id.requestBroadcastButton);
 
-        //linearSMSSender = view.findViewById(R.id.linearSMSDetails);
+        linearSMSSender = view.findViewById(R.id.linearSMSDetails);
         linearOrderSender = view.findViewById(R.id.linearOrderDetails);
-        linearAcceptDeclineSender = view.findViewById(R.id.linearAcceptDetails);
+        //linearAcceptDeclineSender = view.findViewById(R.id.linearAcceptDetails);
 
         openTextView = view.findViewById(R.id.openArrow);
         closeTextView = view.findViewById(R.id.closeArrow);
@@ -346,7 +346,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
         customerImage = dialogView.findViewById(R.id.imageViewAll);
 
         //Temp
-        linearSMSSender = dialogView.findViewById(R.id.linearSMSDetails);
+        linearAcceptDeclineSender = dialogView.findViewById(R.id.linearAcceptDetails);
         accept = dialogView.findViewById(R.id.orderAccept);
         decline = dialogView.findViewById(R.id.orderDecline);
 
@@ -354,6 +354,36 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
         deliveryCons.setVisibility(View.GONE);
 
         closeOrderDialog = dialogView.findViewById(R.id.closeDialogAll);
+
+        accept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AcceptOrder();
+            }
+        });
+        decline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CancelledOrder();
+            }
+        });
+
+        if (userType.equalsIgnoreCase("In-Progress"))
+        {
+            linearAcceptDeclineSender.setVisibility(View.GONE);
+        }
+        else if (userType.equalsIgnoreCase("Completed"))
+        {
+            linearAcceptDeclineSender.setVisibility(View.GONE);
+        }
+        else if (userType.equalsIgnoreCase("Pending"))
+        {
+            linearAcceptDeclineSender.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            linearAcceptDeclineSender.setVisibility(View.GONE);
+        }
 
         if (deliveryFeeMMF.getText().toString().equalsIgnoreCase("pickup"))
         {
@@ -405,7 +435,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
             case R.id.closeArrow:
                 openTextView.setVisibility(View.VISIBLE);
                 closeTextView.setVisibility(View.GONE);
-                linearAcceptDeclineSender.setVisibility(View.GONE);
+                //linearAcceptDeclineSender.setVisibility(View.GONE);
                 linearOrderSender.setVisibility(View.GONE);
                 linearSMSSender.setVisibility(View.GONE);
                 break;
@@ -793,7 +823,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                                                     StationBusinessInfo stationBusinessInfo = dataSnapshot.getValue(StationBusinessInfo.class);
                                                     if (stationBusinessInfo != null)
                                                     {
-
+                                                        closeOrderDialog.performClick();
                                                         String message = "Your order:"+transactionNo+" has been accepted by "+stationBusinessInfo.getBusiness_name()+". We will notify you for further details. Thank You!";
                                                         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
                                                                 != PackageManager.PERMISSION_GRANTED)
@@ -1076,6 +1106,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
+                                                        closeOrderDialog.performClick();
                                                         String message = "Your order:"+transactionNo+" has been declined by "+name+" for the following reasons: \n"
                                                                 +reason.getText().toString();
                                                         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)

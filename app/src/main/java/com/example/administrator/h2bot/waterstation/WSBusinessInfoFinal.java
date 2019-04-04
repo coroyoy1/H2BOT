@@ -1243,6 +1243,7 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
     }
     private void updateBusinessInfo()
     {
+        progressDialog.show();
         mAddress = stationAddress.getEditText().getText().toString();
         if (checkAddress(mAddress))
         {
@@ -1443,8 +1444,7 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            showMessages("Successfully Address");
-                            progressDialog.dismiss();
+                            showMessages("Successfully Update Address");
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -1479,6 +1479,7 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
     }
     public void uploadAllImage(){
         if(filepath != null){
+            progressDialog.show();
             FirebaseUser user = mAuth.getCurrentUser();
             String userId = user.getUid();
             Log.d("auth", userId);
@@ -1499,6 +1500,7 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
         }
 
         if(filepath3 != null){
+            progressDialog.show();
             FirebaseUser user = mAuth.getCurrentUser();
             String userId = user.getUid();
             Log.d("auth", userId);
@@ -1518,6 +1520,7 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
             });
         }
         if(filepath2 != null){
+            progressDialog.show();
             FirebaseUser user = mAuth.getCurrentUser();
             String userId = user.getUid();
             StorageReference mStorageRef = storageReference.child("station_documents").child(userId +"/"+"sanitaryPermitDocument");
@@ -1548,12 +1551,14 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                         public void onSuccess(Void aVoid)
                         {
                             Toast.makeText(getActivity(), "Uploaded ", Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
                         }
                     });
         }
@@ -1570,12 +1575,14 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                         public void onSuccess(Void aVoid)
                         {
                             Toast.makeText(getActivity(), "Uploaded ", Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
                         }
                     });
         }
@@ -1592,12 +1599,14 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                         public void onSuccess(Void aVoid)
                         {
                             Toast.makeText(getActivity(), "Uploaded ", Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
                         }
                     });
         }
