@@ -193,7 +193,7 @@ public class GetDistance extends AsyncTask<Object, String, String> {
                     .radius(Double.parseDouble(currentRadius.getText().toString().substring(0, currentRadius.getText().toString().length() - 3))));
             mMarkerOption.title("You").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 
-            double radiusLimit = Double.parseDouble(currentRadius.getText().toString().substring(0, currentRadius.getText().toString().length()-3));
+            double radiusLimit = Double.parseDouble(currentRadius.getText().toString().substring(0, currentRadius.getText().toString().length() - 3));
             mCurrentLocationMarker = mMap.addMarker(mMarkerOption);
             mMap.addMarker(mMarkerOption);
             mCirle.setRadius(radiusLimit * 1000);

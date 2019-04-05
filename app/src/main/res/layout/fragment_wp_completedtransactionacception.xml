@@ -45,9 +45,9 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textAlignment="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="Order No:"
@@ -55,10 +55,10 @@
                         android:textSize="18dp" />
 
                     <TextView
+                        android:textAlignment="center"
                         android:id="@+id/orderNoCOMACC"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="sample edit"
@@ -74,9 +74,9 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textAlignment="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="Customer:"
@@ -84,10 +84,10 @@
                         android:textSize="18dp" />
 
                     <TextView
+                        android:textAlignment="center"
                         android:id="@+id/customerCOMACC"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="sample edit"
@@ -102,9 +102,9 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textAlignment="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="Contact NO.:"
@@ -112,10 +112,10 @@
                         android:textSize="18dp" />
 
                     <TextView
+                        android:textAlignment="center"
                         android:id="@+id/contactNoCOMACC"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="sample edit"
@@ -130,9 +130,9 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textAlignment="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="Water Type:"
@@ -140,10 +140,10 @@
                         android:textSize="18dp" />
 
                     <TextView
+                        android:textAlignment="center"
                         android:id="@+id/waterTypeCOMACC"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="sample edit"
@@ -158,9 +158,9 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textAlignment="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="Quantity:"
@@ -168,10 +168,10 @@
                         android:textSize="18dp" />
 
                     <TextView
+                        android:textAlignment="center"
                         android:id="@+id/itemQuantityCOMACC"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="sample edit"
@@ -186,20 +186,20 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textAlignment="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
-                        android:text="Price per Gallon:"
+                        android:text="Delivery price per gallon:"
                         android:textColor="@android:color/white"
                         android:textSize="18dp" />
 
                     <TextView
+                        android:textAlignment="center"
                         android:id="@+id/pricePerGallonCOMACC"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="sample edit"
@@ -214,9 +214,9 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textAlignment="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="Service:"
@@ -224,10 +224,10 @@
                         android:textSize="18dp" />
 
                     <TextView
+                        android:textAlignment="center"
                         android:id="@+id/serviceCOMACC"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="sample edit"
@@ -262,7 +262,6 @@
                         android:id="@+id/addressCOMACC"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="sample edit"
@@ -277,7 +276,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_marginLeft="20dp"
+                        android:textAlignment="center"
                         android:layout_marginTop="10dp"
                         android:textSize="18dp"
                         android:layout_weight="1"
@@ -286,6 +285,7 @@
                         android:layout_height="wrap_content"
                         android:text="Date to Deliver:" />
                     <TextView
+                        android:textAlignment="center"
                         android:id="@+id/datedeliveredCOMACC"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
@@ -302,9 +302,9 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textAlignment="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="Delivery Fee:"
@@ -315,7 +315,7 @@
                         android:id="@+id/deliveryFeeCOMACC"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
+                        android:textAlignment="center"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="sample edit"
@@ -332,7 +332,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
+                        android:textAlignment="center"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="Method:"
@@ -340,10 +340,10 @@
                         android:textSize="18dp" />
 
                     <TextView
+                        android:textAlignment="center"
                         android:id="@+id/MethodCOMACC"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="sample edit"
@@ -358,9 +358,9 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textAlignment="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="Total Price:"
@@ -368,10 +368,10 @@
                         android:textSize="18dp" />
 
                     <TextView
+                        android:textAlignment="center"
                         android:id="@+id/totalPriceCOMACC"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="sample edit"

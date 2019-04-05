@@ -44,7 +44,12 @@ public class CustomerWaterTypeAdapter extends RecyclerView.Adapter<CustomerWater
         String delivery_price = userWSWDWaterTypeFile.getDelivery_price_per_gallon();
 
         viewHolder.waterType.setText(water_type);
-        viewHolder.pickupPrice.setText(String.format("%.2f", Double.parseDouble(pickup_price)));
+        if(pickup_price.equalsIgnoreCase("0.00")){
+            viewHolder.pickupPrice.setText("NONE");
+        }
+        else{
+            viewHolder.pickupPrice.setText(String.format("%.2f", Double.parseDouble(pickup_price)));
+        }
         viewHolder.deliveryPrice.setText(String.format("%.2f", Double.parseDouble(delivery_price)));
     }
 

@@ -159,6 +159,12 @@ public class CustomerMapFragment extends Fragment implements
     CustomerWaterTypeAdapter waterTypeAdapter;
     RecyclerView recyclerView;
 
+    //SearchMerchant
+    private SearchMerchantAdapter searchMerchantAdapter;
+    private TextView closeDialog;
+    private EditText waterType;
+    private RecyclerView searchRecyclerView;
+
 
 
     public CustomerMapFragment() {
@@ -220,7 +226,6 @@ public class CustomerMapFragment extends Fragment implements
         arrayListMerchantLatLong = new ArrayList<UserLocationAddress>();
 
         mAuth = FirebaseAuth.getInstance();
-        SearchMerchantPopup();
         mGeocoder = new Geocoder(getActivity().getApplicationContext());
 
 
@@ -642,6 +647,7 @@ public class CustomerMapFragment extends Fragment implements
 
     public void setSearchList(ArrayList<WaterStationOrDealer> searchList){
         this.searchList = searchList;
+        SearchMerchantPopup();
     }
 
     public void SearchMerchantPopup() {
@@ -653,7 +659,7 @@ public class CustomerMapFragment extends Fragment implements
         closeDialog = dialog.findViewById(R.id.closeDialog);
         waterType = dialog.findViewById(R.id.waterType);
         recyclerView = dialog.findViewById(R.id.recyclerView);
-        searchMerchantAdapter = new SearchMerchantAdapter(getActivity(), searchList);
+        searchMerchantAdapter = new SearchMerchantAdapter(dialog.getContext(), searchList);
         recyclerView.setAdapter(searchMerchantAdapter);
         closeDialog.setOnClickListener(new View.OnClickListener() {
             @Override

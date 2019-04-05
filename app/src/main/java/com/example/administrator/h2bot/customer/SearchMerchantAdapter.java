@@ -14,7 +14,7 @@ import com.example.administrator.h2bot.objects.WaterStationOrDealer;
 import java.util.ArrayList;
 
 public class SearchMerchantAdapter extends RecyclerView.Adapter<SearchMerchantAdapter.ViewHolder> {
-    private ArrayList<WaterStationOrDealer> thisList;
+    private ArrayList<WaterStationOrDealer> searchList;
     private Context myContext;
 
     public SearchMerchantAdapter() {
@@ -22,29 +22,30 @@ public class SearchMerchantAdapter extends RecyclerView.Adapter<SearchMerchantAd
 
     public SearchMerchantAdapter(Context myContext, ArrayList<WaterStationOrDealer> thisList) {
         this.myContext = myContext;
-        this.thisList = thisList;
+        this.searchList = thisList;
     }
 
-    @NonNull
     @Override
-
-
-    public SearchMerchantAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(myContext).inflate(R.layout.search_merchant_popup_layout, viewGroup, false);
         return new SearchMerchantAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull SearchMerchantAdapter.ViewHolder viewHolder, int i) {
-        final WaterStationOrDealer merchants = thisList.get(i);
+        final WaterStationOrDealer merchants = searchList.get(i);
         String distance = merchants.getDistance();
+        String merchantName = merchants.getStation_dealer_name();
+        String duration = merchants.getDuration();
 
         viewHolder.distance.setText(distance);
+        viewHolder.merchantName.setText(merchantName);
+        viewHolder.travelTime.setText(duration);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return searchList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -60,6 +61,6 @@ public class SearchMerchantAdapter extends RecyclerView.Adapter<SearchMerchantAd
     }
 
     public void setList(ArrayList<WaterStationOrDealer> thisList){
-        this.thisList = thisList;
+        this.searchList = thisList;
     }
 }
