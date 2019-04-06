@@ -98,6 +98,11 @@ public class DeliveryManMainActivity extends AppCompatActivity implements Naviga
                         OrderModel orderModel = post.getValue(OrderModel.class);
                         if(orderModel != null)
                         {
+                            if(orderModel.getOrder_status().equalsIgnoreCase("In-Progress"))
+                            {
+                                String text="You have in-progress order(s) that has been accepted by your station";
+                                sendNotification(orderModel.getOrder_no(), text);
+                            }
                             if(orderModel.getOrder_merchant_id().equals(currendId)
                                     && orderModel.getOrder_status().equalsIgnoreCase("In-Progress")|| orderModel.getOrder_status().equalsIgnoreCase("Dispatched"))
                             {
@@ -215,16 +220,16 @@ public class DeliveryManMainActivity extends AppCompatActivity implements Naviga
     {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
-    private void sendNotification() {
-        android.app.Notification notification = new NotificationCompat.Builder(this, "notificationforpending")
+    private void sendNotification(String orderno, String text) {
+        android.app.Notification notification = new NotificationCompat.Builder(this,"notificationforpending")
                 .setSmallIcon(R.drawable.ic_look1)
                 .setContentTitle("H2BOT")
-                .setContentText("You have in-progress order(s).")
+                .setContentText(text)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                .setVibrate(new long[]{1000,1000,1000,1000,1000})
                 .build();
 
-        notificationManager.notify(1, notification);
+        notificationManager.notify(1,notification);
     }
 }

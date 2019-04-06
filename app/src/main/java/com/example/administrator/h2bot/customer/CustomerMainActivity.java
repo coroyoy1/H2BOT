@@ -105,13 +105,13 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
                         if (orderModel != null) {
                             if(orderModel.getOrder_status().equalsIgnoreCase("In-Progress"))
                             {
-                                String text="Your order with an order no."+orderModel.getOrder_status()+"has been Accepted";
+                                String text="Your order has been Accepted";
 
                                 sendNotification(orderModel.getOrder_no(), text);
                             }
                             else if(orderModel.getOrder_status().equalsIgnoreCase("Dispatched") || orderModel.getOrder_status().equalsIgnoreCase("Dispatched by affiliate"))
                             {
-                                String text="Your order with an order no."+orderModel.getOrder_status()+"has been dispatched. Be ready with the payment.";
+                                String text="Your order has been dispatched.";
 
                                 sendNotification(orderModel.getOrder_no(), text);
                             }
