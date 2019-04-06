@@ -56,7 +56,7 @@ public class DMInProgressOrdersAdapter extends RecyclerView.Adapter<DMInProgress
                 UserFile userFile = dataSnapshot.getValue(UserFile.class);
                 if (userFile != null)
                 {
-                    String customerName = userFile.getUser_lastname() +", "+ userFile.getUser_firstname();
+                    String customerName = "Customer Name: "+ userFile.getUser_lastname() +", "+ userFile.getUser_firstname();
                     imageViewholder.transactionCustomerText.setText(customerName);
                 }
             }

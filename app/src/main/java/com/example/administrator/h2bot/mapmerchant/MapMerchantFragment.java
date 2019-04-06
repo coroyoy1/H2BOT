@@ -1038,10 +1038,10 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                     }
                 });
     }
-    public void updateOrder(String transactionSet)
+    public void updateOrder(String pathString)
     {
         DatabaseReference referencedata = FirebaseDatabase.getInstance().getReference("Customer_File");
-        referencedata.child(transactionSet)
+        referencedata.child(pathString)
                 .child("order_status").setValue("Completed")
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -1270,6 +1270,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
         if(result != null)
         {
+            String resultString = result.getContents();
             if(result.getContents()==null)
             {
                 showMessages("You cancelled scanning");
@@ -1278,16 +1279,17 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
             {
                 showMessages(result.getContents());
                 transactNoScan = result.getContents();
-                String currentTransact = customerId.replace( " ", "") + "/"
-                        + merchantCheckId.trim().toLowerCase().replace(" ", "") + "/"
-                        + transactNoScan.trim().toLowerCase().replace(" ", "");
-                if(transactNoScan.trim().toLowerCase().replace(" ", "").equals(transactionNo.toLowerCase().trim().replace(" ", "")))
+                String currentTransact = customerNo+"/"
+                        + merchantCheckId+ "/"
+                        + transactionNo;
+                if(resultString.toLowerCase().trim().replace(" ", "")
+                        .equalsIgnoreCase(currentTransact.toLowerCase().trim().replace(" ", "")))
                 {
-                    updateOrder(currentTransact);
+                    updateOrder(resultString);
                 }
                 else
                 {
-                    showMessages("Failed");
+                    showMessages("QR code does not match.");
                 }
             }
         }

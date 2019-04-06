@@ -288,13 +288,15 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
                 showMessages(result.getContents());
                 transactNoScan = result.getContents();
                 progressDialog.show();
-                if(transactNoScan.equals(firebaseUser.getUid()+"/"+customerNo+"/"+transactionNo))
+                String path = customerNo+ "/"+ firebaseUser.getUid() +"/"+transactionNo;
+                if(transactNoScan.toLowerCase().trim().replace(" ", "")
+                        .equals(path.toLowerCase().trim().replace(" ", "")))
                 {
                     updateOrder(transactNoScan);
                 }
                 else
                 {
-                    showMessages("Failed");
+                    showMessages("QR code does not match.");
                     progressDialog.dismiss();
                 }
             }

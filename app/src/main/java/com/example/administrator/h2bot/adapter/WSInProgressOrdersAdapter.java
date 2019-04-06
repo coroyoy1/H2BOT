@@ -60,7 +60,7 @@ public class WSInProgressOrdersAdapter extends RecyclerView.Adapter<WSInProgress
                 UserFile userFile = dataSnapshot.getValue(UserFile.class);
                 if (userFile != null)
                 {
-                    String customerName = userFile.getUser_lastname() +", "+ userFile.getUser_firstname();
+                    String customerName = "Customer Name: "+userFile.getUser_lastname() +", "+ userFile.getUser_firstname();
                     viewHolder.transactionCustomerText.setText(customerName);
                 }
             }

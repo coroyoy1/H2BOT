@@ -768,7 +768,7 @@ public class TPAMapDestinationFragment extends Fragment implements OnMapReadyCal
         }).setActionTextColor(getResources().getColor(android.R.color.white));
         snackbar.show();
     }
-    public void updateOrder()
+    public void updateOrder(String pathString)
     {
         if (merchantCheckId.isEmpty())
         {
@@ -778,7 +778,7 @@ public class TPAMapDestinationFragment extends Fragment implements OnMapReadyCal
                 .child(firebaseUser.getUid()).child(stationID).child(orderNumber).child("status").setValue("Completed with affiliate");
 
         DatabaseReference referencedata = FirebaseDatabase.getInstance().getReference("Customer_File");
-        referencedata.child(customerID +"/"+ stationID + "/" + orderNumber )
+        referencedata.child(pathString)
                 .child("order_status").setValue("Completed with affiliate")
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -906,13 +906,15 @@ public class TPAMapDestinationFragment extends Fragment implements OnMapReadyCal
             {
                 showMessages(result.getContents());
                 transactNoScan = result.getContents();
-                if(transactNoScan.trim().toLowerCase().replace(" ", "").equals(stationID+"/"+customerID+"/"+orderNumber))
+                String path = stationID+"/"+customerID+"/"+orderNumber;
+                if(transactNoScan.trim().toLowerCase().replace(" ", "")
+                        .equals(path.trim().toLowerCase().replace(" ", "")))
                 {
-                    updateOrder();
+                    updateOrder(transactNoScan);
                 }
                 else
                 {
-                    showMessages("Failed");
+                    showMessages("QR code did not match.");
                 }
             }
         }
