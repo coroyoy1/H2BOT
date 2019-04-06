@@ -40,7 +40,7 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
     FirebaseUser firebaseUser;
 
     Button updateBI, updateDocBI, updateInfo, cancelBI;
-    TextView stationName, stationAddress, stationHours, stationTelNo, stationFeePerGal, stationDelivery, stationStatus, deliverymethod;
+    TextView stationName, stationAddress, stationHours, stationTelNo, businessDays, minimumGallon, documentStatus;
     ImageView imageView;
 
     LinearLayout linearLayoutUp, linearLayoutUpNext;
@@ -71,11 +71,9 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
        stationAddress = view.findViewById(R.id.stationAddressBI);
        stationHours = view.findViewById(R.id.stationHoursBI);
        stationTelNo = view.findViewById(R.id.stationTelNoBI);
-       stationFeePerGal = view.findViewById(R.id.stationFeePerGalBI);
-       stationDelivery = view.findViewById(R.id.stationDeliveryBI);
-       stationStatus = view.findViewById(R.id.stationStatusBI);
-       imageView = view.findViewById(R.id.imageWaterStation);
-       deliverymethod = view.findViewById(R.id.deliverymethodBI);
+       businessDays = view.findViewById(R.id.businessDaysBI);
+       minimumGallon = view.findViewById(R.id.minimumGalloonBI);
+       documentStatus = view.findViewById(R.id.documentStatusBI);
 
        linearLayoutUp = view.findViewById(R.id.linearForUpdate);
        linearLayoutUpNext = view.findViewById(R.id.linearForUpdateNext);
@@ -98,8 +96,17 @@ public class WSBusinessInfoFragment extends Fragment implements View.OnClickList
                         stationAddress.setText(userWSBusinessInfoFile.getBusiness_address());
                         stationHours.setText(businessTime);
                         stationTelNo.setText(userWSBusinessInfoFile.getBusiness_tel_no());
-                        stationFeePerGal.setText(dataSnapshot.child("business_delivery_fee").getValue(String.class));
-                        stationStatus.setText(userWSBusinessInfoFile.getBusiness_min_no_of_gallons());
+                        String days = userWSBusinessInfoFile.getBusiness_days().substring(1 , userWSBusinessInfoFile.getBusiness_days().length()-1);
+                       businessDays.setText(days);
+                        minimumGallon.setText(userWSBusinessInfoFile.getBusiness_min_no_of_gallons());
+                        if (userWSBusinessInfoFile.getBusiness_status().equalsIgnoreCase("active"))
+                        {
+                            documentStatus.setText("Verified");
+                        }
+                        else
+                        {
+                            documentStatus.setText("Unverified");
+                        }
                    }
                    else
                    {

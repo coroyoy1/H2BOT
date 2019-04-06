@@ -101,10 +101,13 @@ public class WSDashboard extends Fragment implements View.OnClickListener {
                 if(file.getStation_id().equalsIgnoreCase(firebaseUser.getUid()) && file.getCustomer_id().equalsIgnoreCase(list.getOrder_customer_id())){
                     if(list.getOrder_status().equalsIgnoreCase("Pending")){
                         countPending++;
-                    }else if(list.getOrder_status().equalsIgnoreCase("Completed")){
+                    }else if(list.getOrder_status().equalsIgnoreCase("Completed")
+                    || list.getOrder_status().equalsIgnoreCase("Completed by Affiliate")){
                         countComppleted++;
                     }
-                    else if (list.getOrder_status().equalsIgnoreCase("In-Progress")) {
+                    else if (list.getOrder_status().equalsIgnoreCase("In-Progress")
+                    || list.getOrder_status().equalsIgnoreCase("Dispatched")
+                    || list.getOrder_status().equalsIgnoreCase("Dispatched by Affiliate")) {
                         countInProgress++;
                     }
                 }
@@ -173,7 +176,7 @@ public class WSDashboard extends Fragment implements View.OnClickListener {
                 .replace(R.id.fragment_container_ws, intent)
                 .addToBackStack(null)
                 .commit();
-        Objects.requireNonNull(getActivity()).setTitle("Completed Orders");
+        Objects.requireNonNull(activity.getSupportActionBar()).setTitle("Completed Orders");
     }
 
     private void clickPendingdOrders(View v)
@@ -186,7 +189,7 @@ public class WSDashboard extends Fragment implements View.OnClickListener {
                 .replace(R.id.fragment_container_ws, intent)
                 .addToBackStack(null)
                 .commit();
-        Objects.requireNonNull(getActivity()).setTitle("Pending Orders");
+        Objects.requireNonNull(activity.getSupportActionBar()).setTitle("Pending Orders");
     }
 
     private void clickInProgressOrders(View v)
@@ -199,7 +202,7 @@ public class WSDashboard extends Fragment implements View.OnClickListener {
                 .replace(R.id.fragment_container_ws, intent)
                 .addToBackStack(null)
                 .commit();
-        Objects.requireNonNull(getActivity()).setTitle("In-Progress Orders");
+        Objects.requireNonNull(activity.getSupportActionBar()).setTitle("In-Progress");
     }
 
     //Button Intent

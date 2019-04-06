@@ -107,6 +107,16 @@
                     android:inputType="textEmailAddress"
                     android:textAlignment="center" />
 
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/edit_text_border"
+                    android:hint="Driver's License No."
+                    android:textAlignment="center"
+                    android:inputType="textEmailAddress"
+                    android:id="@+id/licenseUASDM"/>
+
                 <ImageView
                     android:layout_marginTop="20dp"
                     android:layout_width="match_parent"

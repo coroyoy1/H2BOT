@@ -1,96 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/cornerborder4">
 
-    <ScrollView
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Delivery Man Information"
+        android:textSize="24dp"
+        android:background="@android:color/holo_blue_dark"
+        android:textColor="@android:color/white"/>
+    <ScrollView
+        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:layout_gravity="center"
             android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:text="Delivery Man Information"
-                android:textSize="20dp"
-                android:textStyle="bold"/>
 
-            <LinearLayout
+            <android.support.v7.widget.CardView
+                android:layout_margin="18dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="40dp"
-                android:layout_marginBottom="100dp"
-                android:background="#B4888484"
-                android:orientation="vertical">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/imageCircleDMDM"
-                    android:layout_marginTop="10dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_launcher_background"
-                    android:layout_width="180dp"
-                    android:layout_height="120dp" />
-
-                <TextView
-                    android:id="@+id/fullnameDMDM"
-                    android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp"
-                    android:text="Name"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp" />
+                    android:layout_margin="20dp"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:layout_marginTop="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Address"
-                    android:layout_marginLeft="20dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp"
-                    android:id="@+id/addressDMDM"/>
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/imageCircleDMDM"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_launcher_background"
+                        android:layout_width="180dp"
+                        android:layout_height="120dp" />
 
-                <TextView
-                    android:id="@+id/emailAddDMDM"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp"
-                    android:text="Email Address"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp" />
+                    <TextView
+                        android:id="@+id/fullnameDMDM"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Name"
+                        android:textColor="@android:color/black"
+                        android:textSize="18dp" />
 
-                <TextView
-                    android:layout_marginTop="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Phone Number"
-                    android:layout_marginLeft="20dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp"
-                    android:id="@+id/contactNoDMDM"/>
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Address"
+                        android:layout_marginLeft="20dp"
+                        android:textColor="@android:color/black"
+                        android:textSize="18dp"
+                        android:id="@+id/addressDMDM"/>
+
+                    <TextView
+                        android:id="@+id/emailAddDMDM"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Email Address"
+                        android:textColor="@android:color/black"
+                        android:textSize="18dp" />
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Phone Number"
+                        android:layout_marginLeft="20dp"
+                        android:textColor="@android:color/black"
+                        android:textSize="18dp"
+                        android:id="@+id/contactNoDMDM"/>
 
 
-                <TextView
-                    android:id="@+id/statusDMDM"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Status"
-                    android:layout_marginLeft="20dp"
-                    android:textColor="@android:color/holo_green_dark"
-                    android:textSize="18dp"
-                    android:layout_marginBottom="20dp"/>
-            </LinearLayout>
-
+                    <TextView
+                        android:id="@+id/statusDMDM"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Status"
+                        android:layout_marginLeft="20dp"
+                        android:textColor="@android:color/holo_green_dark"
+                        android:textSize="18dp"
+                        android:layout_marginBottom="20dp"/>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+            <Button
+                android:layout_marginBottom="20dp"
+                android:id="@+id/deleteOnDMDM"
+                android:background="@drawable/z_redbutton"
+                android:text="Remove Delivery Man"
+                android:textColor="@android:color/white"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="100dp"
+                android:layout_marginRight="100dp"
+                android:layout_height="60dp"/>
             <Button
                 android:id="@+id/backOnDMDM"
                 android:background="@drawable/z_graybuttomv"

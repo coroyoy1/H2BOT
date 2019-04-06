@@ -1,5 +1,7 @@
 package com.example.administrator.h2bot.waterstation;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -17,6 +19,8 @@ import android.widget.Toast;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.UserAccountFile;
 import com.example.administrator.h2bot.models.UserWSDMFile;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,11 +35,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class WSDMInformation extends Fragment {
 
-    String emailOf;
+    String emailOf, uidOf;
     TextView nameTo, addressTo, contactNoTo, statusTo, emailTo;
     FirebaseUser firebaseUser;
     CircleImageView imageTo;
-    Button backTo;
+    Button backTo, deleteTo;
 
     @Nullable
     @Override
@@ -48,6 +52,7 @@ public class WSDMInformation extends Fragment {
         statusTo = view.findViewById(R.id.statusDMDM);
         imageTo = view.findViewById(R.id.imageCircleDMDM);
         backTo = view.findViewById(R.id.backOnDMDM);
+        deleteTo = view.findViewById(R.id.deleteOnDMDM);
         emailTo = view.findViewById(R.id.emailAddDMDM);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -59,7 +64,7 @@ public class WSDMInformation extends Fragment {
             String contactNoOf = "Contact No.: "+bundle.getString("ContactNoDM");
             String statusOf = "Status: "+bundle.getString("StatusDM");
             String imageOf = bundle.getString("ImageDM");
-            String uidOf = bundle.getString("uidDelMan");
+            uidOf = bundle.getString("uidDelMan");
             if(uidOf != null)
             {
                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_Account_File");
@@ -102,7 +107,57 @@ public class WSDMInformation extends Fragment {
                         .commit();
             }
         });
+        deleteTo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmationToDelete();
+            }
+        });
 
         return view;
+    }
+
+    private void confirmationToDelete()
+    {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        deleteDeliveryMan();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Are you sure to remove this delivery man?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+    }
+
+    private void deleteDeliveryMan()
+    {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_File");
+        reference.child(uidOf).removeValue()
+        .addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful())
+                {
+                    DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("User_Account_File");
+                    reference1.child(uidOf).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            showMessages("Your Delivery man has sucessfully removed");
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void showMessages(String s) {
+        Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
     }
 }

@@ -100,7 +100,7 @@
                     android:layout_marginLeft="50dp"
                     android:layout_marginRight="50dp"
                     android:background="@android:color/holo_blue_dark"
-                    android:text="Add Business Permit"
+                    android:text="Update Business Permit"
                     android:textColor="@android:color/white" />
 
                 <ImageView
@@ -117,7 +117,7 @@
                     android:layout_marginLeft="50dp"
                     android:layout_marginRight="50dp"
                     android:background="@android:color/holo_blue_dark"
-                    android:text="Add Sanitary Permit"
+                    android:text="Update Sanitary Permit"
                     android:textColor="@android:color/white" />
 
                 <ImageView
@@ -134,7 +134,7 @@
                     android:layout_marginLeft="50dp"
                     android:layout_marginRight="50dp"
                     android:background="@android:color/holo_blue_dark"
-                    android:text="Add PhysicoChemical Permit"
+                    android:text="Update PhysicoChemical Permit"
                     android:textColor="@android:color/white" />
 
 

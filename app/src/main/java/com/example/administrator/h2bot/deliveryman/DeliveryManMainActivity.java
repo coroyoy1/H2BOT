@@ -33,6 +33,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class DeliveryManMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -51,6 +52,7 @@ public class DeliveryManMainActivity extends AppCompatActivity implements Naviga
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        adapter2 = new ArrayList<>();
         setContentView(R.layout.activity_delivery_man_main);
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         currendId = currentUser.getUid();
@@ -67,10 +69,10 @@ public class DeliveryManMainActivity extends AppCompatActivity implements Naviga
         drawerLayout.closeDrawers();
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_dmdrawer_open, R.string.navigation_dmdrawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        NavigationView navigationView = findViewById(R.id.nav_view_wp);
+        NavigationView navigationView = findViewById(R.id.nav_view_dm);
         navigationView.setNavigationItemSelectedListener(this);
         nav_inprogress_dm=(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
-                findItem(R.id.nav_inprogress_wp));
+                findItem(R.id.nav_inprogress_dm));
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

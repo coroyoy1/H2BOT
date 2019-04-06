@@ -204,7 +204,7 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-                       String userd = FirebaseAuth.getInstance().getUid();
+                       String userd = FirebaseAuth.getInstance().getCurrentUser().getUid();
                        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                        currentUser.getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {
                            @Override
@@ -277,7 +277,7 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
                                                                                                 public void onSuccess(Void aVoid) {
                                                                                                     //showMessages("Successfully Added");
                                                                                                     getLocationSetter();
-                                                                                                    getStationParent(userd);
+                                                                                                    //getStationParent(userd);
                                                                                                 }
                                                                                             })
                                                                                             .addOnFailureListener(new OnFailureListener() {
@@ -378,6 +378,7 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
                         @Override
                         public void onSuccess(Void aVoid) {
                             showMessages("Successfully registered");
+                            getStationParent(firebaseUser.getUid());
                             progressDialog.dismiss();
                         }
                     })

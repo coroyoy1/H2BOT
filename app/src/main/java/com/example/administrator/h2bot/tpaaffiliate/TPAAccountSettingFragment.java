@@ -78,7 +78,7 @@ public class TPAAccountSettingFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 firstnameTextView.setText(dataSnapshot.child("user_firstname").getValue(String.class));
                 lastnameTextView.setText(dataSnapshot.child("user_lastname").getValue(String.class));
-                AddressWS.setText(dataSnapshot.child("user_lastname").getValue(String.class));
+                AddressWS.setText(dataSnapshot.child("user_address").getValue(String.class));
                 ContactNoWS.setText(dataSnapshot.child("user_phone_no").getValue(String.class));
 
                 Picasso.get().load(dataSnapshot.child("user_uri").getValue(String.class)).fit().centerCrop().into(imageView);

@@ -2,11 +2,13 @@ package com.example.administrator.h2bot.deliveryman;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -33,6 +35,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
+import com.google.android.gms.vision.text.TextRecognizer;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,7 +63,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class DMUpdateAccountSettings extends Fragment implements View.OnClickListener {
     private static final int PICK_IMAGE_REQUEST = 1;
-    private EditText firstNameWU, lastNameWU, addressWU, contactNoWU, emailAddressWU, passwordWU, confirmPasswordWU, retypePassword, oldPass;
+    private EditText firstNameWU, lastNameWU, addressWU, contactNoWU, emailAddressWU, passwordWU, confirmPasswordWU, retypePassword, oldPass, licenseNo;
     private Button updateButton, addPhotobutton, changePassword, changeLicenseButton;
     LinearLayout linearPassword, linearRenewPassword;
     private CircleImageView imageView;
@@ -75,6 +78,7 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
     double lng;
     private String newToken;
     boolean isClick=true;
+    private boolean isPick1 = false, isPick2 = false;
 
     @Nullable
     @Override
@@ -96,6 +100,7 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
         linearRenewPassword = view.findViewById(R.id.linearPasswordUpdateUASDM);
         retypePassword = view.findViewById(R.id.RegisterPasswordRetypeUASDM);
         oldPass = view.findViewById(R.id.oldPasswordUASDM);
+        licenseNo = view.findViewById(R.id.licenseUASDM);
 
         imageView1 = view.findViewById(R.id.driverlicense_imageUASDM);
         changeLicenseButton = view.findViewById(R.id.addPhotoUASDMDM);
@@ -194,29 +199,49 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null)
         {
-            uri = data.getData();
-            Picasso.get().load(uri).into(imageView);
-//            if (isClick)
-//            {
-//                Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-//                SparseArray<TextBlock> items = textRecognizer.detect(frame);
-//                StringBuilder sb= new StringBuilder();
-//
-//                for(int ctr=0;ctr<items.size();ctr++)
-//                {
-//                    TextBlock myItem = items.valueAt(ctr);
-//                    sb.append(myItem.getValue());
-//                    sb.append("\n");
-//                }
-//                if(sb.toString().toLowerCase().contains(stationName.getText().toString().toLowerCase())){
-//                    Picasso.get().load(filepath4).into(birPermit_Image);
-//                    Toast.makeText(getActivity(), "Valid sanitary permit", Toast.LENGTH_SHORT).show();
-//                }
-//                else{
-//                    businessPermit_image.setImageResource(R.drawable.ic_image_black_24dp);
-//                    Toast.makeText(getActivity(), "Invalid sanitary permit", Toast.LENGTH_SHORT).show();
-//                }
-//            }
+            if (isPick1)
+            {
+                uri = data.getData();
+                Picasso.get().load(uri).centerCrop().fit().into(imageView);
+            }
+            if (isPick2)
+            {
+                uri1 = data.getData();
+                Bitmap bitmap = null;
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri1);
+                    TextRecognizer textRecognizer = new TextRecognizer.Builder(getActivity().getApplicationContext()).build();
+
+                    if(!textRecognizer.isOperational())
+                    {
+                        Toast.makeText(getActivity().getApplication(), "No text detected", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+                        SparseArray<TextBlock> items = textRecognizer.detect(frame);
+                        StringBuilder sb= new StringBuilder();
+
+                        for(int ctr=0;ctr<items.size();ctr++)
+                        {
+                            TextBlock myItem = items.valueAt(ctr);
+                            sb.append(myItem.getValue());
+                            sb.append("\n");
+                        }
+                        if(sb.toString().toLowerCase().trim().contains(licenseNo.getText().toString().toLowerCase())){
+                            Picasso.get().load(uri1).fit().centerCrop().into(imageView1);
+                            Toast.makeText(getActivity(), "Valid driver's license", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            imageView1.setImageResource(R.drawable.ic_drive_eta_black_24dp);
+                            Toast.makeText(getActivity(), "Invalid driver's license", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         else
         {
@@ -804,6 +829,8 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
                 }
                 break;
             case R.id.addPhotoUASDM:
+                isPick1 = true;
+                isPick2 = false;
                 openGallery();
                 break;
             case R.id.changePasswordButtonUASDM:
@@ -828,6 +855,8 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
                 }
                 break;
             case R.id.addPhotoUASDMDM:
+                isPick1 = false;
+                isPick2 = true;
                 openGallery();
                 break;
 

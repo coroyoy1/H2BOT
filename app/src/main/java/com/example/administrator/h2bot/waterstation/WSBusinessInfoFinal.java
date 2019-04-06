@@ -987,7 +987,7 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
-        progressDialog.setTitle("Creating account...");
+        progressDialog.setTitle("Updating Document and Information...");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);

@@ -117,14 +117,14 @@
                     android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Delivery Fee"
+                    android:text="Business Days"
                     android:textSize="18dp" />
                 <TextView
-                    android:id="@+id/stationFeePerGalBI"
+                    android:id="@+id/businessDaysBI"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:text="Station fee per gal"
+                    android:text="Business Days"
                     android:textColor="@android:color/black"
                     android:textSize="18dp" />
                 <TextView
@@ -132,14 +132,14 @@
                     android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Minimum number of gallons per order"
+                    android:text="Minimum No. of Gallon(s) to deliver"
                     android:textSize="18dp" />
                 <TextView
-                    android:id="@+id/stationStatusBI"
+                    android:id="@+id/minimumGalloonBI"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:text="Station status"
+                    android:text="Station Gallon"
                     android:textColor="@android:color/black"
                     android:textSize="18dp" />
 
@@ -148,15 +148,15 @@
                         android:layout_marginTop="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
+                        android:text="Document(s) Status"
                         android:textSize="18dp" />
                     <TextView
-                        android:id="@+id/deliverymethodBI"
+                        android:id="@+id/documentStatusBI"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:text="Station status"
-                        android:textColor="@android:color/black"
+                        android:textColor="@android:color/holo_green_dark"
                         android:textSize="18dp" />
                 </LinearLayout>
                 </android.support.v7.widget.CardView>

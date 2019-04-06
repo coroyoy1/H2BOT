@@ -103,23 +103,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:clickable="true"
-                        android:text="Type your password to confirm your changes."
-                        android:textColor="@android:color/holo_blue_dark" />
-
-                    <EditText
-                        android:id="@+id/RegisterPasswordRetypeUAS"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/edit_text_border"
-                        android:hint="Password"
-                        android:inputType="textPassword"
-                        android:textAlignment="center" />
                 </LinearLayout>
 
                 <Button

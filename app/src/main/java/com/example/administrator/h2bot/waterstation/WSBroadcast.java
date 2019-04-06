@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.models.UserFile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,7 +57,6 @@ public class WSBroadcast extends AppCompatActivity implements View.OnClickListen
         fullnameIntent = findViewById(R.id.fullNameBroadcast);
 
         orderNoIntent.setText("Order No: "+orderNoText);
-        fullnameIntent.setText("Customer's Name: "+fullNameText);
 
         activate = findViewById(R.id.broadcastActivate);
         cancel = findViewById(R.id.broadcastCancel);
@@ -76,6 +76,28 @@ public class WSBroadcast extends AppCompatActivity implements View.OnClickListen
 
         cancel.setVisibility(View.GONE);
         timerText.setVisibility(View.GONE);
+
+        checkCustomer();
+    }
+
+    private void checkCustomer() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File");
+        databaseReference.child(fullNameText).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                UserFile userFile = dataSnapshot.getValue(UserFile.class);
+                if (userFile != null)
+                {
+                    String fullname = userFile.getUser_lastname() +", "+ userFile.getUser_firstname();
+                    fullnameIntent.setText(fullname);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public  void disableFindToAffiliate()

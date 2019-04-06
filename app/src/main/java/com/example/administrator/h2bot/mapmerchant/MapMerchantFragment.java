@@ -217,12 +217,38 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
         openTextView.setVisibility(View.GONE);
 
         checkWSorDMUserType(userType);
-
         userTypeIdentity();
+        customerIdentify();
 
         openTextView.setOnClickListener(this);
         closeTextView.setOnClickListener(this);
         return view;
+    }
+
+    private void customerIdentify() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Customer_File");
+        reference.child(customerNo).child(merchantCheckId).child(transactionNo).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                OrderModel orderModel = dataSnapshot.getValue(OrderModel.class);
+                if (orderModel != null)
+                {
+                    String orderStatus = orderModel.getOrder_status();
+                    String serviceStatus = orderModel.getOrder_delivery_method();
+                    if (orderStatus.equalsIgnoreCase("In-Progress"))
+                    {
+                        if (serviceStatus.equalsIgnoreCase("Pickup")) {
+                            requestBroadcast.setVisibility(View.GONE);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void checkWSorDMUserType(String statusType) {
@@ -244,7 +270,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                             launchscan.setVisibility(View.GONE);
                             requestBroadcast.setVisibility(View.GONE);
                         }
-                        if (statusType.equals("In-Progress"))
+                        else if (statusType.equalsIgnoreCase("In-Progress"))
                         {
                             dispatched.setVisibility(View.VISIBLE);
                             //linearAcceptDeclineSender.setVisibility(View.GONE);
@@ -252,7 +278,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                             launchscan.setVisibility(View.VISIBLE);
                             requestBroadcast.setVisibility(View.GONE);
                         }
-                        if (statusType.equals("Dispatched"))
+                        else if (statusType.equals("Dispatched"))
                         {
                             dispatched.setVisibility(View.GONE);
                            // linearAcceptDeclineSender.setVisibility(View.GONE);
@@ -281,6 +307,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                         }
                         if (statusType.equals("Dispatched"))
                         {
+                            requestBroadcast.setVisibility(View.GONE);
                             dispatched.setVisibility(View.GONE);
                           //  linearAcceptDeclineSender.setVisibility(View.GONE);
                             linearSMSSender.setVisibility(View.GONE);
@@ -385,13 +412,9 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
             linearAcceptDeclineSender.setVisibility(View.GONE);
         }
 
-        if (deliveryFeeMMF.getText().toString().equalsIgnoreCase("pickup"))
+        if (methodMMF.getText().toString().equalsIgnoreCase("Pickup"))
         {
             requestBroadcast.setVisibility(View.GONE);
-        }
-        else
-        {
-            requestBroadcast.setVisibility(View.VISIBLE);
         }
     }
 
@@ -993,11 +1016,13 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                                 if (userType.equals("Dispatched"))
                                 {
                                     closeOrderDialog.performClick();
+                                    requestBroadcast.setVisibility(View.GONE);
                                 }
                                 else if (userType.equals("In-Progress"))
                                 {
                                     linearSMSSender.setVisibility(View.GONE);
                                     launchscan.setVisibility(View.GONE);
+                                    requestBroadcast.setVisibility(View.GONE);
                                     closeOrderDialog.performClick();
                                 }
                             }
