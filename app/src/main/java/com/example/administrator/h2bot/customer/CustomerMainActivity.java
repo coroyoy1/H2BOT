@@ -105,18 +105,17 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
                         if (orderModel != null) {
                             if(orderModel.getOrder_status().equalsIgnoreCase("In-Progress"))
                             {
-                                String text="Your order has been Accepted";
-
+                                String text="Your order has been accepted";
                                 sendNotification(orderModel.getOrder_no(), text);
                             }
                             else if(orderModel.getOrder_status().equalsIgnoreCase("Dispatched") || orderModel.getOrder_status().equalsIgnoreCase("Dispatched by affiliate"))
                             {
                                 String text="Your order has been dispatched.";
-
                                 sendNotification(orderModel.getOrder_no(), text);
                             }
                             if (orderModel.getOrder_customer_id().equals(currendId)
-                                    && orderModel.getOrder_status().equalsIgnoreCase("In-Progress") || orderModel.getOrder_status().equalsIgnoreCase("Dispatched")) {
+                                    && orderModel.getOrder_status().equalsIgnoreCase("In-Progress")
+                                    || orderModel.getOrder_status().equalsIgnoreCase("Dispatched")) {
 
                                 adapter.add(orderModel);
                                 adapter.size();
@@ -186,6 +185,8 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

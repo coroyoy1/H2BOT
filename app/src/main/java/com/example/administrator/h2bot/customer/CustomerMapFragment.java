@@ -146,7 +146,7 @@ public class CustomerMapFragment extends Fragment implements
     ProgressDialog progressDialog;
     private SeekBar radius;
     private TextView currentRadius;
-    private Button searchButton;
+    private Button searchButton, legendBtn;
     private GetDistance getDistance = null;
     private LatLng currentLocation;
     private List<UserFile> userFileList;
@@ -215,11 +215,13 @@ public class CustomerMapFragment extends Fragment implements
         progressDialog.show();
         API_KEY = getResources().getString(R.string.google_maps_key);
         radius = getActivity().findViewById(R.id.seekBar);
-        radius.setProgress(1);
         currentRadius = getActivity().findViewById(R.id.current_radius);
         radius.setOnSeekBarChangeListener(seekBarChangeListener);
+        radius.setProgress(1);
         searchButton = view.findViewById(R.id.searchButton);
+        legendBtn = view.findViewById(R.id.legendBtn);
         searchButton.setOnClickListener(search);
+        legendBtn.setOnClickListener(legend);
 
         arrayListUserFile = new ArrayList<UserFile>();
         arrayListBusinessInfo = new ArrayList<WSBusinessInfoFile>();
@@ -250,7 +252,14 @@ public class CustomerMapFragment extends Fragment implements
     public View.OnClickListener search = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            SearchMerchantPopup();
+            NearbyMerchants();
+        }
+    };
+
+    public View.OnClickListener legend = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ShowLegend();
         }
     };
 
@@ -592,8 +601,6 @@ public class CustomerMapFragment extends Fragment implements
         TextView address = bottomSheet.findViewById(R.id.address);
         TextView distance = bottomSheet.findViewById(R.id.distance);
         TextView duration = bottomSheet.findViewById(R.id.duration);
-        TextView deliveryMethod = bottomSheet.findViewById(R.id.deliveryMethod);
-        TextView contactNo = bottomSheet.findViewById(R.id.contactNo);
         Button orderBtn = bottomSheet.findViewById(R.id.orderBtn);
 
         stationName.setText(marker.getTitle());
@@ -613,7 +620,6 @@ public class CustomerMapFragment extends Fragment implements
                 String contact_no = list.getBusiness_tel_no();
                 business_hours.setText(startTime + " - " + endTime);
                 address.setText(list.getBusiness_address());
-                contactNo.setText(contact_no);
                 //                        deliveryMethod.setText(String.format(delivery_method + " - %.2f", deliveryPrice));
                 for(WaterStationOrDealer list2: thisList){
                     if(list2.getStationID().equalsIgnoreCase(marker.getTag().toString())){
@@ -647,10 +653,9 @@ public class CustomerMapFragment extends Fragment implements
 
     public void setSearchList(ArrayList<WaterStationOrDealer> searchList){
         this.searchList = searchList;
-        SearchMerchantPopup();
     }
 
-    public void SearchMerchantPopup() {
+    public void NearbyMerchants() {
         SearchMerchantAdapter searchMerchantAdapter;
         TextView closeDialog;
         EditText waterType;
@@ -661,6 +666,21 @@ public class CustomerMapFragment extends Fragment implements
         recyclerView = dialog.findViewById(R.id.recyclerView);
         searchMerchantAdapter = new SearchMerchantAdapter(dialog.getContext(), searchList);
         recyclerView.setAdapter(searchMerchantAdapter);
+        closeDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+    }
+
+    public void ShowLegend() {
+        TextView closeDialog;
+        dialog.setContentView(R.layout.legend_popup);
+        closeDialog = dialog.findViewById(R.id.closeDialog);
+
         closeDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
