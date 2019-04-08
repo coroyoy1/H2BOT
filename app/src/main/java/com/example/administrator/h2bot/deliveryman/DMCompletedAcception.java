@@ -57,14 +57,12 @@ public class DMCompletedAcception extends Fragment implements View.OnClickListen
         contactNo = view.findViewById(R.id.contactNoCOMDMDM);
         waterType = view.findViewById(R.id.waterTypeCOMDMDM);
         itemQuantity = view.findViewById(R.id.itemQuantityCOMDMDM);
-        pricePerGallon = view.findViewById(R.id.pricePerGallonCOMDMDM);
+        pricePerGallon = view.findViewById(R.id.deliveryPPGCOMDMDM);
         service = view.findViewById(R.id.serviceCOMDMDM);
         address = view.findViewById(R.id.addressCOMDMDM);
-        deliveryFee = view.findViewById(R.id.deliveryFeeCOMDMDM);
         totalPrice = view.findViewById(R.id.totalPriceCOMDMDM);
         backButton = view.findViewById(R.id.backCOMDMDM);
         imageView = view.findViewById(R.id.imageViewCOMDMDM);
-      //  deliveryMethod = view.findViewById(R.id.MethodCOMDMDM);
         deliveryDate = view.findViewById(R.id.datedeliveredCOMDMDM);
 
         progressDialog = new ProgressDialog(getActivity());
@@ -114,18 +112,14 @@ public class DMCompletedAcception extends Fragment implements View.OnClickListen
                                                 if(orderModel.getOrder_status().equals("Completed")) {
                                                     orderNo.setText(orderModel.getOrder_no());
                                                     itemQuantity.setText(orderModel.getOrder_qty());
-                                                    pricePerGallon.setText(orderModel.getOrder_price_per_gallon());
-                                                    totalPrice.setText(orderModel.getOrder_total_amt());
+                                                    pricePerGallon.setText("Php "+orderModel.getOrder_price_per_gallon());
+                                                    totalPrice.setText("Php " +orderModel.getOrder_total_amt());
                                                     waterType.setText(orderModel.getOrder_water_type());
                                                     address.setText(orderModel.getOrder_address());
-                                                    //deliveryMethod.setText(orderModel.getOrder_delivery_method());
-                                                    //inprogressText.setText(orderModel.getOrder_status());
-
                                                     DateTime date = new DateTime(orderModel.getOrder_delivery_date());
                                                     String dateString = date.toLocalDate().toString();
 
                                                     deliveryDate.setText(dateString);
-                                                    deliveryFee.setText(orderModel.getOrder_delivery_fee());
 
                                                     DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_File");
                                                     reference2.child(orderModel.getOrder_customer_id())

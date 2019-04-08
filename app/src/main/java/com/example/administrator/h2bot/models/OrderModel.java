@@ -4,8 +4,8 @@ public class OrderModel {
     private String order_address;
     private String order_customer_id;
     private String order_delivery_date;
-    private String order_delivery_fee;
-    private String order_delivery_method;
+    private String order_delivery_charge;
+    private String order_method;
     private String order_no;
     private String order_price_per_gallon;
     private String order_qty;
@@ -56,20 +56,20 @@ public class OrderModel {
         this.order_delivery_date = order_delivery_date;
     }
 
-    public String getOrder_delivery_fee() {
-        return order_delivery_fee;
+    public String getOrder_delivery_charge() {
+        return order_delivery_charge;
     }
 
-    public void setOrder_delivery_fee(String order_delivery_fee) {
-        this.order_delivery_fee = order_delivery_fee;
+    public void setOrder_delivery_charge(String order_delivery_charge) {
+        this.order_delivery_charge = order_delivery_charge;
     }
 
-    public String getOrder_delivery_method() {
-        return order_delivery_method;
+    public String getOrder_method() {
+        return order_method;
     }
 
-    public void setOrder_delivery_method(String order_delivery_method) {
-        this.order_delivery_method = order_delivery_method;
+    public void setOrder_method(String order_method) {
+        this.order_method = order_method;
     }
 
     public String getOrder_no() {
@@ -133,15 +133,15 @@ public class OrderModel {
 
     }
 
-    public OrderModel(String order_address, String order_customer_id,String order_delivery_date,String order_delivery_fee,String order_delivery_method, String order_no,
-                      String order_price_per_gallon,String order_qty,String order_merchant_id, String order_status, String order_total_amt, String order_water_type, String order_service_method)
+    public OrderModel(String order_address, String order_customer_id, String order_delivery_date, String order_delivery_charge, String order_delivery_method, String order_no,
+                      String order_price_per_gallon, String order_qty, String order_merchant_id, String order_status, String order_total_amt, String order_water_type, String order_service_method)
     {
         this.order_service_method = order_service_method;
         this.order_address = order_address;
         this.order_customer_id = order_customer_id;
         this.order_delivery_date = order_delivery_date;
-        this.order_delivery_fee = order_delivery_fee;
-        this.order_delivery_method = order_delivery_method;
+        this.order_delivery_charge = order_delivery_charge;
+        this.order_method = order_delivery_method;
         this.order_no = order_no;
         this.order_price_per_gallon = order_price_per_gallon;
         this.order_qty = order_qty;

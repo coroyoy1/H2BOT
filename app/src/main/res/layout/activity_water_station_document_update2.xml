@@ -77,9 +77,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_weight="1"
-                        android:hint="Telephone No. (Optional)"
+                        android:hint="Contact No."
                         android:inputType="number"
-                        android:maxLength="12"
+                        android:maxLength="11"
                         android:gravity="center"
                         android:textAlignment="center"
                         android:textSize="18dp">

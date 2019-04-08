@@ -149,7 +149,18 @@ public class WSDMInformation extends Fragment {
                     reference1.child(uidOf).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            showMessages("Your Delivery man has sucessfully removed");
+                            if (task.isSuccessful())
+                            {
+                                showMessages("Your Delivery man has sucessfully removed");
+                                WSDMFragment backFragment = new WSDMFragment();
+                                AppCompatActivity activity = (AppCompatActivity)getContext();
+                                activity.getSupportFragmentManager()
+                                        .beginTransaction()
+                                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                                        .replace(R.id.fragment_container_ws, backFragment)
+                                        .addToBackStack(null)
+                                        .commit();
+                            }
                         }
                     });
                 }

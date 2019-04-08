@@ -39,7 +39,8 @@ public class TimePickerEndingTimeFragment extends DialogFragment implements Time
             hour_of_12_hour_format = hourOfDay;
         }
         TextView tv = (TextView) getActivity().findViewById(R.id.endTimeTextView);
-        tv.setText(hour_of_12_hour_format + " : " + minute + " " + status);
+        String minuteValue = String.format("%02d", minute);
+        tv.setText(hour_of_12_hour_format + " : " + minuteValue + " " + status);
     }
 
 }

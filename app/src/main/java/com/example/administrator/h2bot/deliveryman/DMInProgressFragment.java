@@ -129,7 +129,9 @@ public class DMInProgressFragment extends Fragment implements WSInProgressOrders
                                                 if (orderModel != null)
                                                 {
                                                     if (orderModel.getOrder_merchant_id().equals(merchantId)
-                                                            && orderModel.getOrder_status().equals("In-Progress") || orderModel.getOrder_status().equalsIgnoreCase("Broadcasting") || orderModel.getOrder_status().equalsIgnoreCase("Dispatched")) {
+                                                            && orderModel.getOrder_status().equals("In-Progress")
+                                                            || orderModel.getOrder_status().equalsIgnoreCase("Broadcasting")
+                                                            || orderModel.getOrder_status().equalsIgnoreCase("Dispatched")) {
                                                         noOrdersLayout.setVisibility(View.INVISIBLE);
                                                         recyclerView.setVisibility(View.VISIBLE);
                                                         uploadPO.add(orderModel);

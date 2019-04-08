@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -16,7 +17,7 @@
             <LinearLayout
                 android:background="@drawable/z_linearlayoutdesign"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:orientation="vertical">
@@ -40,175 +41,149 @@
                     android:src="@drawable/ic_account_circle_black_24dp" />
 
                 <LinearLayout
+                    android:layout_margin="8dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
+                    android:layout_height="match_parent">
+                    <LinearLayout
                         android:layout_weight="1"
-                        android:text="Order No:"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
-                    <TextView
-                        android:id="@+id/orderNoCOMACC"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+                            <TextView
+                                android:textAlignment="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_weight="1"
+                                android:text="Order No:"
+                                android:textColor="@android:color/white"
+                                android:textSize="18dp" />
+                            <TextView
+                                android:textAlignment="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_weight="1"
+                                android:text="Customer:"
+                                android:textColor="@android:color/white"
+                                android:textSize="18dp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:layout_marginTop="10dp"
+                                android:layout_weight="1"
+                                android:text="Contact NO.:"
+                                android:textColor="@android:color/white"
+                                android:textSize="18dp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:layout_marginTop="10dp"
+                                android:layout_weight="1"
+                                android:text="Water type:"
+                                android:textColor="@android:color/white"
+                                android:textSize="18dp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:layout_marginTop="10dp"
+                                android:layout_weight="1"
+                                android:text="Quantity:"
+                                android:textColor="@android:color/white"
+                                android:textSize="18dp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_weight="1"
+                                android:textAlignment="center"
+                                android:text="Delivery price/gal:"
+                                android:textColor="@android:color/white"
+                                android:textSize="18dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
                         android:layout_weight="1"
-                        android:text="sample edit"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="Customer:"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
-                    <TextView
-                        android:id="@+id/customerCOMACC"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="sample edit"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="Contact NO.:"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
-                    <TextView
-                        android:id="@+id/contactNoCOMACC"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="sample edit"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="Water Type:"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
-                    <TextView
-                        android:id="@+id/waterTypeCOMACC"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="sample edit"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="Quantity:"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
-                    <TextView
-                        android:id="@+id/itemQuantityCOMACC"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="sample edit"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="Price per Gallon:"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
-                    <TextView
-                        android:id="@+id/pricePerGallonCOMACC"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="sample edit"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+                            <TextView
+                                android:textAlignment="center"
+                                android:id="@+id/orderNoCOMACC"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_weight="1"
+                                android:text="sample edit"
+                                android:textColor="@android:color/white"
+                                android:textSize="18dp" />
+                            <TextView
+                                android:textAlignment="center"
+                                android:id="@+id/customerCOMACC"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_weight="1"
+                                android:text="sample edit"
+                                android:textColor="@android:color/white"
+                                android:textSize="18dp" />
+                            <TextView
+                                android:id="@+id/contactNoCOMACC"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:layout_marginTop="10dp"
+                                android:layout_weight="1"
+                                android:text="sample edit"
+                                android:textColor="@android:color/white"
+                                android:textSize="18dp" />
+                            <TextView
+                                android:id="@+id/waterTypeCOMACC"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:layout_marginTop="10dp"
+                                android:layout_weight="1"
+                                android:text="sample edit"
+                                android:textColor="@android:color/white"
+                                android:textSize="18dp" />
+                            <TextView
+                                android:id="@+id/itemQuantityCOMACC"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:layout_marginTop="10dp"
+                                android:layout_weight="1"
+                                android:text="sample edit"
+                                android:textColor="@android:color/white"
+                                android:textSize="18dp" />
+                            <TextView
+                                android:id="@+id/deliveryPPGCOMACC"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_weight="1"
+                                android:textAlignment="center"
+                                android:text="sample edit"
+                                android:textColor="@android:color/white"
+                                android:textSize="18dp" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
+                    android:layout_margin="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -216,35 +191,6 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="Service:"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
-                    <TextView
-                        android:id="@+id/serviceCOMACC"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="sample edit"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="Address:"
@@ -258,11 +204,11 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <TextView
+                        android:layout_margin="8dp"
                         android:textAlignment="center"
                         android:id="@+id/addressCOMACC"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
                         android:text="sample edit"
@@ -270,114 +216,96 @@
                         android:textSize="18dp" />
 
                 </LinearLayout>
-
                 <LinearLayout
+                    android:layout_margin="8dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:textSize="18dp"
+                    android:layout_height="match_parent">
+                    <LinearLayout
                         android:layout_weight="1"
-                        android:textColor="@android:color/white"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Date to Deliver:" />
-                    <TextView
-                        android:id="@+id/datedeliveredCOMACC"
-                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+                            <TextView
+                                android:textAlignment="center"
+                                android:layout_marginTop="10dp"
+                                android:textSize="18dp"
+                                android:layout_weight="1"
+                                android:textColor="@android:color/white"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Date to Deliver:" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:layout_marginTop="10dp"
+                                android:layout_weight="1"
+                                android:text="Service:"
+                                android:textColor="@android:color/white"
+                                android:textSize="18dp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:layout_marginTop="10dp"
+                                android:layout_weight="1"
+                                android:text="Total Price:"
+                                android:textColor="@android:color/white"
+                                android:textSize="18dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
                         android:layout_weight="1"
-                        android:textSize="18dp"
-                        android:textColor="@android:color/white"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="sample edit"/>
-
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+                            <TextView
+                                android:textAlignment="center"
+                                android:id="@+id/datedeliveredCOMACC"
+                                android:layout_marginTop="10dp"
+                                android:layout_weight="1"
+                                android:textSize="18dp"
+                                android:textColor="@android:color/white"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="sample edit"/>
+                            <TextView
+                                android:id="@+id/serviceCOMACC"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:layout_marginTop="10dp"
+                                android:layout_weight="1"
+                                android:text="sample edit"
+                                android:textColor="@android:color/white"
+                                android:textSize="18dp" />
+                            <TextView
+                                android:id="@+id/totalPriceCOMACC"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:layout_marginTop="10dp"
+                                android:layout_weight="1"
+                                android:text="sample edit"
+                                android:textColor="@android:color/white"
+                                android:textSize="18dp" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="Delivery Fee:"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
-                    <TextView
-                        android:id="@+id/deliveryFeeCOMACC"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="sample edit"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="Method:"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
-                    <TextView
-                        android:id="@+id/MethodCOMACC"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="sample edit"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="Total Price:"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
-                    <TextView
-                        android:id="@+id/totalPriceCOMACC"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="sample edit"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout

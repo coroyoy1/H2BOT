@@ -1,10 +1,19 @@
 package com.example.administrator.h2bot.deliveryman;
 
+import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.view.GravityCompat;
@@ -23,7 +32,12 @@ import android.widget.Toast;
 import com.example.administrator.h2bot.LoginActivity;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.OrderModel;
+import com.example.administrator.h2bot.models.UserLocationAddress;
+import com.google.android.gms.location.FusedLocationProviderClient;
+
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -39,7 +53,9 @@ import java.util.Objects;
 public class DeliveryManMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
+
     private ActionBarDrawerToggle actionBarDrawerToggle;
+    private FusedLocationProviderClient fusedLocationClient;
     FirebaseAuth mAuth;
     GoogleMap map;
     FirebaseUser currentUser;
@@ -49,6 +65,10 @@ public class DeliveryManMainActivity extends AppCompatActivity implements Naviga
     int countInprogress;
     private ProgressDialog progressDialog;
     private NotificationManagerCompat notificationManager;
+
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +82,7 @@ public class DeliveryManMainActivity extends AppCompatActivity implements Naviga
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -71,18 +92,74 @@ public class DeliveryManMainActivity extends AppCompatActivity implements Naviga
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         NavigationView navigationView = findViewById(R.id.nav_view_dm);
         navigationView.setNavigationItemSelectedListener(this);
-        nav_inprogress_dm=(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
+        nav_inprogress_dm = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().
                 findItem(R.id.nav_inprogress_dm));
         actionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         initializeCountDrawer();
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_dm,
                     new DMInProgressFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_inprogress_dm);
         }
+//        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+//        locationListener = new LocationListener() {
+//            @Override
+//            public void onLocationChanged(Location location) {
+//                String lat = location.getLatitude()+"";
+//                String lon = location.getLongitude()+"";
+//
+//                UserLocationAddress userLocationAddress = new UserLocationAddress(
+//                        mAuth.getCurrentUser().getUid(),
+//                        lat,
+//                        lon
+//                );
+//                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_LatLong");
+//                databaseReference.child(mAuth.getCurrentUser().getUid()).setValue(userLocationAddress);
+//            }
+//
+//            @Override
+//            public void onStatusChanged(String provider, int status, Bundle extras) {
+//
+//            }
+//
+//            @Override
+//            public void onProviderEnabled(String provider) {
+//
+//            }
+//
+//            @Override
+//            public void onProviderDisabled(String provider) {
+//                Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//                startActivity(i);
+//            }
+//        };
+        //configureButton();
+    }
 
+    private void configureButton()
+    {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.INTERNET}
+                        ,10);
+            }
+            return;
+        }else{
+            locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case 10:
+                configureButton();
+                break;
+            default:
+                break;
+        }
     }
     private void initializeCountDrawer(){
         DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
@@ -197,11 +274,6 @@ public class DeliveryManMainActivity extends AppCompatActivity implements Naviga
                         new DMAccountSettingsFragment()).commit();
                 Objects.requireNonNull(getSupportActionBar()).setTitle("Account Settings");
                 break;
-//            case R.id.nav_feedback_dm:
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_dm,
-//                        new DMFeedbackFragment()).commit();
-//                Objects.requireNonNull(getSupportActionBar()).setTitle("Feedback");
-//                break;
             case R.id.nav_logout_dm:
                 mAuth.signOut();
                 finish();

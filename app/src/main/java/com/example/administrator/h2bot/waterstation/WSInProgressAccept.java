@@ -1,12 +1,10 @@
 package com.example.administrator.h2bot.waterstation;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,27 +13,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.RadioGroup;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 
-import com.example.administrator.h2bot.adapter.WSInProgressOrdersAdapter;
-import com.example.administrator.h2bot.maps.MapMerchantActivity;
 import com.example.administrator.h2bot.maps.MapMerchantFragmentRenew;
 import com.example.administrator.h2bot.models.CaptureActivityPortrait;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.MerchantCustomerFile;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.UserFile;
-import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
 import com.example.administrator.h2bot.models.WSBusinessInfoFile;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -217,14 +205,14 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                                     totalPrice.setText(orderModel.getOrder_total_amt());
                                     waterType.setText(orderModel.getOrder_water_type());
                                     address.setText(orderModel.getOrder_address());
-                                    deliveryMethod.setText(orderModel.getOrder_delivery_method());
+                                    deliveryMethod.setText(orderModel.getOrder_method());
                                     inprogressText.setText(orderModel.getOrder_status());
 
                                     DateTime date = new DateTime(orderModel.getOrder_delivery_date());
                                     String dateString = date.toLocalDate().toString();
 
                                     deliveryDate.setText(dateString);
-                                    deliveryFee.setText(orderModel.getOrder_delivery_fee());
+                                    deliveryFee.setText(orderModel.getOrder_delivery_charge());
 
                                     DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_File");
                                     reference2.child(orderModel.getOrder_customer_id())

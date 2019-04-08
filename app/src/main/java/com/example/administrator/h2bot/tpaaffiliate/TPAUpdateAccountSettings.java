@@ -249,7 +249,7 @@ public class TPAUpdateAccountSettings extends Fragment implements View.OnClickLi
                             addressWU.setText(userFile.getUser_address());
                             emailnako = user.getEmail();
                             contactNoWU.setText(userFile.getUser_phone_no());
-                            Picasso.get().load(userFile.getUser_uri()).into(imageView);
+                            Picasso.get().load(userFile.getUser_uri()).resize(1000,1000).into(imageView);
                         }
                         DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("User_Account_File");
                         reference1.child(firebaseUser.getUid())

@@ -194,13 +194,13 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
                                                         totalPrice.setText(orderModel.getOrder_total_amt());
                                                         waterType.setText(orderModel.getOrder_water_type());
                                                         address.setText(orderModel.getOrder_address());
-                                                        deliveryMethod.setText(orderModel.getOrder_delivery_method());
+                                                        deliveryMethod.setText(orderModel.getOrder_method());
 
                                                         DateTime date = new DateTime(orderModel.getOrder_delivery_date());
                                                         String dateString = date.toLocalDate().toString();
 
                                                         deliveryDate.setText(dateString);
-                                                        deliveryFee.setText(orderModel.getOrder_delivery_fee());
+                                                        deliveryFee.setText(orderModel.getOrder_delivery_charge());
 
                                                         DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_File");
                                                         reference2.child(orderModel.getOrder_customer_id())

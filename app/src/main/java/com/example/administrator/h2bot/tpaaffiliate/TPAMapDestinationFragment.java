@@ -281,7 +281,6 @@ public class TPAMapDestinationFragment extends Fragment implements OnMapReadyCal
         pricePerGallon = dialogView.findViewById(R.id.pricePerGallon);
         quantity = dialogView.findViewById(R.id.quantity);
         waterType = dialogView.findViewById(R.id.waterType);
-        deliveryFee = dialogView.findViewById(R.id.deliveryFee);
         totalPrice = dialogView.findViewById(R.id.totalPrice);
         okButton = dialogView.findViewById(R.id.okButton);
         imageviewprofile = dialogView.findViewById(R.id.imageviewprofile);
@@ -347,7 +346,7 @@ public class TPAMapDestinationFragment extends Fragment implements OnMapReadyCal
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 String statusOf = dataSnapshot.child("order_status").getValue(String.class);
-                                if (statusOf.toLowerCase().equals("Dispatched".toLowerCase()))
+                                if (statusOf.toLowerCase().equals("Dispatched by affiliate".toLowerCase()))
                                 {
                                     dispatched.setVisibility(View.GONE);
                                     launchscan.setVisibility(View.VISIBLE);
@@ -394,6 +393,7 @@ public class TPAMapDestinationFragment extends Fragment implements OnMapReadyCal
     {
         map.clear();
         mLatLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        Log.d("LATLONG",""+mLatLng);
         MarkerOptions mMarkerOption = new MarkerOptions();
         mMarkerOption.position(mLatLng);
         mMarkerOption.title("You");
@@ -409,6 +409,7 @@ public class TPAMapDestinationFragment extends Fragment implements OnMapReadyCal
     {
         map.clear();
         mLatLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        Log.d("LATLONG",""+mLatLng);
         MarkerOptions mMarkerOption = new MarkerOptions();
         mMarkerOption.position(mLatLng);
         mMarkerOption.title("You");
@@ -501,18 +502,22 @@ public class TPAMapDestinationFragment extends Fragment implements OnMapReadyCal
 
     public void getFromCustomerFile()
     {
+        Log.d("HALLO",customerID+","+stationID+""+orderNumber);
         DatabaseReference customerFile = FirebaseDatabase.getInstance().getReference("Customer_File").child(customerID).child(stationID).child(orderNumber);
         customerFile.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 orderNo.setText(orderNumber);
                 customerAddress.setText(dataSnapshot.child("order_address").getValue(String.class));
-                expectedDate.setText(dataSnapshot.child("order_delivery_date").getValue(String.class));
+                expectedDate.setText(dataSnapshot.child("order_date").getValue(String.class));
                 pricePerGallon.setText(dataSnapshot.child("order_price_per_gallon").getValue(String.class));
                 quantity.setText(dataSnapshot.child("order_qty").getValue(String.class));
                 totalPrice.setText(dataSnapshot.child("order_total_amt").getValue(String.class));
                 waterType.setText(dataSnapshot.child("order_water_type").getValue(String.class));
-                deliveryFee.setText(dataSnapshot.child("order_delivery_fee").getValue(String.class));
+                if(dataSnapshot.child("order_status").getValue(String.class).equalsIgnoreCase("Dispatched by affiliate"))
+                {
+                    dispatched.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -770,10 +775,6 @@ public class TPAMapDestinationFragment extends Fragment implements OnMapReadyCal
     }
     public void updateOrder(String pathString)
     {
-        if (merchantCheckId.isEmpty())
-        {
-            merchantCheckId = firebaseUser.getUid();
-        }
         FirebaseDatabase.getInstance().getReference("Affiliate_WaterStation_Order_File")
                 .child(firebaseUser.getUid()).child(stationID).child(orderNumber).child("status").setValue("Completed with affiliate");
 
@@ -904,9 +905,9 @@ public class TPAMapDestinationFragment extends Fragment implements OnMapReadyCal
             }
             else
             {
-                showMessages(result.getContents());
                 transactNoScan = result.getContents();
-                String path = stationID+"/"+customerID+"/"+orderNumber;
+                String path = customerID+"/"+stationID+"/"+orderNumber;
+                Log.d("BITCH",transactNoScan+"="+path);
                 if(transactNoScan.trim().toLowerCase().replace(" ", "")
                         .equals(path.trim().toLowerCase().replace(" ", "")))
                 {

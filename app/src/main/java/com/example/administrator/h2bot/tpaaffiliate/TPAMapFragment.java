@@ -606,8 +606,8 @@ public class TPAMapFragment extends Fragment
                                                                                         @Override
                                                                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                                                             Log.d("PRICES",dataSnapshot.child("delivery_price").getValue(String.class)+""+dataSnapshot.child("pickup_price").getValue(String.class)+""+waterType);
-                                                                                            pickUpPricePerGallon = Double.parseDouble(dataSnapshot.child("pickup_price").getValue(String.class));
-                                                                                            deliveryPricePerGallon = Double.parseDouble(dataSnapshot.child("delivery_price").getValue(String.class));
+                                                                                            pickUpPricePerGallon = Double.parseDouble(dataSnapshot.child("pickup_price_per_gallon").getValue(String.class));
+                                                                                            deliveryPricePerGallon = Double.parseDouble(dataSnapshot.child("delivery_price_per_gallon").getValue(String.class));
                                                                                             Log.d("PRICES 2",pickUpPricePerGallon+""+deliveryPricePerGallon+""+waterType);
                                                                                             Log.d("Gallon No",""+userData4.getOrder_qty());
                                                                                             noOfGallons.setText(userData4.getOrder_qty());
