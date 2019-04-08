@@ -187,12 +187,15 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 if(firstNameString.isEmpty() || lastNameString.isEmpty() || addressString.isEmpty()
                         || contactNoString.isEmpty() || emailAddressString.isEmpty() || passwordString.isEmpty() || uri == null){
                     Toast.makeText(RegisterActivity.this, "Some fields are missing", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                 }
                 else if(!isEmailValid(emailAddressString)){
                     Toast.makeText(RegisterActivity.this, "Invalid email address", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                 }
                 else if(!isValidPhone(contactNoString)){
                     Toast.makeText(RegisterActivity.this, "Phone number is invalid", Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
                 }
                 else if (contactNoString.length() > 11){
                     showMessage("Contact no. must be maximum of 11 characters");
@@ -228,12 +231,15 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 if(firstNameString.isEmpty() || lastNameString.isEmpty() || addressString.isEmpty()
                         || contactNoString.isEmpty() || emailAddressString.isEmpty() || passwordString.isEmpty() || uri == null){
                     Toast.makeText(RegisterActivity.this, "Some fields are missing", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                 }
                 else if(!isEmailValid(emailAddressString)){
                     Toast.makeText(RegisterActivity.this, "Invalid email address", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                 }
                 else if(!isValidPhone(contactNoString)){
                     Toast.makeText(RegisterActivity.this, "Phone number is invalid", Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
                 }
                 else if (contactNoString.length() > 11){
                     showMessage("Contact no. must be maximum of 11 characters");
@@ -269,13 +275,16 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 if(firstNameString.isEmpty() || lastNameString.isEmpty() || addressString.isEmpty()
                         || contactNoString.isEmpty() || emailAddressString.isEmpty() || passwordString.isEmpty() || uri == null){
                     Toast.makeText(RegisterActivity.this, "Some fields are missing", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                 }
                 else if(!isEmailValid(emailAddressString)){
                     Toast.makeText(RegisterActivity.this, "Invalid email address", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                 }
                 else if (uri == null)
                 {
                     showMessage("Profile picture does not set");
+                    progressDialog.dismiss();
                 }
                 else if (contactNoString.length() > 11){
                     showMessage("Contact no. must be maximum of 11 characters");
@@ -283,14 +292,17 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 }
                 else if(!isValidPhone(contactNoString)){
                     Toast.makeText(RegisterActivity.this, "Phone number is invalid", Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
                 }
                 else if (!passwordString.toLowerCase().equals(confirmPassString.toLowerCase()))
                 {
                     showMessage("Password and Confirm Password does not match!");
+                    progressDialog.dismiss();
                 }
                 else if (checkAddress(addressString))
                 {
                     showMessage("Address is not valid, Please make sure your inputs are correct!");
+                    progressDialog.dismiss();
                 }
                 else{
                     filepath = uri.toString();
@@ -336,6 +348,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 }
                 else if(!isValidPhone(contactNoString)){
                     Toast.makeText(RegisterActivity.this, "Phone number is invalid", Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
                 }
                 else{
                     getLocationSetter();
