@@ -418,6 +418,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     private void CreateAccount(String emailString, String passwordString){
         if (!passwordRegister.getText().toString().toLowerCase().trim().equals(confirmPassword.getText().toString().toLowerCase().trim()))
         {
+
             showMessage("Password did not match");
             return;
         }
