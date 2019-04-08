@@ -433,9 +433,9 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
                     }
                     if(sb.toString().trim().toLowerCase().contains("Department of Transportation".toLowerCase()))
                     {
-                        if (sb.toString().toLowerCase().contains(firstNameDM.getText().toString()))
+                        if (sb.toString().toLowerCase().contains(firstNameDM.getText().toString().toLowerCase()))
                         {
-                            if (sb.toString().toLowerCase().contains(lastNameDM.getText().toString()))
+                            if (sb.toString().toLowerCase().contains(lastNameDM.getText().toString().toLowerCase()))
                             {
                                 Picasso.get().load(uriv).into(imageDocument);
                                 Toast.makeText(getActivity(), "Valid business permit", Toast.LENGTH_SHORT).show();
