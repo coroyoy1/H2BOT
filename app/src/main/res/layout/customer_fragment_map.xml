@@ -165,50 +165,6 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="230dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Delivery Method: " />
-
-                    <TextView
-                        android:id="@+id/deliveryMethod"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Per Gallon - 5.00" />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="230dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Contact #: " />
-
-                    <TextView
-                        android:id="@+id/contactNo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="09234288302" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
                         android:id="@+id/distance"
                         android:layout_width="230dp"
                         android:layout_height="wrap_content"
@@ -300,96 +256,36 @@
             android:orientation="vertical">
 
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="LEGEND:"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Water Dealer" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="     - " />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-
-                    android:background="@drawable/my_location" />
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Water Station" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="    - " />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-
-                    android:background="@drawable/station" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="This is YOU" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="         -" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-
-                    android:background="@drawable/my_pin" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/legendBtn"
+                    android:layout_width="180dp"
+                    android:layout_height="30dp"
+                    android:text="Show Legend"
+                    android:textColor="#FFFFFF"
+                    android:textAllCaps="false"
+                    android:alpha=".8"
+                    android:background="@android:color/holo_orange_dark"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="10dp"/>
 
                 <Button
                     android:id="@+id/searchButton"
-                    android:layout_width="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="180dp"
                     android:layout_height="30dp"
-                    android:text="   Search Merchant"
+                    android:text="Nearby Merchants"
+                    android:textColor="#FFFFFF"
                     android:textAllCaps="false"
                     android:alpha=".8"
-                    android:drawableLeft="@drawable/ic_search_black_24dp"
-                    android:background="@drawable/backgroundv2"
+                    android:drawableLeft="@drawable/ic_store_mall_directory_black_24dp"
+                    android:background="@android:color/holo_orange_dark"
                     android:paddingLeft="5dp"
                     android:paddingRight="10dp"/>
             </LinearLayout>

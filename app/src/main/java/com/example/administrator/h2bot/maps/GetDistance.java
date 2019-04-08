@@ -148,7 +148,7 @@ public class GetDistance extends AsyncTask<Object, String, String> {
                     .strokeColor(Color.BLUE)
                     .strokeWidth(1)
                     .radius(Double.parseDouble(currentRadius.getText().toString().substring(0, currentRadius.getText().toString().length() - 3))));
-            mMarkerOption.title("You").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+            mMarkerOption.title("You").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
 
             double radiusLimit = Double.parseDouble(currentRadius.getText().toString().substring(0, currentRadius.getText().toString().length()-3));
             mCurrentLocationMarker = mMap.addMarker(mMarkerOption);

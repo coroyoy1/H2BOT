@@ -203,22 +203,22 @@ public class CustomerChatbotActivity extends AppCompatActivity {
                 queryEditText.setEnabled(false);
                 sendBtn.setEnabled(false);
             }
-            else if (botReply.equalsIgnoreCase("Your order is now on validation. We will notify you for more details.")) {
-                Button okayBtn;
-                dialog.setContentView(R.layout.customer_chatbot_order_info_popup);
-                dialog.setCanceledOnTouchOutside(false);
-                okayBtn = dialog.findViewById(R.id.okayBtn);
-
-
-                okayBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                        startActivity(new Intent(CustomerChatbotActivity.this, CustomerMainActivity.class));
-                    }
-                });
-                this.dialog.show();
-            }
+//            else if (botReply.equalsIgnoreCase("Your order is now on validation. We will notify you for more details.")) {
+//                Button okayBtn;
+//                dialog.setContentView(R.layout.customer_chatbot_order_info_popup);
+//                dialog.setCanceledOnTouchOutside(false);
+//                okayBtn = dialog.findViewById(R.id.okayBtn);
+//
+//
+//                okayBtn.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        dialog.dismiss();
+//                        startActivity(new Intent(CustomerChatbotActivity.this, CustomerMainActivity.class));
+//                    }
+//                });
+//                this.dialog.show();
+//            }
 
             if (botReply.equalsIgnoreCase("Okay. See you soon!")) {
                 startActivity(new Intent(this, CustomerMainActivity.class));

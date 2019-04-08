@@ -18,10 +18,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.absampletestphase.RatingModel;
 import com.example.administrator.h2bot.models.OrderFileModel;
+import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.TransactionNoModel;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -61,30 +68,29 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
         final OrderFileModel orderModel = orderList.get(i);
         String orderNo = transactionNoModel.getTransOrderNo();
 
-        String myAddress = orderModel.getOrderAddress();
-        String customerId = orderModel.getOrderCustomerId();
-        String dateIssued = orderModel.getOrderDateIssued();
-        String deliveryFee = orderModel.getOrderDeliveryFee();
-        String deliveryFeePerGallon = orderModel.getOrderDeliveryFeePerGallon();
-        String serviceType = orderModel.getOrderDeliveryMethod();
-        String stationId = orderModel.getOrderStationId();
-        String partialAmt = orderModel.getOrderPartialAmt();
-        String pricePerGallon = orderModel.getOrderPricePerGallon();
-        String quantity = orderModel.getOrderQty();
-        String serviceMethod = orderModel.getOrderServiceMethod();
-        String myStatus = orderModel.getOrderStatus();
-        String totalAmt = orderModel.getOrderTotalAmt();
-        String waterType = orderModel.getOrderWaterType();
+        String orderAddress =orderModel.getOrderAddress();
+        String orderCustomerId = orderModel.getOrderCustomerId();
+        String orderDateIssued = orderModel.getOrderDateIssued();
+        String orderDeliveryDate = orderModel.getOrderDeliveryDate();
+        String orderDeliveryCharge = orderModel.getOrderDeliveryCharge();
+        String orderServiceType = orderModel.getOrderServiceType();
+        String orderMerchantId = orderModel.getOrderMerchantId();
+        String orderPricePerGallon = orderModel.getOrderPricePerGallon();
+        String orderQty = orderModel.getOrderQty();
+        String orderMethod = orderModel.getOrderMethod();
+        String orderStatus = orderModel.getOrderStatus();
+        String orderTotalAmt = orderModel.getOrderTotalAmt();
+        String orderWaterType = orderModel.getOrderWaterType();
 
-        if(serviceMethod.equalsIgnoreCase("Delivery")){
-            deliveryDate = orderModel.getOrderDeliveryDate();
-        }
-        else{
-            pickupDate = orderModel.getOrderDeliveryDate();
-        }
+//        if(orderMethod.equalsIgnoreCase("Delivery")){
+//            deliveryDate = orderModel.getOrderDeliveryDate();
+//        }
+//        else{
+//            pickupDate = orderModel.getOrderDeliveryDate();
+//        }
 
         viewHolder.order_no.setText(orderNo);
-        viewHolder.status.setText(myStatus);
+        viewHolder.status.setText(orderStatus);
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
@@ -93,8 +99,8 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
                 TextView order_no, water_type, price_per_gallon, qty, address, service_type, delivery_date,
                 delivery_fee, status, total_amt, qr_code, order_type, date_issued, deliveryFeePerGal, partialAmount, methodText;
                 Button cancelBtn, viewQrQodeBtn;
-                qrCode = customerId.trim().replace(" ", "") +"/"+
-                        stationId.trim().replace(" ", "") + "/" +
+                qrCode = orderCustomerId.trim().replace(" ", "") +"/"+
+                        orderMerchantId.trim().replace(" ", "") + "/" +
                         orderNo.trim().replace(" ", "");
 
                 myDialog.setContentView(R.layout.customer_order_details_custom_dialog);
@@ -113,18 +119,16 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
                 viewQrQodeBtn = myDialog.findViewById(R.id.viewQrQodeBtn);
                 order_type = myDialog.findViewById(R.id.order_type);
                 date_issued = myDialog.findViewById(R.id.dateIssued);
-                deliveryFeePerGal = myDialog.findViewById(R.id.deliveryFeePerGallon);
-                partialAmount = myDialog.findViewById(R.id.partialPayment);
                 methodText = myDialog.findViewById(R.id.methodText);
 
-                order_type.setText(serviceMethod);
+                order_type.setText(orderMethod);
                 order_no.setText(orderNo);
-                water_type.setText(waterType);
-                price_per_gallon.setText(pricePerGallon);
-                qty.setText(quantity + " gallon(s)");
-                address.setText(myAddress);
-                service_type.setText(serviceType);
-                if(serviceMethod.equalsIgnoreCase("Delivery")){
+                water_type.setText(orderWaterType);
+                price_per_gallon.setText(orderPricePerGallon);
+                qty.setText(orderQty + " gallon(s)");
+                address.setText(orderAddress);
+                service_type.setText(orderServiceType);
+                if(orderMethod.equalsIgnoreCase("Delivery")){
                     methodText.setText("Delivery Date: ");
                     delivery_date.setText(deliveryDate);
                 }
@@ -132,12 +136,10 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
                     methodText.setText("Pickup Date: ");
                     delivery_date.setText(pickupDate);
                 }
-                delivery_fee.setText(deliveryFee);
-                status.setText(myStatus);
-                date_issued.setText(dateIssued);
-                deliveryFeePerGal.setText(deliveryFeePerGallon);
-                partialAmount.setText(partialAmt);
-                total_amt.setText("Total: " + totalAmt);
+                delivery_fee.setText(orderDeliveryCharge);
+                status.setText(orderStatus);
+                date_issued.setText(orderDateIssued);
+                total_amt.setText("Total: " + orderTotalAmt);
                 qr_code.setText(qrCode);
                 if(status.getText().toString().equalsIgnoreCase("Broadcasting")
                         || status.getText().toString().equalsIgnoreCase("Dispatched")){
@@ -168,8 +170,8 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
                         dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                    updateOrderRef.child(customerId)
-                                            .child(stationId)
+                                    updateOrderRef.child(orderCustomerId)
+                                            .child(orderMerchantId)
                                             .child(orderNo)
                                             .child("order_status")
                                             .setValue("Cancelled");
@@ -208,4 +210,96 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
             status = itemView.findViewById(R.id.status);
         }
     }
+
+    //Marvel
+//    public void checkIfOrderCompleted(String transNo)
+//    {
+//        DatabaseReference reference =FirebaseDatabase.getInstance().getReference("Customer_File");
+//        reference.child(firebaseUser.getUid()).child(getStation_Id).child(transNo)
+//                .addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        OrderModel orderModel = dataSnapshot.getValue(OrderModel.class);
+//                        if (orderModel != null)
+//                        {
+//                            if (orderModel.getOrder_status().equalsIgnoreCase("Completed"))
+//                            {
+//                                String orderNo = orderModel.getOrder_no();
+//                                if (!orderNo.isEmpty())
+//                                {
+//                                    showDialogRate();
+//                                }
+//                            }
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
+//    }
+//    public void ratingOfCustomer(String rating_customer_id, String rating_merchant_id, String rating_number, String rating_comment, String rating_status)
+//    {
+//
+//        RatingModel ratingModel = new RatingModel(
+//                rating_customer_id,
+//                rating_merchant_id,
+//                rating_number,
+//                rating_comment,
+//                "1",
+//                rating_status
+//        );
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Ratings");
+//        databaseReference.child(firebaseUser.getUid()).child("yzSnsbkYLBcQ32f11ckMHAajyT73").setValue(ratingModel)
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        showMessage("Rated successfully");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        showMessage("Failed to save your feedback");
+//                    }
+//                });
+//    }
+//    public void showDialogRate()
+//    {
+//        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+//        LayoutInflater inflater = getLayoutInflater();
+//        final View dialogView = inflater.inflate(R.layout.z_customer_rate, null);
+//
+//        laterButton = dialogView.findViewById(R.id.laterRatingButton);
+//        submitButton = dialogView.findViewById(R.id.submitRatingButton);
+//        additonalComment = dialogView.findViewById(R.id.addtionalRate);
+//        ratingBar = dialogView.findViewById(R.id.ratingStarsFeedback);
+//        dialogBuilder.setView(dialogView);
+//        dialogBuilder.setCancelable(false);
+//        final AlertDialog alertDialog = dialogBuilder.create();
+//
+//        laterButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                alertDialog.dismiss();
+//            }
+//        });
+//        submitButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String rateString = String.valueOf(ratingBar.getRating());
+//                String rating_customer_id = firebaseUser.getUid(),
+//                        rating_merchant_id = getStation_Id,
+//                        rating_number = rateString,
+//                        rating_comment = additonalComment.getText().toString(),
+//                        rating_status = "AC";
+//                ratingOfCustomer(rating_customer_id,rating_merchant_id, rating_number, rating_comment, rating_status);
+//            }
+//        });
+//        alertDialog.show();
+//    }
+//    private void showMessage(String s) {
+//        Toast.makeText(), s, Toast.LENGTH_LONG).show();
+//    }
 }

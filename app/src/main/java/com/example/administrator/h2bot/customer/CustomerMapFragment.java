@@ -146,7 +146,7 @@ public class CustomerMapFragment extends Fragment implements
     ProgressDialog progressDialog;
     private SeekBar radius;
     private TextView currentRadius;
-    private Button searchButton;
+    private Button searchButton, legendBtn;
     private GetDistance getDistance = null;
     private LatLng currentLocation;
     private List<UserFile> userFileList;
@@ -157,7 +157,7 @@ public class CustomerMapFragment extends Fragment implements
 
     private ArrayList<UserWSWDWaterTypeFile> waterTypeList;
     CustomerWaterTypeAdapter waterTypeAdapter;
-    RecyclerView recyclerView;
+    RecyclerView recyclerView, mRecyclerView;
 
     //SearchMerchant
     private SearchMerchantAdapter searchMerchantAdapter;
@@ -176,6 +176,7 @@ public class CustomerMapFragment extends Fragment implements
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.customer_fragment_map, container, false);
         userFileList = new ArrayList<>();
+        dialog = new Dialog(getActivity());
         businessInfoFileListis = new ArrayList<>();
         userLocationAddressList = new ArrayList<>();
 
@@ -206,7 +207,6 @@ public class CustomerMapFragment extends Fragment implements
         bottomSheetBehavior.setPeekHeight(bottomSheetBehavior.getPeekHeight());
         bottomSheetBehavior.setHideable(true);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        dialog = new Dialog(getActivity());
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading map...");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -215,11 +215,12 @@ public class CustomerMapFragment extends Fragment implements
         progressDialog.show();
         API_KEY = getResources().getString(R.string.google_maps_key);
         radius = getActivity().findViewById(R.id.seekBar);
-        radius.setProgress(1);
         currentRadius = getActivity().findViewById(R.id.current_radius);
         radius.setOnSeekBarChangeListener(seekBarChangeListener);
+        radius.setProgress(1);
         searchButton = view.findViewById(R.id.searchButton);
-        searchButton.setOnClickListener(search);
+        legendBtn = view.findViewById(R.id.legendBtn);
+        legendBtn.setOnClickListener(legend);
 
         arrayListUserFile = new ArrayList<UserFile>();
         arrayListBusinessInfo = new ArrayList<WSBusinessInfoFile>();
@@ -247,10 +248,10 @@ public class CustomerMapFragment extends Fragment implements
         });
     }
 
-    public View.OnClickListener search = new View.OnClickListener() {
+    public View.OnClickListener legend = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            SearchMerchantPopup();
+            ShowLegend();
         }
     };
 
@@ -258,7 +259,6 @@ public class CustomerMapFragment extends Fragment implements
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             currentRadius.setText(progress + " km");
-
             showNearest();
         }
 
@@ -592,8 +592,6 @@ public class CustomerMapFragment extends Fragment implements
         TextView address = bottomSheet.findViewById(R.id.address);
         TextView distance = bottomSheet.findViewById(R.id.distance);
         TextView duration = bottomSheet.findViewById(R.id.duration);
-        TextView deliveryMethod = bottomSheet.findViewById(R.id.deliveryMethod);
-        TextView contactNo = bottomSheet.findViewById(R.id.contactNo);
         Button orderBtn = bottomSheet.findViewById(R.id.orderBtn);
 
         stationName.setText(marker.getTitle());
@@ -613,7 +611,6 @@ public class CustomerMapFragment extends Fragment implements
                 String contact_no = list.getBusiness_tel_no();
                 business_hours.setText(startTime + " - " + endTime);
                 address.setText(list.getBusiness_address());
-                contactNo.setText(contact_no);
                 //                        deliveryMethod.setText(String.format(delivery_method + " - %.2f", deliveryPrice));
                 for(WaterStationOrDealer list2: thisList){
                     if(list2.getStationID().equalsIgnoreCase(marker.getTag().toString())){
@@ -647,20 +644,41 @@ public class CustomerMapFragment extends Fragment implements
 
     public void setSearchList(ArrayList<WaterStationOrDealer> searchList){
         this.searchList = searchList;
-        SearchMerchantPopup();
     }
 
-    public void SearchMerchantPopup() {
-        SearchMerchantAdapter searchMerchantAdapter;
-        TextView closeDialog;
-        EditText waterType;
-        RecyclerView recyclerView;
+    public void NearbyMerchants() {
+        TextView closeDialog, noMerchant;
         dialog.setContentView(R.layout.search_merchant_popup);
         closeDialog = dialog.findViewById(R.id.closeDialog);
-        waterType = dialog.findViewById(R.id.waterType);
-        recyclerView = dialog.findViewById(R.id.recyclerView);
-        searchMerchantAdapter = new SearchMerchantAdapter(dialog.getContext(), searchList);
+        noMerchant = dialog.findViewById(R.id.noMerchant);
+        mRecyclerView = dialog.findViewById(R.id.mRecyclerView);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        searchMerchantAdapter = new SearchMerchantAdapter(getActivity(), searchList);
+        if(searchList.size() != 0){
+            noMerchant.setVisibility(View.GONE);
+        }
+        else{
+            noMerchant.setVisibility(View.VISIBLE);
+        }
+        String a = String.valueOf(searchList.size());
+        Log.d("Search List Size: ", a);
         recyclerView.setAdapter(searchMerchantAdapter);
+        closeDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+    }
+
+    public void ShowLegend() {
+        TextView closeDialog;
+        dialog.setContentView(R.layout.legend_popup);
+        closeDialog = dialog.findViewById(R.id.closeDialog);
+
         closeDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

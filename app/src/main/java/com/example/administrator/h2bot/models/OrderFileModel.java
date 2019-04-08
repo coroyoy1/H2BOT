@@ -5,15 +5,13 @@ public class OrderFileModel {
     private String orderCustomerId;
     private String orderDateIssued;
     private String orderDeliveryDate;
-    private String orderDeliveryFee;
-    private String orderDeliveryFeePerGallon;
-    private String orderDeliveryMethod;
-    private String orderStationId;
+    private String orderDeliveryCharge;
+    private String orderServiceType;
+    private String orderMerchantId;
     private String orderNo;
-    private String orderPartialAmt;
     private String orderPricePerGallon;
     private String orderQty;
-    private String orderServiceMethod;
+    private String orderMethod;
     private String orderStatus;
     private String orderTotalAmt;
     private String orderWaterType;
@@ -21,20 +19,18 @@ public class OrderFileModel {
     public OrderFileModel() {
     }
 
-    public OrderFileModel(String orderAddress, String orderCustomerId, String orderDateIssued, String orderDeliveryDate, String orderDeliveryFee, String orderDeliveryFeePerGallon, String orderDeliveryMethod, String orderStationId, String orderNo, String orderPartialAmt, String orderPricePerGallon, String orderQty, String orderServiceMethod, String orderStatus, String orderTotalAmt, String orderWaterType) {
+    public OrderFileModel(String orderAddress, String orderCustomerId, String orderDateIssued, String orderDeliveryDate, String orderDeliveryCharge, String orderServiceType, String orderMerchantId, String orderNo, String orderPricePerGallon, String orderQty, String orderMethod, String orderStatus, String orderTotalAmt, String orderWaterType) {
         this.orderAddress = orderAddress;
         this.orderCustomerId = orderCustomerId;
         this.orderDateIssued = orderDateIssued;
         this.orderDeliveryDate = orderDeliveryDate;
-        this.orderDeliveryFee = orderDeliveryFee;
-        this.orderDeliveryFeePerGallon = orderDeliveryFeePerGallon;
-        this.orderDeliveryMethod = orderDeliveryMethod;
-        this.orderStationId = orderStationId;
+        this.orderDeliveryCharge = orderDeliveryCharge;
+        this.orderServiceType = orderServiceType;
+        this.orderMerchantId = orderMerchantId;
         this.orderNo = orderNo;
-        this.orderPartialAmt = orderPartialAmt;
         this.orderPricePerGallon = orderPricePerGallon;
         this.orderQty = orderQty;
-        this.orderServiceMethod = orderServiceMethod;
+        this.orderMethod = orderMethod;
         this.orderStatus = orderStatus;
         this.orderTotalAmt = orderTotalAmt;
         this.orderWaterType = orderWaterType;
@@ -72,36 +68,28 @@ public class OrderFileModel {
         this.orderDeliveryDate = orderDeliveryDate;
     }
 
-    public String getOrderDeliveryFee() {
-        return orderDeliveryFee;
+    public String getOrderDeliveryCharge() {
+        return orderDeliveryCharge;
     }
 
-    public void setOrderDeliveryFee(String orderDeliveryFee) {
-        this.orderDeliveryFee = orderDeliveryFee;
+    public void setOrderDeliveryCharge(String orderDeliveryCharge) {
+        this.orderDeliveryCharge = orderDeliveryCharge;
     }
 
-    public String getOrderDeliveryFeePerGallon() {
-        return orderDeliveryFeePerGallon;
+    public String getOrderServiceType() {
+        return orderServiceType;
     }
 
-    public void setOrderDeliveryFeePerGallon(String orderDeliveryFeePerGallon) {
-        this.orderDeliveryFeePerGallon = orderDeliveryFeePerGallon;
+    public void setOrderServiceType(String orderServiceType) {
+        this.orderServiceType = orderServiceType;
     }
 
-    public String getOrderDeliveryMethod() {
-        return orderDeliveryMethod;
+    public String getOrderMerchantId() {
+        return orderMerchantId;
     }
 
-    public void setOrderDeliveryMethod(String orderDeliveryMethod) {
-        this.orderDeliveryMethod = orderDeliveryMethod;
-    }
-
-    public String getOrderStationId() {
-        return orderStationId;
-    }
-
-    public void setOrderStationId(String orderStationId) {
-        this.orderStationId = orderStationId;
+    public void setOrderMerchantId(String orderMerchantId) {
+        this.orderMerchantId = orderMerchantId;
     }
 
     public String getOrderNo() {
@@ -110,14 +98,6 @@ public class OrderFileModel {
 
     public void setOrderNo(String orderNo) {
         this.orderNo = orderNo;
-    }
-
-    public String getOrderPartialAmt() {
-        return orderPartialAmt;
-    }
-
-    public void setOrderPartialAmt(String orderPartialAmt) {
-        this.orderPartialAmt = orderPartialAmt;
     }
 
     public String getOrderPricePerGallon() {
@@ -136,12 +116,12 @@ public class OrderFileModel {
         this.orderQty = orderQty;
     }
 
-    public String getOrderServiceMethod() {
-        return orderServiceMethod;
+    public String getOrderMethod() {
+        return orderMethod;
     }
 
-    public void setOrderServiceMethod(String orderServiceMethod) {
-        this.orderServiceMethod = orderServiceMethod;
+    public void setOrderMethod(String orderMethod) {
+        this.orderMethod = orderMethod;
     }
 
     public String getOrderStatus() {

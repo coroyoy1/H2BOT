@@ -62,6 +62,7 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
     FirebaseUser currentUser;
     String currendId, order, stationID;
     private NotificationManagerCompat notificationManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +78,7 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        my_order=(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
+        my_order = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().
                 findItem(R.id.my_order));
         actionBarDrawerToggle.syncState();
         if (savedInstanceState == null) {
@@ -88,65 +89,59 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initializeCountDrawer();
     }
-    private void initializeCountDrawer(){
+
+    private void initializeCountDrawer() {
         DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
         databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 adapter.clear();
                 my_order.setVisibility(View.VISIBLE);
-                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
-                {
-                    for (DataSnapshot post : dataSnapshot1.getChildren())
-                    {
-                        for (DataSnapshot post1 : post.getChildren())
-                        {
-                        OrderModel orderModel = post1.getValue(OrderModel.class);
-                        if (orderModel != null) {
-                            if(orderModel.getOrder_status().equalsIgnoreCase("In-Progress"))
-                            {
-                                String text="Your order has been Accepted";
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    for (DataSnapshot post : dataSnapshot1.getChildren()) {
+                        for (DataSnapshot post1 : post.getChildren()) {
+                            OrderModel orderModel = post1.getValue(OrderModel.class);
+                            if (orderModel != null) {
+                                if (orderModel.getOrder_status().equalsIgnoreCase("In-Progress")) {
+                                    String text = "Your order has been accepted";
+                                    sendNotification(orderModel.getOrder_no(), text);
+                                } else if (orderModel.getOrder_status().equalsIgnoreCase("Dispatched") || orderModel.getOrder_status().equalsIgnoreCase("Dispatched by affiliate")) {
+                                    String text = "Your order has been dispatched.";
+                                    sendNotification(orderModel.getOrder_no(), text);
+                                }
+                                if (orderModel.getOrder_customer_id().equals(currendId)
+                                        && orderModel.getOrder_status().equalsIgnoreCase("In-Progress")
+                                        || orderModel.getOrder_status().equalsIgnoreCase("Dispatched")) {
 
-                                sendNotification(orderModel.getOrder_no(), text);
-                            }
-                            else if(orderModel.getOrder_status().equalsIgnoreCase("Dispatched") || orderModel.getOrder_status().equalsIgnoreCase("Dispatched by affiliate"))
-                            {
-                                String text="Your order has been dispatched.";
+                                    adapter.add(orderModel);
+                                    adapter.size();
+                                    my_order.setVisibility(View.VISIBLE);
+                                    my_order.setVisibility(View.VISIBLE);
+                                    countInprogress = adapter.size();
 
-                                sendNotification(orderModel.getOrder_no(), text);
-                            }
-                            if (orderModel.getOrder_customer_id().equals(currendId)
-                                    && orderModel.getOrder_status().equalsIgnoreCase("In-Progress") || orderModel.getOrder_status().equalsIgnoreCase("Dispatched")) {
+                                    stationID = orderModel.getOrder_merchant_id();
 
-                                adapter.add(orderModel);
-                                adapter.size();
-                                my_order.setVisibility(View.VISIBLE);
-                                my_order.setVisibility(View.VISIBLE);
-                                countInprogress = adapter.size();
-
-                                stationID = orderModel.getOrder_merchant_id();
-
-                                my_order.setGravity(Gravity.CENTER_VERTICAL);
-                                my_order.setTextSize(20);
-                                my_order.setTypeface(null, Typeface.BOLD);
-                                my_order.setTextColor(getResources().getColor(R.color.colorAccent));
-                                my_order.setText("" + countInprogress);
-
-                            } else {
-                                countInprogress = adapter.size();
-
-                                if (countInprogress == 0) {
-                                    my_order.setVisibility(View.INVISIBLE);
-                                } else {
                                     my_order.setGravity(Gravity.CENTER_VERTICAL);
                                     my_order.setTextSize(20);
                                     my_order.setTypeface(null, Typeface.BOLD);
                                     my_order.setTextColor(getResources().getColor(R.color.colorAccent));
                                     my_order.setText("" + countInprogress);
+
+                                } else {
+                                    countInprogress = adapter.size();
+
+                                    if (countInprogress == 0) {
+                                        my_order.setVisibility(View.INVISIBLE);
+                                    } else {
+                                        my_order.setGravity(Gravity.CENTER_VERTICAL);
+                                        my_order.setTextSize(20);
+                                        my_order.setTypeface(null, Typeface.BOLD);
+                                        my_order.setTextColor(getResources().getColor(R.color.colorAccent));
+                                        my_order.setText("" + countInprogress);
+                                    }
                                 }
                             }
                         }
-                    }
                     }
                 }
             }
@@ -186,6 +181,7 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -243,16 +239,13 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         generate_qr_code = dialog.findViewById(R.id.generate_qr_code);
 
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-        try
-        {
+        try {
             qrString = get_qrCode;
-            BitMatrix bitMatrix = multiFormatWriter.encode(qrString, BarcodeFormat.AZTEC,279, 279);
+            BitMatrix bitMatrix = multiFormatWriter.encode(qrString, BarcodeFormat.AZTEC, 279, 279);
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
             generate_qr_code.setImageBitmap(bitmap);
-        }
-        catch(WriterException e)
-        {
+        } catch (WriterException e) {
             e.printStackTrace();
         }
         closeDialog.setOnClickListener(v -> {
@@ -261,21 +254,21 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
         dialog.show();
     }
 
-    public void setList(ArrayList<WaterStationOrDealer> thisList){
+    public void setList(ArrayList<WaterStationOrDealer> thisList) {
         this.thisList = thisList;
     }
 
     private void sendNotification(String orderno, String text) {
-        android.app.Notification notification = new NotificationCompat.Builder(this,"notificationforpending")
+        android.app.Notification notification = new NotificationCompat.Builder(this, "notificationforpending")
                 .setSmallIcon(R.drawable.ic_look1)
                 .setContentTitle("H2BOT")
                 .setContentText(text)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .setVibrate(new long[]{1000,1000,1000,1000,1000})
+                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                 .build();
 
-        notificationManager.notify(1,notification);
+        notificationManager.notify(1, notification);
     }
 
 }
