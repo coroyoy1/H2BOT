@@ -80,11 +80,14 @@ public class DMCompleteFragment extends Fragment{
                                                 OrderModel orderModel = dataSnapshot4.getValue(OrderModel.class);
                                                 if (orderModel != null)
                                                 {
-                                                    if (orderModel.getOrder_merchant_id().equals(merchantId)
-                                                            && orderModel.getOrder_status().equals("Completed")) {
-                                                        noOrdersLayout.setVisibility(View.INVISIBLE);
-                                                        recyclerView.setVisibility(View.VISIBLE);
-                                                        uploadPO.add(orderModel);
+                                                    if (orderModel.getOrder_merchant_id().equals(merchantId)) {
+                                                        if (orderModel.getOrder_status().equalsIgnoreCase("Completed")
+                                                                || orderModel.getOrder_status().equalsIgnoreCase("Completed with affiliate"))
+                                                        {
+                                                            noOrdersLayout.setVisibility(View.INVISIBLE);
+                                                            recyclerView.setVisibility(View.VISIBLE);
+                                                            uploadPO.add(orderModel);
+                                                        }
                                                     }
                                                 }
                                             }

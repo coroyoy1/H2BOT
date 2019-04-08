@@ -78,7 +78,7 @@
                 </LinearLayout>
 
                 <EditText
-                    android:inputType="textEmailAddress"
+                    android:inputType="text"
                     android:id="@+id/RegisterAddressUAS"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -88,7 +88,7 @@
                     android:textAlignment="center" />
 
                 <EditText
-                    android:inputType="textEmailAddress"
+                    android:inputType="number"
                     android:id="@+id/RegisterContactUAS"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -97,39 +97,12 @@
                     android:hint="@string/contact_number"
                     android:textAlignment="center" />
 
-                <EditText
-                    android:id="@+id/RegisterEmailAddressUAS"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/edit_text_border"
-                    android:hint="@string/email_address"
-                    android:inputType="textEmailAddress"
-                    android:textAlignment="center" />
-
                 <LinearLayout
                     android:id="@+id/linearPasswordCurrent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:clickable="true"
-                        android:text="Type your password to confirm your changes."
-                        android:textColor="@android:color/holo_blue_dark" />
-
-                    <EditText
-                        android:id="@+id/RegisterPasswordRetypeUAS"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/edit_text_border"
-                        android:hint="Password"
-                        android:inputType="textPassword"
-                        android:textAlignment="center" />
                 </LinearLayout>
 
                 <Button

@@ -19,6 +19,7 @@ import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.MerchantCustomerFile;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.UserFile;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,7 +34,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class WPCompletedAccept extends Fragment implements View.OnClickListener {
 
-    TextView orderNo, deliveryDate, customer, contactNo, waterType, itemQuantity, pricePerGallon,  service, address, deliveryFee, totalPrice, deliveryMethod;
+    TextView orderNo, deliveryDate, customer, contactNo, waterType, itemQuantity, pricePerGallon,  service, address, totalPrice, deliveryMethod;
     Button backButton;
     String orderNoGET, customerNoGET, merchantNOGET, transactionNo, dataIssuedGET, deliveryStatusGET
             ,transStatusGET, transTotalAmountGET, transDeliveryFeeGET, transTotalNoGallonGET,
@@ -47,7 +48,12 @@ public class WPCompletedAccept extends Fragment implements View.OnClickListener 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wp_completedtransactionacception, container, false);
-
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Loading...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setProgress(0);
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         orderNo = view.findViewById(R.id.orderNoCOMACC);
         customer = view.findViewById(R.id.customerCOMACC);
         contactNo = view.findViewById(R.id.contactNoCOMACC);
@@ -56,7 +62,6 @@ public class WPCompletedAccept extends Fragment implements View.OnClickListener 
         pricePerGallon = view.findViewById(R.id.pricePerGallonCOMACC);
         service = view.findViewById(R.id.serviceCOMACC);
         address = view.findViewById(R.id.addressCOMACC);
-        deliveryFee = view.findViewById(R.id.deliveryFeeCOMACC);
         totalPrice = view.findViewById(R.id.totalPriceCOMACC);
         backButton = view.findViewById(R.id.backCOMACC);
         imageView = view.findViewById(R.id.imageViewINACC);
@@ -120,12 +125,11 @@ public class WPCompletedAccept extends Fragment implements View.OnClickListener 
                                                         waterType.setText(orderModel.getOrder_water_type());
                                                         address.setText(orderModel.getOrder_address());
                                                         deliveryMethod.setText(orderModel.getOrder_method());
-
+                                                        service.setText(dataSnapshot.child("order_service_type").getValue(String.class ));
                                                         DateTime date = new DateTime(orderModel.getOrder_delivery_date());
                                                         String dateString = date.toLocalDate().toString();
 
                                                         deliveryDate.setText(dateString);
-                                                        deliveryFee.setText(orderModel.getOrder_delivery_charge());
 
                                                         DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_File");
                                                         reference2.child(orderModel.getOrder_customer_id())

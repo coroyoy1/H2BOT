@@ -706,28 +706,47 @@ public class TPAMapFragment extends Fragment
                 dialog.setCancelable(false);
                 dialog.setTitle("CONFIRMATION");
                 dialog.setMessage("Use " + String.valueOf(partialPickup) + " of load?");
-                dialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                 dialog.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        DatabaseReference databaseReference4 = FirebaseDatabase.getInstance().getReference("Affiliate_WaterStation_Order_File").child(firebaseUser.getUid());
-                        databaseReference4.addValueEventListener(new ValueEventListener() {
+                        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+                        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                for(DataSnapshot infoFile : dataSnapshot.getChildren())
-                                {
-                                    for(DataSnapshot infoFile1 : infoFile.getChildren()) {
+                            public void onDataChange(DataSnapshot snapshot) {
+                                if (snapshot.hasChild("Affiliate_WaterStation_Order_File")) {
+                                    DatabaseReference databaseReference4 = FirebaseDatabase.getInstance().getReference("Affiliate_WaterStation_Order_File").child(firebaseUser.getUid());
+                                    databaseReference4.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            for(DataSnapshot infoFile1 : dataSnapshot.getChildren()) {
 
-                                            affiliateOrderStatus = infoFile1.child("status").getValue(String.class);
-                                            Log.d("affiliate status", "" + affiliateOrderStatus);
-                                            if (affiliateOrderStatus.equalsIgnoreCase("Accepted by affiliate") || affiliateOrderStatus.equalsIgnoreCase("Dispatched by affiliate")) {
-                                                String text = "You still have an in-progress order to deliver. Please deliver it first to accept another broadcasting orders";
-                                                snackBar(text);
-                                                break;
-                                            } else {
-                                                statePoints();
+                                                for (DataSnapshot infoFile2 : infoFile1.getChildren()) {
+                                                    for (DataSnapshot infoFile3 : infoFile2.getChildren()) {
+
+                                                        affiliateOrderStatus = infoFile3.child("status").getValue(String.class);
+                                                        Log.d("affiliate status", "" + affiliateOrderStatus);
+                                                        if (affiliateOrderStatus.equalsIgnoreCase("Accepted by affiliate") || affiliateOrderStatus.equalsIgnoreCase("Dispatched by affiliate")) {
+                                                            String text = "You still have an in-progress order to deliver. Please deliver it first to accept another broadcasting orders";
+                                                            snackBar(text);
+                                                            break;
+                                                        } else {
+                                                            statePoints();
+                                                        }
+
+                                                    }
+                                                }
                                             }
+                                        }
 
-                                    }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                }
+                                else
+                                {
+                                    statePoints();
                                 }
                             }
 
@@ -1146,7 +1165,7 @@ public class TPAMapFragment extends Fragment
                 customer_id,
                 orderno,
                 "Accepted by affiliate");
-        FirebaseDatabase.getInstance().getReference("Affiliate_WaterStation_Order_File").child(firebaseUser.getUid()).child(stationId).child(orderno).setValue(ASmodel);
+        FirebaseDatabase.getInstance().getReference("Affiliate_WaterStation_Order_File").child(firebaseUser.getUid()).child(stationId).child(customer_id).child(orderno).setValue(ASmodel);
     }
 
     public void getAffiliateOrder() {

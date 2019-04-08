@@ -63,9 +63,9 @@ public class TPAAcceptedFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 uploadPO.clear();
-                    for (DataSnapshot post : dataSnapshot.getChildren())
-                    {
-                        for (DataSnapshot post2 : post.getChildren()) {
+                for (DataSnapshot post : dataSnapshot.getChildren()) {
+                    for (DataSnapshot post1 : post.getChildren()) {
+                        for (DataSnapshot post2 : post1.getChildren()) {
                             AffiliateStationOrderModel orderModel = post2.getValue(AffiliateStationOrderModel.class);
                             if (orderModel != null) {
                                 Log.d("Hi", "Hi");
@@ -80,10 +80,10 @@ public class TPAAcceptedFragment extends Fragment {
                     POAdapter = new TPAAcceptedOrdersAdapter(getActivity(), uploadPO);
                     recyclerView.setAdapter(POAdapter);
                     POAdapter.setOnItemClickListener(TPAAcceptedFragment.this::onItemClick);
-                if(uploadPO.size() == 0)
-                {
-                    noOrdersLayout.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
+                    if (uploadPO.size() == 0) {
+                        noOrdersLayout.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }
                 }
             }
 

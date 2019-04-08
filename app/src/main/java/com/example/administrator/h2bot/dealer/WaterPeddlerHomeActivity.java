@@ -104,6 +104,7 @@ public class WaterPeddlerHomeActivity extends AppCompatActivity implements Navig
                         OrderModel orderModel = post.getValue(OrderModel.class);
                         if(orderModel != null)
                         {
+                            Log.d("HAHAHALO",""+orderModel.getOrder_merchant_id()+"="+currendId);
                             if(orderModel.getOrder_merchant_id().equals(currendId)
                                     && orderModel.getOrder_status().equals("Pending"))
                             {

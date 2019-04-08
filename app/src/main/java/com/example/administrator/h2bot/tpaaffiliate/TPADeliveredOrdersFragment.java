@@ -67,18 +67,20 @@ public class TPADeliveredOrdersFragment extends Fragment {
                 mUploads.clear();
                 for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                 {
-                    Log.d("Hi","Hello");
                     for(DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren()) {
+                        Log.d("Hi", "Hello");
+                        for (DataSnapshot dataSnapshot3 : dataSnapshot2.getChildren()) {
 
-                        AffiliateStationOrderModel orderModel = dataSnapshot2.getValue(AffiliateStationOrderModel.class);
-                        if (orderModel != null) {
-                            Log.d("Hihi", "Hello");
+                            AffiliateStationOrderModel orderModel = dataSnapshot3.getValue(AffiliateStationOrderModel.class);
+                            if (orderModel != null) {
+                                Log.d("Hihi", "Hello");
 
-                            if (orderModel.getStatus().equals("Completed with affiliate")) {
-                                Log.d("Hi", "gago");
-                                noOrdersLayout.setVisibility(View.INVISIBLE);
-                                recyclerView.setVisibility(View.VISIBLE);
-                                mUploads.add(orderModel);
+                                if (orderModel.getStatus().equals("Completed with affiliate")) {
+                                    Log.d("Hi", "gago");
+                                    noOrdersLayout.setVisibility(View.INVISIBLE);
+                                    recyclerView.setVisibility(View.VISIBLE);
+                                    mUploads.add(orderModel);
+                                }
                             }
                         }
                     }

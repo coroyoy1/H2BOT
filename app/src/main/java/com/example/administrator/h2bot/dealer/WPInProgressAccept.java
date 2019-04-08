@@ -57,7 +57,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class WPInProgressAccept extends Fragment implements View.OnClickListener {
 
 
-    TextView orderNo, customer, contactNo, waterType, itemQuantity, pricePerGallon,  service, address, deliveryFee, totalPrice, deliveryMethod, deliveryDate;
+    TextView orderNo, customer, contactNo, waterType, itemQuantity, pricePerGallon,  service, address, totalPrice, deliveryMethod, deliveryDate;
     Button launchQR, viewLocation, Dispatch, launchSMS, launchCall;
     String orderNoGET, customerNoGET, merchantNOGET, transactionNo, dataIssuedGET, deliveryStatusGET
             ,transStatusGET, transTotalAmountGET, transDeliveryFeeGET, transTotalNoGallonGET,
@@ -88,8 +88,7 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
         pricePerGallon = view.findViewById(R.id.pricePerGallonINACC);
        // service = view.findViewById(R.id.serviceINACC);
         address = view.findViewById(R.id.addressINACC);
-        deliveryFee = view.findViewById(R.id.deliveryFeeINACC);
-        totalPrice = view.findViewById(R.id.totalPriceINACC);
+         totalPrice = view.findViewById(R.id.totalPriceINACC);
         launchQR = view.findViewById(R.id.launchQRINACC);
         viewLocation = view.findViewById(R.id.viewLocationButtonINACC);
         imageView = view.findViewById(R.id.imageViewINACC);
@@ -336,7 +335,6 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
                                     String dateString = date.toLocalDate().toString();
 
                                     deliveryDate.setText(dateString);
-                                    deliveryFee.setText(orderModel.getOrder_delivery_charge());
 
                                     DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_File");
                                     reference2.child(orderModel.getOrder_customer_id())
@@ -391,7 +389,8 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
                             if(status.equals("AC"))
                             {
                                 DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
-                                reference1.child(customerId).child(merchantId).child(transactionSet).child("order_status").setValue("Completed")
+                                Log.d("HIHIHIHLO",customerId+"="+merchantId+"="+transactionNo);
+                                reference1.child(customerId).child(merchantId).child(transactionNo).child("order_status").setValue("Completed")
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {

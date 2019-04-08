@@ -28,6 +28,7 @@ import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.models.UserAccountFile;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserLocationAddress;
+import com.example.administrator.h2bot.models.UserWSDMFile;
 import com.example.administrator.h2bot.waterstation.WSAccountSettingsFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -72,6 +73,7 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
     private FirebaseUser firebaseUser, user;
     ProgressDialog progressDialog;
     String device_token_id;
+    String owner_station_id;
 
     Uri uri, uri1;
     double lat;
@@ -79,6 +81,8 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
     private String newToken;
     boolean isClick=true;
     private boolean isPick1 = false, isPick2 = false;
+
+    String getPic;
 
     @Nullable
     @Override
@@ -101,6 +105,9 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
         retypePassword = view.findViewById(R.id.RegisterPasswordRetypeUASDM);
         oldPass = view.findViewById(R.id.oldPasswordUASDM);
         licenseNo = view.findViewById(R.id.licenseUASDM);
+        licenseNo.setVisibility(View.GONE);
+        emailAddressWU.setEnabled(false);
+        changePassword.setVisibility(View.GONE);
 
         imageView1 = view.findViewById(R.id.driverlicense_imageUASDM);
         changeLicenseButton = view.findViewById(R.id.addPhotoUASDMDM);
@@ -124,10 +131,24 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setProgress(0);
 
+        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("User_File");
+        reference1.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                owner_station_id = dataSnapshot.child("station_parent").getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         if(mAuth.getCurrentUser() != null)
         {
             RetrieveDataThroughEditText();
         }
+
 
         return view;
     }
@@ -228,14 +249,42 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
                             sb.append(myItem.getValue());
                             sb.append("\n");
                         }
-                        if(sb.toString().toLowerCase().trim().contains(licenseNo.getText().toString().toLowerCase())){
-                            Picasso.get().load(uri1).fit().centerCrop().into(imageView1);
-                            Toast.makeText(getActivity(), "Valid driver's license", Toast.LENGTH_SHORT).show();
+                        if(sb.toString().trim().toLowerCase().contains("Department of Transportation".toLowerCase()))
+                        {
+                            if (sb.toString().toLowerCase().contains(firstNameWU.getText().toString().toLowerCase()))
+                            {
+                                if (sb.toString().toLowerCase().contains(lastNameWU.getText().toString().toLowerCase()))
+                                {
+                                    Picasso.get().load(uri1).into(imageView1);
+                                    Toast.makeText(getActivity(), "Valid driver's license", Toast.LENGTH_SHORT).show();
+                                }
+                                else
+                                {
+                                    imageView1.setImageResource(R.drawable.ic_image_black_24dp);
+                                    Toast.makeText(getActivity(), "Invalid driver's license", Toast.LENGTH_SHORT).show();
+                                    uri1 = Uri.parse("");
+                                }
+                            }
+                            else
+                            {
+                                imageView1.setImageResource(R.drawable.ic_image_black_24dp);
+                                Toast.makeText(getActivity(), "Invalid driver's license", Toast.LENGTH_SHORT).show();
+                                uri1 = Uri.parse("");
+                            }
                         }
                         else{
-                            imageView1.setImageResource(R.drawable.ic_drive_eta_black_24dp);
+                            imageView1.setImageResource(R.drawable.ic_image_black_24dp);
                             Toast.makeText(getActivity(), "Invalid driver's license", Toast.LENGTH_SHORT).show();
+                            uri1 = Uri.parse("");
                         }
+//                        if(sb.toString().toLowerCase().trim().contains(licenseNo.getText().toString().toLowerCase())){
+//                            Picasso.get().load(uri1).fit().centerCrop().into(imageView1);
+//                            Toast.makeText(getActivity(), "Valid driver's license", Toast.LENGTH_SHORT).show();
+//                        }
+//                        else{
+//                            imageView1.setImageResource(R.drawable.ic_drive_eta_black_24dp);
+//                            Toast.makeText(getActivity(), "Invalid driver's license", Toast.LENGTH_SHORT).show();
+//                        }
                     }
 
                 } catch (IOException e) {
@@ -248,7 +297,6 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
             showMessages("Choose an image");
         }
     }
-
     private void getLocationSetter()
     {
         Geocoder coder = new Geocoder(getActivity(), Locale.getDefault());
@@ -275,7 +323,69 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
                         @Override
                         public void onSuccess(Void aVoid) {
                             Log.d("latlng2",getLocateLatitude+","+getLocateLongtitude);
-                            successMessages();
+
+                            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("User_File");
+                            reference1.child(firebaseUser.getUid()).child("station_parent").setValue(owner_station_id)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful())
+                                            {
+                                                StorageReference storageReference = FirebaseStorage.getInstance().getReference("user_document");
+                                                storageReference.putFile(uri1).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                        Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                                                        result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                            @Override
+                                                            public void onSuccess(Uri uri) {
+                                                                String uriImage = uri.toString();
+                                                                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_DM_File");
+                                                                databaseReference.addValueEventListener(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                                                                        {
+                                                                            UserWSDMFile userWSDMFile = dataSnapshot1.child(firebaseUser.getUid()).getValue(UserWSDMFile.class);
+                                                                            if (userWSDMFile != null)
+                                                                            {
+                                                                                String getLicense = userWSDMFile.getDealer_drivers_license();
+                                                                                String getStation = userWSDMFile.getStation_id();
+                                                                                String getDelMan = userWSDMFile.getDelivery_man_id();
+                                                                                if (getDelMan != null && getStation != null && getLicense != null)
+                                                                                {
+                                                                                    UserWSDMFile userWSDMFile1 = new UserWSDMFile(
+                                                                                            getStation,
+                                                                                            firebaseUser.getUid(),
+                                                                                            uriImage
+                                                                                    );
+                                                                                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WS_DM_File");
+                                                                                    reference.child(getStation).child(firebaseUser.getUid()).setValue(userWSDMFile1)
+                                                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                                @Override
+                                                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                                                    progressDialog.dismiss();
+                                                                                                }
+                                                                                            });
+                                                                                    return;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                                successMessages();
+                                            }
+                                        }
+                                    });
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -291,11 +401,9 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
             ex.printStackTrace();
         }
     }
-
     private void showMessage(String s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
     }
-
     private void RetrieveDataThroughEditText()
     {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_File");
@@ -321,33 +429,56 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
                                         if (userAccountFile != null)
                                         {
                                             emailAddressWU.setText(userAccountFile.getUser_email_address());
-
-                                            DatabaseReference reference3 = FirebaseDatabase.getInstance().getReference("User_File");
-                                            reference3.child(firebaseUser.getUid())
-                                                    .addValueEventListener(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                            String getKey = dataSnapshot.child("station_parent").getValue(String.class);
-                                                            DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_WS_DM_File");
-                                                            reference2.child(getKey).child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
-                                                                @Override
-                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                    String getPic = dataSnapshot.child("dealer_drivers_license").getValue(String.class);
-                                                                    Picasso.get().load(getPic).fit().centerCrop().into(imageView1);
-                                                                }
-
-                                                                @Override
-                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                                }
-                                                            });
+                                            DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_WS_DM_File");
+                                            reference2.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                                                    {
+                                                        getPic = dataSnapshot1.child(firebaseUser.getUid()).child("dealer_drivers_license").getValue(String.class);
+                                                        if (getPic != null)
+                                                        {
+                                                            Picasso.get().load(getPic).fit().centerCrop().into(imageView1);
+                                                            return;
                                                         }
+                                                    }
+                                                }
 
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                                        }
-                                                    });
+                                                }
+                                            });
+//                                            DatabaseReference reference3 = FirebaseDatabase.getInstance().getReference("User_File");
+//                                            reference3.child(firebaseUser.getUid())
+//                                                    .addValueEventListener(new ValueEventListener() {
+//                                                        @Override
+//                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+////                                                            String getKey = dataSnapshot.child("station_parent").getValue(String.class);
+////                                                            DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_WS_DM_File");
+////                                                            reference2.child(getKey).child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+////                                                                @Override
+////                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+////                                                                    String getPic = dataSnapshot.child("dealer_drivers_license").getValue(String.class);
+////                                                                    Picasso.get().load(getPic).fit().centerCrop().into(imageView1);
+////                                                                }
+////
+////                                                                @Override
+////                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+////
+////                                                                }
+////                                                            });
+//                                                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+//                                                            {
+//
+//                                                            }
+//                                                        }
+//
+//                                                        @Override
+//                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                                                        }
+//                                                    });
                                         }
                                     }
 
@@ -363,8 +494,6 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
                     }
                 });
     }
-
-
     private void updateInfoWithRenewPassword()
     {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_Account_File");
@@ -581,9 +710,9 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
                     }
                 });
     }
-
     private void updateInfoWithoutRenewPassword()
     {
+        progressDialog.show();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_Account_File");
         reference.child(firebaseUser.getUid())
                 .addValueEventListener(new ValueEventListener() {
@@ -620,7 +749,7 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                                         lastNameWU.getText().toString(),
                                                                                         addressWU.getText().toString(),
                                                                                         contactNoWU.getText().toString(),
-                                                                                        "Water Station",
+                                                                                        "Delivery Man",
                                                                                         "active"
                                                                                 );
                                                                                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File");
@@ -644,8 +773,6 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                                                                 reference.child(user.getUid()).setValue(userAccountFile)
                                                                                                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                                                                             @Override
-
-
                                                                                                                             public void onSuccess(Void aVoid) {
                                                                                                                                 Log.d("Hoy",""+emailAddressWU.getText().toString());
                                                                                                                                 getLocationSetter();
@@ -774,7 +901,6 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
                     }
                 });
     }
-
     private void checkOldPassword()
     {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_Account_File");
@@ -802,7 +928,6 @@ public class DMUpdateAccountSettings extends Fragment implements View.OnClickLis
                     }
                 });
     }
-
     private void successMessages() {
         showMessages("Updated successfully");
         DMAccountSettingsFragment wsdmFragment = new DMAccountSettingsFragment();

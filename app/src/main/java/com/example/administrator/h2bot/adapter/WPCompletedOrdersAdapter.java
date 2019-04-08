@@ -14,6 +14,11 @@ import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.dealer.WPCompletedAccept;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 import java.util.List;
@@ -46,8 +51,18 @@ public class WPCompletedOrdersAdapter extends RecyclerView.Adapter<WPCompletedOr
                final OrderModel currentData = mUploads.get(i);
                viewHolder.transactionNo.setText(currentData.getOrder_no());
                viewHolder.status.setText(currentData.getOrder_status());
-               String transactno= currentData.getOrder_no();
-               String status= currentData.getOrder_status();
+        DatabaseReference customerFile = FirebaseDatabase.getInstance().getReference("User_File").child(currentData.getOrder_customer_id());
+        customerFile.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                viewHolder.customerNameCOM.setText("Customer Name: "+dataSnapshot.child("user_firstname").getValue(String.class)+" "+dataSnapshot.child("user_lastname").getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                    @Override
@@ -78,12 +93,13 @@ public class WPCompletedOrdersAdapter extends RecyclerView.Adapter<WPCompletedOr
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView transactionNo, status, details,address, customername, contactno, deliveryfee,itemquantity, pricepergallon,service,totalprice,watertype;
+        public TextView transactionNo,customerNameCOM, status, details,address, customername, contactno, deliveryfee,itemquantity, pricepergallon,service,totalprice,watertype;
         public ViewHolder(View itemView) {
 
             super(itemView);
             transactionNo = itemView.findViewById(R.id.transactionNoCOM);
             status = itemView.findViewById(R.id.transactionStatusCOM);
+            customerNameCOM = itemView.findViewById(R.id.customerNameCOM);
 //            details = itemView.findViewById(R.id.t);
 //            address = itemView.findViewById(R.id.address);
 //            customername = itemView.findViewById(R.id.customername);

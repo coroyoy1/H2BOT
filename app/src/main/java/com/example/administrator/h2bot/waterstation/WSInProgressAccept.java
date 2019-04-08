@@ -46,7 +46,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class WSInProgressAccept extends Fragment implements View.OnClickListener {
 
 
-    TextView orderNo, inprogressText, customer, contactNo, waterType, itemQuantity, pricePerGallon,  service, address, deliveryFee, totalPrice, deliveryMethod, deliveryDate;
+    TextView orderNo, inprogressText, customer, contactNo, waterType, itemQuantity, pricePerGallon,  service, address, totalPrice, deliveryMethod, deliveryDate;
     Button launchQR, viewLocation;
     Button switcBroadcast;
     String orderNoGET, customerNoGET, merchantNOGET, transactionNo, dataIssuedGET, deliveryStatusGET
@@ -74,7 +74,6 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
         pricePerGallon = view.findViewById(R.id.pricePerGallonINACC);
         // service = view.findViewById(R.id.serviceINACC);
         address = view.findViewById(R.id.addressINACC);
-        deliveryFee = view.findViewById(R.id.deliveryFeeINACC);
         totalPrice = view.findViewById(R.id.totalPriceINACC);
         launchQR = view.findViewById(R.id.launchQRINACC);
         viewLocation = view.findViewById(R.id.viewLocationButtonINACC);
@@ -212,7 +211,6 @@ public class WSInProgressAccept extends Fragment implements View.OnClickListener
                                     String dateString = date.toLocalDate().toString();
 
                                     deliveryDate.setText(dateString);
-                                    deliveryFee.setText(orderModel.getOrder_delivery_charge());
 
                                     DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_File");
                                     reference2.child(orderModel.getOrder_customer_id())

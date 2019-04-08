@@ -116,13 +116,15 @@ public class WSTransactionsFragment extends Fragment implements WSCompleterdOrde
                         OrderModel orderModel = post.getValue(OrderModel.class);
                         if(orderModel != null)
                         {
-                            if(orderModel.getOrder_merchant_id().equals(currentUser.getUid())
-                                    && orderModel.getOrder_status().equalsIgnoreCase("Completed")
-                                    && orderModel.getOrder_status().equalsIgnoreCase("Completed with affiliate"))
+                            if(orderModel.getOrder_merchant_id().equals(currentUser.getUid()))
                             {
-                                noOrdersLayout.setVisibility(View.INVISIBLE);
-                                recyclerView.setVisibility(View.VISIBLE);
-                                mUploads.add(orderModel);
+                                if (orderModel.getOrder_status().equalsIgnoreCase("Completed")
+                                        || orderModel.getOrder_status().equalsIgnoreCase("Completed with affiliate"))
+                                {
+                                    noOrdersLayout.setVisibility(View.INVISIBLE);
+                                    recyclerView.setVisibility(View.VISIBLE);
+                                    mUploads.add(orderModel);
+                                }
                             }
                         }
                     }
