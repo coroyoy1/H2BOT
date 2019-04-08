@@ -416,9 +416,9 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     }
 
     private void CreateAccount(String emailString, String passwordString){
-        if (passwordRegister.getText().toString().toLowerCase().trim().equals(confirmPassword.getText().toString().toLowerCase().trim()))
+        if (!passwordRegister.getText().toString().toLowerCase().trim().equals(confirmPassword.getText().toString().toLowerCase().trim()))
         {
-            showMessage("Both password should be the same");
+            showMessage("Password did not match");
             return;
         }
         mAuth.createUserWithEmailAndPassword(emailString, passwordString)
