@@ -1196,6 +1196,7 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                         if (str.toLowerCase().equals("Thursday".toLowerCase()))
                         {
                             thurs.setChecked(true);
+
                         }
                         if (str.toLowerCase().equals("Friday".toLowerCase()))
                         {
@@ -1209,6 +1210,42 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                         {
                             sun.setChecked(true);
                         }
+                    }
+                    String split;
+                    if (mon.isChecked())
+                    {
+                        split = TextUtils.join(",", Collections.singleton("Monday"));
+                        week.add(split);
+                    }
+                    if (tue.isChecked())
+                    {
+                        split = TextUtils.join(",", Collections.singleton("Tuesday"));
+                        week.add(split);
+                    }
+                    if (wed.isChecked())
+                    {
+                        split = TextUtils.join(",", Collections.singleton("Wednesday"));
+                        week.add(split);
+                    }
+                    if (thurs.isChecked())
+                    {
+                        split = TextUtils.join(",", Collections.singleton("Thursday"));
+                        week.add(split);
+                    }
+                    if (fri.isChecked())
+                    {
+                        split = TextUtils.join(",", Collections.singleton("Friday"));
+                        week.add(split);
+                    }
+                    if (sat.isChecked())
+                    {
+                        split = TextUtils.join(",", Collections.singleton("Saturday"));
+                        week.add(split);
+                    }
+                    if (sun.isChecked())
+                    {
+                        split = TextUtils.join(",", Collections.singleton("Sunday"));
+                        week.add(split);
                     }
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_Docs_File");
                     databaseReference.child(mAuth.getCurrentUser().getUid())
@@ -1421,7 +1458,7 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
     private void getLocationSetter()
     {
         progressDialog.show();
-        progressDialog.setMessage("Finishing the BusinessInfo");
+        progressDialog.setMessage("Finishing the Business Information");
         Geocoder coder = new Geocoder(getActivity());
         List<Address> address;
         Address LocationAddress = null;
@@ -1444,7 +1481,8 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            showMessages("Successfully Update Address");
+                            showMessages("Successfully Update Information");
+                            progressDialog.dismiss();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -1478,11 +1516,15 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
         }
     }
     public void uploadAllImage(){
+        if (filepath != null || filepath2 != null || filepath3 != null)
+        {
+            progressDialog.setMessage("Finishing Update Documents");
+            progressDialog.show();
+        }
         if(filepath != null){
             progressDialog.show();
             FirebaseUser user = mAuth.getCurrentUser();
             String userId = user.getUid();
-            Log.d("auth", userId);
             StorageReference mStorageRef = storageReference.child("station_documents").child(userId +"/"+"businessPermitDocument");
             mStorageRef.putFile(filepath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -1503,7 +1545,6 @@ public class WSBusinessInfoFinal extends Fragment implements CheckBox.OnClickLis
             progressDialog.show();
             FirebaseUser user = mAuth.getCurrentUser();
             String userId = user.getUid();
-            Log.d("auth", userId);
             StorageReference mStorageRef = storageReference.child("station_documents").child(userId +"/"+"physicochemicalDocument");
             mStorageRef.putFile(filepath3).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override

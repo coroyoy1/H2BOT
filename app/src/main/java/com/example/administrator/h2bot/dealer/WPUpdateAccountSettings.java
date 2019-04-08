@@ -250,7 +250,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                             addressWU.setText(userFile.getUser_address());
                             emailnako = user.getEmail();
                             contactNoWU.setText(userFile.getUser_phone_no());
-                            Picasso.get().load(userFile.getUser_uri()).into(imageView);
+                            Picasso.get().load(userFile.getUser_uri()).resize(1000,1000).into(imageView);
                         }
                         DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("User_Account_File");
                         reference1.child(firebaseUser.getUid())
@@ -326,7 +326,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                                                                     lastNameWU.getText().toString().trim(),
                                                                                                                     addressWU.getText().toString().trim(),
                                                                                                                     contactNoWU.getText().toString().trim(),
-                                                                                                                    "Third Party Affiliate",
+                                                                                                                    "Water Dealer",
                                                                                                                     "active"
                                                                                                             );
                                                                                                             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File");
@@ -387,7 +387,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                                                                                     lastNameWU.getText().toString().trim(),
                                                                                                                                     addressWU.getText().toString().trim(),
                                                                                                                                     contactNoWU.getText().toString().trim(),
-                                                                                                                                    "Third Party Affiliate" ,
+                                                                                                                                    "Water Dealer" ,
                                                                                                                                     "active"
                                                                                                                             );
                                                                                                                             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File");
@@ -517,7 +517,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                             lastNameString,
                                                             addressString,
                                                             contactNoString,
-                                                            "Third Party Affiliate",
+                                                            "Water Dealer",
                                                             "active"
                                                     );
                                                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File");
@@ -584,7 +584,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                             lastNameString,
                                                                             addressString,
                                                                             contactNoString,
-                                                                            "Third Party Affiliate",
+                                                                            "Water Dealer",
                                                                             "active"
                                                                     );
                                                                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File");
@@ -702,7 +702,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                                                                                         lastNameWU.getText().toString().trim(),
                                                                                         addressWU.getText().toString().trim(),
                                                                                         contactNoWU.getText().toString().trim(),
-                                                                                        "Third Party Affiliate",
+                                                                                        "Water Dealer",
                                                                                         "active"
                                                                                 );
                                                                                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File");
@@ -849,7 +849,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
 
     private void successMessages() {
         showMessages("Updated successfully");
-        WPAccountSettingsFragment wsdmFragment = new WPAccountSettingsFragment();
+        TPAAccountSettingFragment wsdmFragment = new TPAAccountSettingFragment();
         AppCompatActivity activity = (AppCompatActivity)getContext();
         activity.getSupportFragmentManager()
                 .beginTransaction()
@@ -889,6 +889,7 @@ public class WPUpdateAccountSettings extends Fragment implements View.OnClickLis
                         break;
                     case 1:
                         changePassword.setText("Change Password");
+                        linearPassword.setVisibility(View.VISIBLE);
                         linearPassword.setVisibility(View.VISIBLE);
                         linearRenewPassword.setVisibility(View.GONE);
                         isClick=true;

@@ -26,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,8 +35,6 @@ import com.example.administrator.h2bot.models.CaptureActivityPortrait;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserWSDMFile;
-import com.example.administrator.h2bot.waterstation.WSInProgressAccept;
-import com.example.administrator.h2bot.waterstation.WSTransactionsFragment;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -53,8 +50,6 @@ import com.google.zxing.integration.android.IntentResult;
 import com.squareup.picasso.Picasso;
 
 import org.joda.time.DateTime;
-
-import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -392,14 +387,14 @@ public class DMInProgressAcception extends Fragment implements View.OnClickListe
                                                     totalPrice.setText(orderModel.getOrder_total_amt());
                                                     waterType.setText(orderModel.getOrder_water_type());
                                                     address.setText(orderModel.getOrder_address());
-                                                    deliveryMethod.setText(orderModel.getOrder_delivery_method());
+                                                    deliveryMethod.setText(orderModel.getOrder_method());
                                                     inprogressText.setText(orderModel.getOrder_status());
 
                                                     DateTime date = new DateTime(orderModel.getOrder_delivery_date());
                                                     String dateString = date.toLocalDate().toString();
 
                                                     deliveryDate.setText(dateString);
-                                                    deliveryFee.setText(orderModel.getOrder_delivery_fee());
+                                                    deliveryFee.setText(orderModel.getOrder_delivery_charge());
 
                                                     DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_File");
                                                     reference2.child(orderModel.getOrder_customer_id())

@@ -117,7 +117,8 @@ public class WSTransactionsFragment extends Fragment implements WSCompleterdOrde
                         if(orderModel != null)
                         {
                             if(orderModel.getOrder_merchant_id().equals(currentUser.getUid())
-                                    && orderModel.getOrder_status().equals("Completed"))
+                                    && orderModel.getOrder_status().equalsIgnoreCase("Completed")
+                                    && orderModel.getOrder_status().equalsIgnoreCase("Completed with affiliate"))
                             {
                                 noOrdersLayout.setVisibility(View.INVISIBLE);
                                 recyclerView.setVisibility(View.VISIBLE);

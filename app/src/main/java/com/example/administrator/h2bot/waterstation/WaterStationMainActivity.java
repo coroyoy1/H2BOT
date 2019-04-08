@@ -128,6 +128,8 @@ public class WaterStationMainActivity extends AppCompatActivity implements Navig
                 });
     }
 
+
+
     private void initializeCountDrawer() {
         DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
         databaseReference1.addValueEventListener(new ValueEventListener() {

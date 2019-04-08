@@ -2,6 +2,7 @@ package com.example.administrator.h2bot.waterstation;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -116,10 +117,12 @@ public class WSInProgressFragment extends Fragment implements WSInProgressOrders
                             if(orderModel != null)
                             {
                                 if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid())
-                                        && orderModel.getOrder_status().equals("In-Progress")
-                                        || orderModel.getOrder_status().equals("Dispatched")
-                                        || orderModel.getOrder_status().equals("Broadcasting")
-                                        || orderModel.getOrder_status().equals("Accepted"))
+                                        && orderModel.getOrder_status().equalsIgnoreCase("In-Progress")
+                                        || orderModel.getOrder_status().equalsIgnoreCase("Dispatched")
+                                        || orderModel.getOrder_status().equalsIgnoreCase("Broadcasting")
+                                        || orderModel.getOrder_status().equalsIgnoreCase("Accepted")
+                                        || orderModel.getOrder_status().equalsIgnoreCase("Accepted by affiliate")
+                                        || orderModel.getOrder_status().equalsIgnoreCase("Dispatched by affiliate"))
                                 {
                                     noOrdersLayout.setVisibility(View.INVISIBLE);
                                     recyclerView.setVisibility(View.VISIBLE);

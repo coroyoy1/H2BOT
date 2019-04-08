@@ -1,9 +1,11 @@
 package com.example.administrator.h2bot.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +54,14 @@ public class WSInProgressOrdersAdapter extends RecyclerView.Adapter<WSInProgress
         final OrderModel currentData = mUploads.get(i);
                 viewHolder.transactionNo.setText(currentData.getOrder_no());
                 viewHolder.status.setText(currentData.getOrder_status());
+        if (currentData.getOrder_status().equalsIgnoreCase("Dispatched by affiliate"))
+        {
+            viewHolder.cardView.setBackgroundColor(Color.parseColor("#BDB76B"));
+        }
+        if (currentData.getOrder_status().equalsIgnoreCase("Accepted by affiliate"))
+        {
+            viewHolder.cardView.setBackgroundColor(Color.parseColor("#BDB76B"));
+        }
         String customerNo = currentData.getOrder_customer_id();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_File");
         reference.child(customerNo).addValueEventListener(new ValueEventListener() {
@@ -125,10 +135,10 @@ public class WSInProgressOrdersAdapter extends RecyclerView.Adapter<WSInProgress
     }
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView transactionCustomerText, transactionNo, status, details,address, customername, contactno, deliveryfee,itemquantity, pricepergallon,service,totalprice,watertype;
-
+        private CardView cardView;
         public ViewHolder(View itemView) {
             super(itemView);
-
+            cardView = itemView.findViewById(R.id.card_view_top);
             transactionNo = itemView.findViewById(R.id.transactionNoIN);
             status = itemView.findViewById(R.id.transactionStatusIN);
             transactionCustomerText = itemView.findViewById(R.id.customerNameIN);

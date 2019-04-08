@@ -28,8 +28,6 @@ import com.squareup.picasso.Picasso;
 
 import org.joda.time.DateTime;
 
-import java.time.LocalTime;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class WSCompletedAccept extends Fragment implements View.OnClickListener {
@@ -55,16 +53,13 @@ public class WSCompletedAccept extends Fragment implements View.OnClickListener 
         contactNo = view.findViewById(R.id.contactNoCOMACC);
         waterType = view.findViewById(R.id.waterTypeCOMACC);
         itemQuantity = view.findViewById(R.id.itemQuantityCOMACC);
-        pricePerGallon = view.findViewById(R.id.pricePerGallonCOMACC);
+        pricePerGallon = view.findViewById(R.id.deliveryPPGCOMACC);
         service = view.findViewById(R.id.serviceCOMACC);
         address = view.findViewById(R.id.addressCOMACC);
-        deliveryFee = view.findViewById(R.id.deliveryFeeCOMACC);
         totalPrice = view.findViewById(R.id.totalPriceCOMACC);
         backButton = view.findViewById(R.id.backCOMACC);
         imageView = view.findViewById(R.id.imageViewINACC);
-        deliveryMethod = view.findViewById(R.id.MethodCOMACC);
         deliveryDate = view.findViewById(R.id.datedeliveredCOMACC);
-
         backButton = view.findViewById(R.id.backCOMACC);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -89,7 +84,6 @@ public class WSCompletedAccept extends Fragment implements View.OnClickListener 
 
         return view;
     }
-
 
     public void getCustomerOrder()
     {
@@ -116,18 +110,14 @@ public class WSCompletedAccept extends Fragment implements View.OnClickListener 
                                                     if (orderModel.getOrder_status().equals("Completed")) {
                                                         orderNo.setText(orderModel.getOrder_no());;
                                                         itemQuantity.setText(orderModel.getOrder_qty());
-                                                        pricePerGallon.setText(orderModel.getOrder_price_per_gallon());
-                                                        totalPrice.setText(orderModel.getOrder_total_amt());
+                                                        pricePerGallon.setText("Php "+orderModel.getOrder_price_per_gallon());
+                                                        totalPrice.setText("Php "+orderModel.getOrder_total_amt());
                                                         waterType.setText(orderModel.getOrder_water_type());
                                                         address.setText(orderModel.getOrder_address());
-                                                        deliveryMethod.setText(orderModel.getOrder_delivery_method());
-                                                        service.setText(orderModel.getOrder_service_method());
-
+                                                        service.setText(orderModel.getOrder_method());
                                                         DateTime date = new DateTime(orderModel.getOrder_delivery_date());
                                                         String dateString = date.toLocalDate().toString();
-
                                                         deliveryDate.setText(dateString);
-                                                        deliveryFee.setText(orderModel.getOrder_delivery_fee());
 
                                                         DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_File");
                                                         reference2.child(orderModel.getOrder_customer_id())

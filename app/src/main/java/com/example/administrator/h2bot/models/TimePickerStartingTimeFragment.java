@@ -42,6 +42,7 @@ public class TimePickerStartingTimeFragment extends DialogFragment implements Ti
 
 
         TextView tv = getActivity().findViewById(R.id.startTimeTextView);
-        tv.setText(hour_of_12_hour_format + " : " + minute + " " + status);
+        String minuteValue = String.format("%02d", minute);
+        tv.setText(hour_of_12_hour_format + " : " + minuteValue + " " + status);
     }
 }

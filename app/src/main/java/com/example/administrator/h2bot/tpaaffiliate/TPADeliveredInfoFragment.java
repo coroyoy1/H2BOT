@@ -36,7 +36,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class TPADeliveredInfoFragment extends Fragment implements View.OnClickListener {
 
-    TextView orderNo,customerName,customerAddress,customerContactNo,waterStationName,stationAddress,stationContactNo,expectedDate,pricePerGallon,quantity,waterType,deliveryFee,totalPrice,userTypeDirection;
+    TextView orderNo,customerName,customerAddress,customerContactNo,waterStationName,stationAddress,stationContactNo,expectedDate,pricePerGallon,quantity,waterType,totalPrice,userTypeDirection;
     Button okButton,switchUser;
     Button backButton;
     String orderNoGET, customerNoGET, merchantNOGET, transactionNo, dataIssuedGET, deliveryStatusGET
@@ -65,7 +65,6 @@ public class TPADeliveredInfoFragment extends Fragment implements View.OnClickLi
         pricePerGallon = view.findViewById(R.id.pricePerGallon);
         quantity = view.findViewById(R.id.quantity);
         waterType = view.findViewById(R.id.waterType);
-        deliveryFee = view.findViewById(R.id.deliveryFee);
         totalPrice = view.findViewById(R.id.totalPrice);
         okButton = view.findViewById(R.id.okButton);
         imageviewprofile = view.findViewById(R.id.imageviewprofile);
@@ -112,16 +111,13 @@ public class TPADeliveredInfoFragment extends Fragment implements View.OnClickLi
         customerFile.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                Log.d("Popo2","Hallo"+orderNumber);
                 orderNo.setText(orderNumber);
                 customerAddress.setText(dataSnapshot.child("order_address").getValue(String.class));
-                expectedDate.setText(dataSnapshot.child("order_delivery_date").getValue(String.class));
+                expectedDate.setText(dataSnapshot.child("order_date").getValue(String.class));
                 pricePerGallon.setText(dataSnapshot.child("order_price_per_gallon").getValue(String.class));
                 quantity.setText(dataSnapshot.child("order_qty").getValue(String.class));
                 totalPrice.setText(dataSnapshot.child("order_total_amt").getValue(String.class));
                 waterType.setText(dataSnapshot.child("order_water_type").getValue(String.class));
-                deliveryFee.setText(dataSnapshot.child("order_delivery_fee").getValue(String.class));
             }
 
             @Override
