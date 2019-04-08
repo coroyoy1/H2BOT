@@ -108,6 +108,7 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
         addDocumentPhoto = view.findViewById(R.id.addDocumentButton);
         imageDocument = view.findViewById(R.id.documentImage);
         licenseIdDM = view.findViewById(R.id.licenseTextDM);
+        licenseIdDM.setVisibility(View.GONE);
 
         addPhotoBDM = view.findViewById(R.id.addPhotoDM);
         registerDM = view.findViewById(R.id.RegisterSignUpDM);
@@ -350,9 +351,6 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
     private void showMessages(String s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_LONG).show();
     }
-
-
-
     private void getLocationSetter()
     {
         Geocoder coder = new Geocoder(getActivity());
@@ -394,8 +392,6 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
             ex.printStackTrace();
         }
     }
-
-
     public void openGallery()
     {
         Intent intent = new Intent();
@@ -403,7 +399,6 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -436,22 +431,42 @@ public class DMRegisterAccount extends Fragment implements View.OnClickListener{
                         sb.append(myItem.getValue());
                         sb.append("\n");
                     }
-                    if (!licenseIdDM.getText().toString().isEmpty() || !licenseIdDM.getText().toString().equals(""))
+                    if(sb.toString().trim().toLowerCase().contains("Department of Transportation".toLowerCase()))
                     {
-                        String license = licenseIdDM.getText().toString();
-                        if(sb.toString().trim().toLowerCase().contains(license.trim().toLowerCase())){
-                            Picasso.get().load(uriv).into(imageDocument);
-                            Toast.makeText(getActivity(), "Valid business permit", Toast.LENGTH_SHORT).show();
+                        if (sb.toString().toLowerCase().contains(firstNameDM.getText().toString()))
+                        {
+                            if (sb.toString().toLowerCase().contains(lastNameDM.getText().toString()))
+                            {
+                                Picasso.get().load(uriv).into(imageDocument);
+                                Toast.makeText(getActivity(), "Valid business permit", Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                imageDocument.setImageResource(R.drawable.ic_image_black_24dp);
+                                Toast.makeText(getActivity(), "Invalid driver's license", Toast.LENGTH_SHORT).show();
+                                uriv = Uri.parse("");
+                            }
                         }
-                        else{
+                        else
+                        {
                             imageDocument.setImageResource(R.drawable.ic_image_black_24dp);
                             Toast.makeText(getActivity(), "Invalid driver's license", Toast.LENGTH_SHORT).show();
+                            uriv = Uri.parse("");
                         }
                     }
-                    else
-                    {
-                        showMessages("License number does not set");
+                    else{
+                        imageDocument.setImageResource(R.drawable.ic_image_black_24dp);
+                        Toast.makeText(getActivity(), "Invalid driver's license", Toast.LENGTH_SHORT).show();
+                        uriv = Uri.parse("");
                     }
+//                    if (!licenseIdDM.getText().toString().isEmpty() || !licenseIdDM.getText().toString().equals(""))
+//                    {
+//                        String license = licenseIdDM.getText().toString();
+//                    }
+//                    else
+//                    {
+//                        showMessages("License number does not set");
+//                    }
                 }
                 catch (IOException e)
                 {

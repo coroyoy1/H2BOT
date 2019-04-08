@@ -257,7 +257,7 @@
                         android:textColor="@android:color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Date to Deliver:" />
+                        android:text="Expected Date of Deliver:" />
                     <TextView
                         android:id="@+id/datedeliveredPOACC"
                         android:layout_marginTop="10dp"
@@ -267,33 +267,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="sample edit"/>
-
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="Delivery Fee:"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
-
-                    <TextView
-                        android:id="@+id/deliveryFeePOACC"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:text="sample edit"
-                        android:textColor="@android:color/white"
-                        android:textSize="18dp" />
 
                 </LinearLayout>
 

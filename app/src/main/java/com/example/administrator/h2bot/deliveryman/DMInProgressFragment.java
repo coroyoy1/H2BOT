@@ -128,13 +128,16 @@ public class DMInProgressFragment extends Fragment implements WSInProgressOrders
                                                 OrderModel orderModel = dataSnapshot4.getValue(OrderModel.class);
                                                 if (orderModel != null)
                                                 {
-                                                    if (orderModel.getOrder_merchant_id().equals(merchantId)
-                                                            && orderModel.getOrder_status().equals("In-Progress")
-                                                            || orderModel.getOrder_status().equalsIgnoreCase("Broadcasting")
-                                                            || orderModel.getOrder_status().equalsIgnoreCase("Dispatched")) {
-                                                        noOrdersLayout.setVisibility(View.INVISIBLE);
-                                                        recyclerView.setVisibility(View.VISIBLE);
-                                                        uploadPO.add(orderModel);
+                                                    if (orderModel.getOrder_merchant_id().equals(merchantId))
+                                                    {
+                                                        if (orderModel.getOrder_status().equals("In-Progress")
+                                                                || orderModel.getOrder_status().equalsIgnoreCase("Broadcasting")
+                                                                || orderModel.getOrder_status().equalsIgnoreCase("Dispatched"))
+                                                        {
+                                                            noOrdersLayout.setVisibility(View.INVISIBLE);
+                                                            recyclerView.setVisibility(View.VISIBLE);
+                                                            uploadPO.add(orderModel);
+                                                        }
                                                     }
                                                 }
                                             }

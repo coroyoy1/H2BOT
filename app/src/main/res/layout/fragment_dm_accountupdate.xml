@@ -88,6 +88,7 @@
                     android:textAlignment="center" />
 
                 <EditText
+                    android:maxLength="11"
                     android:inputType="textEmailAddress"
                     android:id="@+id/RegisterContactUASDM"
                     android:layout_width="match_parent"

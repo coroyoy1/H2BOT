@@ -184,7 +184,8 @@ public class GetDistance extends AsyncTask<Object, String, String> {
             else if(tpaMapFragment != null)
                 tpaMapFragment.setList(thisList);
         }
-        else{
+        else
+            {
             mCirle = mMap.addCircle(new CircleOptions()
                     .center(orig)
                     .fillColor(Color.argb(100, 173, 216, 230))
@@ -197,14 +198,14 @@ public class GetDistance extends AsyncTask<Object, String, String> {
             mCurrentLocationMarker = mMap.addMarker(mMarkerOption);
             mMap.addMarker(mMarkerOption);
             mCirle.setRadius(radiusLimit * 1000);
-            ArrayList<WaterStationOrDealer> searchList = new ArrayList<>();
+            //ArrayList<WaterStationOrDealer> searchList = new ArrayList<>();
             for(int i = 0; i < thisList.size(); i++){
                 LatLng latLng = new LatLng(thisList.get(i).getLat(), thisList.get(i).getLng());
                 double stationDistance = Double.parseDouble(thisList.get(i).getDistance().substring(10, thisList.get(i).getDistance().length()-3));
                 if(stationDistance <= radiusLimit){
-                    searchList.add(thisList.get(i));
-
-                    if(thisList.get(i).getUserType().equalsIgnoreCase("Water Station")){
+             //       searchList.add(thisList.get(i));
+                    if(thisList.get(i).getUserType().equalsIgnoreCase("Water Station"))
+                    {
                         mMap.addMarker(new MarkerOptions()
                                 .position(latLng).title(thisList.get(i).getStation_dealer_name())
                                 .snippet(thisList.get(i).getType() + "\n" + thisList.get(i).getStatus())
@@ -224,7 +225,7 @@ public class GetDistance extends AsyncTask<Object, String, String> {
             }
             if(customerMapFragment != null) {
                 customerMapFragment.setList(thisList);
-                customerMapFragment.setSearchList(searchList);
+              //  customerMapFragment.setSearchList(searchList);
             }
             else if(tpaMapFragment != null)
                 tpaMapFragment.setList(thisList);

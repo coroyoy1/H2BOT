@@ -58,6 +58,7 @@ public class WPPendingOrdersFragment extends Fragment implements WPPendingListAd
         databaseReference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                uploadPO.clear();
                 for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                 {
                     for (DataSnapshot post : dataSnapshot1.child(firebaseUser.getUid()).getChildren())

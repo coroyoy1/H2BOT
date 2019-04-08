@@ -745,7 +745,7 @@ public class TPAMapDestinationFragment extends Fragment implements OnMapReadyCal
                                             }
                                         });
                             }
-                            FirebaseDatabase.getInstance().getReference("Affiliate_WaterStation_Order_File").child(firebaseUser.getUid()).child(stationID).child(orderNumber).child("status").setValue("Dispatched by affiliate");
+                            FirebaseDatabase.getInstance().getReference("Affiliate_WaterStation_Order_File").child(firebaseUser.getUid()).child(stationID).child(customerID).child(orderNumber).child("status").setValue("Dispatched by affiliate");
                         }
                     }
 
@@ -776,7 +776,7 @@ public class TPAMapDestinationFragment extends Fragment implements OnMapReadyCal
     public void updateOrder(String pathString)
     {
         FirebaseDatabase.getInstance().getReference("Affiliate_WaterStation_Order_File")
-                .child(firebaseUser.getUid()).child(stationID).child(orderNumber).child("status").setValue("Completed with affiliate");
+                .child(firebaseUser.getUid()).child(stationID).child(customerID).child(orderNumber).child("status").setValue("Completed with affiliate");
 
         DatabaseReference referencedata = FirebaseDatabase.getInstance().getReference("Customer_File");
         referencedata.child(pathString)
@@ -784,7 +784,7 @@ public class TPAMapDestinationFragment extends Fragment implements OnMapReadyCal
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        TPAAcceptedFragment additem = new TPAAcceptedFragment();
+                        TPADeliveredOrdersFragment additem = new TPADeliveredOrdersFragment();
                         AppCompatActivity activity = (AppCompatActivity)getContext();
                         activity.getSupportFragmentManager()
                                 .beginTransaction()
@@ -907,8 +907,7 @@ public class TPAMapDestinationFragment extends Fragment implements OnMapReadyCal
             {
                 transactNoScan = result.getContents();
                 String path = customerID+"/"+stationID+"/"+orderNumber;
-                Log.d("BITCH",transactNoScan+"="+path);
-                if(transactNoScan.trim().toLowerCase().replace(" ", "")
+                  if(transactNoScan.trim().toLowerCase().replace(" ", "")
                         .equals(path.trim().toLowerCase().replace(" ", "")))
                 {
                     updateOrder(transactNoScan);

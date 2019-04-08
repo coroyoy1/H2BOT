@@ -18,6 +18,11 @@ import com.example.administrator.h2bot.adapter.WSInProgressOrdersAdapter;
 import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 import com.example.administrator.h2bot.waterstation.WSPendingOrderAcceptDeclineFragment;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -57,6 +62,18 @@ public class WPPendingListAdapter extends RecyclerView.Adapter<WPPendingListAdap
         imageViewholder.transactionNoText.setText(transactionNo);
         imageViewholder.transactionStatusText.setText(transactionStatus);
 
+        DatabaseReference customerFile = FirebaseDatabase.getInstance().getReference("User_File").child(currentData.getOrder_customer_id());
+        customerFile.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                imageViewholder.customerNamePEN.setText("Customer Name: "+dataSnapshot.child("user_firstname").getValue(String.class)+" "+dataSnapshot.child("user_lastname").getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         imageViewholder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,11 +102,12 @@ public class WPPendingListAdapter extends RecyclerView.Adapter<WPPendingListAdap
     }
 
     public class ImageViewholder extends RecyclerView.ViewHolder{
-        TextView transactionNoText, transactionStatusText;
+        TextView transactionNoText, transactionStatusText,customerNamePEN;
         public ImageViewholder(@NonNull View itemView) {
             super(itemView);
             transactionNoText = itemView.findViewById(R.id.transactionNoPEN);
             transactionStatusText = itemView.findViewById(R.id.transactionStatusPEN);
+            customerNamePEN = itemView.findViewById(R.id.customerNamePEN);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

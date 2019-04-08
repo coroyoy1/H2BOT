@@ -60,7 +60,7 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
     ProgressDialog progressDialog;
     String transactionNo,name;
 
-    TextView orderNo, customer, contactNo, waterType, itemQuantity, pricePerGallon, service, deliveryFee, totalPrice, address, deliveryMethod, deliveryDate;
+    TextView orderNo, customer, contactNo, waterType, itemQuantity, pricePerGallon, service, totalPrice, address, deliveryMethod, deliveryDate;
     String transDeliveryFeePerGallonDetail, transNoDetail, transNoOfGallonDetail, transPartialAmountDetail, transPricePerGallonDetail, transStatusDetail, transWaterTypeDetail;
     String customerIDUser, contactNoUser;
     String orderNoGET , customerNoGET , merchantNOGET , dataIssuedGET , deliveryStatusGET , transStatusGET , transTotalAmountGET , transDeliveryFeeGET, transTotalNoGallonGET;
@@ -98,7 +98,6 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
         waterType = view.findViewById(R.id.waterTypePOACC);
         itemQuantity = view.findViewById(R.id.itemQuantityPOACC);
         pricePerGallon = view.findViewById(R.id.pricePerGallonPOACC);
-        deliveryFee = view.findViewById(R.id.deliveryFeePOACC);
         totalPrice = view.findViewById(R.id.totalPricePOACC);
         imageView = view.findViewById(R.id.imageViewPOACC);
         address = view.findViewById(R.id.addressPOACC);
@@ -200,7 +199,6 @@ public class WPPendingOrderAcceptDeclineFragment extends Fragment implements Vie
                                                         String dateString = date.toLocalDate().toString();
 
                                                         deliveryDate.setText(dateString);
-                                                        deliveryFee.setText(orderModel.getOrder_delivery_charge());
 
                                                         DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_File");
                                                         reference2.child(orderModel.getOrder_customer_id())

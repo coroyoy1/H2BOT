@@ -368,7 +368,7 @@ public class TPAAcceptedOrdersInfo extends Fragment implements View.OnClickListe
     {
         FirebaseDatabase.getInstance().getReference("Customer_File").child(customerID).child(stationID).child(orderNumber)
                 .child("order_status").setValue("Completed with affiliate");
-        FirebaseDatabase.getInstance().getReference("Affiliate_WaterStation_Order_File").child(customerID).child(stationID).child(orderNumber)
+        FirebaseDatabase.getInstance().getReference("Affiliate_WaterStation_Order_File").child(customerID).child(stationID).child(customerID).child(orderNumber)
                 .child("order_status").setValue("Completed with affiliate");
     }
     public void declaration(View view)

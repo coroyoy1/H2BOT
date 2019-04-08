@@ -116,17 +116,19 @@ public class WSInProgressFragment extends Fragment implements WSInProgressOrders
                             OrderModel orderModel = post.getValue(OrderModel.class);
                             if(orderModel != null)
                             {
-                                if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid())
-                                        && orderModel.getOrder_status().equalsIgnoreCase("In-Progress")
-                                        || orderModel.getOrder_status().equalsIgnoreCase("Dispatched")
-                                        || orderModel.getOrder_status().equalsIgnoreCase("Broadcasting")
-                                        || orderModel.getOrder_status().equalsIgnoreCase("Accepted")
-                                        || orderModel.getOrder_status().equalsIgnoreCase("Accepted by affiliate")
-                                        || orderModel.getOrder_status().equalsIgnoreCase("Dispatched by affiliate"))
+                                if(orderModel.getOrder_merchant_id().equals(firebaseUser.getUid()))
                                 {
-                                    noOrdersLayout.setVisibility(View.INVISIBLE);
-                                    recyclerView.setVisibility(View.VISIBLE);
-                                    uploadPO.add(orderModel);
+                                    if (orderModel.getOrder_status().equalsIgnoreCase("In-Progress")
+                                            || orderModel.getOrder_status().equalsIgnoreCase("Dispatched")
+                                            || orderModel.getOrder_status().equalsIgnoreCase("Broadcasting")
+                                            || orderModel.getOrder_status().equalsIgnoreCase("Accepted")
+                                            || orderModel.getOrder_status().equalsIgnoreCase("Accepted by affiliate")
+                                            || orderModel.getOrder_status().equalsIgnoreCase("Dispatched by affiliate"))
+                                    {
+                                        noOrdersLayout.setVisibility(View.INVISIBLE);
+                                        recyclerView.setVisibility(View.VISIBLE);
+                                        uploadPO.add(orderModel);
+                                    }
                                 }
                             }
                         }
