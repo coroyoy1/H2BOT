@@ -157,7 +157,7 @@ public class CustomerMapFragment extends Fragment implements
 
     private ArrayList<UserWSWDWaterTypeFile> waterTypeList;
     CustomerWaterTypeAdapter waterTypeAdapter;
-    RecyclerView recyclerView;
+    RecyclerView recyclerView, mRecyclerView;
 
     //SearchMerchant
     private SearchMerchantAdapter searchMerchantAdapter;
@@ -176,6 +176,7 @@ public class CustomerMapFragment extends Fragment implements
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.customer_fragment_map, container, false);
         userFileList = new ArrayList<>();
+        dialog = new Dialog(getActivity());
         businessInfoFileListis = new ArrayList<>();
         userLocationAddressList = new ArrayList<>();
 
@@ -206,7 +207,6 @@ public class CustomerMapFragment extends Fragment implements
         bottomSheetBehavior.setPeekHeight(bottomSheetBehavior.getPeekHeight());
         bottomSheetBehavior.setHideable(true);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        dialog = new Dialog(getActivity());
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading map...");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -220,7 +220,6 @@ public class CustomerMapFragment extends Fragment implements
         radius.setProgress(1);
         searchButton = view.findViewById(R.id.searchButton);
         legendBtn = view.findViewById(R.id.legendBtn);
-        searchButton.setOnClickListener(search);
         legendBtn.setOnClickListener(legend);
 
         arrayListUserFile = new ArrayList<UserFile>();
@@ -249,13 +248,6 @@ public class CustomerMapFragment extends Fragment implements
         });
     }
 
-    public View.OnClickListener search = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            NearbyMerchants();
-        }
-    };
-
     public View.OnClickListener legend = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -267,7 +259,6 @@ public class CustomerMapFragment extends Fragment implements
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             currentRadius.setText(progress + " km");
-
             showNearest();
         }
 
@@ -656,15 +647,22 @@ public class CustomerMapFragment extends Fragment implements
     }
 
     public void NearbyMerchants() {
-        SearchMerchantAdapter searchMerchantAdapter;
-        TextView closeDialog;
-        EditText waterType;
-        RecyclerView recyclerView;
+        TextView closeDialog, noMerchant;
         dialog.setContentView(R.layout.search_merchant_popup);
         closeDialog = dialog.findViewById(R.id.closeDialog);
-        waterType = dialog.findViewById(R.id.waterType);
-        recyclerView = dialog.findViewById(R.id.recyclerView);
-        searchMerchantAdapter = new SearchMerchantAdapter(dialog.getContext(), searchList);
+        noMerchant = dialog.findViewById(R.id.noMerchant);
+        mRecyclerView = dialog.findViewById(R.id.mRecyclerView);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        searchMerchantAdapter = new SearchMerchantAdapter(getActivity(), searchList);
+        if(searchList.size() != 0){
+            noMerchant.setVisibility(View.GONE);
+        }
+        else{
+            noMerchant.setVisibility(View.VISIBLE);
+        }
+        String a = String.valueOf(searchList.size());
+        Log.d("Search List Size: ", a);
         recyclerView.setAdapter(searchMerchantAdapter);
         closeDialog.setOnClickListener(new View.OnClickListener() {
             @Override

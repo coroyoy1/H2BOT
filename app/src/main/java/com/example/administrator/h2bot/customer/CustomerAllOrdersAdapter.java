@@ -18,10 +18,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
+import com.example.administrator.h2bot.absampletestphase.RatingModel;
 import com.example.administrator.h2bot.models.OrderFileModel;
+import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.TransactionNoModel;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -203,4 +210,96 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
             status = itemView.findViewById(R.id.status);
         }
     }
+
+    //Marvel
+//    public void checkIfOrderCompleted(String transNo)
+//    {
+//        DatabaseReference reference =FirebaseDatabase.getInstance().getReference("Customer_File");
+//        reference.child(firebaseUser.getUid()).child(getStation_Id).child(transNo)
+//                .addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        OrderModel orderModel = dataSnapshot.getValue(OrderModel.class);
+//                        if (orderModel != null)
+//                        {
+//                            if (orderModel.getOrder_status().equalsIgnoreCase("Completed"))
+//                            {
+//                                String orderNo = orderModel.getOrder_no();
+//                                if (!orderNo.isEmpty())
+//                                {
+//                                    showDialogRate();
+//                                }
+//                            }
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
+//    }
+//    public void ratingOfCustomer(String rating_customer_id, String rating_merchant_id, String rating_number, String rating_comment, String rating_status)
+//    {
+//
+//        RatingModel ratingModel = new RatingModel(
+//                rating_customer_id,
+//                rating_merchant_id,
+//                rating_number,
+//                rating_comment,
+//                "1",
+//                rating_status
+//        );
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Ratings");
+//        databaseReference.child(firebaseUser.getUid()).child("yzSnsbkYLBcQ32f11ckMHAajyT73").setValue(ratingModel)
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        showMessage("Rated successfully");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        showMessage("Failed to save your feedback");
+//                    }
+//                });
+//    }
+//    public void showDialogRate()
+//    {
+//        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+//        LayoutInflater inflater = getLayoutInflater();
+//        final View dialogView = inflater.inflate(R.layout.z_customer_rate, null);
+//
+//        laterButton = dialogView.findViewById(R.id.laterRatingButton);
+//        submitButton = dialogView.findViewById(R.id.submitRatingButton);
+//        additonalComment = dialogView.findViewById(R.id.addtionalRate);
+//        ratingBar = dialogView.findViewById(R.id.ratingStarsFeedback);
+//        dialogBuilder.setView(dialogView);
+//        dialogBuilder.setCancelable(false);
+//        final AlertDialog alertDialog = dialogBuilder.create();
+//
+//        laterButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                alertDialog.dismiss();
+//            }
+//        });
+//        submitButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String rateString = String.valueOf(ratingBar.getRating());
+//                String rating_customer_id = firebaseUser.getUid(),
+//                        rating_merchant_id = getStation_Id,
+//                        rating_number = rateString,
+//                        rating_comment = additonalComment.getText().toString(),
+//                        rating_status = "AC";
+//                ratingOfCustomer(rating_customer_id,rating_merchant_id, rating_number, rating_comment, rating_status);
+//            }
+//        });
+//        alertDialog.show();
+//    }
+//    private void showMessage(String s) {
+//        Toast.makeText(), s, Toast.LENGTH_LONG).show();
+//    }
 }

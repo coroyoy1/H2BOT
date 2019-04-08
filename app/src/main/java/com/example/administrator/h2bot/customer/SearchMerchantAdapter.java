@@ -3,6 +3,7 @@ package com.example.administrator.h2bot.customer;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +26,11 @@ public class SearchMerchantAdapter extends RecyclerView.Adapter<SearchMerchantAd
         this.searchList = thisList;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public SearchMerchantAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(myContext).inflate(R.layout.search_merchant_popup_layout, viewGroup, false);
-        return new SearchMerchantAdapter.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
@@ -38,6 +40,8 @@ public class SearchMerchantAdapter extends RecyclerView.Adapter<SearchMerchantAd
         String merchantName = merchants.getStation_dealer_name();
         String duration = merchants.getDuration();
 
+        Log.d("Distance: ", distance);
+        Log.d("Merchant: ", merchantName);
         viewHolder.distance.setText(distance);
         viewHolder.merchantName.setText(merchantName);
         viewHolder.travelTime.setText(duration);
