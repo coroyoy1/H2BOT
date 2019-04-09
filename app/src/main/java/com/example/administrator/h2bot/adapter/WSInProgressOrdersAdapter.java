@@ -85,7 +85,8 @@ public class WSInProgressOrdersAdapter extends RecyclerView.Adapter<WSInProgress
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentData.getOrder_status().equals("Accepted"))
+                if (currentData.getOrder_status().equalsIgnoreCase("Accepted by dispatched")
+                || currentData.getOrder_status().equalsIgnoreCase("Dispatched by affiliate"))
                 {
                     WSStationToAffiliate additem = new WSStationToAffiliate();
                     AppCompatActivity activity = (AppCompatActivity)v.getContext();

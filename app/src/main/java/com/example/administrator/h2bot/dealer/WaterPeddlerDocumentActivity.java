@@ -548,9 +548,6 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
         Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
     }
 
-
-
-
     public void uploadAllImage(){
         if(filepath2 != null){
             StorageReference mStorageRef = storageReference.child("dealer_documents").child(userId +"/"+"DriversLicenseDocument");
@@ -626,56 +623,6 @@ public class WaterPeddlerDocumentActivity extends AppCompatActivity implements C
         }
     }
 
-    public void starttimeData()
-    {
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(WaterPeddlerDocumentActivity.this);
-        LayoutInflater inflater = getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.timepicker, null);
-
-        TimePicker simpleTimePicker = dialogView.findViewById(R.id.simpleTimePicker);
-        Button setButton = dialogView.findViewById(R.id.setButton);
-        simpleTimePicker.setIs24HourView(true);
-        dialogBuilder.setView(dialogView);
-        dialogBuilder.setCancelable(false);
-        final AlertDialog alertDialog = dialogBuilder.create();
-        setButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startHour = String.valueOf(simpleTimePicker.getHour());
-                startMinute = String.valueOf(simpleTimePicker.getMinute());
-                String AM_PM ;
-                Toast.makeText(WaterPeddlerDocumentActivity.this, startHour+","+startMinute,Toast.LENGTH_SHORT).show();
-                startTimeTextView.setText(startHour+":"+startMinute);
-                alertDialog.dismiss();
-            }
-        });
-        alertDialog.show();
-    }
-    public void starttimeData2()
-    {
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(WaterPeddlerDocumentActivity.this);
-        LayoutInflater inflater = getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.timepicker, null);
-
-        TimePicker simpleTimePicker = dialogView.findViewById(R.id.simpleTimePicker);
-        Button setButton = dialogView.findViewById(R.id.setButton);
-        simpleTimePicker.setIs24HourView(true);
-        dialogBuilder.setView(dialogView);
-        dialogBuilder.setCancelable(false);
-        final AlertDialog alertDialog = dialogBuilder.create();
-        setButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startHour = String.valueOf(simpleTimePicker.getHour());
-                startMinute = String.valueOf(simpleTimePicker.getMinute());
-                String AM_PM ;
-                Toast.makeText(WaterPeddlerDocumentActivity.this, startHour+","+startMinute,Toast.LENGTH_SHORT).show();
-                endTimeTextView.setText(startHour+":"+startMinute);
-                alertDialog.dismiss();
-            }
-        });
-        alertDialog.show();
-    }
     @Override
     public void onClick(View v) {
         switch (v.getId())

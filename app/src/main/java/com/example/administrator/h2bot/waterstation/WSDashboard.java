@@ -102,7 +102,7 @@ public class WSDashboard extends Fragment implements View.OnClickListener {
                     if(list.getOrder_status().equalsIgnoreCase("Pending")){
                         countPending++;
                     }else if(list.getOrder_status().equalsIgnoreCase("Completed")
-                    || list.getOrder_status().equalsIgnoreCase("Completed by Affiliate")){
+                    || list.getOrder_status().equalsIgnoreCase("Completed with Affiliate")){
                         countComppleted++;
                     }
                     else if (list.getOrder_status().equalsIgnoreCase("In-Progress")

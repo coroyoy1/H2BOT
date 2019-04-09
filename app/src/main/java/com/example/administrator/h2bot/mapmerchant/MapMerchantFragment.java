@@ -30,6 +30,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -360,11 +362,11 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
         contactNoMMF = dialogView.findViewById(R.id.contactNoAll);
         waterTypeMMF = dialogView.findViewById(R.id.waterTypeAll);
         quantityMMF = dialogView.findViewById(R.id.itemQuantityAll);
-        pricePerGallonMMF = dialogView.findViewById(R.id.pricePerGallonAll);
+        pricePerGallonMMF = dialogView.findViewById(R.id.deliveryPPGAll);
         addressMMF = dialogView.findViewById(R.id.addressAll);
         dateDeliveredMMF = dialogView.findViewById(R.id.datedeliveredAll);
-        deliveryFeeMMF = dialogView.findViewById(R.id.deliveryFeeAll);
-        methodMMF = dialogView.findViewById(R.id.MethodAll);
+        //deliveryFeeMMF = dialogView.findViewById(R.id.deliveryPPGAll);
+        methodMMF = dialogView.findViewById(R.id.serviceAll);
         totalPriceMMF = dialogView.findViewById(R.id.totalPriceAll);
         customerImage = dialogView.findViewById(R.id.imageViewAll);
 
@@ -373,8 +375,8 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
         accept = dialogView.findViewById(R.id.orderAccept);
         decline = dialogView.findViewById(R.id.orderDecline);
 
-        deliveryCons = dialogView.findViewById(R.id.deliveryFeeNonCons);
-        deliveryCons.setVisibility(View.GONE);
+        //deliveryCons = dialogView.findViewById(R.id.deliveryFeeNonCons);
+        //deliveryCons.setVisibility(View.GONE);
 
         closeOrderDialog = dialogView.findViewById(R.id.closeDialogAll);
 
@@ -523,11 +525,15 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
 
     public void orderDetailsDialog()
     {
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
         LayoutInflater inflater = getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.a_order_details, null);
         dialogDataFromOrder(dialogView);
         mDialog.setContentView(dialogView);
         mDialog.setCancelable(false);
+        mDialog.getWindow().setLayout((RelativeLayout.LayoutParams.MATCH_PARENT), RelativeLayout.LayoutParams.MATCH_PARENT);
         closeOrderDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -688,8 +694,8 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                                                     {
                                                         orderNoMMF.setText(orderModel.getOrder_no());
                                                         quantityMMF.setText(orderModel.getOrder_qty());
-                                                        pricePerGallonMMF.setText(orderModel.getOrder_price_per_gallon());
-                                                        totalPriceMMF.setText(orderModel.getOrder_total_amt());
+                                                        pricePerGallonMMF.setText("Php "+orderModel.getOrder_price_per_gallon());
+                                                        totalPriceMMF.setText("Php "+orderModel.getOrder_total_amt());
                                                         waterTypeMMF.setText(orderModel.getOrder_water_type());
                                                         addressMMF.setText(orderModel.getOrder_address());
                                                         methodMMF.setText(orderModel.getOrder_method());
@@ -698,7 +704,7 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                                                         String dateString = date.toLocalDate().toString();
 
                                                         dateDeliveredMMF.setText(dateString);
-                                                        deliveryFeeMMF.setText(orderModel.getOrder_delivery_charge());
+//                                                        deliveryFeeMMF.setText(orderModel.getOrder_delivery_charge());
 
                                                         DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_File");
                                                         reference2.child(orderModel.getOrder_customer_id())
@@ -835,11 +841,12 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                                         @Override
                                         public void onSuccess(Void aVoid) {
 
-                                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_File");
+                                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
                                             databaseReference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                     StationBusinessInfo stationBusinessInfo = dataSnapshot.getValue(StationBusinessInfo.class);
+
                                                     if (stationBusinessInfo != null)
                                                     {
                                                         closeOrderDialog.performClick();
@@ -913,26 +920,34 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
                             String status = merchantCustomerFile.getStatus();
                             if(status.equals("AC"))
                             {
-                                DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
-                                reference1.child(customerId).child(merchantId).child(transactionNo).child("order_status").setValue("Dispatched")
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                String message = "Your order:"+transactionNo+" has been dispatched by "+name+". We will notify you for further details. Thank You!";
-                                                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
-                                                        != PackageManager.PERMISSION_GRANTED)
-                                                {
-                                                    ActivityCompat.requestPermissions(getActivity(), new String [] {Manifest.permission.SEND_SMS},
-                                                            MY_PERMISSIONS_REQUEST_SEND_SMS);
-                                                }
-                                                else {
-                                                    SmsManager sms = SmsManager.getDefault();
-                                                    sms.sendTextMessage(contactNoMMF.getText().toString(), null, message, sentPI, deliveredPI);
-                                                }
-                                                showMessages("Successfully updated");
-                                                linearSMSSender.setVisibility(View.VISIBLE);
-                                                dispatched.setVisibility(View.GONE);
-                                                launchscan.setVisibility(View.VISIBLE);
+                                DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_WS_Business_Info_File");
+                                reference2.child(merchantId).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        StationBusinessInfo stationBusinessInfo = dataSnapshot.getValue(StationBusinessInfo.class);
+                                        if (stationBusinessInfo != null)
+                                        {
+                                            String stationName = stationBusinessInfo.getBusiness_name();
+                                            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
+                                            reference1.child(customerId).child(merchantId).child(transactionNo).child("order_status").setValue("Dispatched")
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            String message = "Your order:"+transactionNo+" has been dispatched by "+stationName+". We will notify you for further details. Thank You!";
+                                                            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
+                                                                    != PackageManager.PERMISSION_GRANTED)
+                                                            {
+                                                                ActivityCompat.requestPermissions(getActivity(), new String [] {Manifest.permission.SEND_SMS},
+                                                                        MY_PERMISSIONS_REQUEST_SEND_SMS);
+                                                            }
+                                                            else {
+                                                                SmsManager sms = SmsManager.getDefault();
+                                                                sms.sendTextMessage(contactNoMMF.getText().toString(), null, message, sentPI, deliveredPI);
+                                                            }
+                                                            showMessages("Successfully updated");
+                                                            linearSMSSender.setVisibility(View.VISIBLE);
+                                                            dispatched.setVisibility(View.GONE);
+                                                            launchscan.setVisibility(View.VISIBLE);
 //                                                WSInProgressFragment additem = new WSInProgressFragment();
 //                                                AppCompatActivity activity = (AppCompatActivity)getContext();
 //                                                activity.getSupportFragmentManager()
@@ -941,18 +956,25 @@ public class MapMerchantFragment extends Fragment implements OnMapReadyCallback,
 //                                                        .replace(R.id.fragment_container_ws, additem)
 //                                                        .addToBackStack(null)
 //                                                        .commit();
-                                                Objects.requireNonNull(((AppCompatActivity)getActivity()).getSupportActionBar()).setTitle("In-Progress");
+                                                            Objects.requireNonNull(((AppCompatActivity)getActivity()).getSupportActionBar()).setTitle("In-Progress");
 //                                                progressDialog.dismiss();
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                showMessages("Failed to update order");
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            showMessages("Failed to update order");
 //                                                progressDialog.dismiss();
-                                            }
-                                        });
+                                                        }
+                                                    });
+                                        }
+                                    }
 
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
                             }
                         }
                     }

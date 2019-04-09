@@ -31,6 +31,7 @@ import com.example.administrator.h2bot.LoginActivity;
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.WaterStationDocumentVersion2Activity;
 import com.example.administrator.h2bot.dealer.WaterPeddlerDocumentActivity;
+import com.example.administrator.h2bot.models.TPADocFile;
 import com.example.administrator.h2bot.models.TPAModel;
 import com.example.administrator.h2bot.models.UserAccountFile;
 import com.example.administrator.h2bot.models.UserFile;
@@ -419,7 +420,7 @@ public class TPADocumentActivity extends AppCompatActivity{
                         @Override
                         public void onSuccess(Uri uri3) {
                             String stringUri3 = uri3.toString();
-                            WDDocFile wsDocFile = new WDDocFile(userId,
+                            TPADocFile wsDocFile = new TPADocFile(userId,
                                     "active",
                                     stringUri3);
                             FirebaseDatabase.getInstance().getReference("User_TPA_Docs_File").child(userId).setValue(wsDocFile)
@@ -429,7 +430,7 @@ public class TPADocumentActivity extends AppCompatActivity{
                                             if(filepath2 != null){
                                                 FirebaseUser user = mAuth.getCurrentUser();
                                                 userId = user.getUid();
-                                                StorageReference mStorageRef = storage.getReference().child("tpa_documents").child(userId +"/"+"NBIClearanceDocument");
+                                                StorageReference mStorageRef = storage.getReference().child("tpa_documents").child(userId +"/"+"NBI_clearance");
                                                 mStorageRef.putFile(filepath2).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                                     @Override
                                                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

@@ -549,10 +549,10 @@ public class TPAMapDestinationFragment extends Fragment implements OnMapReadyCal
         userfile.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                customerAddress.setText(dataSnapshot.child("user_firstname").getValue(String.class)+" "+dataSnapshot.child("user_lastname").getValue(String.class));
+                customerName.setText(dataSnapshot.child("user_firstname").getValue(String.class)+" "+dataSnapshot.child("user_lastname").getValue(String.class));
                 customerAddress.setText(dataSnapshot.child("user_address").getValue(String.class));
                 customerContactNo.setText(dataSnapshot.child("user_phone_no").getValue(String.class));
-                Picasso.get().load(dataSnapshot.child("user_uri").getValue(String.class)).into(imageviewprofile);
+                Picasso.get().load(dataSnapshot.child("user_uri").getValue(String.class)).resize(500,500).into(imageviewprofile);
             }
 
             @Override

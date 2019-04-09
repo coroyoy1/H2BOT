@@ -438,7 +438,6 @@ public class TPAMapFragment extends Fragment
                     affiliate.setLat(latitude);
                     affiliate.setLng(longitude);
                     affiliate.setType(type);
-                    affiliate.setStationID(stationId);
                     affiliateModel.add(affiliate);
                 }
             }
@@ -605,24 +604,20 @@ public class TPAMapFragment extends Fragment
                                                                                     getPrice.addValueEventListener(new ValueEventListener() {
                                                                                         @Override
                                                                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                                            Log.d("PRICES",dataSnapshot.child("delivery_price").getValue(String.class)+""+dataSnapshot.child("pickup_price").getValue(String.class)+""+waterType);
                                                                                             pickUpPricePerGallon = Double.parseDouble(dataSnapshot.child("pickup_price_per_gallon").getValue(String.class));
                                                                                             deliveryPricePerGallon = Double.parseDouble(dataSnapshot.child("delivery_price_per_gallon").getValue(String.class));
-                                                                                            Log.d("PRICES 2",pickUpPricePerGallon+""+deliveryPricePerGallon+""+waterType);
-                                                                                            Log.d("Gallon No",""+userData4.getOrder_qty());
+
                                                                                             noOfGallons.setText(userData4.getOrder_qty());
                                                                                             partialDelivery = deliveryPricePerGallon * Double.valueOf(userData4.getOrder_qty());
-                                                                                            Log.d("Times:",deliveryPricePerGallon+" * "+userData4.getOrder_qty());
-                                                                                            Log.d("Times2:",deliveryPricePerGallon+" * "+noOfGallons.getText().toString());
+
                                                                                             partialPickup = pickUpPricePerGallon * Double.valueOf(userData4.getOrder_qty());
-                                                                                            Log.d("partial pickup","HI."+partialPickup+","+partialDelivery);
+
                                                                                             double profit = partialDelivery - partialPickup;
-                                                                                            Log.d("profit","HILO<"+profit);
+
                                                                                             Profit.setText(String.valueOf(profit));
                                                                                             stationadd.setText(stationaddress);
                                                                                             fundAmt.setText(String.valueOf(partialPickup));
                                                                                             String type = "Type: " + userType;
-                                                                                            station_id_snip = stationId;
                                                                                         }
 
                                                                                         @Override
@@ -836,13 +831,25 @@ public class TPAMapFragment extends Fragment
                             }
                         });
                         Log.d("Hello", stationId + "," + customer_id + "," + orderno);
+                        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("User_File");
+                                    reference1.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            affiliatename = dataSnapshot.child("user_firstname").getValue(String.class) + " " + dataSnapshot.child("user_lastname").getValue(String.class);
+                                            affiliateNo = dataSnapshot.child("user_phone_no").getValue(String.class);
+                                        }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
                         DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("Customer_File");
                         reference2.child(customer_id).child(stationId).child(orderno).child("order_status").setValue("Accepted by affiliate")
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
 
-                                        String message = "Your broadcasted order#:" + orderno + " has  been accepted by an affiliate named :" + affiliatename + ". For further information about " + affiliatename;
+                                        String message = "Your broadcasted ORDER # " + orderno + " has  been accepted by an affiliate named " + affiliatename + ". For further information about " + affiliatename;
                                         String message2 = "Contact # of " + affiliatename + ":" + affiliateNo;
                                         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
                                                 != PackageManager.PERMISSION_GRANTED) {
@@ -1192,9 +1199,8 @@ public class TPAMapFragment extends Fragment
             getPrice.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Log.d("PRICES",dataSnapshot.child("delivery_price").getValue(String.class)+""+dataSnapshot.child("pickup_price").getValue(String.class)+""+waterType);
-                    pickUpPricePerGallon = Double.parseDouble(dataSnapshot.child("pickup_price").getValue(String.class));
-                    deliveryPricePerGallon = Double.parseDouble(dataSnapshot.child("delivery_price").getValue(String.class));
+                    pickUpPricePerGallon = Double.parseDouble(dataSnapshot.child("pickup_price_per_gallon").getValue(String.class));
+                    deliveryPricePerGallon = Double.parseDouble(dataSnapshot.child("delivery_price_per_gallon").getValue(String.class));
                     Log.d("PRICES 2",pickUpPricePerGallon+""+deliveryPricePerGallon+""+waterType);
                 }
 

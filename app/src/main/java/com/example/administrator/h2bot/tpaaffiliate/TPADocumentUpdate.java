@@ -1,4 +1,4 @@
-package com.example.administrator.h2bot.dealer;
+package com.example.administrator.h2bot.tpaaffiliate;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -18,14 +18,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
-import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
-import com.google.android.gms.tasks.OnFailureListener;
+import com.example.administrator.h2bot.dealer.WPBusinessInfoFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.Frame;
@@ -47,7 +45,7 @@ import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
 
-public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickListener{
+public class TPADocumentUpdate extends Fragment implements View.OnClickListener{
 
     FirebaseAuth mAuth;
     FirebaseUser currentUser;
@@ -62,10 +60,12 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
     boolean isClick1=false, isClick2=false, isClick3=false, isClick4=false, isClick5=false, isClick6=false;
     private ProgressDialog progressDialog;
 
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.z_merchant_wp_updatedocument, container, false);
+        View view = inflater.inflate(R.layout.tpa_document_update, container, false);
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -86,7 +86,7 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
         button1.setOnClickListener(this);
         permitButtonUD2.setOnClickListener(this);
         updateDocummentButton.setOnClickListener(this);
-        DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_WD_Docs_File").child(currentUser.getUid());
+        DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("User_TPA_Docs_File").child(currentUser.getUid());
         reference2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -121,6 +121,7 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
         if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null)
         {
             if(isClick1) {
+                check2 = false;
                 uri1 = data.getData();
                 Bitmap bitmap = null;
                 Picasso.get().load(uri1).into(imageView1);
@@ -148,12 +149,13 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
                                 && sb.toString().toLowerCase().contains("driver's license")
                                 && sb.toString().toLowerCase().contains("license no")) {
                             Picasso.get().load(uri1).into(imageView1);
-                            Toast.makeText(getActivity(), "Valid driver's license", Toast.LENGTH_SHORT).show();
                             check = true;
-                        } else {
+                            check2 = false;
+                        }
+                        else {
                             imageView1.setImageResource(R.drawable.ic_image_black_24dp);
-                            Toast.makeText(getActivity(), "Invalid driver's license. Please capture the license clearly", Toast.LENGTH_SHORT).show();
                             check = false;
+                            check2 = false;
                         }
                     }
                 } catch (IOException e) {
@@ -162,6 +164,7 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
             }
             if (isClick2)
             {
+                check = false;
                 uri2 = data.getData();
                 Bitmap bitmap = null;
                 Picasso.get().load(uri2).into(imageUD2);
@@ -253,8 +256,8 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
         {
             StorageReference storageReference
                     = FirebaseStorage.getInstance()
-                    .getReference("dealer_documents")
-                    .child(currentUser.getUid()+"/"+"DriversLicenseDocument");
+                    .getReference("tpa_documents")
+                    .child(currentUser.getUid()+"/"+"driversLicense");
             storageReference.putFile(uri1)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -265,7 +268,7 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
                                 public void onSuccess(Uri uri) {
                                     String uriString = uri.toString();
                                     FirebaseDatabase.getInstance()
-                                            .getReference("User_WD_Docs_File")
+                                            .getReference("User_TPA_Docs_File")
                                             .child(currentUser.getUid())
                                             .child("driverLicense").setValue(uriString);
 
@@ -273,8 +276,8 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
                                     {
                                         StorageReference storageReference
                                                 = FirebaseStorage.getInstance()
-                                                .getReference("dealer_documents")
-                                                .child(currentUser.getUid()+"/"+"NBIClearanceDocument");
+                                                .getReference("tpa_documents")
+                                                .child(currentUser.getUid()+"/"+"NBI_clearance");
                                         storageReference.putFile(uri2)
                                                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                                     @Override
@@ -285,16 +288,16 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
                                                             public void onSuccess(Uri uri2) {
                                                                 String uriString2 = uri2.toString();
                                                                 FirebaseDatabase.getInstance()
-                                                                        .getReference("User_WD_Docs_File")
+                                                                        .getReference("User_TPA_Docs_File")
                                                                         .child(currentUser.getUid())
                                                                         .child("NBI_clearance").setValue(uriString2);
 
-                                                                WPBusinessInfoFragment additem = new WPBusinessInfoFragment();
+                                                                TPAAccountSettingFragment additem = new TPAAccountSettingFragment();
                                                                 AppCompatActivity activity = (AppCompatActivity)getContext();
                                                                 activity.getSupportFragmentManager()
                                                                         .beginTransaction()
                                                                         .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                                                                        .replace(R.id.fragment_container_wp, additem)
+                                                                        .replace(R.id.fragment_container, additem)
                                                                         .addToBackStack(null)
                                                                         .commit();
                                                             }
@@ -314,7 +317,7 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
     {
         progressDialog.dismiss();
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WD_Docs_File").child(currentUser.getUid());
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_TPA_Docs_File").child(currentUser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -322,7 +325,7 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
                 driverurl = dataSnapshot.child("driverLicense").getValue(String.class);
 
                 FirebaseDatabase.getInstance()
-                        .getReference("User_WD_Docs_File")
+                        .getReference("User_TPA_Docs_File")
                         .child(currentUser.getUid())
                         .child("driverLicense").setValue(driverurl);
             }
@@ -334,12 +337,10 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
         });
         if(uri2 != null)
         {
-            Log.d("HAHA",""+driverurl);
-
             StorageReference storageReference
                     = FirebaseStorage.getInstance()
-                    .getReference("dealer_documents")
-                    .child(currentUser.getUid()+"/"+"NBIClearanceDocument");
+                    .getReference("tpa_documents")
+                    .child(currentUser.getUid()+"/"+"NBI_clearance");
             storageReference.putFile(uri2)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -350,16 +351,16 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
                                 public void onSuccess(Uri uri2) {
                                     String uriString2 = uri2.toString();
                                     FirebaseDatabase.getInstance()
-                                            .getReference("User_WD_Docs_File")
+                                            .getReference("User_TPA_Docs_File")
                                             .child(currentUser.getUid())
                                             .child("NBI_clearance").setValue(uriString2);
 
-                                    WPBusinessInfoFragment additem = new WPBusinessInfoFragment();
+                                    TPAAccountSettingFragment additem = new TPAAccountSettingFragment();
                                     AppCompatActivity activity = (AppCompatActivity)getContext();
                                     activity.getSupportFragmentManager()
                                             .beginTransaction()
                                             .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                                            .replace(R.id.fragment_container_wp, additem)
+                                            .replace(R.id.fragment_container, additem)
                                             .addToBackStack(null)
                                             .commit();
                                 }
@@ -371,7 +372,7 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
     public void uploadPhotoWithoutNBIClearance()
     {
         progressDialog.dismiss();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_WD_Docs_File").child(currentUser.getUid());
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User_TPA_Docs_File").child(currentUser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -389,9 +390,8 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
         {
             StorageReference storageReference
                     = FirebaseStorage.getInstance()
-                    .getReference("dealer_documents")
-                    .child(currentUser.getUid()+"/"+" DriversLicenseDocument");
-
+                    .getReference("tpa_documents")
+                    .child(currentUser.getUid()+"/"+"driversLicense");
             storageReference.putFile(uri1)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -401,23 +401,22 @@ public class WPBusinessDocumentUpdate extends Fragment implements View.OnClickLi
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     String uriString = uri.toString();
-
                                     FirebaseDatabase.getInstance()
-                                            .getReference("User_WD_Docs_File")
+                                            .getReference("User_TPA_Docs_File")
                                             .child(currentUser.getUid())
                                             .child("driverLicense").setValue(uriString);
 
                                     FirebaseDatabase.getInstance()
-                                            .getReference("User_WD_Docs_File")
+                                            .getReference("User_TPA_Docs_File")
                                             .child(currentUser.getUid())
                                             .child("NBI_clearance").setValue(nbiurl);
 
-                                    WPBusinessInfoFragment additem = new WPBusinessInfoFragment();
+                                    TPAAccountSettingFragment additem = new TPAAccountSettingFragment();
                                     AppCompatActivity activity = (AppCompatActivity)getContext();
                                     activity.getSupportFragmentManager()
                                             .beginTransaction()
                                             .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                                            .replace(R.id.fragment_container_wp, additem)
+                                            .replace(R.id.fragment_container, additem)
                                             .addToBackStack(null)
                                             .commit();
                                 }

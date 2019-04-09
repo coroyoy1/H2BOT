@@ -35,35 +35,149 @@
                 android:src="@drawable/ic_account_circle_black_24dp" />
 
             <LinearLayout
+                android:layout_margin="8dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"
+                android:layout_height="match_parent">
+                <LinearLayout
                     android:layout_weight="1"
-                    android:text="Order No:"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp" />
-
-                <TextView
-                    android:id="@+id/orderNoAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:textAlignment="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:text="Order No:"
+                            android:textColor="@android:color/white"
+                            android:textSize="16dp" />
+                        <TextView
+                            android:textAlignment="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:text="Customer:"
+                            android:textColor="@android:color/white"
+                            android:textSize="16dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:text="Contact NO.:"
+                            android:textColor="@android:color/white"
+                            android:textSize="16dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:text="Water type:"
+                            android:textColor="@android:color/white"
+                            android:textSize="16dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:text="Quantity:"
+                            android:textColor="@android:color/white"
+                            android:textSize="16dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:textAlignment="center"
+                            android:text="Delivery price/gal:"
+                            android:textColor="@android:color/white"
+                            android:textSize="16dp" />
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
                     android:layout_weight="1"
-                    android:text="sample edit"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp" />
-
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:textAlignment="center"
+                            android:id="@+id/orderNoAll"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:text="sample edit"
+                            android:textColor="@android:color/white"
+                            android:textSize="16dp" />
+                        <TextView
+                            android:textAlignment="center"
+                            android:id="@+id/customerAll"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:text="sample edit"
+                            android:textColor="@android:color/white"
+                            android:textSize="16dp" />
+                        <TextView
+                            android:id="@+id/contactNoAll"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:text="sample edit"
+                            android:textColor="@android:color/white"
+                            android:textSize="16dp" />
+                        <TextView
+                            android:id="@+id/waterTypeAll"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:text="sample edit"
+                            android:textColor="@android:color/white"
+                            android:textSize="16dp" />
+                        <TextView
+                            android:id="@+id/itemQuantityAll"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:text="sample edit"
+                            android:textColor="@android:color/white"
+                            android:textSize="16dp" />
+                        <TextView
+                            android:id="@+id/deliveryPPGAll"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:textAlignment="center"
+                            android:text="sample edit"
+                            android:textColor="@android:color/white"
+                            android:textSize="16dp" />
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
 
-
             <LinearLayout
+                android:layout_margin="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -71,159 +185,20 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Customer:"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp" />
-
-                <TextView
-                    android:id="@+id/customerAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="sample edit"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Contact NO.:"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp" />
-
-                <TextView
-                    android:id="@+id/contactNoAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="sample edit"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Water type:"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp" />
-
-                <TextView
-                    android:id="@+id/waterTypeAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="sample edit"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Quantity:"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp" />
-
-                <TextView
-                    android:id="@+id/itemQuantityAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="sample edit"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Delivery price per gallon:"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp" />
-
-                <TextView
-                    android:id="@+id/pricePerGallonAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="sample edit"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="Address:"
                     android:textColor="@android:color/white"
-                    android:textSize="18dp" />
+                    android:textSize="16dp" />
+
 
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
                 <TextView
+                    android:layout_margin="8dp"
                     android:textAlignment="center"
                     android:id="@+id/addressAll"
                     android:layout_width="wrap_content"
@@ -232,120 +207,396 @@
                     android:layout_weight="1"
                     android:text="sample edit"
                     android:textColor="@android:color/white"
-                    android:textSize="18dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"
-                    android:textSize="18dp"
-                    android:layout_weight="1"
-                    android:textColor="@android:color/white"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Date to Deliver:" />
-                <TextView
-                    android:id="@+id/datedeliveredAll"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:textAlignment="center"
-                    android:textSize="18dp"
-                    android:textColor="@android:color/white"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="sample edit"/>
+                    android:textSize="16dp" />
 
             </LinearLayout>
             <LinearLayout
-                android:id="@+id/deliveryFeeNonCons"
+                android:layout_margin="8dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"
+                android:layout_height="match_parent">
+                <LinearLayout
                     android:layout_weight="1"
-                    android:text="Delivery Fee:"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp" />
-
-                <TextView
-                    android:id="@+id/deliveryFeeAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:textAlignment="center"
+                            android:layout_marginTop="10dp"
+                            android:textSize="16dp"
+                            android:layout_weight="1"
+                            android:textColor="@android:color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Date to Deliver:" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:text="Service:"
+                            android:textColor="@android:color/white"
+                            android:textSize="16dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:text="Total Price:"
+                            android:textColor="@android:color/white"
+                            android:textSize="16dp" />
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
                     android:layout_weight="1"
-                    android:text="sample edit"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp" />
-
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:textAlignment="center"
+                            android:id="@+id/datedeliveredAll"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:textSize="16dp"
+                            android:textColor="@android:color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="sample edit"/>
+                        <TextView
+                            android:id="@+id/serviceAll"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:text="sample edit"
+                            android:textColor="@android:color/white"
+                            android:textSize="16dp" />
+                        <TextView
+                            android:id="@+id/totalPriceAll"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:text="sample edit"
+                            android:textColor="@android:color/white"
+                            android:textSize="16dp" />
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Service:"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp" />
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="Order No:"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="16dp" />-->
 
-                <TextView
-                    android:id="@+id/MethodAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="sample edit"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp" />
+                <!--<TextView-->
+                    <!--android:id="@+id/orderNoAll"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="sample edit"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="16dp" />-->
 
-            </LinearLayout>
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="Customer:"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="16dp" />-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Total Price:"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp" />
+                <!--<TextView-->
+                    <!--android:id="@+id/customerAll"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="sample edit"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="16dp" />-->
 
-                <TextView
-                    android:id="@+id/totalPriceAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="sample edit"
-                    android:textColor="@android:color/white"
-                    android:textSize="18dp" />
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
 
-            </LinearLayout>
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="Contact NO.:"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="16dp" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/contactNoAll"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="sample edit"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="16dp" />-->
+
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="Water type:"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="16dp" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/waterTypeAll"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="sample edit"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="16dp" />-->
+
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="Quantity:"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="16dp" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/itemQuantityAll"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="sample edit"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="16dp" />-->
+
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="Delivery price per gallon:"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="16dp" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/pricePerGallonAll"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="sample edit"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="16dp" />-->
+
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="20dp"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="Address:"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="16dp" />-->
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<TextView-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:id="@+id/addressAll"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="sample edit"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="16dp" />-->
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<TextView-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:textSize="16dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="Date to Deliver:" />-->
+                <!--<TextView-->
+                    <!--android:id="@+id/datedeliveredAll"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:textSize="16dp"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="sample edit"/>-->
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:id="@+id/deliveryFeeNonCons"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="Delivery Fee:"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="16dp" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/deliveryFeeAll"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="sample edit"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="16dp" />-->
+
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="Service:"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="16dp" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/MethodAll"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="sample edit"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="16dp" />-->
+
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="Total Price:"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="16dp" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/totalPriceAll"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:text="sample edit"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:textSize="16dp" />-->
+
+            <!--</LinearLayout>-->
+
+
             <LinearLayout
                 android:layout_marginTop="20dp"
                 android:orientation="horizontal"

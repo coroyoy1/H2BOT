@@ -127,7 +127,8 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
                                     my_order.setTextColor(getResources().getColor(R.color.colorAccent));
                                     my_order.setText("" + countInprogress);
 
-                                } else {
+                                }
+                                else {
                                     countInprogress = adapter.size();
 
                                     if (countInprogress == 0) {

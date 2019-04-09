@@ -27,8 +27,8 @@ import com.squareup.picasso.Picasso;
 
 public class TPAAccountSettingFragment extends Fragment {
 
-    TextView lastnameTextView, firstnameTextView,FullNameWS, AddressWS, ContactNoWS, EmailAddressWS;
-    Button updateAccount;
+    TextView lastnameTextView, firstnameTextView,FullNameWS, AddressWS, ContactNoWS, EmailAddressWS, points;
+    Button updateAccount,updateDocs;
     ImageView imageView;
     Dialog dialog;
     FirebaseUser firebaseUser;
@@ -51,7 +51,12 @@ public class TPAAccountSettingFragment extends Fragment {
         ContactNoWS = view.findViewById(R.id.contactAS);
         EmailAddressWS = view.findViewById(R.id.emailAS);
         imageView = view.findViewById(R.id.profileImageAS);
+        updateDocs = view.findViewById(R.id.updateDocs);
         updateAccount = view.findViewById(R.id.updateAccount);
+        points = view.findViewById(R.id.points);
+        userFile();
+        userAccountFile();
+        wallet();
         updateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,8 +70,19 @@ public class TPAAccountSettingFragment extends Fragment {
                         .commitAllowingStateLoss();
             }
         });
-        userFile();
-        userAccountFile();
+        updateDocs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TPADocumentUpdate wsdmFragment = new TPADocumentUpdate();
+                AppCompatActivity activity = (AppCompatActivity)getContext();
+                activity.getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                        .replace(R.id.fragment_container, wsdmFragment)
+                        .addToBackStack(null)
+                        .commitAllowingStateLoss();
+            }
+        });
 
         return view;
     }
@@ -80,8 +96,22 @@ public class TPAAccountSettingFragment extends Fragment {
                 lastnameTextView.setText(dataSnapshot.child("user_lastname").getValue(String.class));
                 AddressWS.setText(dataSnapshot.child("user_address").getValue(String.class));
                 ContactNoWS.setText(dataSnapshot.child("user_phone_no").getValue(String.class));
-
                 Picasso.get().load(dataSnapshot.child("user_uri").getValue(String.class)).fit().centerCrop().into(imageView);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    public void wallet()
+    {
+        DatabaseReference walletpoints = FirebaseDatabase.getInstance().getReference("User_Wallet").child(firebaseUser.getUid());
+        walletpoints.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                points.setText(dataSnapshot.child("user_points").getValue(String.class));
             }
 
             @Override

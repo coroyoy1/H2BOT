@@ -17,6 +17,7 @@ import com.example.administrator.h2bot.models.OrderModel;
 import com.example.administrator.h2bot.models.TransactionHeaderFileModel;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.waterstation.WSCompletedAccept;
+import com.example.administrator.h2bot.waterstation.WSStationToAffiliate;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -77,19 +78,41 @@ public class WSCompleterdOrdersAdapter extends RecyclerView.Adapter<WSCompleterd
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    WSCompletedAccept additem = new WSCompletedAccept();
-                    AppCompatActivity activity = (AppCompatActivity)v.getContext();
-                    activity.getSupportFragmentManager()
-                            .beginTransaction()
-                            .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
-                            .replace(R.id.fragment_container_ws, additem)
-                            .addToBackStack(null)
-                            .commit();
-                    Bundle args = new Bundle();
-                    args.putString("transactionno", currentData.getOrder_no());
-                    args.putString("transactioncustomer", currentData.getOrder_customer_id());
-                    args.putString("status", currentData.getOrder_status());;
+
+                    if (currentData.getOrder_status().equalsIgnoreCase("Completed with affiliate"))
+                    {
+                        WSStationToAffiliate additem = new WSStationToAffiliate();
+                        AppCompatActivity activity = (AppCompatActivity)v.getContext();
+                        activity.getSupportFragmentManager()
+                                .beginTransaction()
+                                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                                .replace(R.id.fragment_container_ws, additem)
+                                .addToBackStack(null)
+                                .commit();
+                        Bundle args = new Bundle();
+                        args.putString("transactionno", currentData.getOrder_no());
+                        args.putString("transactioncustomer", currentData.getOrder_customer_id());
+                        args.putString("status", currentData.getOrder_status());
+                        args.putString("transactionusertype", currentData.getOrder_status());
+                        args.putString("transactionmerchant", currentData.getOrder_merchant_id());
                         additem.setArguments(args);
+                    }
+                    else
+                    {
+                        WSCompletedAccept additem = new WSCompletedAccept();
+                        AppCompatActivity activity = (AppCompatActivity)v.getContext();
+                        activity.getSupportFragmentManager()
+                                .beginTransaction()
+                                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.fade_in, android.R.anim.fade_out)
+                                .replace(R.id.fragment_container_ws, additem)
+                                .addToBackStack(null)
+                                .commit();
+                        Bundle args = new Bundle();
+                        args.putString("transactionno", currentData.getOrder_no());
+                        args.putString("transactioncustomer", currentData.getOrder_customer_id());
+                        args.putString("status", currentData.getOrder_status());;
+                        additem.setArguments(args);
+                    }
                 }
             });
 
