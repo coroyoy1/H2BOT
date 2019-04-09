@@ -97,14 +97,6 @@ public class CustomerAllOrdersFragment extends Fragment {
                     order.setOrderStatus(data.child("order_status").getValue(String.class));
                     order.setOrderTotalAmt(data.child("order_total_amt").getValue(String.class));
                     order.setOrderWaterType(data.child("order_water_type").getValue(String.class));
-
-                    if(data.child("order_method").getValue(String.class).equalsIgnoreCase("Delivery")){
-                        order.setOrderDeliveryDate(data.child("order_delivery_date").getValue(String.class));
-                    }
-                    else{
-                       // order.setOrderDeliveryDate(data.child("order_price_per_gallon").getValue(String.class));
-                        order.setOrderDeliveryDate("None");
-                    }
                 }
                 customerAllOrdersAdapter = new CustomerAllOrdersAdapter(getActivity(), transactionList, orderList);
                 recyclerView.setAdapter(customerAllOrdersAdapter);

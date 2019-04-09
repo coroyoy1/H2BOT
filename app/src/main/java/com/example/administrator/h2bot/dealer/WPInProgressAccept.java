@@ -375,6 +375,8 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
 
     private void updateOrder(String transactionSet)
     {
+        Log.d("HIHIHIHLO",transactionNo);
+
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Merchant_File");
         reference.child(firebaseUser.getUid()).child(customerNo)
                 .addValueEventListener(new ValueEventListener() {
@@ -389,8 +391,7 @@ public class WPInProgressAccept extends Fragment implements View.OnClickListener
                             if(status.equals("AC"))
                             {
                                 DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Customer_File");
-                                Log.d("HIHIHIHLO",customerId+"="+merchantId+"="+transactionNo);
-                                reference1.child(customerId).child(merchantId).child(transactionNo).child("order_status").setValue("Completed")
+                                reference1.child(customerNo).child(firebaseUser.getUid()).child(transactionNo).child("order_status").setValue("Completed")
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {

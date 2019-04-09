@@ -210,7 +210,7 @@ public class CustomerChatbotActivity extends AppCompatActivity {
 //                okayBtn = dialog.findViewById(R.id.okayBtn);
 //
 //
-//                okayBtn.setOnClickListener(new View.OnClickListener() {
+//                okayBtn.setOnClickListener(new Vie+w.OnClickListener() {
 //                    @Override
 //                    public void onClick(View v) {
 //                        dialog.dismiss();
@@ -246,7 +246,6 @@ public class CustomerChatbotActivity extends AppCompatActivity {
                         userFile.add(user);
                         String customerId = user.getUser_getUID();
                         String msg = stationId + " " + customerId;
-                        Toast.makeText(CustomerChatbotActivity.this, "ID's: " + msg, Toast.LENGTH_SHORT).show();
                         QueryInput queryInput = QueryInput.newBuilder().setText(TextInput.newBuilder().setText(msg).setLanguageCode("en-US")).build();
                         new RequestJavaV2Task(CustomerChatbotActivity.this, session, sessionsClient, queryInput).execute();
                     }

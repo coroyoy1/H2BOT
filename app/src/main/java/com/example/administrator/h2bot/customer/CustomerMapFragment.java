@@ -13,7 +13,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -31,34 +30,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.h2bot.R;
-import com.example.administrator.h2bot.maps.DirectionsParser;
-import com.example.administrator.h2bot.maps.DownloadUrl;
 import com.example.administrator.h2bot.maps.GetDistance;
 import com.example.administrator.h2bot.maps.MapMerchantActivity;
 import com.example.administrator.h2bot.models.UserFile;
 import com.example.administrator.h2bot.models.UserLocationAddress;
-import com.example.administrator.h2bot.models.UserWSBusinessInfoFile;
-//import com.firebase.geofire.GeoFire;
-//import com.firebase.geofire.GeoLocation;
-//import com.firebase.geofire.GeoQuery;
-//import com.firebase.geofire.GeoQueryDataEventListener;
-//import com.firebase.geofire.GeoQueryEventListener;
 import com.example.administrator.h2bot.models.UserWSWDWaterTypeFile;
 import com.example.administrator.h2bot.models.WSBusinessInfoFile;
 import com.example.administrator.h2bot.objects.WaterStationOrDealer;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -66,15 +52,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -82,18 +63,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-
-import retrofit2.http.Query;
 
 
 /**
@@ -108,17 +81,20 @@ public class CustomerMapFragment extends Fragment implements
 
     // User Permissions
 
+    public LatLng navLatLng, navCurrentLocation;
     private Dialog dialog;
-    private GoogleMap map;
+    public GoogleMap map;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Location mLastLocation;
+
 
     private static final int REQUEST_USER_LOCATION_CODE = 99;
     public static final String EXTRA_stationID = "station_id";
     public static final String EXTRA_stationName = "station_name";
     public String API_KEY = "";
     public static Boolean isExist = false;
+    public LatLng mLatLng;
     private Circle circle;
 
     private ChildEventListener mChilExventListener;
@@ -148,7 +124,7 @@ public class CustomerMapFragment extends Fragment implements
     private TextView currentRadius;
     private Button searchButton, legendBtn;
     private GetDistance getDistance = null;
-    private LatLng currentLocation;
+    public LatLng currentLocation;
     private List<UserFile> userFileList;
     private List<WSBusinessInfoFile> businessInfoFileListis;
     private List<UserLocationAddress> userLocationAddressList;
@@ -157,15 +133,7 @@ public class CustomerMapFragment extends Fragment implements
 
     private ArrayList<UserWSWDWaterTypeFile> waterTypeList;
     CustomerWaterTypeAdapter waterTypeAdapter;
-    RecyclerView recyclerView, mRecyclerView;
-
-    //SearchMerchant
-    private SearchMerchantAdapter searchMerchantAdapter;
-    private TextView closeDialog;
-    private EditText waterType;
-    private RecyclerView searchRecyclerView;
-
-
+    RecyclerView recyclerView;
 
     public CustomerMapFragment() {
         // Required empty public constructor
@@ -230,9 +198,15 @@ public class CustomerMapFragment extends Fragment implements
         mGeocoder = new Geocoder(getActivity().getApplicationContext());
 
 
-//        usersLocRef = FirebaseDatabase.getInstance().getReference("User_File").child(mAuth.getCurrentUser().getUid());
         mapFragment.getMapAsync(this);
         ChildEventListener mChildEventListener;
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NearbyMerchants();
+            }
+        });
 
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -280,7 +254,6 @@ public class CustomerMapFragment extends Fragment implements
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             buildGoogleApiClient();
             map.setMyLocationEnabled(true);
-//            Toast.makeText(getActivity(), "Permission granted", Toast.LENGTH_SHORT).show();
         }
 
         float zoomLevel = 16.0f;
@@ -331,7 +304,7 @@ public class CustomerMapFragment extends Fragment implements
         map.setOnMapLoadedCallback(() -> progressDialog.dismiss());
     }
 
-    private void nav(LatLng dest){
+    public void nav(LatLng dest){
         String url = getRequestUrl(currentLocation, dest);
         MapMerchantActivity mapMerchantActivity = new MapMerchantActivity();
         mapMerchantActivity.setMap(map);
@@ -459,6 +432,7 @@ public class CustomerMapFragment extends Fragment implements
             Object[] transferData = new Object[7];
             transferData[0] = waterStationOrDealers;
             transferData[1] = currentLocation;
+            navCurrentLocation = currentLocation;
             transferData[2] = map;
             transferData[3] = API_KEY;
             transferData[4] = currentRadius;
@@ -522,12 +496,11 @@ public class CustomerMapFragment extends Fragment implements
     public void onLocationChanged(Location location) {
         map.clear();
         mLastLocation = location;
-        LatLng mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+        mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
         currentLocation = mLatLng;
 
         float zoomLevel = 16.0f;
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoomLevel));
-
 
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
@@ -623,7 +596,9 @@ public class CustomerMapFragment extends Fragment implements
                     if(list2.getStationID().equalsIgnoreCase(marker.getTag().toString())){
                         map.clear();
                         showNearest();
+                        navLatLng = new LatLng(list2.getLat(), list2.getLng());
                         nav(new LatLng(list2.getLat(), list2.getLng()));
+                        Log.d("Nav LatLong: ", navLatLng.toString());
                         break;
                     }
                 }
@@ -641,29 +616,40 @@ public class CustomerMapFragment extends Fragment implements
             startActivity(detailIntent);
         });
     }
-
     public void setSearchList(ArrayList<WaterStationOrDealer> searchList){
         this.searchList = searchList;
     }
 
     public void NearbyMerchants() {
-        TextView closeDialog, noMerchant;
+        RecyclerView mRecyclerView;
+        SearchMerchantAdapter searchMerchantAdapter;
+        TextView closeDialog, noMerchant, countMerchantsNearYou;
+
         dialog.setContentView(R.layout.search_merchant_popup);
         closeDialog = dialog.findViewById(R.id.closeDialog);
         noMerchant = dialog.findViewById(R.id.noMerchant);
+        countMerchantsNearYou = dialog.findViewById(R.id.countMerchantsNearYou);
         mRecyclerView = dialog.findViewById(R.id.mRecyclerView);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        searchMerchantAdapter = new SearchMerchantAdapter(getActivity(), searchList);
-        if(searchList.size() != 0){
-            noMerchant.setVisibility(View.GONE);
-        }
-        else{
+        if(searchList.size() == 0){
             noMerchant.setVisibility(View.VISIBLE);
         }
+        else{
+            noMerchant.setVisibility(View.GONE);
+            if(searchList.size() == 0){
+                countMerchantsNearYou.setText("NO MERCHANTS NEAR YOU");
+            }
+            else if(searchList.size() == 1){
+                countMerchantsNearYou.setText("1 MERCHANT NEAR YOU");
+            }
+            else{
+                countMerchantsNearYou.setText(String.valueOf(searchList.size()) + " MERCHANTS NEAR YOU");
+            }
+            mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            searchMerchantAdapter = new SearchMerchantAdapter(getActivity(), searchList);
+            mRecyclerView.setAdapter(searchMerchantAdapter);
+        }
         String a = String.valueOf(searchList.size());
-        Log.d("Search List Size: ", a);
-        recyclerView.setAdapter(searchMerchantAdapter);
         closeDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

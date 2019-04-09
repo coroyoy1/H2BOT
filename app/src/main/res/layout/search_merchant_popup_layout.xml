@@ -2,13 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="5dp">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
+        android:background="#FFFFFF"
         android:orientation="vertical">
             <LinearLayout
                 android:layout_weight="1"
@@ -21,7 +20,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Water Merchant Name"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:textStyle="bold"/>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -38,6 +37,24 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Nasipit, Talamban, Cebu City"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_weight="1"
+                        android:layout_width="210dp"
+                        android:layout_height="wrap_content"
+                        android:text="Merchant Type: "/>
+                    <TextView
+                        android:id="@+id/merchantType"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Water Station"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"

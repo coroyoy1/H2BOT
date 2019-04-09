@@ -153,7 +153,7 @@ public class WPProductAdd extends Fragment implements View.OnClickListener {
                 firebaseUser.getUid(),
                 productNameString,
                 productTypeString,
-                "None",
+                "0",
                 productPriceString,
                 productDescriptionString,
                 "Available"

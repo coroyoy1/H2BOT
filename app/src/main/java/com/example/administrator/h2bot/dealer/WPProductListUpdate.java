@@ -174,7 +174,7 @@ public class WPProductListUpdate extends Fragment implements View.OnClickListene
                 firebaseUser.getUid(),
                 prodName,
                 prodType,
-                "None",
+                "0",
                 prodPrice,
                 prodDescription2,
                 statY

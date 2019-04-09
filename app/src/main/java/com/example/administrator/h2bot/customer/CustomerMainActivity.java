@@ -111,7 +111,8 @@ public class CustomerMainActivity extends AppCompatActivity implements Navigatio
                                 }
                                 if (orderModel.getOrder_customer_id().equals(currendId)
                                         && orderModel.getOrder_status().equalsIgnoreCase("In-Progress")
-                                        || orderModel.getOrder_status().equalsIgnoreCase("Dispatched")) {
+                                        || orderModel.getOrder_status().equalsIgnoreCase("Dispatched")
+                                        || orderModel.getOrder_status().equalsIgnoreCase("Dispatched by affiliate")) {
 
                                     adapter.add(orderModel);
                                     adapter.size();

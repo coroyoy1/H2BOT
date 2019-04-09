@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,8 +72,8 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
         String orderAddress =orderModel.getOrderAddress();
         String orderCustomerId = orderModel.getOrderCustomerId();
         String orderDateIssued = orderModel.getOrderDateIssued();
-        String orderDeliveryDate = orderModel.getOrderDeliveryDate();
-        String orderDeliveryCharge = orderModel.getOrderDeliveryCharge();
+        String orderDate = orderModel.getOrderDeliveryDate();
+        Log.d("Date: ", "haha" + orderModel.getOrderDeliveryDate());
         String orderServiceType = orderModel.getOrderServiceType();
         String orderMerchantId = orderModel.getOrderMerchantId();
         String orderPricePerGallon = orderModel.getOrderPricePerGallon();
@@ -82,13 +83,6 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
         String orderTotalAmt = orderModel.getOrderTotalAmt();
         String orderWaterType = orderModel.getOrderWaterType();
 
-//        if(orderMethod.equalsIgnoreCase("Delivery")){
-//            deliveryDate = orderModel.getOrderDeliveryDate();
-//        }
-//        else{
-//            pickupDate = orderModel.getOrderDeliveryDate();
-//        }
-
         viewHolder.order_no.setText(orderNo);
         viewHolder.status.setText(orderStatus);
 
@@ -97,7 +91,7 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
             @Override
             public void onClick(View v) {
                 TextView order_no, water_type, price_per_gallon, qty, address, service_type, delivery_date,
-                delivery_fee, status, total_amt, qr_code, order_type, date_issued, deliveryFeePerGal, partialAmount, methodText;
+                        status, total_amt, qr_code, order_type, date_issued;
                 Button cancelBtn, viewQrQodeBtn;
                 qrCode = orderCustomerId.trim().replace(" ", "") +"/"+
                         orderMerchantId.trim().replace(" ", "") + "/" +
@@ -111,7 +105,6 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
                 address = myDialog.findViewById(R.id.address);
                 service_type = myDialog.findViewById(R.id.service_type);
                 delivery_date = myDialog.findViewById(R.id.delivery_date);
-                delivery_fee = myDialog.findViewById(R.id.deliveryFee);
                 status = myDialog.findViewById(R.id.status);
                 total_amt = myDialog.findViewById(R.id.total_amt);
                 qr_code = myDialog.findViewById(R.id.qr_code);
@@ -119,7 +112,6 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
                 viewQrQodeBtn = myDialog.findViewById(R.id.viewQrQodeBtn);
                 order_type = myDialog.findViewById(R.id.order_type);
                 date_issued = myDialog.findViewById(R.id.dateIssued);
-                methodText = myDialog.findViewById(R.id.methodText);
 
                 order_type.setText(orderMethod);
                 order_no.setText(orderNo);
@@ -128,16 +120,9 @@ public class CustomerAllOrdersAdapter extends RecyclerView.Adapter<CustomerAllOr
                 qty.setText(orderQty + " gallon(s)");
                 address.setText(orderAddress);
                 service_type.setText(orderServiceType);
-                if(orderMethod.equalsIgnoreCase("Delivery")){
-                    methodText.setText("Delivery Date: ");
-                    delivery_date.setText(deliveryDate);
-                }
-                else{
-                    methodText.setText("Pickup Date: ");
-                    delivery_date.setText(pickupDate);
-                }
-                delivery_fee.setText(orderDeliveryCharge);
+                delivery_date.setText(pickupDate);
                 status.setText(orderStatus);
+                delivery_date.setText(orderDate);
                 date_issued.setText(orderDateIssued);
                 total_amt.setText("Total: " + orderTotalAmt);
                 qr_code.setText(qrCode);

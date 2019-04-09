@@ -3,12 +3,10 @@ package com.example.administrator.h2bot.customer;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.example.administrator.h2bot.R;
 import com.example.administrator.h2bot.objects.WaterStationOrDealer;
 
@@ -39,12 +37,13 @@ public class SearchMerchantAdapter extends RecyclerView.Adapter<SearchMerchantAd
         String distance = merchants.getDistance();
         String merchantName = merchants.getStation_dealer_name();
         String duration = merchants.getDuration();
+        String waterType = merchants.getUserType();
 
-        Log.d("Distance: ", distance);
-        Log.d("Merchant: ", merchantName);
+
         viewHolder.distance.setText(distance);
         viewHolder.merchantName.setText(merchantName);
         viewHolder.travelTime.setText(duration);
+        viewHolder.merchantType.setText(waterType);
     }
 
     @Override
@@ -53,7 +52,7 @@ public class SearchMerchantAdapter extends RecyclerView.Adapter<SearchMerchantAd
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView merchantName, address, distance, travelTime;
+        TextView merchantName, address, distance, travelTime, merchantType, latitude, longitude;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -61,6 +60,7 @@ public class SearchMerchantAdapter extends RecyclerView.Adapter<SearchMerchantAd
             address = itemView.findViewById(R.id.address);
             distance = itemView.findViewById(R.id.distance);
             travelTime = itemView.findViewById(R.id.travelTime);
+            merchantType = itemView.findViewById(R.id.merchantType);
         }
     }
 
